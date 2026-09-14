@@ -1,292 +1,141 @@
-# 刑天 / Headless
+# 刑天 / Headless — Original ES2 考證檔
 
-> ES2-KING Race Design File  
 > Original ID：`headless`
 >
-> 本文件同時保存 Original ES2 考證資料與 ES2-KING 重建設定。
-> 所有新增設定必須明確標示來源，不得將 ES2-KING 新設定誤認為 Original ES2 原始設定。
+> 本檔案只保存 Original ES2 的可追溯資料、歷史資料與待驗證項目。
+> ES2-KING 新創設定請見 `es2_king_expansion/races/headless.md`。
 
 ---
 
-# 1. 基本資料
+## 1. 基本資料
 
-| 項目 | 設定 | 狀態 |
+| 項目 | 內容 | 狀態 |
 |---|---|---|
 | Original ID | `headless` | [Confirmed] |
-| 中文名稱 | 刑天 | [ES2-KING Naming] |
-| 歷史異名 | 形天 | [Archived / Mythology Reference] |
-| 種族類型 | Original ES2 Race | [Confirmed] |
-| ES2-KING 定位 | 高力量、高氣血、低悟性戰鬥型種族 | [ES2-KING Design] |
-| 角色建立 | 可直接選擇 | [ES2-KING Design] |
-| 武器限制 | 無 | [ES2-KING Design] |
-| 職業限制 | 無 | [ES2-KING Design] |
-| 特殊主動能力 | 暫無 | [ES2-KING Design] |
+| Original ES2 Race | 存在 | [Confirmed] |
+| 專案統一中文名稱 | 刑天 | [ES2-KING Naming] |
+| 歷史資料常見異名 | 形天 | [Archived] |
+
+`headless` 的存在已由 Original ES2 文件索引確認。
+
+ES2-KING 專案中文名稱統一使用「刑天」。歷史資料若出現「形天」，保留原文作為異名與搜尋關鍵字，不取代專案主名稱。
 
 ---
 
-# 2. 種族名稱
+## 2. 歷史資料線索
 
-ES2-KING 專案統一使用：
+[Archived]
 
-**刑天**
+目前保存的 ES2 歷史資料曾以「形天 / headless」記錄此種族，並存在與形天相關的裝備、武器詞綴與 NPC 種族線索。
 
-Original ID：
-
-`headless`
-
-部分歷史資料及古籍版本存在：
-
-**形天**
-
-但 ES2-KING 遊戲顯示、角色建立、文件與未來程式碼註解，
-中文名稱統一使用：
-
-**刑天**
-
-進行歷史資料考證時，仍應同時搜尋：
-
-- `headless`
-- `刑天`
-- `形天`
-
-避免因不同歷史用字遺漏資料。
+這些資料只能證明歷史版本中存在相關內容；在取得對應 Original Source Code 前，不直接推導成種族屬性或能力公式。
 
 ---
 
-# 3. 種族背景
-
-## 神話背景
+## 3. 神話原型
 
 [Mythology Reference]
 
-刑天源自中國上古神話。
+《山海經・海外西經》存在刑天／形天相關神話：失首後仍以乳為目、臍為口，持干戚而舞。
 
-《山海經・海外西經》記載，
-刑天與帝爭神，戰敗後被斬去首級，
-其首葬於常羊之山。
-
-失去頭顱後，
-刑天並未因此停止戰鬥。
-
-他以雙乳為目，
-以肚臍為口，
-手持「干」與「戚」繼續戰鬥。
-
-其中：
-
-- 干：盾
-- 戚：斧
-
-刑天因此成為無首而仍戰、
-即使遭受重創仍不屈服的上古戰神形象。
+神話資料只作為名稱與文化原型參考，不等同於 Original ES2 的遊戲機制。
 
 ---
 
-## ES2-KING 世界觀設定
+## 4. 天生屬性
 
-[ES2-KING Design]
+[Unverified]
 
-刑天族承襲上古戰神刑天的血脈。
+待確認 Original ES2 中 `headless` 的：
 
-此族天生具有強大的肉體力量與旺盛氣血，
-身軀遠較一般人類強韌，
-即使身受重創仍能持續戰鬥。
+- Str 力量
+- Con 體魄
+- Dex 身法
+- Int 悟性
+- Wis 慧根
+- Cor 定力
+- 屬性生成公式
+- 種族 Bonus / Penalty
 
-刑天族崇尚力量、意志與正面戰鬥，
-不以複雜技巧取勝，
-而是依靠強大的力量、體魄與堅定意志突破敵人。
-
-然而，
-過度強大的肉體也形成刑天族最大的限制。
-
-刑天族對複雜知識與精細武學的理解速度較慢，
-修習技能所需時間明顯高於一般種族。
-
-因此刑天是一個：
-
-**力量強大、生命旺盛、意志堅定，
-但學習速度較慢的戰鬥型種族。**
+不得使用 ES2-KING 的設計值反推 Original ES2。
 
 ---
 
-# 4. 六大基本屬性
+## 5. Health / Resource
 
-Original ES2 六大 Attribute：
+[Unverified]
 
-| Attribute | 中文 | 刑天傾向 | 狀態 |
-|---|---|---|---|
-| Str | 力量 | 高 | [ES2-KING Design] |
-| Con | 體魄 | 高 | [ES2-KING Design] |
-| Dex | 身法 | 一般 | [ES2-KING Design] |
-| Int | 悟性 | 低 | [ES2-KING Design] |
-| Wis | 慧根 | 一般 | [ES2-KING Design] |
-| Cor | 定力 | 高 | [ES2-KING Design] |
+待確認：
 
----
-
-## 核心屬性特色
-
-### 力量 Str
-
-**高**
-
-刑天最主要的種族優勢之一。
-
-代表：
-
-- 強大的肉體力量
-- 適合正面戰鬥
-- 能夠使用各類型武器
-- 具有良好的物理戰鬥發展潛力
+- Kee 氣血
+- Gin 精力
+- Sen 神識
+- Force 內力
+- 是否存在種族修正
+- 是否存在特殊恢復機制
 
 ---
 
-### 體魄 Con
+## 6. 特殊能力與指令
 
-**高**
+[Unverified]
 
-刑天具有強韌的肉體與旺盛生命力。
-
-主要影響方向：
-
-- 氣血
-- 生存能力
-- 持續戰鬥能力
+目前尚未取得足夠 Original Source Code 證據確認刑天是否具有專屬主動能力、被動能力或特殊 Command。
 
 ---
 
-### 定力 Cor
+## 7. 職業、武器與門派限制
 
-**高**
+[Unverified]
 
-刑天具有強烈的戰鬥意志。
+待確認：
 
-即使遭受重創，
-仍能維持戰鬥意志。
-
----
-
-### 悟性 Int
-
-**低**
-
-刑天最大的種族弱點。
-
-刑天依靠肉體與意志戰鬥，
-對複雜知識、武學理論與技能理解速度較慢。
-
-此項直接形成刑天的：
-
-**學習速度懲罰。**
+- Class 職業限制
+- Guild / Clan 門派限制
+- Weapon 武器限制
+- Skill Bonus
+- Combat Bonus
 
 ---
 
-# 5. 氣血 / 精力 / 神識 / 內力
+## 8. 業力與創角條件
 
-| Resource | 中文 | 刑天設定 | 狀態 |
-|---|---|---|---|
-| Kee | 氣血 | 高 | [ES2-KING Design] |
-| Gin | 精力 | 一般 | [ES2-KING Design] |
-| Sen | 神識 | 一般 | [ES2-KING Design] |
-| Force | 內力 | 依角色修練 | [ES2-KING Design] |
+[Archived]
 
----
+後期歷史玩家資料曾記錄 `headless`／形天的轉生業力需求為 25。
 
-## 氣血 Kee
-
-刑天具有較高的氣血發展能力。
-
-此特性來自：
-
-- 高力量
-- 高體魄
-- 強韌肉體
-
-因此刑天在正面戰鬥中的生存能力
-高於一般平均種族。
+此資料屬歷史版本記錄，不直接視為所有 Original ES2 版本的固定值；仍需版本與原始碼交叉驗證。
 
 ---
 
-## 特殊恢復
+## 9. 待考證清單
 
-目前：
-
-**無特殊恢復能力**
-
-刑天的優勢來自：
-
-**較高的氣血與體魄**
-
-而不是：
-
-**額外回血技能。**
+- Original Race daemon / source file
+- 中文名稱在原始遊戲中的正式顯示
+- 六大 Attribute 公式
+- Kee / Gin / Sen / Force 公式
+- 特殊能力與 Command
+- 武器、職業、門派限制
+- 學習速度是否有種族修正
+- 業力與創角條件的版本差異
+- Lifecycle / Death 特殊機制
 
 ---
 
-# 6. 種族核心特性
+## 10. Preservation Rule
 
-## 強健體魄
+本檔案只負責 Original ES2：
 
-[ES2-KING Design]
+**保存 → 考證 → 重建 → 驗證**
 
-刑天具有高於一般種族的力量與體魄。
+以下內容不得寫回本檔案作為 Original ES2 事實：
 
-核心方向：
+- ES2-KING 的高力量／高體魄／高定力設計
+- ES2-KING 的低悟性設計
+- ES2-KING 的 60% 學習速度
+- ES2-KING 的直接選角規則
+- ES2-KING 的武器／職業開放規則
 
-**Str ↑**
+上述設計統一保存於：
 
-**Con ↑**
-
-**Kee ↑**
-
-實際數值公式待後續平衡階段決定。
-
----
-
-## 堅定意志
-
-[ES2-KING Design]
-
-刑天具有較高定力。
-
-核心方向：
-
-**Cor ↑**
-
-實際數值公式待後續平衡階段決定。
-
----
-
-# 7. 種族弱點
-
-## 悟性低下
-
-[ES2-KING Design]
-
-刑天雖然具有強大的肉體能力，
-但對知識與武學的理解速度較慢。
-
-因此設定：
-
-### Skill Learning Rate
-
-一般種族：
-
-`100%`
-
-刑天：
-
-`60%`
-
-也就是：
-
-**刑天學習技能的速度只有一般角色的 60%。**
-
----
-
-## 學習速度公式
-
-第一版設計：
-
-```text
-Headless Learning Rate = Normal Learning Rate × 0.60
+`es2_king_expansion/races/headless.md`
