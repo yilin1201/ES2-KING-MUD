@@ -1,274 +1,292 @@
 # 刑天 / Headless
 
-> Original ES2 Race Research File  
-> 本文件只記錄《東方故事2：天朝帝國》Original ES2 的刑天種族資料。  
-> 未經原始碼或可靠歷史資料確認的內容，不得自行補完。
+> ES2-KING Race Design File  
+> Original ID：`headless`
+>
+> 本文件同時保存 Original ES2 考證資料與 ES2-KING 重建設定。
+> 所有新增設定必須明確標示來源，不得將 ES2-KING 新設定誤認為 Original ES2 原始設定。
 
 ---
 
-## 1. 基本資料
+# 1. 基本資料
 
-| 項目 | 資料 | 狀態 |
+| 項目 | 設定 | 狀態 |
 |---|---|---|
 | Original ID | `headless` | [Confirmed] |
-| 中文名稱 | 刑天 | [Player Memory] |
-| Race 類型 | Original ES2 Race | [Confirmed] |
-| 版本 | 待考證 | [Unverified] |
+| 中文名稱 | 刑天 | [ES2-KING Naming] |
+| 歷史異名 | 形天 | [Archived / Mythology Reference] |
+| 種族類型 | Original ES2 Race | [Confirmed] |
+| ES2-KING 定位 | 高力量、高氣血、低悟性戰鬥型種族 | [ES2-KING Design] |
+| 角色建立 | 可直接選擇 | [ES2-KING Design] |
+| 武器限制 | 無 | [ES2-KING Design] |
+| 職業限制 | 無 | [ES2-KING Design] |
+| 特殊主動能力 | 暫無 | [ES2-KING Design] |
 
 ---
 
-## 2. 種族背景
+# 2. 種族名稱
 
-### Original ES2 世界觀
+ES2-KING 專案統一使用：
 
-[Unverified]
+**刑天**
 
-待查：
+Original ID：
 
-- Original ES2 對刑天的背景描述
-- 刑天在天朝帝國世界觀中的定位
-- 與其他種族的關係
-- 是否直接取材自中國神話刑天
-- Original ES2 是否修改其神話設定
+`headless`
 
-> 注意：中國神話中的刑天資料只能作為文化背景參考，
-> 不得直接視為 Original ES2 遊戲設定。
+部分歷史資料及古籍版本存在：
+
+**形天**
+
+但 ES2-KING 遊戲顯示、角色建立、文件與未來程式碼註解，
+中文名稱統一使用：
+
+**刑天**
+
+進行歷史資料考證時，仍應同時搜尋：
+
+- `headless`
+- `刑天`
+- `形天`
+
+避免因不同歷史用字遺漏資料。
 
 ---
 
-## 3. 六大基本屬性
+# 3. 種族背景
+
+## 神話背景
+
+[Mythology Reference]
+
+刑天源自中國上古神話。
+
+《山海經・海外西經》記載，
+刑天與帝爭神，戰敗後被斬去首級，
+其首葬於常羊之山。
+
+失去頭顱後，
+刑天並未因此停止戰鬥。
+
+他以雙乳為目，
+以肚臍為口，
+手持「干」與「戚」繼續戰鬥。
+
+其中：
+
+- 干：盾
+- 戚：斧
+
+刑天因此成為無首而仍戰、
+即使遭受重創仍不屈服的上古戰神形象。
+
+---
+
+## ES2-KING 世界觀設定
+
+[ES2-KING Design]
+
+刑天族承襲上古戰神刑天的血脈。
+
+此族天生具有強大的肉體力量與旺盛氣血，
+身軀遠較一般人類強韌，
+即使身受重創仍能持續戰鬥。
+
+刑天族崇尚力量、意志與正面戰鬥，
+不以複雜技巧取勝，
+而是依靠強大的力量、體魄與堅定意志突破敵人。
+
+然而，
+過度強大的肉體也形成刑天族最大的限制。
+
+刑天族對複雜知識與精細武學的理解速度較慢，
+修習技能所需時間明顯高於一般種族。
+
+因此刑天是一個：
+
+**力量強大、生命旺盛、意志堅定，
+但學習速度較慢的戰鬥型種族。**
+
+---
+
+# 4. 六大基本屬性
 
 Original ES2 六大 Attribute：
 
-| Attribute | 中文 | 刑天設定 | 狀態 |
+| Attribute | 中文 | 刑天傾向 | 狀態 |
 |---|---|---|---|
-| Str | 力量 | 待考證 | [Unverified] |
-| Con | 體魄 | 待考證 | [Unverified] |
-| Dex | 身法 | 待考證 | [Unverified] |
-| Int | 悟性 | 待考證 | [Unverified] |
-| Wis | 慧根 | 待考證 | [Unverified] |
-| Cor | 定力 | 待考證 | [Unverified] |
-
-禁止在找到 Original Source 前自行設定 Bonus / Penalty。
+| Str | 力量 | 高 | [ES2-KING Design] |
+| Con | 體魄 | 高 | [ES2-KING Design] |
+| Dex | 身法 | 一般 | [ES2-KING Design] |
+| Int | 悟性 | 低 | [ES2-KING Design] |
+| Wis | 慧根 | 一般 | [ES2-KING Design] |
+| Cor | 定力 | 高 | [ES2-KING Design] |
 
 ---
 
-## 4. 生命與能量系統
+## 核心屬性特色
 
-| Resource | 中文 | 刑天影響 | 狀態 |
+### 力量 Str
+
+**高**
+
+刑天最主要的種族優勢之一。
+
+代表：
+
+- 強大的肉體力量
+- 適合正面戰鬥
+- 能夠使用各類型武器
+- 具有良好的物理戰鬥發展潛力
+
+---
+
+### 體魄 Con
+
+**高**
+
+刑天具有強韌的肉體與旺盛生命力。
+
+主要影響方向：
+
+- 氣血
+- 生存能力
+- 持續戰鬥能力
+
+---
+
+### 定力 Cor
+
+**高**
+
+刑天具有強烈的戰鬥意志。
+
+即使遭受重創，
+仍能維持戰鬥意志。
+
+---
+
+### 悟性 Int
+
+**低**
+
+刑天最大的種族弱點。
+
+刑天依靠肉體與意志戰鬥，
+對複雜知識、武學理論與技能理解速度較慢。
+
+此項直接形成刑天的：
+
+**學習速度懲罰。**
+
+---
+
+# 5. 氣血 / 精力 / 神識 / 內力
+
+| Resource | 中文 | 刑天設定 | 狀態 |
 |---|---|---|---|
-| Kee | 氣血 | 待考證 | [Unverified] |
-| Gin | 精力 | 待考證 | [Unverified] |
-| Sen | 神識 | 待考證 | [Unverified] |
-| Force | 內力 | 待考證 | [Unverified] |
-
-待確認是否具有：
-
-- 最大值加成
-- 回復速度差異
-- 種族特殊公式
-- 特殊消耗方式
+| Kee | 氣血 | 高 | [ES2-KING Design] |
+| Gin | 精力 | 一般 | [ES2-KING Design] |
+| Sen | 神識 | 一般 | [ES2-KING Design] |
+| Force | 內力 | 依角色修練 | [ES2-KING Design] |
 
 ---
 
-## 5. 種族天生能力
+## 氣血 Kee
 
-[Unverified]
+刑天具有較高的氣血發展能力。
 
-待 Original Source Code 確認：
+此特性來自：
 
-- Passive Ability
-- Active Ability
-- Race Skill
-- Race Feature
-- 特殊攻擊
-- 特殊防禦
-- 特殊抗性
-- 特殊恢復能力
+- 高力量
+- 高體魄
+- 強韌肉體
 
-不得依照「刑天」神話形象自行創造能力。
+因此刑天在正面戰鬥中的生存能力
+高於一般平均種族。
 
 ---
 
-## 6. 種族特殊指令
-
-[Unverified]
-
-待確認：
-
-| Command | 功能 | 消耗 | 條件 | Source |
-|---|---|---|---|---|
-| 待考證 | 待考證 | 待考證 | 待考證 | 待考證 |
-
----
-
-## 7. 職業適性
-
-Original ES2 Class：
-
-- 武者
-- 道士
-- 和尚
-- 書生
-- 小偷
-- 軍人
-- 方士
-
-刑天的：
-
-- 推薦職業：[Unverified]
-- 限制職業：[Unverified]
-- Class Bonus：[Unverified]
-- Skill Bonus：[Unverified]
-
-待 Original Source Code / Original Documentation 確認。
-
----
-
-## 8. 戰鬥系統
-
-[Unverified]
-
-待確認刑天是否具有：
-
-- Attack Bonus
-- Damage Bonus
-- Defense Bonus
-- Parry Bonus
-- Dodge Penalty / Bonus
-- Weapon Bonus
-- Unarmed Bonus
-- Damage Reduction
-- Race Combat Function
-
-所有公式必須保留 Original ES2 實際程式邏輯。
-
----
-
-## 9. 創角 / 轉生條件
-
-[Unverified]
-
-待確認：
-
-- 是否可直接創建
-- Karma / 業力需求
-- Level Requirement
-- Lifecycle Requirement
-- Rebirth Requirement
-- Race Change Requirement
-- 其他限制
-
-不同 ES2 版本必須分開記錄。
-
----
-
-## 10. Original Source Evidence
-
-### Source Code
-
-待搜尋：
-
-- `headless`
-- Race Object
-- Race Daemon
-- Character Creation
-- Lifecycle
-- Combat
-- Attribute
-- Race Command
-
-### Original Documentation
-
-待搜尋：
-
-- Annihilator ES2 Mudlib
-- ES2 `/doc/wiz/`
-- Original Race Documentation
-
-### Archived Evidence
-
-待補。
-
-### Player Memory
-
-目前已知：
-
-- `headless` 對應「刑天」。
-
-狀態：
-
-[Player Memory]
-
----
-
-## 11. 版本差異
-
-後續若發現不同版本：
-
-- Original ES2 v1.3b
-- ES2 Legacy
-- 後期 ES2
-- North America Variant
-- 其他衍生版本
-
-必須分開記錄。
-
-不得用後期版本覆蓋 Original ES2 設定。
-
----
-
-## 12. 待考證清單
-
-- [ ] 中文名稱 Original Source 確認
-- [ ] Race Source File
-- [ ] 種族背景
-- [ ] Str
-- [ ] Con
-- [ ] Dex
-- [ ] Int
-- [ ] Wis
-- [ ] Cor
-- [ ] Kee
-- [ ] Gin
-- [ ] Sen
-- [ ] Force
-- [ ] 天生能力
-- [ ] 特殊 Command
-- [ ] 職業適性
-- [ ] Combat Bonus
-- [ ] 業力需求
-- [ ] 創角條件
-- [ ] Lifecycle
-- [ ] 版本差異
-
----
-
-## 13. ES2-KING Expansion
+## 特殊恢復
 
 目前：
 
-**無**
+**無特殊恢復能力**
 
-Original ES2 刑天的重建完成以前，
-本文件不得加入 ES2-KING 自創能力。
+刑天的優勢來自：
 
-未來新增內容必須移至：
+**較高的氣血與體魄**
 
-`es2_king_expansion/`
+而不是：
 
-並標記：
-
-[ES2-KING Expansion]
+**額外回血技能。**
 
 ---
 
-# Preservation Rule
+# 6. 種族核心特性
 
-刑天資料建立順序：
+## 強健體魄
 
-**Original Source → Evidence → Verification → Reconstruction → ES2-KING Expansion**
+[ES2-KING Design]
 
-不得：
+刑天具有高於一般種族的力量與體魄。
 
-**先創作 → 再反推 Original ES2。**
+核心方向：
+
+**Str ↑**
+
+**Con ↑**
+
+**Kee ↑**
+
+實際數值公式待後續平衡階段決定。
+
+---
+
+## 堅定意志
+
+[ES2-KING Design]
+
+刑天具有較高定力。
+
+核心方向：
+
+**Cor ↑**
+
+實際數值公式待後續平衡階段決定。
+
+---
+
+# 7. 種族弱點
+
+## 悟性低下
+
+[ES2-KING Design]
+
+刑天雖然具有強大的肉體能力，
+但對知識與武學的理解速度較慢。
+
+因此設定：
+
+### Skill Learning Rate
+
+一般種族：
+
+`100%`
+
+刑天：
+
+`60%`
+
+也就是：
+
+**刑天學習技能的速度只有一般角色的 60%。**
+
+---
+
+## 學習速度公式
+
+第一版設計：
+
+```text
+Headless Learning Rate = Normal Learning Rate × 0.60
