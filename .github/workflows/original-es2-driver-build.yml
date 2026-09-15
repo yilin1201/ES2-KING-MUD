@@ -26,11 +26,11 @@ jobs:
 
       - name: Configure Neolith
         working-directory: .runtime/original-es2/neolith
-        run: cmake --preset linux-gcc -DBUILD_TESTING=OFF
+        run: cmake --preset linux -DBUILD_TESTING=OFF
 
       - name: Build Neolith
         working-directory: .runtime/original-es2/neolith
-        run: cmake --build --preset dev-linux-gcc
+        run: cmake --build --preset linux
 
       - name: Locate driver executable
         run: |
