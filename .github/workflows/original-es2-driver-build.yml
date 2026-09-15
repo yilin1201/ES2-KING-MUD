@@ -30,7 +30,7 @@ jobs:
 
       - name: Build Neolith
         working-directory: .runtime/original-es2/neolith
-        run: cmake --build --preset linux
+        run: cmake --build --preset dev-linux
 
       - name: Locate driver executable
         run: |
