@@ -9,7 +9,7 @@ on:
 
 jobs:
   race-phase2:
-    # Job／測試工作：在 Linux 測試環境執行 M6-M9 靜態、Runtime 與真實 MUD 驗證。
+    # Job／測試工作：在 Linux 測試環境執行 M6-M9 靜態、Runtime、真實 MUD 與資料保存驗證。
     runs-on: ubuntu-latest
     steps:
       - name: Checkout／取得專案程式
@@ -81,12 +81,12 @@ jobs:
             sleep 1
           done
           cat "$RUNNER_TEMP/es2-race-phase2-boot.log"; exit 1
-      - name: Live M6-M9 character verification／真實角色建立與屬性驗證
+      - name: Live historical race verification／真實歷史種族角色與保存重登驗證
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          # Telnet／文字連線協定：模擬真實玩家從 4000 Port（連線埠）登入 MUD 建立角色。
+          # Telnet／文字連線協定：模擬真實玩家從 4000 Port（連線埠）登入 MUD。
           import telnetlib,time,re,sys
           ANSI=re.compile(r'\x1b\[[0-9;?]*[ -/]*[@-~]')
           def read(tn,b,t=.8):
@@ -100,23 +100,34 @@ jobs:
           def line(tn,b,s,t=.8): tn.write(s.encode()+b'\r\n'); read(tn,b,t)
           def key(tn,b,s,t=.5): tn.write(s.encode()); read(tn,b,t)
           def clean(b): return ANSI.sub('',b.decode(errors='replace'))
-          # Account ID／帳號代號：Original ES2 規定只能使用 a-z 英文字母，因此測試帳號不可含 M6/M7 等數字。
-          # registry_index／種族清單位置：依 Runtime logind.c 的 user_race 順序，用方向鍵選到指定種族。
-          cases=[('rainnar',7,'msixrain','雨師妾測試'),('ashura',8,'msevenashu','阿修羅測試'),('headless',9,'meighthead','形天測試'),('yaksa',10,'mnineyaks','夜叉測試')]
-          for race,index,uid,name in cases:
+          def probe(out,race,value,label):
+              match=re.search(r'RACEPROBE(.*?)(?:\n|$)',out)
+              if not match or f'RACE={race}' not in match.group(1): sys.exit(f'{label} FAIL／失敗：{race} 真實角色種族不符')
+              values=[int(v) for _,v,_ in re.findall(r'(str|cps|int|spi|cor|dex|con|wis)=(\d+)/(\d+)',match.group(1))]
+              if len(values)!=8 or any(v!=value for v in values): sys.exit(f'{label} FAIL／失敗：{race} 八項出生屬性不是 {value}：{values}')
+              if not all(x in match.group(1) for x in ['GIN=30/30','KEE=30/30','SEN=30/30']): sys.exit(f'{label} FAIL／失敗：{race} 精氣神初始值異常')
+          # Account ID／帳號代號：Original ES2 規定只能使用 a-z 英文字母。
+          # index／種族清單位置：依 Runtime logind.c 的 user_race 順序，用方向鍵選到指定種族。
+          cases=[
+            ('blackteeth',0,'tblack','黑齒測試',25),('yenhold',3,'tyenhold','厭火測試',25),
+            ('woochan',4,'twoochan','無腸測試',25),('dingling',5,'tdinglin','釘靈測試',25),
+            ('jiaojao',6,'tjiaojao','焦僥測試',25),('rainnar',7,'msixrain','雨師妾測試',50),
+            ('ashura',8,'msevenashu','阿修羅測試',50),('headless',9,'meighthead','形天測試',50),
+            ('yaksa',10,'mnineyaks','夜叉測試',50),('malik',11,'tmalik','巫首測試',25)]
+          for race,index,uid,name,value in cases:
               tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); b=bytearray(); read(tn,b,1)
               line(tn,b,uid); key(tn,b,'Y'); line(tn,b,'phasepass'); line(tn,b,'phasepass'); line(tn,b,'none')
-              for _ in range(index): key(tn,b,'\x1b[B',.12)
-              # Menu confirmation／選單確認：Original ES2 get_char 選單以換行確認；只送 CR 會停留在種族選單。
-              line(tn,b,'',1.0); key(tn,b,'M'); line(tn,b,name); key(tn,b,'Y',1.5); line(tn,b,'raceprobe',1.0)
-              out=clean(b); print(out)
-              match=re.search(r'RACEPROBE(.*?)(?:\n|$)',out)
-              if not match or f'RACE={race}' not in match.group(1): sys.exit(f'M6-M9 FAIL／失敗：{race} 真實角色種族不符')
-              values=[int(v) for _,v,_ in re.findall(r'(str|cps|int|spi|cor|dex|con|wis)=(\d+)/(\d+)',match.group(1))]
-              if len(values)!=8 or any(v!=50 for v in values): sys.exit(f'M6-M9 FAIL／失敗：{race} 八項出生屬性不是 50：{values}')
-              if not all(x in match.group(1) for x in ['GIN=30/30','KEE=30/30','SEN=30/30']): sys.exit(f'M6-M9 FAIL／失敗：{race} 精氣神初始值異常')
-              line(tn,b,'look',.4); line(tn,b,'west',.4); line(tn,b,'east',.4); line(tn,b,'quit',.3); tn.close()
-              print(f'M6-M9 LIVE PASS／真實角色通過：{race}，八屬性=50，精氣神=30，基本移動指令完成。')
+              for _ in range(index): key(tn,b,'\x1b[B',.10)
+              # Menu confirmation／選單確認：Original ES2 get_char 選單以完整換行確認。
+              line(tn,b,'',.8); key(tn,b,'M'); line(tn,b,name); key(tn,b,'Y',1.2); line(tn,b,'raceprobe',.8)
+              out=clean(b); print(out); probe(out,race,value,'LIVE')
+              line(tn,b,'look',.3); line(tn,b,'west',.3); line(tn,b,'east',.3); line(tn,b,'quit',.5); tn.close()
+              # Persistence／資料保存：登出後以同一帳號重新登入，確認種族與出生屬性仍保持一致。
+              tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); b2=bytearray(); read(tn,b2,1)
+              line(tn,b2,uid); line(tn,b2,'phasepass',1.2); line(tn,b2,'raceprobe',.8)
+              out2=clean(b2); print(out2); probe(out2,race,value,'PERSISTENCE')
+              line(tn,b2,'quit',.3); tn.close()
+              print(f'RACE LIVE+PERSISTENCE PASS／真實角色與保存重登通過：{race}，八屬性={value}。')
           PY
       - name: Stop MUD／停止測試伺服器
         if: always()
