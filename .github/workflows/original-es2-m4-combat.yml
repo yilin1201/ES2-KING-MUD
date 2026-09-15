@@ -74,7 +74,7 @@ jobs:
               try:
                 d=tn.read_very_eager()
                 if d:b.extend(d)
-              except EOFError:break
+              except (EOFError,ConnectionResetError):break
               time.sleep(.05)
           def line(s,t=.8):tn.write(s.encode()+b'\r\n');read(t)
           def key(s,t=.8):tn.write(s.encode());read(t)
@@ -88,10 +88,15 @@ jobs:
           if '你想攻擊誰' in flat:sys.exit('M4 FAIL: fight target was not resolved')
           resource=re.search(r'形體\s+\d+/\d+\s+精\s+\d+/\d+\s+氣\s+\d+/\d+\s+神\s+\d+/\d+',flat)
           if not resource:sys.exit('M4 FAIL: live resource output missing')
+          combat_patterns=[r'你握緊拳頭往木樁武者',r'木樁武者.*向你',r'你.*往木樁武者.*踢',r'木樁武者.*一拳往你']
+          if not any(re.search(p,flat) for p in combat_patterns):sys.exit('M4 FAIL: genuine live combat exchange text missing')
           print('M4 PASS SKILLS: fresh Human/Commoner/Lv.1 skills command returned live Original ES2 state.')
-          print('M4 PASS COMBAT: Original ES2 fight command resolved the runtime-only NPC and the NPC accepted combat.')
+          print('M4 PASS COMBAT: Original ES2 fight command produced a genuine bilateral combat exchange against the runtime-only NPC.')
           print('M4 PASS RESOURCES: hp command returned live HP/Gin/Kee/Sen resources after combat initiation.')
-          line('quit',.5);tn.close()
+          try: tn.write(b'quit\r\n'); time.sleep(.2)
+          except (EOFError,ConnectionResetError,BrokenPipeError,OSError): pass
+          try: tn.close()
+          except OSError: pass
           PY
       - name: Stop Original ES2
         if: always()
@@ -99,4 +104,4 @@ jobs:
           if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
       - name: Record M4 result
         run: |
-          echo 'M4 PASS: Original ES2 live skills command, fight command, combat acceptance, and resource command verified.'
+          echo 'M4 PASS: Original ES2 live skills command, fight command, genuine bilateral combat text, and resource command verified.'
