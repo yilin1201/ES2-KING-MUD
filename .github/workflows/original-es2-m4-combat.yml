@@ -36,13 +36,13 @@ jobs:
           }
           int accept_fight(object ob){ return 1; }
           LPC
-          cat > .runtime/original-es2/mudlib/cmds/usr/m4spawn.c <<'LPC'
-          inherit F_CLEAN_UP;
-          int main(object me,string arg){object ob=new("/obj/es2king_test/m4_dummy");ob->move(environment(me));write("M4SPAWN PASS: 木樁武者已進入目前房間。\n");return 1;}
-          LPC
           cat > .runtime/original-es2/mudlib/cmds/usr/m4probe.c <<'LPC'
           inherit F_CLEAN_UP;
-          int main(object me,string arg){object ob=present("m4dummy",environment(me));write(sprintf("M4PROBE FIGHTING=%d TARGET=%d HP=%d/%d GIN=%d/%d KEE=%d/%d SEN=%d/%d\n",me->is_fighting()?1:0,(ob&&me->is_fighting(ob))?1:0,me->query_stat("HP"),me->query_stat_maximum("HP"),me->query_stat("gin"),me->query_stat_maximum("gin"),me->query_stat("kee"),me->query_stat_maximum("kee"),me->query_stat("sen"),me->query_stat_maximum("sen")));return 1;}
+          int main(object me,string arg){
+            object ob=present("m4dummy",environment(me));
+            if(arg=="spawn" && !ob){ob=new("/obj/es2king_test/m4_dummy");ob->move(environment(me));write("M4SPAWN PASS: 木樁武者已進入目前房間。\n");return 1;}
+            write(sprintf("M4PROBE FIGHTING=%d TARGET=%d HP=%d/%d GIN=%d/%d KEE=%d/%d SEN=%d/%d\n",me->is_fighting()?1:0,(ob&&me->is_fighting(ob))?1:0,me->query_stat("HP"),me->query_stat_maximum("HP"),me->query_stat("gin"),me->query_stat_maximum("gin"),me->query_stat("kee"),me->query_stat_maximum("kee"),me->query_stat("sen"),me->query_stat_maximum("sen")));return 1;
+          }
           LPC
       - name: Configure Neolith
         working-directory: .runtime/original-es2/neolith
@@ -77,12 +77,13 @@ jobs:
           def line(s,t=.8):tn.write(s.encode()+b'\r\n');read(t)
           def key(s,t=.8):tn.write(s.encode());read(t)
           read(1);line('mfour');key('Y');line('m4pass');line('m4pass');line('none');key('\r');key('M');line('戰鬥測試');key('Y',1.5)
-          line('skills',1.0); line('m4spawn',1.0); line('look',1.0); line('fight m4dummy',1.5); line('m4probe',1.0); line('hp',1.0); line('skills',1.0)
+          line('skills',1.0); line('west',1.0); line('m4probe spawn',1.0); line('look',1.0); line('fight m4dummy',2.5); line('m4probe',1.0); line('hp',1.0); line('skills',1.0)
           out=ANSI.sub('',b.decode(errors='replace')); flat=re.sub(r'\s+',' ',out); print(out)
-          required=['戰鬥測試在天朝帝國的冒險開始了。','你目前並沒有學會任何技能。','M4SPAWN PASS','木樁武者','M4PROBE FIGHTING=1 TARGET=1']
+          required=['戰鬥測試在天朝帝國的冒險開始了。','你目前並沒有學會任何技能。','廚房','M4SPAWN PASS','木樁武者','M4PROBE FIGHTING=1 TARGET=1']
           miss=[x for x in required if x not in flat]
           if miss:sys.exit('M4 FAIL: live combat/skills evidence missing: '+repr(miss))
-          combat_markers=['攻擊','招架','閃','拳','掌','踢','擊','打','戰鬥','較量','高招']
+          if '這裡禁止戰鬥' in flat:sys.exit('M4 FAIL: selected room still prohibits combat')
+          combat_markers=['攻擊','招架','閃','拳','掌','踢','擊','打','較量','高招']
           if not any(x in flat for x in combat_markers):sys.exit('M4 FAIL: no live combat text observed')
           print('M4 PASS SKILLS: fresh Human/Commoner/Lv.1 skills command returned live Original ES2 state.')
           print('M4 PASS COMBAT: fight command entered a real bilateral combat state against the runtime-only fixture.')
