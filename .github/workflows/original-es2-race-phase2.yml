@@ -107,7 +107,8 @@ jobs:
               tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); b=bytearray(); read(tn,b,1)
               line(tn,b,uid); key(tn,b,'Y'); line(tn,b,'phasepass'); line(tn,b,'phasepass'); line(tn,b,'none')
               for _ in range(index): key(tn,b,'\x1b[B',.12)
-              key(tn,b,'\r',.8); key(tn,b,'M'); line(tn,b,name); key(tn,b,'Y',1.5); line(tn,b,'raceprobe',1.0)
+              # Menu confirmation／選單確認：Original ES2 get_char 選單以換行確認；只送 CR 會停留在種族選單。
+              line(tn,b,'',1.0); key(tn,b,'M'); line(tn,b,name); key(tn,b,'Y',1.5); line(tn,b,'raceprobe',1.0)
               out=clean(b); print(out)
               match=re.search(r'RACEPROBE(.*?)(?:\n|$)',out)
               if not match or f'RACE={race}' not in match.group(1): sys.exit(f'M6-M9 FAIL／失敗：{race} 真實角色種族不符')
