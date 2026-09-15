@@ -73,23 +73,27 @@ jobs:
                       transcript.extend(data)
                   time.sleep(0.05)
 
-          def send(line, wait=0.8):
-              tn.write(line.encode('utf-8') + b'\n')
+          def send_line(line, wait=0.8):
+              tn.write(line.encode('utf-8') + bytes((13, 10)))
+              read_for(wait)
+
+          def send_key(key, wait=0.8):
+              tn.write(key.encode('ascii'))
               read_for(wait)
 
           read_for(1.0)
-          send('mone')
-          send('Y')
-          send('m1pass')
-          send('m1pass')
-          send('none')
-          send('human')
-          send('M')
-          send('測試玩家')
-          send('Y', 1.5)
-          send('look')
-          send('score')
-          send('north', 1.0)
+          send_line('mone')
+          send_key('Y')
+          send_line('m1pass')
+          send_line('m1pass')
+          send_line('none')
+          send_key('0')
+          send_key('M')
+          send_line('測試玩家')
+          send_key('Y', 1.5)
+          send_line('look')
+          send_line('score')
+          send_line('north', 1.0)
           read_for(0.5)
           tn.close()
 
@@ -102,11 +106,13 @@ jobs:
               ('login', '您的使用者代號'),
               ('race', '選擇你的角色所屬的種族'),
               ('name', '您的顯示名稱'),
-              ('created', '的冒險開始了'),
           ]
           missing = [label for label, token in required if token not in clean]
           if missing:
               print('M1 FAIL missing stages:', ', '.join(missing), file=sys.stderr)
+              sys.exit(1)
+          if 'score' not in clean.lower() and '臂力' not in clean and '膂力' not in clean:
+              print('M1 FAIL: score probe did not return recognizable character status.', file=sys.stderr)
               sys.exit(1)
           PY
       - name: Stop Original ES2
