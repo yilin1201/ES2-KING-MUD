@@ -1,50 +1,62 @@
 # Original ES2 Race Reconstruction — Phase 2
 
-Status: IN PROGRESS
+Status: EVIDENCE GATE PASS / RUNTIME FORMULAS STILL UNDER RECOVERY
 Branch: `build/original-es2-races-phase2`
 Base: M0–M5 merged `main` (`9740478cad342c3193c5e0f611427e31f5fa1fbc`)
 
 ## Safety rule
 
-This phase reconstructs Original ES2 races only from recoverable evidence. Missing race daemons, numerical initializers, natural armor, karma, age, or special abilities MUST NOT be invented. ES2-KING expansion data remains separate.
+Original ES2 races are reconstructed only from recoverable evidence. Missing race daemons, numerical initializers, natural armor, age, or special abilities MUST NOT be invented. ES2-KING expansion data remains separate.
 
-## Confirmed historical race registry evidence
+## Confirmed source cross-check
 
-The archived Original ES2 wizard documentation index explicitly lists these race help topics:
+Archived Original ES2 wizard documentation lists race topics for `human`, `woochan`, `jiaojao`, `yenhold`, `rainnar`, `ashura`, `headless`, `yaksa`, and `blackteeth`. Current Original `who.c` independently preserves historical race filters including `headless` and `malik`.
 
-- `human`
-- `woochan`
-- `jiaojao`
-- `yenhold`
-- `rainnar`
-- `ashura`
-- `headless`
-- `yaksa`
-- `blackteeth`
+## Archived gameplay race-selection evidence
 
-Current `who.c` additionally preserves filters/abbreviations for `malik`, alongside the historical race identifiers above.
+A 2014 ES2 gameplay record preserves the actual reincarnation race-selection menu:
 
-This proves that `headless` and the other identifiers were part of the historical Original ES2 race vocabulary, but it does NOT by itself prove their missing initialization formulas or gameplay effects.
+| ID | Original display | Karma |
+|---|---|---:|
+| blackteeth | 黑齒 | 5 |
+| human | 人類 | 5 |
+| yenhold | 厭火 | 5 |
+| woochan | 無腸 | 5 |
+| dingling | 釘靈 | 10 |
+| jiaojao | 焦僥 | 10 |
+| rainnar | 雨師妾 | 25 |
+| ashura | 阿修羅 | 30 |
+| headless | 形天 | 25 |
+| yaksa | 夜叉 | 30 |
+| malik | 巫首 | 30 |
+
+Important: archived ES2 game text spells `headless` as **形天**. Original ES2 data preserves that evidence rather than silently rewriting it as 刑天.
+
+Machine-readable registry: `original_es2/data/historical_race_registry.json`.
+
+## Additional archived gameplay cross-check
+
+A surviving level-65 male 形天 character record confirms `headless` was playable in the live game. The archive also preserves `形天之怒 (Girdle of headless)` and a weapon modifier named 形天 that grants +3 strength. These confirm historical vocabulary/content, but do not prove the race's birth initializer.
 
 ## Current executable baseline
 
-Current Annihilator main exposes registered `human` and `avatar` race daemons. M5 has already verified both end-to-end at runtime. Historical race identifiers must therefore be reconstructed separately rather than silently fabricated into the current baseline.
+Current Annihilator main exposes registered `human` and `avatar` race daemons. M5 already verifies both end-to-end at runtime. Missing historical race implementations must therefore be recovered separately rather than fabricated.
 
-## M6 accelerated acceptance gate
+## M6 accelerated result
 
-1. Preserve M0–M5 executable baseline.
-2. Establish recoverable historical evidence for `headless` before implementing it.
-3. Search source/docs/archives for race-specific semantics and numerical behavior.
-4. Only source-supported fields may enter `original_es2/` runtime reconstruction.
-5. If exact Original behavior remains unrecovered, record the gap explicitly and continue evidence recovery rather than inventing values.
-6. Once sufficient evidence exists, add live creation/runtime/persistence/combat verification and run the full regression gate before review.
+PASS:
+- `headless` identity is source/player-record cross-checked.
+- All 11 archived selectable race IDs, Chinese names, and karma costs are locked.
+- Original spelling `形天` is locked for `headless`.
+- No guessed initializer/effect has entered Original runtime code.
 
-## Evidence recovered so far
+Still unresolved:
+- exact eight-attribute birth formulas for `headless`
+- initial Gin/Kee/Sen overrides, if any
+- natural armor, age/lifespan, and race-specific runtime effects
 
-- `[Confirmed Source]` `docs/legacy/wiz/all`: historical race topic list includes `headless`, `yaksa`, `ashura`, `rainnar`, etc.
-- `[Confirmed Source]` `mudlib/cmds/usr/who.c`: historical race filters include `headless` (`-hs`), `yaksa`, `ashura`, `rainnar`, `malik`, `woochan`, `jiaojao`, `yenhold`, `blackteeth`, and `human`.
-- `[Confirmed Source]` `mudlib/d/snow/npc/teacher.c`: some NPC behavior explicitly branches on historical race IDs, confirming these IDs participated in gameplay logic.
+Current searched repositories contain no historical `mudlib/daemon/race/headless.c` commit history. High-level player score records cannot safely reconstruct birth formulas because attributes can change through level growth, skills, equipment, and other gameplay systems.
 
-## Open evidence gap
+## Next implementation gate
 
-The current searched repositories have not yet yielded the historical `headless` race daemon or a source-backed mapping from `headless` to a Chinese display name and exact initialization/effect formulas. Those fields remain intentionally unset until evidence is recovered.
+Do not create a guessed `headless.c`. Continue archive/source recovery. Once Original formulas are recovered, implement live 形天 creation and verify creation, score, persistence/relogin, movement, and combat, then run the full regression gate before merge review.
