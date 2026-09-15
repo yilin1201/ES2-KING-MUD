@@ -23,28 +23,18 @@ jobs:
         run: bash scripts/bootstrap_original_es2.sh
       - name: Provision Original ES2 persistent user directories
         run: |
-          # Original ES2 user_data() saves /data/user/<first-letter>/<id>.o.
-          # Git does not preserve empty directories, so a fresh clone needs these runtime folders.
           mkdir -p .runtime/original-es2/mudlib/data/user/{a..z}
           test -d .runtime/original-es2/mudlib/data/user/m
           echo 'M3 persistence storage ready: /data/user/a..z'
       - name: Disable Original ES2 anti-spam character penalty
         run: |
-          grep -RIl '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' .runtime/original-es2/mudlib/include .runtime/original-es2/mudlib/adm 2>/dev/null | while read -r f; do
-            sed -i 's/^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM.*/\/\/ ES2-KING: ENABLE_ANTISPAM disabled/' "$f"
-          done
+          grep -RIl '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' .runtime/original-es2/mudlib/include .runtime/original-es2/mudlib/adm 2>/dev/null | while read -r f; do sed -i 's/^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM.*/\/\/ ES2-KING: ENABLE_ANTISPAM disabled/' "$f"; done
           if grep -R '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' .runtime/original-es2/mudlib/include .runtime/original-es2/mudlib/adm 2>/dev/null; then exit 1; fi
       - name: Install M2 runtime-only attribute probe
         run: |
           cat > .runtime/original-es2/mudlib/cmds/usr/m2probe.c <<'LPC'
           inherit F_CLEAN_UP;
-          int main(object me, string arg) {
-              string *keys = ({"str","cor","int","spi","cps","dex","con","wis"}); string k,out="M2PROBE"; int raw,eff,boosted;
-              foreach(k in keys){raw=me->query_attr(k,1);eff=me->query_attr(k);out+=sprintf(" %s=%d/%d",k,raw,eff);}
-              raw=me->query_attr("str",1);eff=me->query_attr("str");me->add_temp("apply/str",2);boosted=me->query_attr("str");me->add_temp("apply/str",-2);
-              out+=sprintf(" STRTEST=%d/%d/%d",raw,eff,boosted);
-              out+=sprintf(" HP=%d/%d GIN=%d/%d KEE=%d/%d SEN=%d/%d RACE=%s LEVEL=%d",me->query_stat("HP"),me->query_stat_maximum("HP"),me->query_stat("gin"),me->query_stat_maximum("gin"),me->query_stat("kee"),me->query_stat_maximum("kee"),me->query_stat("sen"),me->query_stat_maximum("sen"),me->query_race(),me->query_level()); write(out+"\n");return 1;
-          }
+          int main(object me,string arg){string *keys=({"str","cor","int","spi","cps","dex","con","wis"});string k,out="M2PROBE";int raw,eff,boosted;foreach(k in keys){raw=me->query_attr(k,1);eff=me->query_attr(k);out+=sprintf(" %s=%d/%d",k,raw,eff);}raw=me->query_attr("str",1);eff=me->query_attr("str");me->add_temp("apply/str",2);boosted=me->query_attr("str");me->add_temp("apply/str",-2);out+=sprintf(" STRTEST=%d/%d/%d",raw,eff,boosted);out+=sprintf(" HP=%d/%d GIN=%d/%d KEE=%d/%d SEN=%d/%d RACE=%s LEVEL=%d",me->query_stat("HP"),me->query_stat_maximum("HP"),me->query_stat("gin"),me->query_stat_maximum("gin"),me->query_stat("kee"),me->query_stat_maximum("kee"),me->query_stat("sen"),me->query_stat_maximum("sen"),me->query_race(),me->query_level());write(out+"\n");return 1;}
           LPC
       - name: Configure Neolith
         working-directory: .runtime/original-es2/neolith
@@ -83,28 +73,29 @@ jobs:
             return read(tn,buf,t)
           def key(tn,buf,s,t=.8): tn.write(s.encode()); return read(tn,buf,t)
           def txt(buf): return ANSI.sub('',buf.decode(errors='replace'))
-          tn=session(); b=bytearray(); read(tn,b,1); line(tn,b,'mthree'); key(tn,b,'Y'); line(tn,b,'m3pass'); line(tn,b,'m3pass'); line(tn,b,'none'); key(tn,b,'\r'); key(tn,b,'M'); line(tn,b,'持久測試'); key(tn,b,'Y',1.5)
-          line(tn,b,'look'); line(tn,b,'score'); line(tn,b,'m2probe',1.0)
-          first=re.sub(r'\s+',' ',txt(b)); print(txt(b)); m=re.search(r'M2PROBE(.*?)STRTEST=',first)
-          if not m: sys.exit('M3 FAIL: initial live attribute probe missing')
+          tn=session();b=bytearray();read(tn,b,1);line(tn,b,'mthree');key(tn,b,'Y');line(tn,b,'m3pass');line(tn,b,'m3pass');line(tn,b,'none');key(tn,b,'\r');key(tn,b,'M');line(tn,b,'持久測試');key(tn,b,'Y',1.5);line(tn,b,'look');line(tn,b,'score');line(tn,b,'m2probe',1.0)
+          first=re.sub(r'\s+',' ',txt(b));print(txt(b));m=re.search(r'M2PROBE(.*?)STRTEST=',first)
+          if not m:sys.exit('M3 FAIL: initial live attribute probe missing')
           attrs=dict((k,int(v)) for k,v,e in re.findall(r'(str|cor|int|spi|cps|dex|con|wis)=(\d+)/(\d+)',m.group(1)))
-          if len(attrs)!=8 or any(not 13<=v<=18 for v in attrs.values()): sys.exit('M3 FAIL: initial attributes invalid')
-          if '【 平民 】持久測試 (Mthree)' not in first or '客棧大堂' not in first: sys.exit('M3 FAIL: initial identity/spawn missing')
-          closed=line(tn,b,'quit',1.2); read(tn,b,.5); tn.close(); print('M3 first-session quit closed=',closed); time.sleep(1)
+          if len(attrs)!=8 or any(not 13<=v<=18 for v in attrs.values()):sys.exit('M3 FAIL: initial attributes invalid')
+          if '【 平民 】持久測試 (Mthree)' not in first or '客棧大堂' not in first:sys.exit('M3 FAIL: initial identity/spawn missing')
+          closed=line(tn,b,'quit',1.2);read(tn,b,.5);tn.close();print('M3 first-session quit closed=',closed);time.sleep(1)
           save='.runtime/original-es2/mudlib/data/user/m/mthree.o'
-          if not os.path.isfile(save): sys.exit('M3 FAIL: expected Original ES2 save file missing: '+save)
+          if not os.path.isfile(save):sys.exit('M3 FAIL: expected Original ES2 save file missing: '+save)
           print('M3 SAVE PASS:',save,'bytes=',os.path.getsize(save))
-          tn=session(); b2=bytearray(); read(tn,b2,1); line(tn,b2,'mthree',1); second_pre=re.sub(r'\s+',' ',txt(b2)); print(txt(b2))
-          if '創造一個新的人物' in second_pre: sys.exit('M3 FAIL: character was not persisted; server asks to create it again')
-          line(tn,b2,'m3pass',1.8); line(tn,b2,'look'); line(tn,b2,'score'); line(tn,b2,'inventory'); line(tn,b2,'help'); line(tn,b2,'west'); line(tn,b2,'east'); line(tn,b2,'m2probe',1.0)
-          second=re.sub(r'\s+',' ',txt(b2)); print(txt(b2)); required=['【 平民 】持久測試 (Mthree)','目前是等級 1 的平民','男性人類','客棧大堂','廚房','M2PROBE']; miss=[x for x in required if x not in second]
-          if miss: sys.exit('M3 FAIL: relogin/basic-command evidence missing: '+repr(miss))
-          m2=re.search(r'M2PROBE(.*?)STRTEST=',second); attrs2=dict((k,int(v)) for k,v,e in re.findall(r'(str|cor|int|spi|cps|dex|con|wis)=(\d+)/(\d+)',m2.group(1) if m2 else ''))
-          if attrs2!=attrs: sys.exit('M3 FAIL: attributes changed across quit/relogin: '+repr((attrs,attrs2)))
-          print('M3 PASS PERSISTENCE: same character recognized after quit and relogin.'); print('M3 PASS ATTRIBUTES:',attrs2); print('M3 PASS COMMANDS: look, score, inventory, help, west/east movement executed after relogin.'); line(tn,b2,'quit',.8); tn.close()
+          tn=session();b2=bytearray();read(tn,b2,1);line(tn,b2,'mthree',1);second_pre=re.sub(r'\s+',' ',txt(b2));print(txt(b2))
+          if '創造一個新的人物' in second_pre:sys.exit('M3 FAIL: character was not persisted; server asks to create it again')
+          line(tn,b2,'m3pass',1.8);line(tn,b2,'look');line(tn,b2,'score');line(tn,b2,'inventory');line(tn,b2,'help');line(tn,b2,'west');line(tn,b2,'east');line(tn,b2,'m2probe',1.0)
+          second=re.sub(r'\s+',' ',txt(b2));print(txt(b2));required=['【 平民 】持久測試 (Mthree)','目前是等級 1 的平民','男性人類','客棧大堂','廚房','M2PROBE'];miss=[x for x in required if x not in second]
+          if miss:sys.exit('M3 FAIL: relogin/basic-command evidence missing: '+repr(miss))
+          m2=re.search(r'M2PROBE(.*?)STRTEST=',second);attrs2=dict((k,int(v)) for k,v,e in re.findall(r'(str|cor|int|spi|cps|dex|con|wis)=(\d+)/(\d+)',m2.group(1) if m2 else ''))
+          if attrs2!=attrs:sys.exit('M3 FAIL: attributes changed across quit/relogin: '+repr((attrs,attrs2)))
+          print('M3 PASS PERSISTENCE: same character recognized after quit and relogin.');print('M3 PASS ATTRIBUTES:',attrs2);print('M3 PASS COMMANDS: look, score, inventory, help, west/east movement executed after relogin.');line(tn,b2,'quit',.8);tn.close()
           PY
       - name: Stop Original ES2
         if: always()
-        run: if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
+        run: |
+          if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
       - name: Record M3 result
-        run: echo 'M3 PASS: character persisted through quit/relogin with identity and attributes intact; core commands and movement remained usable.'
+        run: |
+          echo 'M3 PASS: character persisted through quit/relogin with identity and attributes intact; core commands and movement remained usable.'
