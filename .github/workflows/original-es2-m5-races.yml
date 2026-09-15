@@ -1,0 +1,113 @@
+name: Original ES2 M5 Races
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [build/executable-mud-phase1]
+    paths: ['.github/workflows/original-es2-m5-races.yml','scripts/bootstrap_original_es2.sh','original_es2/runtime/**']
+  pull_request:
+    paths: ['.github/workflows/original-es2-m5-races.yml','scripts/bootstrap_original_es2.sh','original_es2/runtime/**']
+
+jobs:
+  m5-races:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ES2-KING
+        uses: actions/checkout@v4
+      - name: Install build prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build bison netcat-openbsd
+          python -m pip install --upgrade cmake
+      - name: Bootstrap Original ES2 and Neolith
+        run: bash scripts/bootstrap_original_es2.sh
+      - name: Verify Original ES2 race source baseline
+        run: |
+          test -f .runtime/original-es2/mudlib/daemon/race/human.c
+          test -f .runtime/original-es2/mudlib/daemon/race/avatar.c
+          grep -q '13 + random(6)' .runtime/original-es2/mudlib/daemon/race/human.c
+          grep -q '16 + random(3)' .runtime/original-es2/mudlib/daemon/race/avatar.c
+          grep -q 'add_temp ("apply/armor", 5)' .runtime/original-es2/mudlib/daemon/race/avatar.c
+          echo 'M5 SOURCE PASS: current Original ES2 race baseline contains human and avatar daemons.'
+      - name: Install M5 runtime-only race probe
+        run: |
+          cat > .runtime/original-es2/mudlib/cmds/usr/m5probe.c <<'LPC'
+          inherit F_CLEAN_UP;
+          int main(object me,string arg){
+            string *keys=({"str","cor","int","spi","cps","dex","con","wis"}); string k,out="M5PROBE";
+            foreach(k in keys) out+=sprintf(" %s=%d/%d",k,me->query_attr(k,1),me->query_attr(k));
+            out+=sprintf(" RACE=%s LEVEL=%d ARMOR=%d HP=%d/%d GIN=%d/%d KEE=%d/%d SEN=%d/%d",me->query_race(),me->query_level(),me->query_temp("apply/armor"),me->query_stat("HP"),me->query_stat_maximum("HP"),me->query_stat("gin"),me->query_stat_maximum("gin"),me->query_stat("kee"),me->query_stat_maximum("kee"),me->query_stat("sen"),me->query_stat_maximum("sen"));
+            write(out+"\n"); return 1;
+          }
+          LPC
+      - name: Configure Neolith
+        working-directory: .runtime/original-es2/neolith
+        run: cmake --preset linux -DBUILD_TESTING=OFF
+      - name: Build Neolith
+        working-directory: .runtime/original-es2/neolith
+        run: cmake --build --preset dev-linux
+      - name: Locate driver executable
+        run: |
+          DRIVER="$(find .runtime/original-es2/neolith/out -type f -name neolith -perm -111 | head -n 1)"; test -n "$DRIVER"; echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"
+      - name: Boot Original ES2 Mudlib
+        shell: bash
+        run: |
+          set -euo pipefail; cd .runtime/original-es2; DRIVER_ABS="$(realpath "$GITHUB_WORKSPACE/$DRIVER")"; "$DRIVER_ABS" -f neolith.conf -c > "$RUNNER_TEMP/es2-m5-boot.log" 2>&1 & PID=$!; echo "ES2_PID=$PID" >> "$GITHUB_ENV"
+          for i in $(seq 1 30); do kill -0 "$PID" 2>/dev/null || break; if nc -z 127.0.0.1 4000; then exit 0; fi; sleep 1; done; cat "$RUNNER_TEMP/es2-m5-boot.log"; exit 1
+      - name: M5 live Human and Avatar race verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import telnetlib,time,re,sys
+          ANSI=re.compile(r'\x1b\[[0-9;?]*[ -/]*[@-~]')
+          def session(): return telnetlib.Telnet('127.0.0.1',4000,timeout=5)
+          def read(tn,b,t=.8):
+            end=time.time()+t
+            while time.time()<end:
+              try:
+                d=tn.read_very_eager()
+                if d:b.extend(d)
+              except (EOFError,ConnectionResetError,BrokenPipeError,OSError):break
+              time.sleep(.05)
+          def line(tn,b,s,t=.8):
+            try:tn.write(s.encode()+b'\r\n')
+            except OSError:return
+            read(tn,b,t)
+          def key(tn,b,s,t=.8):tn.write(s.encode());read(tn,b,t)
+          def text(b):return ANSI.sub('',b.decode(errors='replace'))
+          def create(uid,pw,name,avatar=False):
+            tn=session();b=bytearray();read(tn,b,1);line(tn,b,uid);key(tn,b,'Y');line(tn,b,pw);line(tn,b,pw);line(tn,b,'none')
+            if avatar:
+              key(tn,b,'\x1b[B',.5); key(tn,b,'\r',.8)
+            else:key(tn,b,'\r',.8)
+            key(tn,b,'M');line(tn,b,name);key(tn,b,'Y',1.5);line(tn,b,'m5probe',1.0)
+            out=text(b);print(out);return tn,b,re.sub(r'\s+',' ',out)
+          tn,b,h=create('mfiveh','m5hpass','人類測試',False)
+          if 'human 人類是最常見的種族' not in h or 'avatar' not in h:sys.exit('M5 FAIL: race selection menu did not expose current Original ES2 human/avatar baseline')
+          mh=re.search(r'M5PROBE(.*?)(?:\n|$)',h)
+          if not mh or 'RACE=human' not in mh.group(1):sys.exit('M5 FAIL: live Human race probe missing')
+          hv=[int(v) for k,v,e in re.findall(r'(str|cor|int|spi|cps|dex|con|wis)=(\d+)/(\d+)',mh.group(1))]
+          if len(hv)!=8 or any(not 13<=v<=18 for v in hv):sys.exit('M5 FAIL: Human base attributes outside 13..18: '+repr(hv))
+          try:line(tn,b,'quit',.3);tn.close()
+          except OSError:pass
+          tn2,b2,a=create('mfivea','m5apass','化身測試',True)
+          ma=re.search(r'M5PROBE(.*?)(?:\n|$)',a)
+          if not ma or 'RACE=avatar' not in ma.group(1):sys.exit('M5 FAIL: live Avatar selection/probe missing')
+          av=[int(v) for k,v,e in re.findall(r'(str|cor|int|spi|cps|dex|con|wis)=(\d+)/(\d+)',ma.group(1))]
+          if len(av)!=8 or any(not 16<=v<=18 for v in av):sys.exit('M5 FAIL: Avatar base attributes outside 16..18: '+repr(av))
+          if 'ARMOR=5' not in ma.group(1):sys.exit('M5 FAIL: Avatar natural armor +5 not active at runtime')
+          if not all(x in ma.group(1) for x in ['GIN=30/30','KEE=30/30','SEN=30/30']):sys.exit('M5 FAIL: Avatar initial Gin/Kee/Sen baseline invalid')
+          print('M5 PASS HUMAN: live Human creation uses eight base attributes in Original ES2 range 13..18.')
+          print('M5 PASS AVATAR: live Avatar creation uses eight base attributes in range 16..18 and natural armor +5.')
+          print('M5 PASS RACES: current executable Original ES2 race-selection framework verified end-to-end for its registered Human and Avatar baseline.')
+          try:line(tn2,b2,'quit',.3);tn2.close()
+          except OSError:pass
+          PY
+      - name: Stop Original ES2
+        if: always()
+        run: |
+          if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
+      - name: Record M5 result
+        run: |
+          echo 'M5 PASS: current Original ES2 Human/Avatar race framework, initialization, and runtime effects verified.'
