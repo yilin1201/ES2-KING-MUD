@@ -21,31 +21,24 @@ jobs:
     steps:
       - name: Checkout ES2-KING
         uses: actions/checkout@v4
-
       - name: Install build prerequisites
         run: |
           sudo apt-get update
           sudo apt-get install -y ninja-build bison netcat-openbsd
           python -m pip install --upgrade cmake
-
       - name: Bootstrap Original ES2 and Neolith
         run: bash scripts/bootstrap_original_es2.sh
-
       - name: Configure Neolith
         working-directory: .runtime/original-es2/neolith
         run: cmake --preset linux -DBUILD_TESTING=OFF
-
       - name: Build Neolith
         working-directory: .runtime/original-es2/neolith
         run: cmake --build --preset dev-linux
-
       - name: Locate driver executable
         run: |
           DRIVER="$(find .runtime/original-es2/neolith/out -type f -name neolith -perm -111 | head -n 1)"
           test -n "$DRIVER"
           echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"
-          echo "Neolith executable: $DRIVER"
-
       - name: Boot Original ES2 Mudlib
         shell: bash
         run: |
@@ -63,30 +56,25 @@ jobs:
           done
           cat "$RUNNER_TEMP/es2-boot.log" || true
           test "$BOOT_OK" -eq 1
-
       - name: M1 create Human/Commoner/Lv1 and enter world
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import socket, time, re, sys
-          HOST, PORT = '127.0.0.1', 4000
+          import telnetlib, time, re, sys
+          tn = telnetlib.Telnet('127.0.0.1', 4000, timeout=5)
           transcript = bytearray()
-          s = socket.create_connection((HOST, PORT), timeout=5)
-          s.settimeout(0.25)
 
           def read_for(seconds=1.0):
               end = time.time() + seconds
               while time.time() < end:
-                  try:
-                      data = s.recv(8192)
-                      if not data: break
+                  data = tn.read_very_eager()
+                  if data:
                       transcript.extend(data)
-                  except socket.timeout:
-                      pass
+                  time.sleep(0.05)
 
           def send(line, wait=0.8):
-              s.sendall(line.encode('utf-8') + b'\n')
+              tn.write(line.encode('utf-8') + b'\n')
               read_for(wait)
 
           read_for(1.0)
@@ -103,15 +91,13 @@ jobs:
           send('score')
           send('north', 1.0)
           read_for(0.5)
-          s.close()
+          tn.close()
 
           text = transcript.decode('utf-8', errors='replace')
           clean = re.sub(r'\x1b\[[0-9;?]*[ -/]*[@-~]', '', text)
-          open('/tmp/es2-m1.txt', 'w', encoding='utf-8').write(clean)
           print('----- M1 transcript -----')
           print(clean)
           print('-------------------------')
-
           required = [
               ('login', '您的使用者代號'),
               ('race', '選擇你的角色所屬的種族'),
@@ -123,12 +109,10 @@ jobs:
               print('M1 FAIL missing stages:', ', '.join(missing), file=sys.stderr)
               sys.exit(1)
           PY
-
       - name: Stop Original ES2
         if: always()
         run: |
           if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
-
       - name: Record M1 result
         run: |
           echo 'M1 PASS: login, character creation, Human selection, world entry and gameplay command probe completed.'
