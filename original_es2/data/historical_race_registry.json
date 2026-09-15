@@ -1,0 +1,28 @@
+{
+  "schema": "original-es2-historical-race-registry-v1",
+  "status": "evidence_registry_not_runtime_implementation",
+  "rules": {
+    "no_invented_initializers": true,
+    "no_invented_race_effects": true,
+    "original_and_expansion_separated": true
+  },
+  "races": [
+    {"id":"blackteeth","zh":"黑齒","karma":5,"evidence":"player_record_2014"},
+    {"id":"human","zh":"人類","karma":5,"evidence":"player_record_2014+current_source"},
+    {"id":"yenhold","zh":"厭火","karma":5,"evidence":"player_record_2014"},
+    {"id":"woochan","zh":"無腸","karma":5,"evidence":"player_record_2014"},
+    {"id":"dingling","zh":"釘靈","karma":10,"evidence":"player_record_2014"},
+    {"id":"jiaojao","zh":"焦僥","karma":10,"evidence":"player_record_2014"},
+    {"id":"rainnar","zh":"雨師妾","karma":25,"evidence":"player_record_2014"},
+    {"id":"ashura","zh":"阿修羅","karma":30,"evidence":"player_record_2014"},
+    {"id":"headless","zh":"形天","karma":25,"evidence":"player_record_2014"},
+    {"id":"yaksa","zh":"夜叉","karma":30,"evidence":"player_record_2014"},
+    {"id":"malik","zh":"巫首","karma":30,"evidence":"player_record_2014"}
+  ],
+  "notes": [
+    "2014 archived gameplay record shows all 11 selectable races after reincarnation and their karma costs.",
+    "Historical wizard index independently lists nine race help topics; who.c preserves historical filters including malik.",
+    "The archived gameplay spelling is 形天 for headless. Do not silently normalize it to 刑天 in Original ES2 data.",
+    "Exact missing historical race initializer formulas and special effects remain unresolved and are intentionally absent."
+  ]
+}
