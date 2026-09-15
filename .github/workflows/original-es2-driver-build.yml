@@ -63,68 +63,38 @@ jobs:
           python - <<'PY'
           import telnetlib, time, re, sys
           tn = telnetlib.Telnet('127.0.0.1', 4000, timeout=5)
-          transcript = bytearray()
-          connection_closed = False
+          transcript = bytearray(); connection_closed = False
           def read_for(seconds=1.0):
               global connection_closed
-              end = time.time() + seconds
-              while time.time() < end and not connection_closed:
+              end=time.time()+seconds
+              while time.time()<end and not connection_closed:
                   try:
-                      data = tn.read_very_eager()
+                      data=tn.read_very_eager()
                       if data: transcript.extend(data)
-                  except (EOFError, ConnectionResetError, BrokenPipeError, OSError):
-                      connection_closed = True
-                      break
+                  except (EOFError,ConnectionResetError,BrokenPipeError,OSError): connection_closed=True; break
                   time.sleep(0.05)
-          def send_line(line, wait=0.8):
+          def send_line(line,wait=0.8):
               global connection_closed
-              if connection_closed: return
-              try:
-                  tn.write(line.encode('utf-8') + bytes((13, 10)))
-              except (EOFError, ConnectionResetError, BrokenPipeError, OSError):
-                  connection_closed = True
-                  return
+              if connection_closed:return
+              try: tn.write(line.encode('utf-8')+bytes((13,10)))
+              except (EOFError,ConnectionResetError,BrokenPipeError,OSError): connection_closed=True; return
               read_for(wait)
-          def send_key(key, wait=0.8):
+          def send_key(key,wait=0.8):
               global connection_closed
-              if connection_closed: return
-              try:
-                  tn.write(key.encode('ascii'))
-              except (EOFError, ConnectionResetError, BrokenPipeError, OSError):
-                  connection_closed = True
-                  return
+              if connection_closed:return
+              try: tn.write(key.encode('ascii'))
+              except (EOFError,ConnectionResetError,BrokenPipeError,OSError): connection_closed=True; return
               read_for(wait)
-          read_for(1.0)
-          send_line('mone')
-          send_key('Y')
-          send_line('m1pass')
-          send_line('m1pass')
-          send_line('none')
-          send_key('\r')
-          send_key('M')
-          send_line('測試玩家')
-          send_key('Y', 1.5)
-          send_line('look')
-          send_line('score')
-          send_line('west', 1.0)
-          send_line('quit', 1.0)
-          read_for(0.5)
+          read_for(1); send_line('mone'); send_key('Y'); send_line('m1pass'); send_line('m1pass'); send_line('none'); send_key('\r'); send_key('M'); send_line('測試玩家'); send_key('Y',1.5); send_line('look'); send_line('score'); send_line('west',1); send_line('quit',1); read_for(.5)
           try: tn.close()
           except OSError: pass
-          text = transcript.decode('utf-8', errors='replace')
-          clean = re.sub(r'\x1b\[[0-9;?]*[ -/]*[@-~]', '', text)
-          normalized = re.sub(r'\s+', ' ', clean)
-          print('----- M1/M2 live transcript -----')
-          print(clean)
-          print('---------------------------------')
-          required = [('login','您的使用者代號'),('race','選擇你的角色所屬的種族'),('name','您的顯示名稱'),('created','的冒險開始了'),('spawn','客棧大堂'),('commoner','【 平民 】'),('level1','目前是等級 1 的平民'),('human','男性人類'),('hp','形體'),('gin','精'),('kee','氣'),('sen','神'),('food','食物'),('water','飲水'),('fatigue','疲勞'),('movement','廚房'),('return_exit','這裡唯一的出口是 east')]
-          missing = [label for label, token in required if token not in normalized]
-          if missing:
-              print('M1/M2 FAIL missing evidence:', ', '.join(missing), file=sys.stderr); sys.exit(1)
-          if not connection_closed and '歡迎下次再來' not in normalized:
-              print('M1/M2 FAIL: quit neither closed the connection nor returned the farewell text.', file=sys.stderr); sys.exit(1)
-          if 'What?' in clean:
-              print('M1/M2 FAIL: gameplay probe returned an invalid command.', file=sys.stderr); sys.exit(1)
+          clean=re.sub(r'\x1b\[[0-9;?]*[ -/]*[@-~]','',transcript.decode('utf-8',errors='replace')); normalized=re.sub(r'\s+',' ',clean)
+          print('----- M1/M2 live transcript -----'); print(clean); print('---------------------------------')
+          required=[('login','您的使用者代號'),('race','選擇你的角色所屬的種族'),('name','您的顯示名稱'),('created','的冒險開始了'),('spawn','客棧大堂'),('commoner','【 平民 】'),('level1','目前是等級 1 的平民'),('human','男性人類'),('hp','形體'),('gin','精'),('kee','氣'),('sen','神'),('food','食物'),('water','飲水'),('fatigue','疲勞'),('movement','廚房'),('return_exit','這裡唯一的出口是 east')]
+          missing=[label for label,token in required if token not in normalized]
+          if missing: print('M1/M2 FAIL missing evidence:',','.join(missing),file=sys.stderr); sys.exit(1)
+          if not connection_closed and '歡迎下次再來' not in normalized: print('M1/M2 FAIL: quit did not end session.',file=sys.stderr); sys.exit(1)
+          if 'What?' in clean: print('M1/M2 FAIL invalid command.',file=sys.stderr); sys.exit(1)
           print('M1/M2 quit PASS: Original ES2 accepted quit and ended the player session.')
           PY
       - name: M2 verify persisted Human attributes
@@ -133,41 +103,32 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
-          import re, sys
-          root = Path('.runtime/original-es2')
-          candidates = list(root.rglob('mone.o'))
-          print('M2 save candidates:', [str(p) for p in candidates])
+          import re,sys
+          root=Path('.runtime/original-es2')
+          named=[p for p in root.rglob('*') if p.is_file() and 'mone' in p.name.lower()]
+          print('M2 files containing mone:',[str(p) for p in named])
+          data_files=[p for p in root.rglob('*') if p.is_file() and '/data/' in str(p).replace('\\','/')]
+          print('M2 generated data files:',[str(p) for p in data_files if '.git' not in str(p)][:100])
+          candidates=[p for p in named if '/user/' in str(p).replace('\\','/')]
           if not candidates:
-              print('M2 FAIL: character quit succeeded but live character save file mone.o was not found.', file=sys.stderr); sys.exit(1)
-          data = candidates[0].read_text(encoding='utf-8', errors='replace')
-          print('----- M2 persisted character evidence -----')
-          for line in data.splitlines():
-              if any(k in line.lower() for k in ('attribute','statistic','race','class','level')):
-                  print(line)
-          print('-------------------------------------------')
-          attrs = {}
+              print('M2 FAIL: no persisted user character file found; trace above records actual generated data paths.',file=sys.stderr); sys.exit(1)
+          p=candidates[0]; data=p.read_text(encoding='utf-8',errors='replace'); print('M2 character save path:',p); print('----- M2 persisted character evidence -----'); print(data[:12000]); print('-------------------------------------------')
+          attrs={}
           for key in ('str','cor','int','spi','cps','dex','con','wis'):
-              patterns = [rf'"{key}"\s*:\s*(\d+)', rf'{key}\s+(\d+)']
-              for pattern in patterns:
-                  m = re.search(pattern, data)
-                  if m:
-                      attrs[key] = int(m.group(1)); break
-          print('M2 parsed raw attributes:', attrs)
-          if set(attrs) != {'str','cor','int','spi','cps','dex','con','wis'}:
-              print('M2 FAIL: could not parse all eight live attributes.', file=sys.stderr); sys.exit(1)
-          bad = {k:v for k,v in attrs.items() if not 13 <= v <= 18}
-          if bad:
-              print('M2 FAIL: Human raw attribute outside 13..18:', bad, file=sys.stderr); sys.exit(1)
-          for token, label in [('human','human'),('commoner','commoner')]:
-              if token not in data:
-                  print('M2 FAIL: persisted character missing '+label, file=sys.stderr); sys.exit(1)
-          print('M2 LIVE ATTRIBUTES:', ' '.join(f'{k}={attrs[k]}' for k in ('str','cor','int','spi','cps','dex','con','wis')))
-          print('M2 attribute range PASS: all Human raw attributes are 13..18.')
+              for pattern in (rf'"{key}"\s*:\s*(\d+)',rf'{key}\s+(\d+)',rf'"{key}"\s*,\s*(\d+)'):
+                  m=re.search(pattern,data)
+                  if m: attrs[key]=int(m.group(1)); break
+          print('M2 parsed raw attributes:',attrs)
+          if set(attrs)!={'str','cor','int','spi','cps','dex','con','wis'}: print('M2 FAIL: could not parse all eight live attributes.',file=sys.stderr); sys.exit(1)
+          bad={k:v for k,v in attrs.items() if not 13<=v<=18}
+          if bad: print('M2 FAIL: Human raw attribute outside 13..18:',bad,file=sys.stderr); sys.exit(1)
+          for token in ('human','commoner'):
+              if token not in data: print('M2 FAIL: persisted character missing '+token,file=sys.stderr); sys.exit(1)
+          print('M2 LIVE ATTRIBUTES:',' '.join(f'{k}={attrs[k]}' for k in ('str','cor','int','spi','cps','dex','con','wis'))); print('M2 attribute range PASS: all Human raw attributes are 13..18.')
           PY
       - name: Stop Original ES2
         if: always()
         run: |
           if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
       - name: Record M2 result
-        run: |
-          echo 'M2 PASS: live Human/Commoner/Lv.1 creation persisted all eight Original ES2 raw attributes in the Human 13..18 range; live score separately verifies HP and Gin/Kee/Sen.'
+        run: echo 'M2 PASS: live Human/Commoner/Lv.1 persisted all eight Original ES2 raw attributes in the Human 13..18 range.'
