@@ -9,13 +9,18 @@ on:
 
 jobs:
   race-phase2:
-    # Job／測試工作：在 Linux 測試環境執行 M6-M9 驗證。
+    # Job／測試工作：在 Linux 測試環境執行 M6-M9 靜態、Runtime 與真實 MUD 驗證。
     runs-on: ubuntu-latest
     steps:
       - name: Checkout／取得專案程式
         uses: actions/checkout@v4
       - name: Static verification／靜態驗證
         run: bash scripts/test_race_phase2_static.sh
+      - name: Install build prerequisites／安裝編譯工具
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build bison netcat-openbsd
+          python -m pip install --upgrade cmake
       - name: Bootstrap runtime／建立 Original ES2 執行環境
         run: bash scripts/bootstrap_original_es2.sh
       - name: Apply race overlay／套用歷史種族執行環境覆蓋層
@@ -28,18 +33,90 @@ jobs:
           # M6-M9：八項出生屬性全部暫定為 50。
           for race in headless yaksa ashura rainnar; do
             test -f "$root/$race.c"
-            for attr in str cps int spi cor dex con wis; do
-              grep -q "\"$attr\":50" "$root/$race.c"
-            done
+            for attr in str cps int spi cor dex con wis; do grep -q "\"$attr\":50" "$root/$race.c"; done
           done
           # 其餘歷史重建種族：八項出生屬性暫定 25；Human/Avatar 保留 Original 基準。
           for race in blackteeth yenhold woochan dingling jiaojao malik; do
             test -f "$root/$race.c"
-            for attr in str cps int spi cor dex con wis; do
-              grep -q "\"$attr\":25" "$root/$race.c"
-            done
+            for attr in str cps int spi cor dex con wis; do grep -q "\"$attr\":25" "$root/$race.c"; done
           done
           echo 'M6-M9 RUNTIME FILE PASS／執行環境種族檔案驗證通過'
       - name: Regression protection／Human Avatar 回歸保護
         # Regression Test／回歸測試：確認 M6-M9 新增內容沒有破壞已完成的 M2/M5 Original 基準。
         run: bash scripts/test_race_phase2_regression.sh
+      - name: Install live race probe／安裝真實角色種族探針
+        run: |
+          cat > .runtime/original-es2/mudlib/cmds/usr/raceprobe.c <<'LPC'
+          /* raceprobe／種族探針：僅存在測試 Runtime，用來讀取角色實際種族與八項出生屬性。 */
+          inherit F_CLEAN_UP;
+          int main(object me,string arg){
+            string *keys=({"str","cps","int","spi","cor","dex","con","wis"}); string k,out="RACEPROBE";
+            foreach(k in keys) out+=sprintf(" %s=%d/%d",k,me->query_attr(k,1),me->query_attr(k));
+            out+=sprintf(" RACE=%s GIN=%d/%d KEE=%d/%d SEN=%d/%d",me->query_race(),me->query_stat("gin"),me->query_stat_maximum("gin"),me->query_stat("kee"),me->query_stat_maximum("kee"),me->query_stat("sen"),me->query_stat_maximum("sen"));
+            write(out+"\n"); return 1;
+          }
+          LPC
+      - name: Configure Neolith／設定 MUD Driver 編譯
+        working-directory: .runtime/original-es2/neolith
+        run: cmake --preset linux -DBUILD_TESTING=OFF
+      - name: Build Neolith／編譯 MUD Driver
+        working-directory: .runtime/original-es2/neolith
+        run: cmake --build --preset dev-linux
+      - name: Locate driver／尋找 MUD Driver 執行檔
+        run: |
+          DRIVER="$(find .runtime/original-es2/neolith/out -type f -name neolith -perm -111 | head -n 1)"
+          test -n "$DRIVER"
+          echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"
+      - name: Boot MUD／啟動 Original ES2
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd .runtime/original-es2
+          DRIVER_ABS="$(realpath "$GITHUB_WORKSPACE/$DRIVER")"
+          "$DRIVER_ABS" -f neolith.conf -c > "$RUNNER_TEMP/es2-race-phase2-boot.log" 2>&1 &
+          PID=$!; echo "ES2_PID=$PID" >> "$GITHUB_ENV"
+          for i in $(seq 1 30); do
+            kill -0 "$PID" 2>/dev/null || break
+            if nc -z 127.0.0.1 4000; then exit 0; fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/es2-race-phase2-boot.log"; exit 1
+      - name: Live M6-M9 character verification／真實角色建立與屬性驗證
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          # Telnet／文字連線協定：模擬真實玩家從 4000 Port（連線埠）登入 MUD 建立角色。
+          import telnetlib,time,re,sys
+          ANSI=re.compile(r'\x1b\[[0-9;?]*[ -/]*[@-~]')
+          def read(tn,b,t=.8):
+              end=time.time()+t
+              while time.time()<end:
+                  try:
+                      d=tn.read_very_eager()
+                      if d:b.extend(d)
+                  except (EOFError,ConnectionResetError,BrokenPipeError,OSError):break
+                  time.sleep(.05)
+          def line(tn,b,s,t=.8): tn.write(s.encode()+b'\r\n'); read(tn,b,t)
+          def key(tn,b,s,t=.5): tn.write(s.encode()); read(tn,b,t)
+          def clean(b): return ANSI.sub('',b.decode(errors='replace'))
+          # registry_index／種族清單位置：依 Runtime logind.c 的 user_race 順序，用方向鍵選到指定種族。
+          cases=[('rainnar',7,'m6rain','雨師妾測試'),('ashura',8,'m7ashu','阿修羅測試'),('headless',9,'m8head','形天測試'),('yaksa',10,'m9yaks','夜叉測試')]
+          for race,index,uid,name in cases:
+              tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); b=bytearray(); read(tn,b,1)
+              line(tn,b,uid); key(tn,b,'Y'); line(tn,b,'phase2pass'); line(tn,b,'phase2pass'); line(tn,b,'none')
+              for _ in range(index): key(tn,b,'\x1b[B',.12)
+              key(tn,b,'\r',.8); key(tn,b,'M'); line(tn,b,name); key(tn,b,'Y',1.5); line(tn,b,'raceprobe',1.0)
+              out=clean(b); print(out)
+              match=re.search(r'RACEPROBE(.*?)(?:\n|$)',out)
+              if not match or f'RACE={race}' not in match.group(1): sys.exit(f'M6-M9 FAIL／失敗：{race} 真實角色種族不符')
+              values=[int(v) for _,v,_ in re.findall(r'(str|cps|int|spi|cor|dex|con|wis)=(\d+)/(\d+)',match.group(1))]
+              if len(values)!=8 or any(v!=50 for v in values): sys.exit(f'M6-M9 FAIL／失敗：{race} 八項出生屬性不是 50：{values}')
+              if not all(x in match.group(1) for x in ['GIN=30/30','KEE=30/30','SEN=30/30']): sys.exit(f'M6-M9 FAIL／失敗：{race} 精氣神初始值異常')
+              line(tn,b,'look',.4); line(tn,b,'west',.4); line(tn,b,'east',.4); line(tn,b,'quit',.3); tn.close()
+              print(f'M6-M9 LIVE PASS／真實角色通過：{race}，八屬性=50，精氣神=30，基本移動指令完成。')
+          PY
+      - name: Stop MUD／停止測試伺服器
+        if: always()
+        run: |
+          if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
