@@ -64,17 +64,35 @@ jobs:
           import telnetlib, time, re, sys
           tn = telnetlib.Telnet('127.0.0.1', 4000, timeout=5)
           transcript = bytearray()
+          connection_closed = False
           def read_for(seconds=1.0):
+              global connection_closed
               end = time.time() + seconds
-              while time.time() < end:
-                  data = tn.read_very_eager()
-                  if data: transcript.extend(data)
+              while time.time() < end and not connection_closed:
+                  try:
+                      data = tn.read_very_eager()
+                      if data: transcript.extend(data)
+                  except (EOFError, ConnectionResetError, BrokenPipeError, OSError):
+                      connection_closed = True
+                      break
                   time.sleep(0.05)
           def send_line(line, wait=0.8):
-              tn.write(line.encode('utf-8') + bytes((13, 10)))
+              global connection_closed
+              if connection_closed: return
+              try:
+                  tn.write(line.encode('utf-8') + bytes((13, 10)))
+              except (EOFError, ConnectionResetError, BrokenPipeError, OSError):
+                  connection_closed = True
+                  return
               read_for(wait)
           def send_key(key, wait=0.8):
-              tn.write(key.encode('ascii'))
+              global connection_closed
+              if connection_closed: return
+              try:
+                  tn.write(key.encode('ascii'))
+              except (EOFError, ConnectionResetError, BrokenPipeError, OSError):
+                  connection_closed = True
+                  return
               read_for(wait)
           read_for(1.0)
           send_line('mone')
@@ -91,7 +109,8 @@ jobs:
           send_line('west', 1.0)
           send_line('quit', 1.0)
           read_for(0.5)
-          tn.close()
+          try: tn.close()
+          except OSError: pass
           text = transcript.decode('utf-8', errors='replace')
           clean = re.sub(r'\x1b\[[0-9;?]*[ -/]*[@-~]', '', text)
           normalized = re.sub(r'\s+', ' ', clean)
