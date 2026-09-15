@@ -28,19 +28,18 @@ jobs:
           # M6-M9：八項出生屬性全部暫定為 50。
           for race in headless yaksa ashura rainnar; do
             test -f "$root/$race.c"
-            grep -q '"str":50' "$root/$race.c"
-            grep -q '"cps":50' "$root/$race.c"
-            grep -q '"int":50' "$root/$race.c"
-            grep -q '"spi":50' "$root/$race.c"
-            grep -q '"cor":50' "$root/$race.c"
-            grep -q '"dex":50' "$root/$race.c"
-            grep -q '"con":50' "$root/$race.c"
-            grep -q '"wis":50' "$root/$race.c"
+            for attr in str cps int spi cor dex con wis; do
+              grep -q "\"$attr\":50" "$root/$race.c"
+            done
           done
-          # 其餘歷史重建種族：暫定八項出生屬性 25；Human 保留 Original M2 基準，不在此覆寫。
+          # 其餘歷史重建種族：八項出生屬性暫定 25；Human/Avatar 保留 Original 基準。
           for race in blackteeth yenhold woochan dingling jiaojao malik; do
             test -f "$root/$race.c"
-            grep -q '"str":25' "$root/$race.c"
-            grep -q '"wis":25' "$root/$race.c"
+            for attr in str cps int spi cor dex con wis; do
+              grep -q "\"$attr\":25" "$root/$race.c"
+            done
           done
           echo 'M6-M9 RUNTIME FILE PASS／執行環境種族檔案驗證通過'
+      - name: Regression protection／Human Avatar 回歸保護
+        # Regression Test／回歸測試：確認 M6-M9 新增內容沒有破壞已完成的 M2/M5 Original 基準。
+        run: bash scripts/test_race_phase2_regression.sh
