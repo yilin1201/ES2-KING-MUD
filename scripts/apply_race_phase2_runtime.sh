@@ -86,7 +86,15 @@ block='string *user_race = ({\n' + ''.join(f'    "{r}",\n' for r in races) + '})
 s,n=re.subn(r'string \*user_race = \(\{.*?\}\);',block,s,count=1,flags=re.S)
 if n != 1:
     raise SystemExit('Could not replace user_race registry／無法更新登入種族清單')
+
+# Race acceptance／種族接受邏輯：目前保存的 Original logind.c 的 get_race() 只接受 human/avatar。
+# 重建 Runtime 必須同步讓歷史種族通過 switch，否則游標雖可選到種族，確認後仍會被退回選單。
+marker='''        case "avatar":\n            race = "avatar";\n            break;'''
+extra=''.join(f'''\n        case "{race}":\n            race = "{race}";\n            break;''' for race in races if race not in ('human','avatar'))
+if marker not in s:
+    raise SystemExit('Could not locate get_race switch／找不到登入種族接受邏輯')
+s=s.replace(marker, marker+extra, 1)
 p.write_text(s)
 PY
 
-echo 'M6-M9 RUNTIME OVERLAY PASS／執行環境覆蓋完成：新增 10 個歷史重建種族，保留 Original Human/Avatar；M6-M9=50，其餘重建種族=25。'
+echo 'M6-M9 RUNTIME OVERLAY PASS／執行環境覆蓋完成：新增 10 個歷史重建種族，保留 Original Human/Avatar；登入流程已接受歷史種族；M6-M9=50，其餘重建種族=25。'
