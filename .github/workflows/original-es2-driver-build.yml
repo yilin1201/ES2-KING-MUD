@@ -45,51 +45,82 @@ jobs:
           set -euo pipefail
           cd .runtime/original-es2
           DRIVER_ABS="$(realpath "$GITHUB_WORKSPACE/$DRIVER")"
-          echo "Starting Original ES2 with: $DRIVER_ABS -f neolith.conf -c"
           "$DRIVER_ABS" -f neolith.conf -c > "$RUNNER_TEMP/es2-boot.log" 2>&1 &
           PID=$!
           echo "ES2_PID=$PID" >> "$GITHUB_ENV"
-
           BOOT_OK=0
           for i in $(seq 1 30); do
-            if ! kill -0 "$PID" 2>/dev/null; then
-              echo "Neolith exited during boot."
-              break
-            fi
-            if nc -z 127.0.0.1 4000; then
-              BOOT_OK=1
-              echo "Original ES2 is listening on TCP port 4000."
-              break
-            fi
+            if ! kill -0 "$PID" 2>/dev/null; then break; fi
+            if nc -z 127.0.0.1 4000; then BOOT_OK=1; break; fi
             sleep 1
           done
-
-          echo '----- Original ES2 boot log -----'
           cat "$RUNNER_TEMP/es2-boot.log" || true
-          echo '---------------------------------'
+          test "$BOOT_OK" -eq 1
 
-          if [[ "$BOOT_OK" -ne 1 ]]; then
-            echo "M0 FAIL: process did not remain alive and listen on port 4000 within 30 seconds." >&2
-            exit 1
-          fi
-
-      - name: Probe login banner
+      - name: M1 create Human/Commoner/Lv1 and enter world
         shell: bash
         run: |
           set -euo pipefail
-          timeout 5 bash -c 'exec 3<>/dev/tcp/127.0.0.1/4000; cat <&3' > "$RUNNER_TEMP/es2-login.txt" 2>/dev/null || true
-          echo '----- Original ES2 login probe -----'
-          cat "$RUNNER_TEMP/es2-login.txt" || true
-          echo '------------------------------------'
-          test -s "$RUNNER_TEMP/es2-login.txt"
+          python - <<'PY'
+          import socket, time, re, sys
+          HOST, PORT = '127.0.0.1', 4000
+          transcript = bytearray()
+          s = socket.create_connection((HOST, PORT), timeout=5)
+          s.settimeout(0.25)
+
+          def read_for(seconds=1.0):
+              end = time.time() + seconds
+              while time.time() < end:
+                  try:
+                      data = s.recv(8192)
+                      if not data: break
+                      transcript.extend(data)
+                  except socket.timeout:
+                      pass
+
+          def send(line, wait=0.8):
+              s.sendall(line.encode('utf-8') + b'\n')
+              read_for(wait)
+
+          read_for(1.0)
+          send('mone')
+          send('Y')
+          send('m1pass')
+          send('m1pass')
+          send('none')
+          send('human')
+          send('M')
+          send('測試玩家')
+          send('Y', 1.5)
+          send('look')
+          send('score')
+          send('north', 1.0)
+          read_for(0.5)
+          s.close()
+
+          text = transcript.decode('utf-8', errors='replace')
+          clean = re.sub(r'\x1b\[[0-9;?]*[ -/]*[@-~]', '', text)
+          open('/tmp/es2-m1.txt', 'w', encoding='utf-8').write(clean)
+          print('----- M1 transcript -----')
+          print(clean)
+          print('-------------------------')
+
+          required = [
+              ('login', '您的使用者代號'),
+              ('race', '選擇你的角色所屬的種族'),
+              ('name', '您的顯示名稱'),
+              ('created', '的冒險開始了'),
+          ]
+          missing = [label for label, token in required if token not in clean]
+          if missing:
+              print('M1 FAIL missing stages:', ', '.join(missing), file=sys.stderr)
+              sys.exit(1)
+          PY
 
       - name: Stop Original ES2
         if: always()
         run: |
-          if [[ -n "${ES2_PID:-}" ]]; then
-            kill "$ES2_PID" 2>/dev/null || true
-          fi
+          if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
 
-      - name: Record M0 result
-        run: |
-          echo 'M0 PASS: Neolith stayed alive, Original ES2 opened TCP port 4000, and the login endpoint returned data.'
+      - name: Record M1 result
+        run: echo 'M1 PASS: login, character creation, Human selection, world entry and gameplay command probe completed.'
