@@ -131,4 +131,5 @@ jobs:
         run: |
           if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
       - name: Record M2 result
-        run: echo 'M2 PASS: live Human/Commoner/Lv.1 persisted all eight Original ES2 raw attributes in the Human 13..18 range.'
+        run: |
+          echo 'M2 PASS: live Human/Commoner/Lv.1 persisted all eight Original ES2 raw attributes in the Human 13..18 range.'
