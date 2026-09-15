@@ -10,7 +10,9 @@ Original ES2 races are reconstructed only from recoverable evidence. Missing rac
 
 ## Confirmed source cross-check
 
-Archived Original ES2 wizard documentation lists race topics for `human`, `woochan`, `jiaojao`, `yenhold`, `rainnar`, `ashura`, `headless`, `yaksa`, and `blackteeth`. Current Original `who.c` independently preserves historical race filters including `headless` and `malik`.
+Archived Original ES2 wizard documentation lists race topics for `human`, `woochan`, `jiaojao`, `yenhold`, `rainnar`, `ashura`, `headless`, `yaksa`, and `blackteeth`. Original `who.c` independently preserves historical race filters including `headless` and `malik`.
+
+Original `mudlib/data/chinese.o` supplies direct source mappings including `headless` → `形天`, `yaksa` → `夜叉`, `ashura` → `阿修羅`, `rainnar` → `雨師妾`, `woochan` → `無腸`, `jiaojao` → `焦僥`, `yenhold` → `厭火`, `blackteeth` → `黑齒`, `malik` → `巫首`, and `human` → `人類`.
 
 ## Archived gameplay race-selection evidence
 
@@ -30,7 +32,7 @@ A 2014 ES2 gameplay record preserves the actual reincarnation race-selection men
 | yaksa | 夜叉 | 30 |
 | malik | 巫首 | 30 |
 
-Important: archived ES2 game text spells `headless` as **形天**. Original ES2 data preserves that evidence rather than silently rewriting it as 刑天.
+Important: both Original source translation data and archived live game text spell `headless` as **形天**. Original ES2 data therefore preserves 形天 rather than silently rewriting it as 刑天.
 
 Machine-readable registry: `original_es2/data/historical_race_registry.json`.
 
@@ -45,9 +47,8 @@ Current Annihilator main exposes registered `human` and `avatar` race daemons. M
 ## M6 accelerated result
 
 PASS:
-- `headless` identity is source/player-record cross-checked.
-- All 11 archived selectable race IDs, Chinese names, and karma costs are locked.
-- Original spelling `形天` is locked for `headless`.
+- `headless` → `形天` is now confirmed by Original source and archived gameplay.
+- All 11 archived selectable race IDs, Chinese names, and karma costs are locked in a structured evidence registry.
 - No guessed initializer/effect has entered Original runtime code.
 
 Still unresolved:
