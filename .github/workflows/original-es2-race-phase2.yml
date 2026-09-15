@@ -1,0 +1,46 @@
+name: Original ES2 M6-M9 種族驗證
+
+# Workflow／工作流程：GitHub 自動執行測試的設定。
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+  pull_request:
+    branches: [main]
+
+jobs:
+  race-phase2:
+    # Job／測試工作：在 Linux 測試環境執行 M6-M9 驗證。
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得專案程式
+        uses: actions/checkout@v4
+      - name: Static verification／靜態驗證
+        run: bash scripts/test_race_phase2_static.sh
+      - name: Bootstrap runtime／建立 Original ES2 執行環境
+        run: bash scripts/bootstrap_original_es2.sh
+      - name: Apply race overlay／套用歷史種族執行環境覆蓋層
+        run: bash scripts/apply_race_phase2_runtime.sh
+      - name: Verify generated race files／確認產生的種族程式
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=.runtime/original-es2/mudlib/daemon/race
+          # M6-M9：八項出生屬性全部暫定為 50。
+          for race in headless yaksa ashura rainnar; do
+            test -f "$root/$race.c"
+            grep -q '"str":50' "$root/$race.c"
+            grep -q '"cps":50' "$root/$race.c"
+            grep -q '"int":50' "$root/$race.c"
+            grep -q '"spi":50' "$root/$race.c"
+            grep -q '"cor":50' "$root/$race.c"
+            grep -q '"dex":50' "$root/$race.c"
+            grep -q '"con":50' "$root/$race.c"
+            grep -q '"wis":50' "$root/$race.c"
+          done
+          # 其餘歷史重建種族：暫定八項出生屬性 25；Human 保留 Original M2 基準，不在此覆寫。
+          for race in blackteeth yenhold woochan dingling jiaojao malik; do
+            test -f "$root/$race.c"
+            grep -q '"str":25' "$root/$race.c"
+            grep -q '"wis":25' "$root/$race.c"
+          done
+          echo 'M6-M9 RUNTIME FILE PASS／執行環境種族檔案驗證通過'
