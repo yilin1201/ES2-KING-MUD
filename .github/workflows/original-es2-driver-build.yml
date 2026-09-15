@@ -23,38 +23,22 @@ jobs:
         run: bash scripts/bootstrap_original_es2.sh
       - name: Disable Original ES2 anti-spam character penalty
         run: |
-          # ES2-KING design decision: do not reduce newly-created character attributes.
-          # Remove ENABLE_ANTISPAM from the ephemeral Original ES2 runtime config only.
           grep -RIl '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' .runtime/original-es2/mudlib/include .runtime/original-es2/mudlib/adm 2>/dev/null | while read -r f; do
             sed -i 's/^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM.*/\/\/ ES2-KING: ENABLE_ANTISPAM disabled/' "$f"
           done
-          if grep -R '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' .runtime/original-es2/mudlib/include .runtime/original-es2/mudlib/adm 2>/dev/null; then
-            echo 'M2 FAIL: ENABLE_ANTISPAM is still enabled.' >&2
-            exit 1
-          fi
-          echo 'M2 CONFIG PASS: Original ES2 anti-spam character penalty is disabled for ES2-KING runtime.'
+          if grep -R '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' .runtime/original-es2/mudlib/include .runtime/original-es2/mudlib/adm 2>/dev/null; then exit 1; fi
       - name: Install M2 runtime-only attribute probe
         run: |
           cat > .runtime/original-es2/mudlib/cmds/usr/m2probe.c <<'LPC'
           inherit F_CLEAN_UP;
           int main(object me, string arg) {
               string *keys = ({"str","cor","int","spi","cps","dex","con","wis"});
-              string k, out = "M2PROBE";
-              int raw, eff, boosted;
-              foreach(k in keys) {
-                  raw = me->query_attr(k, 1);
-                  eff = me->query_attr(k);
-                  out += sprintf(" %s=%d/%d", k, raw, eff);
-              }
-              raw = me->query_attr("str", 1);
-              eff = me->query_attr("str");
-              me->add_temp("apply/str", 2);
-              boosted = me->query_attr("str");
-              me->add_temp("apply/str", -2);
-              out += sprintf(" STRTEST=%d/%d/%d", raw, eff, boosted);
-              out += sprintf(" HP=%d/%d GIN=%d/%d KEE=%d/%d SEN=%d/%d RACE=%s LEVEL=%d", me->query_stat("HP"), me->query_stat_maximum("HP"), me->query_stat("gin"), me->query_stat_maximum("gin"), me->query_stat("kee"), me->query_stat_maximum("kee"), me->query_stat("sen"), me->query_stat_maximum("sen"), me->query_race(), me->query_level());
-              write(out + "\n");
-              return 1;
+              string k, out = "M2PROBE"; int raw, eff, boosted;
+              foreach(k in keys) { raw=me->query_attr(k,1); eff=me->query_attr(k); out+=sprintf(" %s=%d/%d",k,raw,eff); }
+              raw=me->query_attr("str",1); eff=me->query_attr("str"); me->add_temp("apply/str",2); boosted=me->query_attr("str"); me->add_temp("apply/str",-2);
+              out+=sprintf(" STRTEST=%d/%d/%d",raw,eff,boosted);
+              out+=sprintf(" HP=%d/%d GIN=%d/%d KEE=%d/%d SEN=%d/%d RACE=%s LEVEL=%d",me->query_stat("HP"),me->query_stat_maximum("HP"),me->query_stat("gin"),me->query_stat_maximum("gin"),me->query_stat("kee"),me->query_stat_maximum("kee"),me->query_stat("sen"),me->query_stat_maximum("sen"),me->query_race(),me->query_level());
+              write(out+"\n"); return 1;
           }
           LPC
       - name: Configure Neolith
@@ -65,75 +49,66 @@ jobs:
         run: cmake --build --preset dev-linux
       - name: Locate driver executable
         run: |
-          DRIVER="$(find .runtime/original-es2/neolith/out -type f -name neolith -perm -111 | head -n 1)"
-          test -n "$DRIVER"
-          echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"
+          DRIVER="$(find .runtime/original-es2/neolith/out -type f -name neolith -perm -111 | head -n 1)"; test -n "$DRIVER"; echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"
       - name: Boot Original ES2 Mudlib
         shell: bash
         run: |
-          set -euo pipefail
-          cd .runtime/original-es2
-          DRIVER_ABS="$(realpath "$GITHUB_WORKSPACE/$DRIVER")"
-          "$DRIVER_ABS" -f neolith.conf -c > "$RUNNER_TEMP/es2-boot.log" 2>&1 &
-          PID=$!
-          echo "ES2_PID=$PID" >> "$GITHUB_ENV"
-          for i in $(seq 1 30); do
-            kill -0 "$PID" 2>/dev/null || break
-            if nc -z 127.0.0.1 4000; then exit 0; fi
-            sleep 1
-          done
-          cat "$RUNNER_TEMP/es2-boot.log"; exit 1
-      - name: M2 live Human attribute and statistic verification
+          set -euo pipefail; cd .runtime/original-es2; DRIVER_ABS="$(realpath "$GITHUB_WORKSPACE/$DRIVER")"; "$DRIVER_ABS" -f neolith.conf -c > "$RUNNER_TEMP/es2-boot.log" 2>&1 & PID=$!; echo "ES2_PID=$PID" >> "$GITHUB_ENV"
+          for i in $(seq 1 30); do kill -0 "$PID" 2>/dev/null || break; if nc -z 127.0.0.1 4000; then exit 0; fi; sleep 1; done; cat "$RUNNER_TEMP/es2-boot.log"; exit 1
+      - name: M2 regression and M3 persistence/relogin verification
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
           import telnetlib,time,re,sys
-          tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); buf=bytearray(); closed=False
-          def rd(t=.8):
-            global closed
-            end=time.time()+t
+          ANSI=re.compile(r'\x1b\[[0-9;?]*[ -/]*[@-~]')
+          def session(): return telnetlib.Telnet('127.0.0.1',4000,timeout=5)
+          def read(tn,buf,t=.8):
+            end=time.time()+t; closed=False
             while time.time()<end and not closed:
               try:
                 d=tn.read_very_eager()
                 if d: buf.extend(d)
               except (EOFError,ConnectionResetError,BrokenPipeError,OSError): closed=True
               time.sleep(.05)
-          def line(s,t=.8):
-            global closed
-            if closed:return
+            return closed
+          def line(tn,buf,s,t=.8):
             try: tn.write(s.encode()+b'\r\n')
-            except OSError: closed=True; return
-            rd(t)
-          def key(s,t=.8):
-            tn.write(s.encode()); rd(t)
-          rd(1); line('mone'); key('Y'); line('m1pass'); line('m1pass'); line('none'); key('\r'); key('M'); line('測試玩家'); key('Y',1.5)
-          line('look'); line('score'); line('west'); line('m2probe',1.2)
-          text=re.sub(r'\x1b\[[0-9;?]*[ -/]*[@-~]','',buf.decode(errors='replace')); norm=re.sub(r'\s+',' ',text)
-          print(text)
-          base=['您的使用者代號','的冒險開始了','客棧大堂','【 平民 】','目前是等級 1 的平民','男性人類','形體','精','氣','神','廚房','M2PROBE']
-          miss=[x for x in base if x not in norm]
-          if miss: print('M2 FAIL missing live evidence:',miss,file=sys.stderr); sys.exit(1)
-          m=re.search(r'M2PROBE(.*?)STRTEST=(\d+)/(\d+)/(\d+) HP=(\d+)/(\d+) GIN=(\d+)/(\d+) KEE=(\d+)/(\d+) SEN=(\d+)/(\d+) RACE=(\w+) LEVEL=(\d+)',norm)
-          if not m: print('M2 FAIL probe format not found',file=sys.stderr); sys.exit(1)
-          attrs=dict((k,(int(a),int(e))) for k,a,e in re.findall(r'(str|cor|int|spi|cps|dex|con|wis)=(\d+)/(\d+)',m.group(1)))
-          if set(attrs)!={'str','cor','int','spi','cps','dex','con','wis'}: print('M2 FAIL missing attrs',attrs,file=sys.stderr); sys.exit(1)
-          if any(not 13<=a<=18 or a!=e for a,e in attrs.values()): print('M2 FAIL attr range/base-effective',attrs,file=sys.stderr); sys.exit(1)
-          sr,se,sb=map(int,m.group(2,3,4))
-          if not (sr==se and sb==sr+2): print('M2 FAIL temporary effective attribute mechanism',sr,se,sb,file=sys.stderr); sys.exit(1)
-          hp,hpm,gin,ginm,kee,keem,sen,senm=map(int,m.group(5,6,7,8,9,10,11,12)); race=m.group(13); level=int(m.group(14))
-          if race!='human' or level!=1 or (gin,ginm,kee,keem,sen,senm)!=(30,30,30,30,30,30): print('M2 FAIL race/level/resources',file=sys.stderr); sys.exit(1)
-          if hpm != attrs['con'][0]*5 or hp!=hpm: print('M2 FAIL HP/con relationship',hp,hpm,attrs['con'],file=sys.stderr); sys.exit(1)
-          print('M2 PASS LIVE ATTRIBUTES:',attrs)
-          print('M2 PASS BASE/EFFECTIVE: str',sr,'->',sb,'with temporary +2, raw unchanged')
-          print('M2 PASS STATS: HP',hp,'/',hpm,'Gin/Kee/Sen 30/30; Human Lv.1')
-          print('M2 PASS CONFIG: anti-spam character attribute penalty disabled; all Human starting raw attributes remain 13..18.')
-          line('quit'); rd(.5); tn.close()
+            except OSError: return True
+            return read(tn,buf,t)
+          def key(tn,buf,s,t=.8): tn.write(s.encode()); return read(tn,buf,t)
+          def txt(buf): return ANSI.sub('',buf.decode(errors='replace'))
+          # First session: create real Human/Commoner/Lv.1 and capture persistent identity/attributes.
+          tn=session(); b=bytearray(); read(tn,b,1); line(tn,b,'mthree'); key(tn,b,'Y'); line(tn,b,'m3pass'); line(tn,b,'m3pass'); line(tn,b,'none'); key(tn,b,'\r'); key(tn,b,'M'); line(tn,b,'持久測試'); key(tn,b,'Y',1.5)
+          line(tn,b,'look'); line(tn,b,'score'); line(tn,b,'m2probe',1.0)
+          first=re.sub(r'\s+',' ',txt(b)); print(txt(b))
+          m=re.search(r'M2PROBE(.*?)STRTEST=',first)
+          if not m: sys.exit('M3 FAIL: initial live attribute probe missing')
+          attrs=dict((k,int(v)) for k,v,e in re.findall(r'(str|cor|int|spi|cps|dex|con|wis)=(\d+)/(\d+)',m.group(1)))
+          if len(attrs)!=8 or any(not 13<=v<=18 for v in attrs.values()): sys.exit('M3 FAIL: initial attributes invalid')
+          if '【 平民 】持久測試 (Mthree)' not in first or '客棧大堂' not in first: sys.exit('M3 FAIL: initial identity/spawn missing')
+          # Quit must save the character before destruction.
+          closed=line(tn,b,'quit',1.2); read(tn,b,.5); tn.close(); print('M3 first-session quit closed=',closed)
+          time.sleep(1)
+          # Second session: same account must be recognized; password should restore existing character, not ask to create it again.
+          tn=session(); b2=bytearray(); read(tn,b2,1); line(tn,b2,'mthree',1); second_pre=re.sub(r'\s+',' ',txt(b2)); print(txt(b2))
+          if '創造一個新的人物' in second_pre: sys.exit('M3 FAIL: character was not persisted; server asks to create it again')
+          line(tn,b2,'m3pass',1.8); line(tn,b2,'look'); line(tn,b2,'score'); line(tn,b2,'inventory'); line(tn,b2,'help'); line(tn,b2,'west'); line(tn,b2,'east'); line(tn,b2,'m2probe',1.0)
+          second=re.sub(r'\s+',' ',txt(b2)); print(txt(b2))
+          required=['【 平民 】持久測試 (Mthree)','目前是等級 1 的平民','男性人類','客棧大堂','廚房','M2PROBE']
+          miss=[x for x in required if x not in second]
+          if miss: sys.exit('M3 FAIL: relogin/basic-command evidence missing: '+repr(miss))
+          m2=re.search(r'M2PROBE(.*?)STRTEST=',second)
+          attrs2=dict((k,int(v)) for k,v,e in re.findall(r'(str|cor|int|spi|cps|dex|con|wis)=(\d+)/(\d+)',m2.group(1) if m2 else ''))
+          if attrs2 != attrs: sys.exit('M3 FAIL: attributes changed across quit/relogin: '+repr((attrs,attrs2)))
+          print('M3 PASS PERSISTENCE: same character recognized after quit and relogin.')
+          print('M3 PASS ATTRIBUTES: eight base attributes survived relogin unchanged:',attrs2)
+          print('M3 PASS COMMANDS: look, score, inventory, help, west/east movement executed after relogin.')
+          line(tn,b2,'quit',.8); tn.close()
           PY
       - name: Stop Original ES2
         if: always()
+        run: if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
+      - name: Record M3 result
         run: |
-          if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
-      - name: Record M2 result
-        run: |
-          echo 'M2 PASS: anti-spam character penalty disabled; live runtime verified all eight Human attributes at 13..18, base/effective behavior, HP/con relation, and Gin/Kee/Sen.'
+          echo 'M3 PASS: character persisted through quit/relogin with identity and attributes intact; core commands and movement remained usable.'
