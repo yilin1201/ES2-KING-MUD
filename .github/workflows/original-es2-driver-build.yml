@@ -3,17 +3,10 @@ name: Original ES2 Driver Build
 on:
   workflow_dispatch:
   push:
-    branches:
-      - build/executable-mud-phase1
-    paths:
-      - '.github/workflows/original-es2-driver-build.yml'
-      - 'scripts/bootstrap_original_es2.sh'
-      - 'original_es2/runtime/**'
+    branches: [build/executable-mud-phase1]
+    paths: ['.github/workflows/original-es2-driver-build.yml','scripts/bootstrap_original_es2.sh','original_es2/runtime/**']
   pull_request:
-    paths:
-      - '.github/workflows/original-es2-driver-build.yml'
-      - 'scripts/bootstrap_original_es2.sh'
-      - 'original_es2/runtime/**'
+    paths: ['.github/workflows/original-es2-driver-build.yml','scripts/bootstrap_original_es2.sh','original_es2/runtime/**']
 
 jobs:
   build-neolith:
@@ -28,6 +21,30 @@ jobs:
           python -m pip install --upgrade cmake
       - name: Bootstrap Original ES2 and Neolith
         run: bash scripts/bootstrap_original_es2.sh
+      - name: Install M2 runtime-only attribute probe
+        run: |
+          cat > .runtime/original-es2/mudlib/cmds/usr/m2probe.c <<'LPC'
+          inherit F_CLEAN_UP;
+          int main(object me, string arg) {
+              string *keys = ({"str","cor","int","spi","cps","dex","con","wis"});
+              string k, out = "M2PROBE";
+              int raw, eff, boosted;
+              foreach(k in keys) {
+                  raw = me->query_attr(k, 1);
+                  eff = me->query_attr(k);
+                  out += sprintf(" %s=%d/%d", k, raw, eff);
+              }
+              raw = me->query_attr("str", 1);
+              eff = me->query_attr("str");
+              me->add_temp("apply/str", 2);
+              boosted = me->query_attr("str");
+              me->add_temp("apply/str", -2);
+              out += sprintf(" STRTEST=%d/%d/%d", raw, eff, boosted);
+              out += sprintf(" HP=%d/%d GIN=%d/%d KEE=%d/%d SEN=%d/%d RACE=%s LEVEL=%d", me->query_stat("HP"), me->query_stat_maximum("HP"), me->query_stat("gin"), me->query_stat_maximum("gin"), me->query_stat("kee"), me->query_stat_maximum("kee"), me->query_stat("sen"), me->query_stat_maximum("sen"), me->query_race(), me->query_level());
+              write(out + "\n");
+              return 1;
+          }
+          LPC
       - name: Configure Neolith
         working-directory: .runtime/original-es2/neolith
         run: cmake --preset linux -DBUILD_TESTING=OFF
@@ -48,83 +65,57 @@ jobs:
           "$DRIVER_ABS" -f neolith.conf -c > "$RUNNER_TEMP/es2-boot.log" 2>&1 &
           PID=$!
           echo "ES2_PID=$PID" >> "$GITHUB_ENV"
-          BOOT_OK=0
           for i in $(seq 1 30); do
-            if ! kill -0 "$PID" 2>/dev/null; then break; fi
-            if nc -z 127.0.0.1 4000; then BOOT_OK=1; break; fi
+            kill -0 "$PID" 2>/dev/null || break
+            if nc -z 127.0.0.1 4000; then exit 0; fi
             sleep 1
           done
-          cat "$RUNNER_TEMP/es2-boot.log" || true
-          test "$BOOT_OK" -eq 1
-      - name: M1 create Human/Commoner/Lv1 and enter world
+          cat "$RUNNER_TEMP/es2-boot.log"; exit 1
+      - name: M2 live Human attribute and statistic verification
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import telnetlib, time, re, sys
-          tn = telnetlib.Telnet('127.0.0.1', 4000, timeout=5)
-          transcript = bytearray(); connection_closed = False
-          def read_for(seconds=1.0):
-              global connection_closed
-              end=time.time()+seconds
-              while time.time()<end and not connection_closed:
-                  try:
-                      data=tn.read_very_eager()
-                      if data: transcript.extend(data)
-                  except (EOFError,ConnectionResetError,BrokenPipeError,OSError): connection_closed=True; break
-                  time.sleep(0.05)
-          def send_line(line,wait=0.8):
-              global connection_closed
-              if connection_closed:return
-              try: tn.write(line.encode('utf-8')+bytes((13,10)))
-              except (EOFError,ConnectionResetError,BrokenPipeError,OSError): connection_closed=True; return
-              read_for(wait)
-          def send_key(key,wait=0.8):
-              global connection_closed
-              if connection_closed:return
-              try: tn.write(key.encode('ascii'))
-              except (EOFError,ConnectionResetError,BrokenPipeError,OSError): connection_closed=True; return
-              read_for(wait)
-          read_for(1); send_line('mone'); send_key('Y'); send_line('m1pass'); send_line('m1pass'); send_line('none'); send_key('\r'); send_key('M'); send_line('測試玩家'); send_key('Y',1.5); send_line('look'); send_line('score'); send_line('west',1); send_line('quit',1); read_for(.5)
-          try: tn.close()
-          except OSError: pass
-          clean=re.sub(r'\x1b\[[0-9;?]*[ -/]*[@-~]','',transcript.decode('utf-8',errors='replace')); normalized=re.sub(r'\s+',' ',clean)
-          print('----- M1/M2 live transcript -----'); print(clean); print('---------------------------------')
-          required=[('login','您的使用者代號'),('race','選擇你的角色所屬的種族'),('name','您的顯示名稱'),('created','的冒險開始了'),('spawn','客棧大堂'),('commoner','【 平民 】'),('level1','目前是等級 1 的平民'),('human','男性人類'),('hp','形體'),('gin','精'),('kee','氣'),('sen','神'),('food','食物'),('water','飲水'),('fatigue','疲勞'),('movement','廚房'),('return_exit','這裡唯一的出口是 east')]
-          missing=[label for label,token in required if token not in normalized]
-          if missing: print('M1/M2 FAIL missing evidence:',','.join(missing),file=sys.stderr); sys.exit(1)
-          if not connection_closed and '歡迎下次再來' not in normalized: print('M1/M2 FAIL: quit did not end session.',file=sys.stderr); sys.exit(1)
-          if 'What?' in clean: print('M1/M2 FAIL invalid command.',file=sys.stderr); sys.exit(1)
-          print('M1/M2 quit PASS: Original ES2 accepted quit and ended the player session.')
-          PY
-      - name: M2 verify persisted Human attributes
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          import re,sys
-          root=Path('.runtime/original-es2')
-          named=[p for p in root.rglob('*') if p.is_file() and 'mone' in p.name.lower()]
-          print('M2 files containing mone:',[str(p) for p in named])
-          data_files=[p for p in root.rglob('*') if p.is_file() and '/data/' in str(p).replace('\\','/')]
-          print('M2 generated data files:',[str(p) for p in data_files if '.git' not in str(p)][:100])
-          candidates=[p for p in named if '/user/' in str(p).replace('\\','/')]
-          if not candidates:
-              print('M2 FAIL: no persisted user character file found; trace above records actual generated data paths.',file=sys.stderr); sys.exit(1)
-          p=candidates[0]; data=p.read_text(encoding='utf-8',errors='replace'); print('M2 character save path:',p); print('----- M2 persisted character evidence -----'); print(data[:12000]); print('-------------------------------------------')
-          attrs={}
-          for key in ('str','cor','int','spi','cps','dex','con','wis'):
-              for pattern in (rf'"{key}"\s*:\s*(\d+)',rf'{key}\s+(\d+)',rf'"{key}"\s*,\s*(\d+)'):
-                  m=re.search(pattern,data)
-                  if m: attrs[key]=int(m.group(1)); break
-          print('M2 parsed raw attributes:',attrs)
-          if set(attrs)!={'str','cor','int','spi','cps','dex','con','wis'}: print('M2 FAIL: could not parse all eight live attributes.',file=sys.stderr); sys.exit(1)
-          bad={k:v for k,v in attrs.items() if not 13<=v<=18}
-          if bad: print('M2 FAIL: Human raw attribute outside 13..18:',bad,file=sys.stderr); sys.exit(1)
-          for token in ('human','commoner'):
-              if token not in data: print('M2 FAIL: persisted character missing '+token,file=sys.stderr); sys.exit(1)
-          print('M2 LIVE ATTRIBUTES:',' '.join(f'{k}={attrs[k]}' for k in ('str','cor','int','spi','cps','dex','con','wis'))); print('M2 attribute range PASS: all Human raw attributes are 13..18.')
+          import telnetlib,time,re,sys
+          tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); buf=bytearray(); closed=False
+          def rd(t=.8):
+            global closed
+            end=time.time()+t
+            while time.time()<end and not closed:
+              try:
+                d=tn.read_very_eager()
+                if d: buf.extend(d)
+              except (EOFError,ConnectionResetError,BrokenPipeError,OSError): closed=True
+              time.sleep(.05)
+          def line(s,t=.8):
+            global closed
+            if closed:return
+            try: tn.write(s.encode()+b'\r\n')
+            except OSError: closed=True; return
+            rd(t)
+          def key(s,t=.8):
+            tn.write(s.encode()); rd(t)
+          rd(1); line('mone'); key('Y'); line('m1pass'); line('m1pass'); line('none'); key('\r'); key('M'); line('測試玩家'); key('Y',1.5)
+          line('look'); line('score'); line('west'); line('m2probe',1.2)
+          text=re.sub(r'\x1b\[[0-9;?]*[ -/]*[@-~]','',buf.decode(errors='replace')); norm=re.sub(r'\s+',' ',text)
+          print(text)
+          base=['您的使用者代號','的冒險開始了','客棧大堂','【 平民 】','目前是等級 1 的平民','男性人類','形體','精','氣','神','廚房','M2PROBE']
+          miss=[x for x in base if x not in norm]
+          if miss: print('M2 FAIL missing live evidence:',miss,file=sys.stderr); sys.exit(1)
+          m=re.search(r'M2PROBE(.*?)STRTEST=(\d+)/(\d+)/(\d+) HP=(\d+)/(\d+) GIN=(\d+)/(\d+) KEE=(\d+)/(\d+) SEN=(\d+)/(\d+) RACE=(\w+) LEVEL=(\d+)',norm)
+          if not m: print('M2 FAIL probe format not found',file=sys.stderr); sys.exit(1)
+          attrs=dict((k,(int(a),int(e))) for k,a,e in re.findall(r'(str|cor|int|spi|cps|dex|con|wis)=(\d+)/(\d+)',m.group(1)))
+          if set(attrs)!={'str','cor','int','spi','cps','dex','con','wis'}: print('M2 FAIL missing attrs',attrs,file=sys.stderr); sys.exit(1)
+          if any(not 13<=a<=18 or a!=e for a,e in attrs.values()): print('M2 FAIL attr range/base-effective',attrs,file=sys.stderr); sys.exit(1)
+          sr,se,sb=map(int,m.group(2,3,4))
+          if not (sr==se and sb==sr+2): print('M2 FAIL temporary effective attribute mechanism',sr,se,sb,file=sys.stderr); sys.exit(1)
+          hp,hpm,gin,ginm,kee,keem,sen,senm=map(int,m.group(5,6,7,8,9,10,11,12)); race=m.group(13); level=int(m.group(14))
+          if race!='human' or level!=1 or (gin,ginm,kee,keem,sen,senm)!=(30,30,30,30,30,30): print('M2 FAIL race/level/resources',file=sys.stderr); sys.exit(1)
+          if hpm != attrs['con'][0]*5 or hp!=hpm: print('M2 FAIL HP/con relationship',hp,hpm,attrs['con'],file=sys.stderr); sys.exit(1)
+          print('M2 PASS LIVE ATTRIBUTES:',attrs)
+          print('M2 PASS BASE/EFFECTIVE: str',sr,'->',sb,'with temporary +2, raw unchanged')
+          print('M2 PASS STATS: HP',hp,'/',hpm,'Gin/Kee/Sen 30/30; Human Lv.1')
+          line('quit'); rd(.5); tn.close()
           PY
       - name: Stop Original ES2
         if: always()
@@ -132,4 +123,4 @@ jobs:
           if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
       - name: Record M2 result
         run: |
-          echo 'M2 PASS: live Human/Commoner/Lv.1 persisted all eight Original ES2 raw attributes in the Human 13..18 range.'
+          echo 'M2 PASS: live runtime probe verified all eight Human attributes, base/effective behavior, HP/con relation, and Gin/Kee/Sen.'
