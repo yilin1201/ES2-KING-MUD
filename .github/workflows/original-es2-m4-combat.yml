@@ -79,7 +79,7 @@ jobs:
           read(1);line('mfour');key('Y');line('m4pass');line('m4pass');line('none');key('\r');key('M');line('戰鬥測試');key('Y',1.5)
           line('skills',1.0); line('m4spawn',1.0); line('look',1.0); line('fight m4dummy',1.5); line('m4probe',1.0); line('hp',1.0); line('skills',1.0)
           out=ANSI.sub('',b.decode(errors='replace')); flat=re.sub(r'\s+',' ',out); print(out)
-          required=['【 平民 】戰鬥測試 (Mfour)' if '【 平民 】戰鬥測試 (Mfour)' in flat else '戰鬥測試在天朝帝國的冒險開始了。','你目前並沒有學會任何技能。','M4SPAWN PASS','木樁武者','M4PROBE FIGHTING=1 TARGET=1']
+          required=['戰鬥測試在天朝帝國的冒險開始了。','你目前並沒有學會任何技能。','M4SPAWN PASS','木樁武者','M4PROBE FIGHTING=1 TARGET=1']
           miss=[x for x in required if x not in flat]
           if miss:sys.exit('M4 FAIL: live combat/skills evidence missing: '+repr(miss))
           combat_markers=['攻擊','招架','閃','拳','掌','踢','擊','打','戰鬥','較量','高招']
@@ -94,4 +94,5 @@ jobs:
         run: |
           if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
       - name: Record M4 result
-        run: echo 'M4 PASS: Original ES2 live skills command, fight command, bilateral combat state, combat text, and resource command verified.'
+        run: |
+          echo 'M4 PASS: Original ES2 live skills command, fight command, bilateral combat state, combat text, and resource command verified.'
