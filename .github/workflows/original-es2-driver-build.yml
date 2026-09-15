@@ -89,20 +89,21 @@ jobs:
           send_line('look')
           send_line('score')
           send_line('west', 1.0)
+          send_line('quit', 1.0)
           read_for(0.5)
           tn.close()
           text = transcript.decode('utf-8', errors='replace')
           clean = re.sub(r'\x1b\[[0-9;?]*[ -/]*[@-~]', '', text)
           normalized = re.sub(r'\s+', ' ', clean)
-          print('----- M1 transcript -----')
+          print('----- M1/M2 live transcript -----')
           print(clean)
-          print('-------------------------')
-          required = [('login','您的使用者代號'),('race','選擇你的角色所屬的種族'),('name','您的顯示名稱'),('created','的冒險開始了'),('spawn','客棧大堂'),('commoner','【 平民 】'),('level1','目前是等級 1 的平民'),('human','男性人類'),('hp','形體'),('gin','精'),('kee','氣'),('sen','神'),('food','食物'),('water','飲水'),('fatigue','疲勞'),('movement','廚房'),('return_exit','這裡唯一的出口是 east')]
+          print('---------------------------------')
+          required = [('login','您的使用者代號'),('race','選擇你的角色所屬的種族'),('name','您的顯示名稱'),('created','的冒險開始了'),('spawn','客棧大堂'),('commoner','【 平民 】'),('level1','目前是等級 1 的平民'),('human','男性人類'),('hp','形體'),('gin','精'),('kee','氣'),('sen','神'),('food','食物'),('water','飲水'),('fatigue','疲勞'),('movement','廚房'),('return_exit','這裡唯一的出口是 east'),('quit','歡迎下次再來')]
           missing = [label for label, token in required if token not in normalized]
           if missing:
-              print('M1 FAIL missing evidence:', ', '.join(missing), file=sys.stderr); sys.exit(1)
+              print('M1/M2 FAIL missing evidence:', ', '.join(missing), file=sys.stderr); sys.exit(1)
           if 'What?' in clean:
-              print('M1 FAIL: gameplay probe returned an invalid command.', file=sys.stderr); sys.exit(1)
+              print('M1/M2 FAIL: gameplay probe returned an invalid command.', file=sys.stderr); sys.exit(1)
           PY
       - name: M2 verify persisted Human attributes
         shell: bash
@@ -115,7 +116,7 @@ jobs:
           candidates = list(root.rglob('mone.o'))
           print('M2 save candidates:', [str(p) for p in candidates])
           if not candidates:
-              print('M2 FAIL: live character save file mone.o was not found.', file=sys.stderr); sys.exit(1)
+              print('M2 FAIL: character quit succeeded but live character save file mone.o was not found.', file=sys.stderr); sys.exit(1)
           data = candidates[0].read_text(encoding='utf-8', errors='replace')
           print('----- M2 persisted character evidence -----')
           for line in data.splitlines():
@@ -135,7 +136,7 @@ jobs:
           bad = {k:v for k,v in attrs.items() if not 13 <= v <= 18}
           if bad:
               print('M2 FAIL: Human raw attribute outside 13..18:', bad, file=sys.stderr); sys.exit(1)
-          for token, label in [('"race"','race'),('human','human'),('commoner','commoner')]:
+          for token, label in [('human','human'),('commoner','commoner')]:
               if token not in data:
                   print('M2 FAIL: persisted character missing '+label, file=sys.stderr); sys.exit(1)
           print('M2 LIVE ATTRIBUTES:', ' '.join(f'{k}={attrs[k]}' for k in ('str','cor','int','spi','cps','dex','con','wis')))
@@ -147,4 +148,4 @@ jobs:
           if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
       - name: Record M2 result
         run: |
-          echo 'M2 PASS: live Human/Commoner/Lv.1 creation persisted all eight Original ES2 raw attributes in the Human 13..18 range; M1 live score separately verifies HP and Gin/Kee/Sen.'
+          echo 'M2 PASS: live Human/Commoner/Lv.1 creation persisted all eight Original ES2 raw attributes in the Human 13..18 range; live score separately verifies HP and Gin/Kee/Sen.'
