@@ -123,4 +123,5 @@ jobs:
           if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
 
       - name: Record M1 result
-        run: echo 'M1 PASS: login, character creation, Human selection, world entry and gameplay command probe completed.'
+        run: |
+          echo 'M1 PASS: login, character creation, Human selection, world entry and gameplay command probe completed.'
