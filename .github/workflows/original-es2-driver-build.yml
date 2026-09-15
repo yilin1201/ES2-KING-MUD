@@ -18,7 +18,7 @@ jobs:
       - name: Install build prerequisites
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build bison
+          sudo apt-get install -y ninja-build bison netcat-openbsd
           python -m pip install --upgrade cmake
 
       - name: Bootstrap Original ES2 and Neolith
@@ -36,8 +36,60 @@ jobs:
         run: |
           DRIVER="$(find .runtime/original-es2/neolith/out -type f -name neolith -perm -111 | head -n 1)"
           test -n "$DRIVER"
+          echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"
           echo "Neolith executable: $DRIVER"
 
-      - name: Record scope
+      - name: Boot Original ES2 Mudlib
+        shell: bash
         run: |
-          echo 'Driver build passed. This does NOT yet prove the ES2 Mudlib boot/login flow.'
+          set -euo pipefail
+          cd .runtime/original-es2
+          DRIVER_ABS="$(realpath "$GITHUB_WORKSPACE/$DRIVER")"
+          echo "Starting Original ES2 with: $DRIVER_ABS -f neolith.conf -c"
+          "$DRIVER_ABS" -f neolith.conf -c > "$RUNNER_TEMP/es2-boot.log" 2>&1 &
+          PID=$!
+          echo "ES2_PID=$PID" >> "$GITHUB_ENV"
+
+          BOOT_OK=0
+          for i in $(seq 1 30); do
+            if ! kill -0 "$PID" 2>/dev/null; then
+              echo "Neolith exited during boot."
+              break
+            fi
+            if nc -z 127.0.0.1 4000; then
+              BOOT_OK=1
+              echo "Original ES2 is listening on TCP port 4000."
+              break
+            fi
+            sleep 1
+          done
+
+          echo '----- Original ES2 boot log -----'
+          cat "$RUNNER_TEMP/es2-boot.log" || true
+          echo '---------------------------------'
+
+          if [[ "$BOOT_OK" -ne 1 ]]; then
+            echo "M0 FAIL: process did not remain alive and listen on port 4000 within 30 seconds." >&2
+            exit 1
+          fi
+
+      - name: Probe login banner
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 5 bash -c 'exec 3<>/dev/tcp/127.0.0.1/4000; cat <&3' > "$RUNNER_TEMP/es2-login.txt" 2>/dev/null || true
+          echo '----- Original ES2 login probe -----'
+          cat "$RUNNER_TEMP/es2-login.txt" || true
+          echo '------------------------------------'
+          test -s "$RUNNER_TEMP/es2-login.txt"
+
+      - name: Stop Original ES2
+        if: always()
+        run: |
+          if [[ -n "${ES2_PID:-}" ]]; then
+            kill "$ES2_PID" 2>/dev/null || true
+          fi
+
+      - name: Record M0 result
+        run: |
+          echo 'M0 PASS: Neolith stayed alive, Original ES2 opened TCP port 4000, and the login endpoint returned data.'
