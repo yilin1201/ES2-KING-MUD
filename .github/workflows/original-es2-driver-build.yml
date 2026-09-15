@@ -2,6 +2,13 @@ name: Original ES2 Driver Build
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - build/executable-mud-phase1
+    paths:
+      - '.github/workflows/original-es2-driver-build.yml'
+      - 'scripts/bootstrap_original_es2.sh'
+      - 'original_es2/runtime/**'
   pull_request:
     paths:
       - '.github/workflows/original-es2-driver-build.yml'
