@@ -100,11 +100,12 @@ jobs:
           def line(tn,b,s,t=.8): tn.write(s.encode()+b'\r\n'); read(tn,b,t)
           def key(tn,b,s,t=.5): tn.write(s.encode()); read(tn,b,t)
           def clean(b): return ANSI.sub('',b.decode(errors='replace'))
+          # Account ID／帳號代號：Original ES2 規定只能使用 a-z 英文字母，因此測試帳號不可含 M6/M7 等數字。
           # registry_index／種族清單位置：依 Runtime logind.c 的 user_race 順序，用方向鍵選到指定種族。
-          cases=[('rainnar',7,'m6rain','雨師妾測試'),('ashura',8,'m7ashu','阿修羅測試'),('headless',9,'m8head','形天測試'),('yaksa',10,'m9yaks','夜叉測試')]
+          cases=[('rainnar',7,'msixrain','雨師妾測試'),('ashura',8,'msevenashu','阿修羅測試'),('headless',9,'meighthead','形天測試'),('yaksa',10,'mnineyaks','夜叉測試')]
           for race,index,uid,name in cases:
               tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); b=bytearray(); read(tn,b,1)
-              line(tn,b,uid); key(tn,b,'Y'); line(tn,b,'phase2pass'); line(tn,b,'phase2pass'); line(tn,b,'none')
+              line(tn,b,uid); key(tn,b,'Y'); line(tn,b,'phasepass'); line(tn,b,'phasepass'); line(tn,b,'none')
               for _ in range(index): key(tn,b,'\x1b[B',.12)
               key(tn,b,'\r',.8); key(tn,b,'M'); line(tn,b,name); key(tn,b,'Y',1.5); line(tn,b,'raceprobe',1.0)
               out=clean(b); print(out)
