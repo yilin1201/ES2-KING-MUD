@@ -39,8 +39,11 @@ jobs:
           int main(object me, string arg)
           {
               if (arg == "prepare") {
-                  // USER_PROTECT／玩家資料保護：只準備技能資料；內功常駐程式改由真正 exert 流程自行解析，避免探針代替玩家路徑。
+                  // USER_PROTECT／玩家資料保護：測試探針只準備技能與 Original Daemon，不改寫保存用 Original 原始碼。
                   seteuid(MUDLIB_UID);
+                  // Skill Daemon／技能常駐程式：龍圖心經位於 d/snow，必須先載入，讓其 create() 向 DAEMON_D 登記真正路徑。
+                  // 若不先登記，SKILL_D 會依預設規則尋找 /daemon/skill/dragon_force，因而無法進入 Original exert_function。
+                  load_object("/d/snow/skill/dragon_force");
                   me->set_skill("force", 80);
                   me->set_skill("dragon force", 80);
                   // map_skill／技能映射：沿用 Original feature/char/skill.c，將基礎內功映射到龍圖心經。
