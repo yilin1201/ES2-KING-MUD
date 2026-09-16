@@ -8,6 +8,7 @@
 - M12：技能 Runtime 既有回歸 PASS；`study → improve_skill → persistence` 已建立 Runtime 計畫、靜態回歸、專用 Actions 與結果追蹤文件。
 - M17：Original 國家地圖圖像證據基線已建立。
 - Score：`[PROJECT-CANON]` 正式模板 V1 已鎖定。
+- Google Sites：已新增實際讀取狀態文件，避免把「找到網址」誤報為「已讀正文」。
 
 ## 不可跨越的證據邊界
 
