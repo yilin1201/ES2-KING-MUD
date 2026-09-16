@@ -38,21 +38,13 @@ jobs:
           inherit F_CLEAN_UP;
           int main(object me, string arg)
           {
-              object daemon;
               if (arg == "prepare") {
-                  // Skill Daemon／技能常駐程式：先載入 Original 龍圖心經，使技能名稱完成註冊。
-                  daemon = load_object("/d/snow/skill/dragon_force");
-                  if (!daemon) return notify_fail("M13FORCE ERROR: 無法載入 Original 龍圖心經技能常駐程式。\n");
-                  // USER_PROTECT／玩家資料保護：探針本身以 Mudlib UID 執行，符合 Original user.h 的可信任修改規則。
+                  // USER_PROTECT／玩家資料保護：只準備技能資料；內功常駐程式改由真正 exert 流程自行解析，避免探針代替玩家路徑。
                   seteuid(MUDLIB_UID);
                   me->set_skill("force", 80);
                   me->set_skill("dragon force", 80);
-                  // map_skill／技能映射沒有 USER_PROTECT 包裝，仍沿用 Original feature/char/skill.c 的介面。
+                  // map_skill／技能映射：沿用 Original feature/char/skill.c，將基礎內功映射到龍圖心經。
                   me->map_skill("force", "dragon force");
-                  // Statistic API／狀態介面：Original 使用 current/effective/maximum 三層，不存在 set_stat/query_stat_max 簡寫。
-                  me->set_stat_current("gin", me->query_stat_maximum("gin"));
-                  me->set_stat_current("kee", me->query_stat_maximum("kee"));
-                  me->set_stat_current("sen", me->query_stat_maximum("sen"));
                   seteuid(getuid());
               }
               write(sprintf("M13FORCE FORCE=%d DRAGON=%d MAP=%s GIN=%d KEE=%d SEN=%d\n",
@@ -123,7 +115,9 @@ jobs:
           before_text=clean(buf[mark:]); before=state(before_text); print(before_text)
           if not before or before[:3] != ('80','80','dragon force'):
               print(clean(buf)); sys.exit('M13 FORCE FAIL／失敗：技能前置或 force → dragon force 映射未建立')
-          # exert_function 的有效功能名稱由 Original dragon_force.c 明確定義為 dragon force。
+          # Original 新角色精／氣／神各 30，已高於 dragon_force.c 每輪要求的 10；不由測試探針偽造資源。
+          if any(int(v) < 10 for v in before[-3:]):
+              sys.exit('M13 FORCE FAIL／失敗：角色資源不足以啟動 Original 龍圖心經')
           mark=len(buf); line(tn,buf,'exert dragon force',1.0); read(tn,buf,2.5)
           exert_text=clean(buf[mark:]); print(exert_text)
           if '開始修習龍圖心經的內功' not in exert_text:
@@ -143,10 +137,16 @@ jobs:
           restored_text=clean(buf2[mark:]); restored=state(restored_text); print(restored_text)
           if not restored or restored[:3] != ('80','80','dragon force'):
               sys.exit('M13 FORCE FAIL／失敗：重新登入後技能或 force 映射未保存')
-          print('M13 FORCE RUNTIME PASS／實機通過：Original 龍圖心經載入、force 映射、exert、資源消耗與重登保存均成立。')
+          print('M13 FORCE RUNTIME PASS／實機通過：Original force 映射、exert、龍圖心經資源消耗與重登保存均成立。')
           try: line(tn2,buf2,'quit',.3); tn2.close()
           except OSError: pass
           PY
+      - name: Show MUD error log on failure／失敗時輸出 MUD 錯誤紀錄
+        if: failure()
+        run: |
+          # Error log／錯誤紀錄：下次若仍失敗，直接把 Mudlib 編譯／執行錯誤帶進 Actions Log，縮短修正週期。
+          cat "$RUNNER_TEMP/es2-m13-force-boot.log" || true
+          find .runtime/original-es2/mudlib/log -maxdepth 2 -type f -print -exec tail -n 80 {} \; 2>/dev/null || true
       - name: Stop MUD／停止測試伺服器
         if: always()
         run: |
