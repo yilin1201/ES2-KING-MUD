@@ -1,0 +1,139 @@
+name: Original ES2 M12 Skill Runtime
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths:
+      - '.github/workflows/original-es2-m12-skill.yml'
+      - 'scripts/test_skill_m12_static.sh'
+      - 'scripts/bootstrap_original_es2.sh'
+      - 'original_es2/research/original_skill_reconstruction_m12.md'
+  pull_request:
+    paths:
+      - '.github/workflows/original-es2-m12-skill.yml'
+      - 'scripts/test_skill_m12_static.sh'
+      - 'scripts/bootstrap_original_es2.sh'
+      - 'original_es2/research/original_skill_reconstruction_m12.md'
+
+jobs:
+  m12-skill-runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v4
+
+      - name: Install prerequisites／安裝編譯工具
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build bison netcat-openbsd
+          python -m pip install --upgrade cmake
+
+      - name: Bootstrap runtime／建立 Original ES2 執行環境
+        run: bash scripts/bootstrap_original_es2.sh
+
+      - name: Skill static regression／技能靜態回歸測試
+        run: bash scripts/test_skill_m12_static.sh
+
+      - name: Install skill probe／安裝技能實機測試指令
+        run: |
+          # Runtime-only probe／執行環境專用探針：不修改保存用途的 Original ES2 原始碼。
+          cat > .runtime/original-es2/mudlib/cmds/usr/m12skill.c <<'LPC'
+          inherit F_CLEAN_UP;
+
+          // Skill Runtime Probe／技能實機探針：只呼叫 Original 已存在的角色技能介面與 Skill Daemon。
+          int main(object me, string arg)
+          {
+              if (arg == "seed") {
+                  // set_skill／設定技能：驗證角色能持有徒手與劍術技能。
+                  me->set_skill("unarmed", 10);
+                  me->set_skill("sword", 20);
+                  // advance_skill／技能進階：確認 Original 技能升級介面能真正執行。
+                  me->advance_skill("unarmed", 5);
+                  // 上限保護：Original set_skill() 對超過 200 的數值會限制為 200。
+                  me->set_skill("sword", 999);
+              }
+              write(sprintf("M12SKILL UNARMED=%d SWORD=%d\n",
+                    me->query_skill("unarmed", 1), me->query_skill("sword", 1)));
+              return 1;
+          }
+          LPC
+
+      - name: Configure Neolith／設定 MUD Driver 編譯
+        working-directory: .runtime/original-es2/neolith
+        run: cmake --preset linux -DBUILD_TESTING=OFF
+
+      - name: Build Neolith／編譯 MUD Driver
+        working-directory: .runtime/original-es2/neolith
+        run: cmake --build --preset dev-linux
+
+      - name: Locate driver／尋找 MUD Driver 執行檔
+        run: |
+          DRIVER="$(find .runtime/original-es2/neolith/out -type f -name neolith -perm -111 | head -n 1)"
+          test -n "$DRIVER"
+          echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"
+
+      - name: Boot MUD／啟動 Original ES2
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd .runtime/original-es2
+          DRIVER_ABS="$(realpath "$GITHUB_WORKSPACE/$DRIVER")"
+          "$DRIVER_ABS" -f neolith.conf -c > "$RUNNER_TEMP/es2-m12-boot.log" 2>&1 &
+          PID=$!
+          echo "ES2_PID=$PID" >> "$GITHUB_ENV"
+          for i in $(seq 1 30); do
+            kill -0 "$PID" 2>/dev/null || break
+            if nc -z 127.0.0.1 4000; then exit 0; fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/es2-m12-boot.log"
+          exit 1
+
+      - name: Live Skill and persistence verification／真實技能與保存重登驗證
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          # Telnet／文字連線協定：使用真實玩家建立、退出、重登流程驗證技能資料。
+          import telnetlib,time,re,sys
+          ANSI=re.compile(r'\x1b\[[0-9;?]*[ -/]*[@-~]')
+          def session(): return telnetlib.Telnet('127.0.0.1',4000,timeout=5)
+          def read(tn,buf,t=.8):
+              end=time.time()+t
+              while time.time()<end:
+                  try:
+                      d=tn.read_very_eager()
+                      if d: buf.extend(d)
+                  except (EOFError,OSError): break
+                  time.sleep(.05)
+          def line(tn,buf,s,t=.8): tn.write(s.encode()+b'\r\n'); read(tn,buf,t)
+          def key(tn,buf,s,t=.8): tn.write(s.encode()); read(tn,buf,t)
+          def clean(buf): return ANSI.sub('',buf.decode(errors='replace'))
+
+          # 建立新角色並寫入技能；這裡不假裝已完成 NPC 師父教學，只驗證 Original 底層技能介面。
+          tn=session(); buf=bytearray(); read(tn,buf,1)
+          line(tn,buf,'mskill'); key(tn,buf,'Y'); line(tn,buf,'mskillpass'); line(tn,buf,'mskillpass'); line(tn,buf,'none')
+          key(tn,buf,'\r'); key(tn,buf,'M'); line(tn,buf,'技能測試'); key(tn,buf,'Y',1.5)
+          line(tn,buf,'m12skill seed',1.0)
+          first=clean(buf); print(first)
+          if 'M12SKILL UNARMED=15 SWORD=200' not in first:
+              sys.exit('M12 FAIL／失敗：技能設定、進階或 200 上限未依 Original 介面生效')
+          line(tn,buf,'quit',.5); tn.close()
+
+          # Persistence／保存重登：重新連線同一帳號，不再 seed，確認技能等級由角色檔恢復。
+          tn2=session(); buf2=bytearray(); read(tn2,buf2,1)
+          line(tn2,buf2,'mskill'); line(tn2,buf2,'mskillpass',1.5)
+          line(tn2,buf2,'m12skill',1.0)
+          second=clean(buf2); print(second)
+          if 'M12SKILL UNARMED=15 SWORD=200' not in second:
+              sys.exit('M12 FAIL／失敗：角色重登後技能資料未正確保存／恢復')
+          print('M12 RUNTIME PASS／實機驗證通過：徒手與劍術技能介面、200 上限及保存重登皆正常。')
+          try: line(tn2,buf2,'quit',.3); tn2.close()
+          except OSError: pass
+          PY
+
+      - name: Stop MUD／停止測試伺服器
+        if: always()
+        run: |
+          if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
