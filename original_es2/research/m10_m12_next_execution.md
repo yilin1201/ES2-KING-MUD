@@ -15,6 +15,10 @@
 - 真實執行 `study`，確認技能進度增加。
 - quit → relogin 後再次確認資料，完成 Persistence（持久化）驗證。
 
+## GitHub 操作
+
+本輪所有 Commit 先建立在分支歷史中；只有在更新 `build/original-es2-races-phase2` 分支 Ref（分支指標）後，PR #13 才會觸發新的 Actions。
+
 ## 合併限制
 
 PR #13 保持 OPEN；沒有使用者明確的 Merge（合併）授權，不執行 Merge。
