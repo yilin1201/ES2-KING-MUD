@@ -23,9 +23,18 @@ if grep -q 'ES2-KING Runtime reconstruction overlay' "$RACE_DIR/avatar.c"; then
   exit 1
 fi
 
-# Login registry／登入種族清單：Human、Avatar 與 M6-M9 歷史種族都必須可被登入系統辨識。
-for race in human avatar headless yaksa ashura rainnar; do
+# Login registry／登入種族清單：Human、Avatar 與全部歷史重建種族都必須出現在登入選單。
+ALL_RACES=(human avatar blackteeth yenhold woochan dingling jiaojao rainnar ashura headless yaksa malik)
+for race in "${ALL_RACES[@]}"; do
   grep -q "\"$race\"" "$LOGIN"
+done
+
+# Race acceptance／種族接受邏輯：只出現在選單仍不夠；get_race() 的 switch 必須真的接受每一個種族，避免選完又被退回選單。
+for race in "${ALL_RACES[@]}"; do
+  grep -q "case \"$race\":" "$LOGIN" || {
+    echo "FAIL／失敗：登入接受邏輯缺少種族 $race" >&2
+    exit 1
+  }
 done
 
 # M6-M9 baseline／M6-M9 基準：四個優先歷史種族八項出生屬性維持 50。
@@ -44,4 +53,4 @@ for race in blackteeth yenhold woochan dingling jiaojao malik; do
   done
 done
 
-echo 'M2/M5/M6-M9 REGRESSION PASS／回歸驗證通過：Original Human/Avatar 保留，歷史種族 50/25 設定正確。'
+echo 'M2/M5/M6-M9 REGRESSION PASS／回歸驗證通過：Original Human/Avatar 保留，全部歷史種族登入接受邏輯與 50/25 設定正確。'
