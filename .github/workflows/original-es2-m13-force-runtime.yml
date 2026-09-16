@@ -41,7 +41,6 @@ jobs:
               object daemon;
               if (arg == "prepare") {
                   // Skill Daemon／技能常駐程式：Original 龍圖心經只有在載入 create() 後才向 DAEMON_D 註冊名稱。
-                  // 真實遊戲通常由師門／技能流程載入；獨立 Runtime 測試必須先重現這個載入步驟。
                   daemon = load_object("/d/snow/skill/dragon_force");
                   if (!daemon) return notify_fail("M13FORCE ERROR: 無法載入 Original 龍圖心經技能常駐程式。\n");
                   // USER_PROTECT／玩家資料保護：測試前置資料使用 Mudlib 權限，不修改保存用途的 Original 程式。
@@ -113,17 +112,22 @@ jobs:
               return m[-1] if m else None
           tn=session(); buf=bytearray(); read(tn,buf,1)
           line(tn,buf,'mforce'); key(tn,buf,'Y'); line(tn,buf,'mforcepass'); line(tn,buf,'mforcepass'); line(tn,buf,'none')
-          key(tn,buf,'\r'); key(tn,buf,'M'); line(tn,buf,'內功測試'); key(tn,buf,'Y',1.5)
-          mark=len(buf); line(tn,buf,'m13force prepare',1.0)
+          key(tn,buf,'\r'); key(tn,buf,'M'); line(tn,buf,'內功測試'); key(tn,buf,'Y',2.0)
+          # Character creation timing／角色建立時序：Original 建角完成後仍可能有登入回呼；
+          # 先用 look 確認玩家已真正進入世界，再執行 Runtime Probe，避免指令被建立流程吃掉造成假 FAIL。
+          mark=len(buf); line(tn,buf,'look',1.2)
+          world_text=clean(buf[mark:]); print(world_text)
+          if '客棧大堂' not in world_text:
+              print(clean(buf)); sys.exit('M13 FORCE FAIL／失敗：角色尚未完成建立並進入客棧大堂')
+          mark=len(buf); line(tn,buf,'m13force prepare',1.2)
           before_text=clean(buf[mark:]); before=state(before_text); print(before_text)
           if not before or before[:3] != ('80','80','dragon force'):
-              sys.exit('M13 FORCE FAIL／失敗：技能前置或 force → dragon force 映射未建立')
+              print(clean(buf)); sys.exit('M13 FORCE FAIL／失敗：技能前置或 force → dragon force 映射未建立')
           # exert_function 的有效功能名稱由 Original dragon_force.c 明確定義為 dragon force。
           mark=len(buf); line(tn,buf,'exert dragon force',1.0); read(tn,buf,2.5)
           exert_text=clean(buf[mark:]); print(exert_text)
           if '開始修習龍圖心經的內功' not in exert_text:
               sys.exit('M13 FORCE FAIL／失敗：Original exert 未進入龍圖心經 exert_function')
-          # 先讀取 busy 期間資源，再 halt；do_exercise 每個回合消耗精／氣／神各 10。
           mark=len(buf); line(tn,buf,'m13force',.8)
           after_text=clean(buf[mark:]); after=state(after_text); print(after_text)
           if not after: sys.exit('M13 FORCE FAIL／失敗：exert 後無法讀取內功狀態')
