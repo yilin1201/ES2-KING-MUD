@@ -1,0 +1,25 @@
+{
+  "schema_note_zh_tw": "M15 Original ES2 冷梅莊／梅影風機器可讀證據基線；只記錄已有歷史證據，不補造原始 NPC 數值。",
+  "evidence_layer": "Original ES2 Research",
+  "source_character_file": "original_es2/characters/mei_yingfeng.md",
+  "character": {
+    "name_zh_tw": "梅影風",
+    "mud_display_name": "May yin fong",
+    "role_zh_tw": "冷梅莊莊主、門派掌門、武者師父",
+    "class_route": "fighter.lunmay",
+    "class_route_note_zh_tw": "歷史攻略所記錄的冷梅莊武者職業路線。",
+    "location_note_zh_tw": "歷史攻略記錄為水嵐武陵客棧北方一帶的冷梅莊路線；尚未取得可確認的 Original NPC LPC path。"
+  },
+  "confirmed_martial_arts": [
+    {"name_zh_tw": "冷梅劍法", "note_zh_tw": "冷梅莊核心劍法。"},
+    {"name_zh_tw": "傲梅暗劍訣", "note_zh_tw": "歷史實戰紀錄可見其殺招。"},
+    {"name_zh_tw": "梅影身法", "note_zh_tw": "歷史冷梅劍士進階條件之一。"},
+    {"name_zh_tw": "七巧如意手", "note_zh_tw": "只確認技能存在，不補造招式效果。"},
+    {"name_zh_tw": "寒梅心法", "note_zh_tw": "冷梅莊內功／心法體系。"}
+  ],
+  "confirmed_equipment": ["銀霜鎧", "奔雲靴", "梅花白襖", "流雲清玉帶", "白玉戒指", "寒霜劍", "冰雪匕"],
+  "confirmed_ao_mei_moves": ["雪蛇弄梅", "梅厲風行", "暗劍難防", "愛霜恨雪"],
+  "story_links_zh_tw": ["梅夫人尋藥／九轉冰心丹／寒梅玉珮", "魚鐵山刺殺柳東蘆消息線", "劉乙忘玄相關武林事件"],
+  "unknown_original_fields": ["npc_lpc_path", "hp", "skill_levels", "attributes", "complete_set_skill", "complete_map_skill"],
+  "separation_rule_zh_tw": "明鏡止水・極意覺醒等後期擴充不得寫回 Original ES2；若採用只能存在 ES2-KING Expansion 層。"
+}
