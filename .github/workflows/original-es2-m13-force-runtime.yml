@@ -40,17 +40,19 @@ jobs:
           {
               object daemon;
               if (arg == "prepare") {
-                  // Skill Daemon／技能常駐程式：Original 龍圖心經只有在載入 create() 後才向 DAEMON_D 註冊名稱。
+                  // Skill Daemon／技能常駐程式：先載入 Original 龍圖心經，使技能名稱完成註冊。
                   daemon = load_object("/d/snow/skill/dragon_force");
                   if (!daemon) return notify_fail("M13FORCE ERROR: 無法載入 Original 龍圖心經技能常駐程式。\n");
-                  // USER_PROTECT／玩家資料保護：測試前置資料使用 Mudlib 權限，不修改保存用途的 Original 程式。
+                  // USER_PROTECT／玩家資料保護：探針本身以 Mudlib UID 執行，符合 Original user.h 的可信任修改規則。
                   seteuid(MUDLIB_UID);
                   me->set_skill("force", 80);
                   me->set_skill("dragon force", 80);
+                  // map_skill／技能映射沒有 USER_PROTECT 包裝，仍沿用 Original feature/char/skill.c 的介面。
                   me->map_skill("force", "dragon force");
-                  me->set_stat("gin", me->query_stat_max("gin"));
-                  me->set_stat("kee", me->query_stat_max("kee"));
-                  me->set_stat("sen", me->query_stat_max("sen"));
+                  // Statistic API／狀態介面：Original 使用 current/effective/maximum 三層，不存在 set_stat/query_stat_max 簡寫。
+                  me->set_stat_current("gin", me->query_stat_maximum("gin"));
+                  me->set_stat_current("kee", me->query_stat_maximum("kee"));
+                  me->set_stat_current("sen", me->query_stat_maximum("sen"));
                   seteuid(getuid());
               }
               write(sprintf("M13FORCE FORCE=%d DRAGON=%d MAP=%s GIN=%d KEE=%d SEN=%d\n",
@@ -113,8 +115,6 @@ jobs:
           tn=session(); buf=bytearray(); read(tn,buf,1)
           line(tn,buf,'mforce'); key(tn,buf,'Y'); line(tn,buf,'mforcepass'); line(tn,buf,'mforcepass'); line(tn,buf,'none')
           key(tn,buf,'\r'); key(tn,buf,'M'); line(tn,buf,'內功測試'); key(tn,buf,'Y',2.0)
-          # Character creation timing／角色建立時序：Original 建角完成後仍可能有登入回呼；
-          # 先用 look 確認玩家已真正進入世界，再執行 Runtime Probe，避免指令被建立流程吃掉造成假 FAIL。
           mark=len(buf); line(tn,buf,'look',1.2)
           world_text=clean(buf[mark:]); print(world_text)
           if '客棧大堂' not in world_text:
