@@ -3,7 +3,7 @@
 ## 目前鎖定
 
 - M10：11 種族 Original Google Sites 證據表完成。
-- M10：11 種族機器可讀靜態基線與專用 GitHub Actions 驗證已建立；等待分支 Push 後的實際 Run 結果。
+- M10：11 種族機器可讀靜態基線與專用 GitHub Actions 驗證已建立；本輪 Push 後執行實際 Run。
 - M11：職業 Runtime 既有回歸 PASS。
 - M12：技能 Runtime 既有回歸 PASS；`study → improve_skill → persistence` 已建立 Runtime 計畫、靜態回歸、專用 Actions 與結果追蹤文件。
 - M17：Original 國家地圖圖像證據基線已建立。
