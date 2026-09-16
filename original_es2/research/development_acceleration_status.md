@@ -3,9 +3,9 @@
 ## 目前鎖定
 
 - M10：11 種族 Original Google Sites 證據表完成。
-- M10：11 種族機器可讀靜態基線完成，等待 Actions 實際驗證。
+- M10：11 種族機器可讀靜態基線與專用 GitHub Actions 驗證已建立；等待實際 Run 結果。
 - M11：職業 Runtime 既有回歸 PASS。
-- M12：技能 Runtime 既有回歸 PASS；下一段為 `study → improve_skill → persistence`。
+- M12：技能 Runtime 既有回歸 PASS；`study → improve_skill → persistence` 已建立 Runtime 計畫、靜態回歸與專用 Actions 驗證。
 - M17：Original 國家地圖圖像證據基線已建立。
 - Score：`[PROJECT-CANON]` 正式模板 V1 已鎖定。
 
