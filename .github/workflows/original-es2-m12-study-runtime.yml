@@ -66,8 +66,9 @@ jobs:
                   me->set_skill("literate", 100);
                   me->set_skill("unarmed", 1);
                   me->set_learn("unarmed", 0);
-                  me->set_stat("gin", 100);
-                  me->set_stat("sen", 100);
+                  // Original Human 初始精神上限只有 30；把目前值補滿即可，不假裝突破 Original 上限。
+                  me->set_stat("gin", me->query_stat_max("gin"));
+                  me->set_stat("sen", me->query_stat_max("sen"));
                   seteuid(getuid());
                   book = new("/obj/m12studybook");
                   if (book) book->move(me);
@@ -141,15 +142,16 @@ jobs:
           if not before or before[1] != 0:
               print(clean(buf)); sys.exit('M12 STUDY FAIL／失敗：無法建立研讀前置狀態')
 
-          # Original study 有隨機成功判定；有限次重試只等待真實成功，不繞過 study_content()。
           learned=0
           for _ in range(20):
-              line(tn,buf,'study sheet',.5)
-              read(tn,buf,1.0)
+              # Original study 會讓角色 busy；每輪等待後先 halt，再進下一次研讀，避免把 busy 訊息誤當成學習失敗。
+              line(tn,buf,'study sheet',1.2)
+              read(tn,buf,1.5)
               line(tn,buf,'m12study',.4)
               cur=state(clean(buf))
               if cur and cur[1] > 0:
                   learned=cur[1]; break
+              line(tn,buf,'halt',.5)
           first=clean(buf); print(first)
           if learned <= 0:
               sys.exit('M12 STUDY FAIL／失敗：20 次真實 study 後 learned 仍未增加')
