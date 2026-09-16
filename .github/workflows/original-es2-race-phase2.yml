@@ -92,26 +92,31 @@ jobs:
           def line(tn,b,s,t=.8): tn.write(s.encode()+b'\r\n'); read(tn,b,t)
           def key(tn,b,s,t=.5): tn.write(s.encode()); read(tn,b,t)
           def clean(b): return ANSI.sub('',b.decode(errors='replace'))
-          def probe(out,race,value,label):
+          def probe(out,race,value,label,require_full_resources):
               m=re.search(r'RACEPROBE(.*?)(?:\n|$)',out)
               if not m or f'RACE={race}' not in m.group(1): sys.exit(f'{label} FAIL／失敗：{race} 種族不符')
               vals=[int(v) for _,v,_ in re.findall(r'(str|cps|int|spi|cor|dex|con|wis)=(\d+)/(\d+)',m.group(1))]
               if len(vals)!=8 or any(v!=value for v in vals): sys.exit(f'{label} FAIL／失敗：{race} 八項屬性不是 {value}：{vals}')
-              if not all(x in m.group(1) for x in ['GIN=30/30','KEE=30/30','SEN=30/30']): sys.exit(f'{label} FAIL／失敗：{race} 精氣神異常')
+              # Fresh character／新角色建立時必須精氣神 30/30；戰鬥後重登只要求最大值仍為 30，因目前值可能已被戰鬥消耗並正常保存。
+              if require_full_resources:
+                  if not all(x in m.group(1) for x in ['GIN=30/30','KEE=30/30','SEN=30/30']): sys.exit(f'{label} FAIL／失敗：{race} 初始精氣神異常')
+              else:
+                  stats=re.findall(r'(GIN|KEE|SEN)=(\d+)/(\d+)',m.group(1))
+                  if len(stats)!=3 or any(int(maximum)!=30 for _,current,maximum in stats): sys.exit(f'{label} FAIL／失敗：{race} 戰鬥後重登精氣神最大值異常：{stats}')
           # index／種族清單位置；M6-M9=50，其餘重建歷史種族=25。
           cases=[('blackteeth',0,'tblack','黑齒測試',25),('yenhold',3,'tyenhold','厭火測試',25),('woochan',4,'twoochan','無腸測試',25),('dingling',5,'tdinglin','釘靈測試',25),('jiaojao',6,'tjiaojao','焦僥測試',25),('rainnar',7,'msixrain','雨師妾測試',50),('ashura',8,'msevenashu','阿修羅測試',50),('headless',9,'meighthead','形天測試',50),('yaksa',10,'mnineyaks','夜叉測試',50),('malik',11,'tmalik','巫首測試',25)]
           for race,index,uid,name,value in cases:
               tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); b=bytearray(); read(tn,b,1); line(tn,b,uid); key(tn,b,'Y'); line(tn,b,'phasepass'); line(tn,b,'phasepass'); line(tn,b,'none')
               for _ in range(index): key(tn,b,'\x1b[B',.10)
-              line(tn,b,'',.8); key(tn,b,'M'); line(tn,b,name); key(tn,b,'Y',1.2); line(tn,b,'raceprobe',.8); probe(clean(b),race,value,'LIVE')
+              line(tn,b,'',.8); key(tn,b,'M'); line(tn,b,name); key(tn,b,'Y',1.2); line(tn,b,'raceprobe',.8); probe(clean(b),race,value,'LIVE',True)
               line(tn,b,'west',.4); line(tn,b,'look',.4); line(tn,b,'fight racedummy',2.5); line(tn,b,'hp',.6)
               combat=clean(b); flat=re.sub(r'\s+',' ',combat)
               if 'RACEFIGHT ACCEPTED' not in flat or '種族木樁武者' not in flat: sys.exit(f'COMBAT FAIL／戰鬥失敗：{race} 未進入真實 fight 流程')
               patterns=[r'你握緊拳頭往種族木樁武者',r'種族木樁武者.*向你',r'你.*往種族木樁武者.*踢',r'種族木樁武者.*一拳往你']
               if not any(re.search(p,flat) for p in patterns): sys.exit(f'COMBAT FAIL／戰鬥失敗：{race} 沒有真實雙向攻擊文字')
               line(tn,b,'quit',.5); tn.close()
-              # Persistence／資料保存：重登後再次讀取同一角色的種族與屬性。
-              tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); b2=bytearray(); read(tn,b2,1); line(tn,b2,uid); line(tn,b2,'phasepass',1.2); line(tn,b2,'raceprobe',.8); probe(clean(b2),race,value,'PERSISTENCE'); line(tn,b2,'quit',.3); tn.close()
+              # Persistence／資料保存：重登後確認種族與出生屬性不變；戰鬥造成的目前資源消耗可以正常保存，不誤判成初始化失敗。
+              tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); b2=bytearray(); read(tn,b2,1); line(tn,b2,uid); line(tn,b2,'phasepass',1.2); line(tn,b2,'raceprobe',.8); probe(clean(b2),race,value,'PERSISTENCE',False); line(tn,b2,'quit',.3); tn.close()
               print(f'LIVE+COMBAT+PERSISTENCE PASS／角色、戰鬥、保存重登通過：{race}，八屬性={value}。')
           PY
       - name: Stop MUD／停止測試伺服器
