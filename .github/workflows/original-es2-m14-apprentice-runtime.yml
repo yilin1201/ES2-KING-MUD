@@ -1,0 +1,154 @@
+name: Original ES2 M14 Apprentice Runtime
+
+# Runtime／實機驗證：以真實玩家 apprentice 指令走 Original 師徒流程，不修改保存用途原始碼。
+on:
+  workflow_dispatch:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths:
+      - '.github/workflows/original-es2-m14-apprentice-runtime.yml'
+      - 'scripts/test_apprentice_m14_static.sh'
+      - 'original_es2/research/original_apprentice_m14.md'
+      - 'scripts/bootstrap_original_es2.sh'
+  pull_request:
+    paths:
+      - '.github/workflows/original-es2-m14-apprentice-runtime.yml'
+      - 'scripts/test_apprentice_m14_static.sh'
+      - 'original_es2/research/original_apprentice_m14.md'
+      - 'scripts/bootstrap_original_es2.sh'
+
+jobs:
+  m14-apprentice-runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v4
+      - name: Install prerequisites／安裝編譯工具
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build bison netcat-openbsd
+          python -m pip install --upgrade cmake
+      - name: Bootstrap Original ES2／建立執行環境
+        run: bash scripts/bootstrap_original_es2.sh
+      - name: Static regression／先鎖定 Original 師徒介面
+        run: bash scripts/test_apprentice_m14_static.sh
+      - name: Install Runtime-only master fixture／建立僅測試用師父 NPC
+        run: |
+          mkdir -p .runtime/original-es2/mudlib/obj/es2king_test
+          cat > .runtime/original-es2/mudlib/obj/es2king_test/m14_master.c <<'LPC'
+          #include <npc.h>
+          inherit F_VILLAGER;
+          void create()
+          {
+              // Runtime-only NPC／僅執行期師父：只提供收徒入口，真正關係由 Original relation.c 建立。
+              set_name("試煉師父", ({"m14master", "master"}));
+              set_race("human");
+              set_class("fighter");
+              set_level(10);
+              set_attr("str", 18); set_attr("cps", 18); set_attr("int", 18); set_attr("spi", 18);
+              set_attr("cor", 18); set_attr("dex", 18); set_attr("con", 18); set_attr("wis", 18);
+              set("long", "這是 M14 Runtime 專用的臨時師父。\n");
+              setup();
+          }
+          // accept_apprentice／收徒確認：回傳真，讓 Original apprentice.c 繼續執行 init_apprentice()。
+          int accept_apprentice(object ob)
+          {
+              tell_object(ob, "M14MASTER ACCEPTED／試煉師父同意收你為徒。\n");
+              return 1;
+          }
+          LPC
+          cat > .runtime/original-es2/mudlib/cmds/usr/m14relation.c <<'LPC'
+          inherit F_CLEAN_UP;
+          int main(object me, string arg)
+          {
+              object ob;
+              // Runtime Probe／執行期探針：只讀取 Original relation.c 的公開關係介面。
+              ob = present("m14master", environment(me));
+              write(sprintf("M14REL MASTER_PRESENT=%d PLAYER_IS_APPRENTICE=%d MASTER_IS_MASTER=%d\n",
+                    objectp(ob), objectp(ob) ? me->is_apprentice_of(ob) : 0,
+                    objectp(ob) ? ob->is_master_of(me) : 0));
+              return 1;
+          }
+          LPC
+          python - <<'PY'
+          from pathlib import Path
+          # Runtime overlay／執行期覆蓋：把測試師父掛入客棧大堂；不回寫 Original room。
+          p=Path('.runtime/original-es2/mudlib/d/snow/inn.c')
+          s=p.read_text()
+          needle='\n\tsetup();\n'
+          assert needle in s, '找不到 inn.c setup() 掛載點'
+          s=s.replace(needle,'\n\tset("objects", ([ "/obj/es2king_test/m14_master" : 1 ]));\n\tsetup();\n',1)
+          p.write_text(s)
+          PY
+      - name: Configure and build Neolith／設定並編譯 Driver
+        working-directory: .runtime/original-es2/neolith
+        run: |
+          cmake --preset linux -DBUILD_TESTING=OFF
+          cmake --build --preset dev-linux
+      - name: Locate driver／尋找 Driver
+        run: |
+          DRIVER="$(find .runtime/original-es2/neolith/out -type f -name neolith -perm -111 | head -n 1)"
+          test -n "$DRIVER"
+          echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"
+      - name: Boot MUD／啟動 Original ES2
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd .runtime/original-es2
+          DRIVER_ABS="$(realpath "$GITHUB_WORKSPACE/$DRIVER")"
+          "$DRIVER_ABS" -f neolith.conf -c > "$RUNNER_TEMP/es2-m14-boot.log" 2>&1 &
+          PID=$!
+          echo "ES2_PID=$PID" >> "$GITHUB_ENV"
+          for i in $(seq 1 30); do
+            if nc -z 127.0.0.1 4000; then exit 0; fi
+            kill -0 "$PID" 2>/dev/null || break
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/es2-m14-boot.log"
+          exit 1
+      - name: Live apprentice verification／真實拜師與重登驗證
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import telnetlib,time,re,sys
+          ANSI=re.compile(r'\x1b\[[0-9;?]*[ -/]*[@-~]')
+          def read(tn,b,t=.8):
+              end=time.time()+t
+              while time.time()<end:
+                  try:
+                      d=tn.read_very_eager()
+                      if d:b.extend(d)
+                  except (EOFError,OSError):break
+                  time.sleep(.05)
+          def line(tn,b,s,t=.8):tn.write(s.encode()+b'\r\n');read(tn,b,t)
+          def key(tn,b,s,t=.8):tn.write(s.encode());read(tn,b,t)
+          def clean(b):return ANSI.sub('',b.decode(errors='replace'))
+          tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); b=bytearray(); read(tn,b,1)
+          line(tn,b,'mfourteen');key(tn,b,'Y');line(tn,b,'m14pass');line(tn,b,'m14pass');line(tn,b,'none');key(tn,b,'\r');key(tn,b,'M');line(tn,b,'拜師測試');key(tn,b,'Y',2)
+          mark=len(b);line(tn,b,'look',1);text=clean(b[mark:]);print(text)
+          if '試煉師父' not in text:sys.exit('M14 FAIL／失敗：客棧大堂未生成測試師父')
+          mark=len(b);line(tn,b,'apprentice m14master',1.2);ap=clean(b[mark:]);print(ap)
+          if 'M14MASTER ACCEPTED' not in ap:sys.exit('M14 FAIL／失敗：Original apprentice 未進入 NPC accept_apprentice()')
+          mark=len(b);line(tn,b,'m14relation',.8);rel=clean(b[mark:]);print(rel)
+          if 'PLAYER_IS_APPRENTICE=1' not in rel or 'MASTER_IS_MASTER=1' not in rel:
+              sys.exit('M14 FAIL／失敗：Original relation.c 未建立雙向師徒關係')
+          # Persistence／持久化：玩家端 masters mapping 應隨角色存檔；重新登入後再對同一 NPC 驗證。
+          line(tn,b,'quit',1.2);tn.close()
+          tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5);b=bytearray();read(tn,b,1);line(tn,b,'mfourteen');line(tn,b,'m14pass',1.5)
+          mark=len(b);line(tn,b,'m14relation',.8);restored=clean(b[mark:]);print(restored)
+          if 'PLAYER_IS_APPRENTICE=1' not in restored:
+              sys.exit('M14 FAIL／失敗：quit → relogin 後玩家師父關係未保存')
+          print('M14 APPRENTICE RUNTIME PASS／實機通過：真實拜師、雙向關係與玩家重登保存成立。')
+          try:line(tn,b,'quit',.3);tn.close()
+          except OSError:pass
+          PY
+      - name: Dump Mudlib errors on failure／失敗時輸出錯誤紀錄
+        if: failure()
+        run: |
+          find .runtime/original-es2 -type f \( -name '*error*' -o -name '*.log' \) -maxdepth 6 -print -exec tail -n 120 {} \; || true
+          cat "$RUNNER_TEMP/es2-m14-boot.log" 2>/dev/null || true
+      - name: Stop MUD／停止測試伺服器
+        if: always()
+        run: |
+          if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
