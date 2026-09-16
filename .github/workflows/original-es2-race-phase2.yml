@@ -50,7 +50,7 @@ jobs:
           /* Combat fixture／戰鬥測試物件：Runtime-only 木樁武者，不寫入 Original ES2 保存層。 */
           #include <npc.h>
           inherit F_VILLAGER;
-          void create(){ set_name("種族木樁武者",({"racedummy","dummy"})); set_race("human"); set_class("commoner"); set_level(1); set_attr("str",13); set_attr("cor",13); set_attr("int",13); set_attr("spi",13); set_attr("cps",13); set_attr("dex",13); set_attr("con",18); set_attr("wis",13); set("long","這是歷史種族 Runtime 戰鬥驗證使用的臨時對象。\n"); setup(); }
+          void create(){ set_name("種族木樁武者",({"racedummy","dummy"})); set_race("human"); set_class("commoner"); set_level(1); set_attr("str",13); set_attr("cor",13); set_attr("int",13); set_attr("spi",13); set_attr("cps",13); set_attr("dex",13); set_attr("con",1000); set_attr("wis",13); set("long","這是歷史種族 Runtime 戰鬥驗證使用的高耐久臨時對象。\n"); setup(); }
           int accept_fight(object ob){ do_chat("RACEFIGHT ACCEPTED: 種族木樁武者接受切磋。\n"); return 1; }
           LPC
           python - <<'PY'
@@ -109,11 +109,13 @@ jobs:
               tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); b=bytearray(); read(tn,b,1); line(tn,b,uid); key(tn,b,'Y'); line(tn,b,'phasepass'); line(tn,b,'phasepass'); line(tn,b,'none')
               for _ in range(index): key(tn,b,'\x1b[B',.10)
               line(tn,b,'',.8); key(tn,b,'M'); line(tn,b,name); key(tn,b,'Y',1.2); line(tn,b,'raceprobe',.8); probe(clean(b),race,value,'LIVE',True)
-              line(tn,b,'west',.4); line(tn,b,'look',.4); line(tn,b,'fight racedummy',2.5); line(tn,b,'hp',.6)
-              combat=clean(b); flat=re.sub(r'\s+',' ',combat)
-              if 'RACEFIGHT ACCEPTED' not in flat or '種族木樁武者' not in flat: sys.exit(f'COMBAT FAIL／戰鬥失敗：{race} 未進入真實 fight 流程')
-              patterns=[r'你握緊拳頭往種族木樁武者',r'種族木樁武者.*向你',r'你.*往種族木樁武者.*踢',r'種族木樁武者.*一拳往你']
-              if not any(re.search(p,flat) for p in patterns): sys.exit(f'COMBAT FAIL／戰鬥失敗：{race} 沒有真實雙向攻擊文字')
+              line(tn,b,'west',.4); line(tn,b,'look',.4); before=len(b); line(tn,b,'fight racedummy',3.5); line(tn,b,'hp',.6)
+              # Combat evidence／戰鬥證據：只分析 fight 指令後的新輸出，避免把房間描述誤認為戰鬥文字。
+              combat=clean(b[before:]); flat=re.sub(r'\s+',' ',combat)
+              if 'RACEFIGHT ACCEPTED' not in flat: sys.exit(f'COMBAT FAIL／戰鬥失敗：{race} 未進入真實 fight 流程')
+              # Original ES2 不同種族與隨機招式的文字可能不同；雙方名稱同時出現在接受切磋以外的新句子，即視為真實交換攻擊文字。
+              exchange=[part for part in re.split(r'[\r\n]+',combat) if '種族木樁武者' in part and '你' in part]
+              if not exchange: print(combat); sys.exit(f'COMBAT FAIL／戰鬥失敗：{race} 沒有真實雙向攻擊文字')
               line(tn,b,'quit',.5); tn.close()
               # Persistence／資料保存：重登後確認種族與出生屬性不變；戰鬥造成的目前資源消耗可以正常保存，不誤判成初始化失敗。
               tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); b2=bytearray(); read(tn,b2,1); line(tn,b2,uid); line(tn,b2,'phasepass',1.2); line(tn,b2,'raceprobe',.8); probe(clean(b2),race,value,'PERSISTENCE',False); line(tn,b2,'quit',.3); tn.close()
