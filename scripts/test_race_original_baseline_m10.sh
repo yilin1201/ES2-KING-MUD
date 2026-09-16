@@ -6,12 +6,12 @@ set -euo pipefail
 BASELINE="original_es2/research/original_race_runtime_baseline_m10.tsv"
 test -f "$BASELINE"
 
-# 去掉兩行中文說明與欄位標題後，必須剛好是 11 個種族。
+# 排除中文說明與欄位標題後，必須剛好是 11 個種族。
 count=$(grep -v '^#' "$BASELINE" | tail -n +2 | wc -l | tr -d ' ')
 test "$count" = "11"
 
 # 每個資料列必須有 14 欄：ID、中文名、業力、精氣神與八項屬性。
-awk -F '\t' 'BEGIN{ok=1} /^#/ {next} NR==4 {next} NF!=14 {ok=0; print "欄位數錯誤: " $0 > "/dev/stderr"} END{exit ok?0:1}' "$BASELINE"
+awk -F '\t' '!/^#/ && $1 != "race_id" { if (NF != 14) { print "欄位數錯誤: " $0 > "/dev/stderr"; bad=1 } } END { exit bad ? 1 : 0 }' "$BASELINE"
 
 # 鎖定幾組差異最大的 Original 證據，避免再次被暫定全 25／50 覆蓋。
 grep -q $'^headless\t刑天\t25\t80\t100\t30\t30\t20\t15\t10\t16\t24\t28\t18$' "$BASELINE"
