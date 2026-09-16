@@ -45,6 +45,9 @@ jobs:
 
           void create()
           {
+              // USER_PROTECT／使用者資料保護：Original user.c 只允許 ROOT、DOMAIN、MUDLIB 或玩家本人修改技能資料。
+              // 研讀的 improve_skill() 是由書本物件回呼，因此測試書必須使用 MUDLIB_UID；不修改 Original study.c。
+              seteuid(MUDLIB_UID);
               set_name("研讀測試卷", ({ "study sheet", "sheet" }));
               set_weight(1);
               // content／研讀內容：單一 unarmed 可提高成功機率，也保留 Original 隨機學習機制。
@@ -144,7 +147,7 @@ jobs:
 
           learned=0
           for _ in range(20):
-              # Original study 會讓角色 busy；每輪等待後先 halt，再進下一次研讀，避免把 busy 訊息誤當成學習失敗。
+              # Original study 會讓角色 busy；等待 study_content() 回呼後再讀取狀態。
               line(tn,buf,'study sheet',1.2)
               read(tn,buf,1.5)
               line(tn,buf,'m12study',.4)
