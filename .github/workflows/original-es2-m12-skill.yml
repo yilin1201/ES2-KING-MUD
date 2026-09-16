@@ -114,7 +114,8 @@ jobs:
           # 建立新角色並寫入技能；這裡不假裝已完成 NPC 師父教學，只驗證 Original 底層技能介面。
           tn=session(); buf=bytearray(); read(tn,buf,1)
           line(tn,buf,'mskill'); key(tn,buf,'Y'); line(tn,buf,'mskillpass'); line(tn,buf,'mskillpass'); line(tn,buf,'none')
-          key(tn,buf,'\r'); key(tn,buf,'M'); line(tn,buf,'技能測試'); key(tn,buf,'Y',1.5)
+          # Menu confirmation／選單確認：Original 種族選單先以 CR 確認 human，再選性別；性別選單則用完整 CRLF 送出 M，避免停留在確認畫面。
+          key(tn,buf,'\r'); line(tn,buf,'M'); line(tn,buf,'技能測試'); key(tn,buf,'Y',1.5)
           line(tn,buf,'m12skill seed',1.0)
           first=clean(buf); print(first)
           if 'M12SKILL UNARMED=15 SWORD=200' not in first:
