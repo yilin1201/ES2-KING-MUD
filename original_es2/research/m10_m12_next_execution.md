@@ -17,7 +17,7 @@
 
 ## GitHub 操作
 
-本輪所有 Commit 先建立在分支歷史中；更新 `build/original-es2-races-phase2` 分支 Ref（分支指標）即為 Push（推送）本輪 Commit，並讓 PR #13 觸發新的 Actions。
+本輪 Commit 已準備完成；更新 `build/original-es2-races-phase2` 分支 Ref（分支指標）即為 Push（推送），並讓 PR #13 觸發新的 Actions。
 
 ## 合併限制
 
