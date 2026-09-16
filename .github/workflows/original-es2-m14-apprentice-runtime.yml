@@ -72,12 +72,12 @@ jobs:
           LPC
           python - <<'PY'
           from pathlib import Path
-          # Runtime overlay／執行期覆蓋：把測試師父掛入客棧大堂；不回寫 Original room。
-          p=Path('.runtime/original-es2/mudlib/d/snow/inn.c')
+          # Runtime overlay／執行期覆蓋：Original 出生房實際檔名為 inn_hall.c；只在執行樹加入測試師父。
+          p=Path('.runtime/original-es2/mudlib/d/snow/inn_hall.c')
           s=p.read_text()
-          needle='\n\tsetup();\n'
-          assert needle in s, '找不到 inn.c setup() 掛載點'
-          s=s.replace(needle,'\n\tset("objects", ([ "/obj/es2king_test/m14_master" : 1 ]));\n\tsetup();\n',1)
+          needle='        "/d/snow/npc/innkeeper" : 1,\n'
+          assert needle in s, '找不到 inn_hall.c 原始 NPC 掛載點'
+          s=s.replace(needle, needle + '        "/obj/es2king_test/m14_master" : 1,\n', 1)
           p.write_text(s)
           PY
       - name: Configure and build Neolith／設定並編譯 Driver
