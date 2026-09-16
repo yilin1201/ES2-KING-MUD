@@ -1,0 +1,126 @@
+name: Original ES2 M11 Class Runtime
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths:
+      - '.github/workflows/original-es2-m11-class.yml'
+      - 'scripts/test_class_m11_static.sh'
+      - 'scripts/bootstrap_original_es2.sh'
+      - 'original_es2/research/original_class_reconstruction_m11.md'
+  pull_request:
+    paths:
+      - '.github/workflows/original-es2-m11-class.yml'
+      - 'scripts/test_class_m11_static.sh'
+      - 'scripts/bootstrap_original_es2.sh'
+      - 'original_es2/research/original_class_reconstruction_m11.md'
+
+jobs:
+  m11-class-runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v4
+
+      - name: Install prerequisites／安裝編譯工具
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build bison netcat-openbsd
+          python -m pip install --upgrade cmake
+
+      - name: Bootstrap runtime／建立 Original ES2 執行環境
+        run: bash scripts/bootstrap_original_es2.sh
+
+      - name: Class static regression／職業靜態回歸測試
+        run: bash scripts/test_class_m11_static.sh
+
+      - name: Install class probe／安裝職業實機測試指令
+        run: |
+          # Runtime-only probe／只存在測試執行環境的探針：不修改保存用途的 Original ES2 原始碼。
+          cat > .runtime/original-es2/mudlib/cmds/usr/m11class.c <<'LPC'
+          inherit F_CLEAN_UP;
+
+          // M11 Class probe／職業探針：實際呼叫 Original set_class()，確認職業 Daemon 可被載入與切換。
+          int main(object me, string arg)
+          {
+              if (arg != "commoner" && arg != "fighter") {
+                  write("用法：m11class commoner|fighter\n");
+                  return 1;
+              }
+              me->set_class(arg);
+              write(sprintf("M11CLASS CLASS=%s LEVEL=%d RACE=%s\n",
+                    me->query_class(), me->query_level(), me->query_race()));
+              return 1;
+          }
+          LPC
+
+      - name: Configure Neolith／設定 MUD Driver 編譯
+        working-directory: .runtime/original-es2/neolith
+        run: cmake --preset linux -DBUILD_TESTING=OFF
+
+      - name: Build Neolith／編譯 MUD Driver
+        working-directory: .runtime/original-es2/neolith
+        run: cmake --build --preset dev-linux
+
+      - name: Locate driver／尋找 MUD Driver 執行檔
+        run: |
+          DRIVER="$(find .runtime/original-es2/neolith/out -type f -name neolith -perm -111 | head -n 1)"
+          test -n "$DRIVER"
+          echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"
+
+      - name: Boot MUD／啟動 Original ES2
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd .runtime/original-es2
+          DRIVER_ABS="$(realpath "$GITHUB_WORKSPACE/$DRIVER")"
+          "$DRIVER_ABS" -f neolith.conf -c > "$RUNNER_TEMP/es2-m11-boot.log" 2>&1 &
+          PID=$!
+          echo "ES2_PID=$PID" >> "$GITHUB_ENV"
+          for i in $(seq 1 30); do
+            kill -0 "$PID" 2>/dev/null || break
+            if nc -z 127.0.0.1 4000; then exit 0; fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/es2-m11-boot.log"
+          exit 1
+
+      - name: Live Class verification／真實職業切換驗證
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          # Telnet／文字連線協定：用真正玩家登入流程建立角色，再執行 M11 職業探針。
+          import telnetlib,time,re,sys
+          ANSI=re.compile(r'\x1b\[[0-9;?]*[ -/]*[@-~]')
+          tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); buf=bytearray()
+          def read(t=.8):
+              end=time.time()+t
+              while time.time()<end:
+                  try:
+                      d=tn.read_very_eager()
+                      if d: buf.extend(d)
+                  except (EOFError,OSError): break
+                  time.sleep(.05)
+          def line(s,t=.8): tn.write(s.encode()+b'\r\n'); read(t)
+          def key(s,t=.8): tn.write(s.encode()); read(t)
+          read(1); line('mclass'); key('Y'); line('mclasspass'); line('mclasspass'); line('none')
+          key('\r'); key('M'); line('職業測試'); key('Y',1.5)
+          line('m11class fighter',1.0)
+          line('m11class commoner',1.0)
+          out=ANSI.sub('',buf.decode(errors='replace'))
+          print(out)
+          if 'M11CLASS CLASS=fighter' not in out:
+              sys.exit('M11 FAIL／失敗：Original fighter／武者無法在 Runtime 切換或載入')
+          if 'M11CLASS CLASS=commoner' not in out:
+              sys.exit('M11 FAIL／失敗：Original commoner／平民無法在 Runtime 切換或載入')
+          print('M11 RUNTIME PASS／實機驗證通過：Original 武者與平民可在真實角色 Runtime 載入及切換。')
+          try: line('quit',.3); tn.close()
+          except OSError: pass
+          PY
+
+      - name: Stop MUD／停止測試伺服器
+        if: always()
+        run: |
+          if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
