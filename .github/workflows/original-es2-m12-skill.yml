@@ -45,6 +45,8 @@ jobs:
           int main(object me, string arg)
           {
               if (arg == "seed") {
+                  // User protection／使用者保護：Original user.c 只允許可信任 UID 修改玩家技能；測試探針暫時使用 Mudlib 權限。
+                  seteuid(MUDLIB_UID);
                   // set_skill／設定技能：驗證角色能持有徒手與劍術技能。
                   me->set_skill("unarmed", 10);
                   me->set_skill("sword", 20);
@@ -52,6 +54,7 @@ jobs:
                   me->advance_skill("unarmed", 5);
                   // 上限保護：Original set_skill() 對超過 200 的數值會限制為 200。
                   me->set_skill("sword", 999);
+                  seteuid(getuid());
               }
               write(sprintf("M12SKILL UNARMED=%d SWORD=%d\n",
                     me->query_skill("unarmed", 1), me->query_skill("sword", 1)));
