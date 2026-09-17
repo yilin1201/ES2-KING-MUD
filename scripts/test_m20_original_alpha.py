@@ -38,7 +38,7 @@ def clean(output):
 tn = telnetlib.Telnet("127.0.0.1", 4000, timeout=5)
 buf = bytearray()
 read(tn, buf, 1)
-line(tn, buf, "m20alpha")
+line(tn, buf, "malpha")
 key(tn, buf, "Y")
 line(tn, buf, "m20pass")
 line(tn, buf, "m20pass")
@@ -51,7 +51,7 @@ for command in ("look", "score", "inventory", "west", "look", "east", "look"):
     line(tn, buf, command)
 first = clean(buf)
 print(first)
-required = ["【 平民 】阿法驗收 (M20alpha)", "目前是等級 1 的平民", "男性人類", "客棧大堂", "廚房"]
+required = ["【 平民 】阿法驗收 (Malpha)", "目前是等級 1 的平民", "男性人類", "客棧大堂", "廚房"]
 missing = [item for item in required if item not in first]
 if missing:
     sys.exit("M20 ALPHA FAIL／首次連線旅程缺少：" + repr(missing))
@@ -63,7 +63,7 @@ time.sleep(1)
 tn = telnetlib.Telnet("127.0.0.1", 4000, timeout=5)
 buf = bytearray()
 read(tn, buf, 1)
-line(tn, buf, "m20alpha")
+line(tn, buf, "malpha")
 before_password = clean(buf)
 if "創造一個新的人物" in before_password or "請輸入密碼" not in before_password:
     sys.exit("M20 ALPHA FAIL／帳號或角色未保存")
@@ -72,7 +72,7 @@ line(tn, buf, "look")
 line(tn, buf, "score")
 second = clean(buf)
 print(second)
-if "【 平民 】阿法驗收 (M20alpha)" not in second or "客棧大堂" not in second:
+if "【 平民 】阿法驗收 (Malpha)" not in second or "客棧大堂" not in second:
     sys.exit("M20 ALPHA FAIL／重新登入後角色或房間不正確")
 print("M20 ALPHA PASS／連線、創角、房間、基本指令、移動與重新登入全部通過。")
 line(tn, buf, "quit", 0.3)
