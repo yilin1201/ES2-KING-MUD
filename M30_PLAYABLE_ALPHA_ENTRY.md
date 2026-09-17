@@ -98,7 +98,7 @@ Web Entry 與 Original mudlib 分離，沒有修改 Original 保存原始碼。
 
 `M30 BROWSER PLAYABLE PASS`：**尚未成立。**
 
-嘗試以真正 Chrome browser 開啟 Work 本機 Web Client 時，Work 執行環境連線中斷並回報 environment offline；因此沒有取得完整 Browser Journey 證據，不能用 HTML、Static 或 WebSocket 腳本冒充 Browser PASS。
+第一次以真正 Chrome browser 開啟 Work 本機 Web Client 時，Work 執行環境離線；恢復後再次啟動 Neolith `:4000` 與 WebSocket Bridge `:8080`，兩個本機 listener 均確認可連線，但 Cloud Browser 開啟 `http://127.0.0.1:8080` 明確回報 `ERR_BLOCKED_BY_CLIENT`。這證明 Browser 與 Work Runtime 不共享 localhost；因此仍沒有完整 Browser Journey 證據，不能用 HTML、Static 或 WebSocket 腳本冒充 Browser PASS。
 
 目前狀態：
 
@@ -106,7 +106,7 @@ Web Entry 與 Original mudlib 分離，沒有修改 Original 保存原始碼。
 - WebSocket/Telnet Bridge：完成，本機協定整合 PASS。
 - 真正 Browser 全流程：`ENVIRONMENT-LIMITATION`。
 - Owner 外部 Chrome／Edge 公開 URL：不存在，不得虛構。
-- Work Public Port／Temporary Public URL／HTTPS forwarding：未取得可用端點。
+- Work Public Port／Temporary Public URL／HTTPS forwarding：實際檢查環境與工具後未提供可用端點；未嘗試繞過平台隔離。
 - 待完成：一個零成本或既有的公開 Hosting／External Access（主機託管／外部連線）位置，能同時常駐 Neolith 與 bridge，配置 HTTPS/WSS 後重跑 Browser Journey。
 
 沒有購買服務、填入信用卡、提高 GitHub Spending Budget 或啟用付費 Actions。
