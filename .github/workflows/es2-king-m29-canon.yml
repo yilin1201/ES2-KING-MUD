@@ -1,0 +1,17 @@
+name: ES2-KING M29 Canon Martial Arts
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths: ['es2_king_expansion/runtime/mudlib/adm/daemons/kingcanon_d.c', 'es2_king_expansion/runtime/mudlib/cmds/adm/kingcanon.c', 'es2_king_expansion/research/m29_*', 'es2_king_expansion/runtime/m29_*', 'scripts/test_m29_*', '.github/workflows/es2-king-m29-canon.yml']
+  pull_request:
+    paths: ['es2_king_expansion/runtime/mudlib/adm/daemons/kingcanon_d.c', 'es2_king_expansion/runtime/mudlib/cmds/adm/kingcanon.c', 'es2_king_expansion/research/m29_*', 'es2_king_expansion/runtime/m29_*', 'scripts/test_m29_*', '.github/workflows/es2-king-m29-canon.yml']
+  workflow_dispatch:
+jobs:
+  m29-canon:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: bash scripts/test_m29_canon_static.sh
+      - run: bash scripts/bootstrap_original_es2.sh .runtime/es2-king
+      - run: bash scripts/apply_es2_king_expansion.sh .runtime/es2-king
+      - run: bash scripts/test_m29_canon_runtime_gate.sh .runtime/es2-king
