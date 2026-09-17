@@ -10,6 +10,12 @@ test -d "$TARGET/mudlib" || {
   exit 1
 }
 test -d "$SOURCE"
-
 cp -a "$SOURCE/." "$TARGET/mudlib/"
+
+# Owner provisioning／擁有者授權配置：只在獨立 Expansion Runtime 登錄帳號 ID；
+# 密碼仍由 Original 登入系統建立、雜湊與驗證，不存在 repository 設定值。
+WIZLIST="$TARGET/mudlib/adm/etc/wizlist"
+touch "$WIZLIST"
+grep -Fqx 'king (admin)' "$WIZLIST" || printf '%s\n' 'king (admin)' >> "$WIZLIST"
+
 echo "ES2-KING EXPANSION APPLY PASS／Expansion 已套用至獨立 Runtime：$TARGET"
