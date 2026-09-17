@@ -60,6 +60,8 @@ Expansion 只由 overlay 加入，沒有覆寫 Original 來源檔。
 
 Repository 已加入 `webtelnet/`：Chrome／Edge 頁面、WebSocket（網頁雙向通訊）橋接及 Telnet TCP 轉送。`npm run check` 可做語法檢查。
 
+本機整合測試已同時啟動 Neolith 與 bridge，使用 WebSocket client 連入 `/mud`，並實際收到 Original ES2 的「您的使用者代號」登入提示：PASS。此結果證明橋接程式可用，但不代表它已有公網網址。
+
 目前不能提供使用者可開啟的公開網址，狀態為 `ENVIRONMENT-LIMITATION`：Work 臨時環境沒有可授權發布的公網 TCP/HTTP 端點；瀏覽器也不能直接連 raw Telnet。仍缺一個零成本或既有的公網執行位置、HTTPS/WSS 網域終端，以及在該位置同時常駐 Neolith 與 bridge。未購買、未部署任何服務。
 
 ## 已知限制
