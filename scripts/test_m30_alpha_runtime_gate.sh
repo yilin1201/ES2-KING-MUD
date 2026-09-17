@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="${1:-.runtime/es2-king}/mudlib"
+
+# Original core／Original 核心：M30 不得犧牲已完成可玩基線。
+for f in adm/daemons/logind.c obj/login.c obj/user.c feature/char/skill.c feature/study.c feature/char/combat.c cmds/std/study.c cmds/usr/enable.c cmds/std/exert.c cmds/std/perform.c cmds/std/apprentice.c feature/save.c d/snow/inn_hall.c d/snow/square.c; do
+  test -f "$ROOT/$f" || { echo "M30 RUNTIME FAIL：Original 核心缺少 $f"; exit 1; }
+done
+grep -Fq 'if( val > 200 ) val = 200;' "$ROOT/feature/char/skill.c"
+grep -Fq 'save_object (file)' "$ROOT/feature/save.c"
+grep -Fq 'restore_object (file, 1)' "$ROOT/feature/save.c"
+
+# Expansion core／Expansion 核心：M26-M29 全部同一 overlay／覆蓋層。
+for f in adm/daemons/kingd.c adm/daemons/kingmartiald.c adm/daemons/kingcanon_d.c cmds/adm/kingcreate.c cmds/adm/kingrealm.c cmds/adm/kingmartial.c cmds/adm/kingcanon.c d/king/wuji_realm.c obj/king/creation_mark.c; do
+  test -f "$ROOT/$f" || { echo "M30 RUNTIME FAIL：Expansion 缺少 $f"; exit 1; }
+done
+grep -Fq 'level > 300' "$ROOT/adm/daemons/kingmartiald.c"
+grep -Fq 'form < 1 || form > 11' "$ROOT/adm/daemons/kingcanon_d.c"
+grep -Fq '"down" : "/d/snow/square"' "$ROOT/d/king/wuji_realm.c"
+grep -Fq 'creation_registry[id]' "$ROOT/adm/daemons/kingd.c"
+echo 'M30 ALPHA RUNTIME PASS／Original 核心與 M26-M29 Expansion overlay 相容。'

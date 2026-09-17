@@ -1,0 +1,24 @@
+name: ES2-KING M30 Alpha
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths: ['ROADMAP_M0_M30.md', 'original_es2/**', 'es2_king_expansion/**', 'king_library/**', 'scripts/test_m30_*', 'scripts/test_m*', '.github/workflows/es2-king-m30-alpha.yml']
+  pull_request:
+    paths: ['ROADMAP_M0_M30.md', 'original_es2/**', 'es2_king_expansion/**', 'king_library/**', 'scripts/test_m30_*', 'scripts/test_m*', '.github/workflows/es2-king-m30-alpha.yml']
+  workflow_dispatch:
+jobs:
+  m30-alpha:
+    name: ES2-KING Alpha 整合驗收
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Static Gate／完成矩陣與邊界
+        run: bash scripts/test_m30_alpha_static.sh
+      - name: Bootstrap／建立獨立 Expansion Runtime
+        run: bash scripts/bootstrap_original_es2.sh .runtime/es2-king
+      - name: Apply Expansion／套用 M26-M29 overlay
+        run: bash scripts/apply_es2_king_expansion.sh .runtime/es2-king
+      - name: Runtime Gate／Original 與 Expansion 相容性
+        run: bash scripts/test_m30_alpha_runtime_gate.sh .runtime/es2-king
+      - name: Driver Build／建置 Driver
+        run: cmake --preset linux -DBUILD_TESTING=OFF && cmake --build --preset dev-linux
