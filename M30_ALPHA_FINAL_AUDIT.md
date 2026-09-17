@@ -1,6 +1,6 @@
 # M30 ES2-KING Alpha 最終完整性稽核
 
-稽核基準：`f5cc94a05fe57b4f7125122cc1bc0297ff5021b6`（`build/original-es2-races-phase2`）。
+稽核基準：`f5f325706ac3645ede7828798ae2008d873c8a56`（`build/original-es2-races-phase2` 最新 Head）；Closure 前基準為 `f5cc94a05fe57b4f7125122cc1bc0297ff5021b6`。
 
 ## 1. M0～M30 完整驗收矩陣
 

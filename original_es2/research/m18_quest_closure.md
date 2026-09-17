@@ -1,6 +1,6 @@
 # M18 Original ES2 Quest 證據收斂紀錄
 
-稽核基準：`build/original-es2-races-phase2` Head `c7e98ab32dcb5d513ccee81fa207dbf3747ff2db`。
+稽核基準：`build/original-es2-races-phase2` 最新 Head `f5f325706ac3645ede7828798ae2008d873c8a56`。
 
 ## 已完成
 
