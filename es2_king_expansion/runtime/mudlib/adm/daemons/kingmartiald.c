@@ -1,6 +1,6 @@
 #pragma save_binary
-
 inherit F_CLEAN_UP;
+#define KING_D "/adm/daemons/kingd"
 
 private mapping yijinjing_stages = ([
     49 : "紅級通脈境", 99 : "黃級鍛骨境", 149 : "青級生生境",
@@ -10,11 +10,8 @@ private mapping yijinjing_stages = ([
 
 private void create() { seteuid(getuid()); }
 
-int authorized(object actor)
-{
-    return objectp(actor) && interactive(actor)
-        && wiz_level(actor) >= wiz_level("(admin)");
-}
+// 唯一 Owner 帳號授權集中交給 KING_D，避免各武學服務產生不同判定。
+int authorized(object actor) { return KING_D->authorized(actor); }
 
 string yijinjing_stage(int level)
 {
