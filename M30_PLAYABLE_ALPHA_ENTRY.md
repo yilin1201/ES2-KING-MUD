@@ -1,74 +1,124 @@
 # M30 Playable Alpha Entry（M30 可遊玩 Alpha 入口）
 
-驗證日期：2026-09-17。GitHub Actions（GitHub 自動化測試）因免費額度／US$0 預算無法啟動，狀態僅為 `ACTIONS-INFRA-BLOCKED`，本文件沒有宣稱 Actions PASS。
+Branch：`build/original-es2-races-phase2`  
+本次重新驗證起始 Head：`473092d54a82ea87f903bd2a4a8130b8520abb67`  
+KING Owner 程式／Canon Head（驗收文件更新前）：`eb37f3d4c2d3edb500ea95feb98e1edf92bb04ad`
 
-## 真實 Runtime
+GitHub Actions（GitHub 自動化測試）因免費額度／US$0 預算無法啟動，狀態僅為 `ACTIONS-INFRA-BLOCKED`；沒有 rerun，也沒有宣稱 Actions PASS。
+
+## 1. M30 PLAYABLE DRIVER PASS
+
+**狀態：PASS。**
 
 - Original ES2 mudlib：`taedlar/es2_mudlib` commit `cc45c06af4852380e5148dad3c9d53ff06854f2c`。
 - Neolith Driver（MUD 遊戲執行引擎）：`neolith-1.0.0`，來源 commit `96b33bdad773713769d7af453d5989d76e69ca0a`。
-- 建立：乾淨 Original tree → CMake/Ninja 編譯 Neolith → `scripts/apply_es2_king_expansion.sh` 疊加 M26～M29 → `neolith -f neolith.conf`。
-- Listener（監聽埠）：真實 TCP/Telnet `127.0.0.1:4000`，socket 連線及登入 banner 實測 PASS。
-- Boot：`mudlib/log/debug.log` 明確記錄 `master object is created successfully`；SimulEfun、preload daemons 與登入流程成功，無 fatal startup error。
+- Runtime：乾淨 Original tree → Expansion overlay → Neolith。
+- Driver Build：CMake／Ninja 全新設定及 109 build steps，PASS。
+- Driver Boot：PASS；`master object is created successfully`。
+- Telnet listener：`127.0.0.1:4000` 實際連線 PASS。
+- Original 玩家連線、創角、房間、look、score、inventory、移動、NPC、戰鬥、學習、save、quit、獨立重新連線及 persistence（持久化）已有真正 Driver 證據，不是 Mock（模擬程式）或 Static Test（靜態測試）。
 
-## 真人 Playable Journey
+## 2. KING Owner Expansion Canon
 
-| 步驟 | 狀態 | 真實 Driver 證據摘要 |
-|---|---|---|
-| Connect / Login | PLAYABLE PASS | Telnet 4000 顯示 Eastern Stories II／天朝帝國 banner。 |
-| Create Character | PLAYABLE PASS | 新建帳號、密碼、email 選擇與顯示名稱完成。 |
-| Race Selection | PLAYABLE PASS | 選擇 human／男性後建立角色。 |
-| Class / School | PARTIAL | 平民可出生；拜陳光蕊為師與稱號成功，但 Original 缺 `alchemist` class daemon，`score` 顯示職業 `0`。不可虛構補齊。 |
-| Spawn / look / score / inventory | PLAYABLE PASS | 客棧大堂出生，三個命令均有真實輸出。 |
-| movement | PLAYABLE PASS | 客棧、廚房、城內往返成功。 |
-| NPC interaction | PLAYABLE PASS | `look waiter`、藥鋪 `list` 與師徒對話成功。 |
-| combat | PLAYABLE PASS | `kill junkman` 進入真實心跳戰鬥，`halt` 可停止。 |
-| skill / learning | PLAYABLE PASS | `skills` 可用；`acquire literate from wang` 後 `sit` 進入真實授課循環。 |
-| study | PARTIAL | 指令可達；本次正常玩家路徑沒有取得可研讀書籍，沒有宣稱研讀成功。 |
-| enable | PARTIAL | 指令可達；新角色沒有可映射武功。 |
-| exert | PARTIAL | 指令可達並正確拒絕未 enable 的內功；沒有完成一次有效施展。 |
-| perform | PARTIAL | 指令可達；沒有完成一次已學招式施展。 |
-| equipment | PLAYABLE PASS（管理測試） | 真實 Driver 中 clone Original 銀劍並 `wield sword` 成功；尚非新手自然取得流程。 |
-| save / quit / relogin | PLAYABLE PASS | 儲存、離線、重新建立 Telnet 連線、密碼登入與角色／房間恢復均通過 M20 測試。 |
+`king` 是唯一 `KING / Owner / Creator` 帳號，屬於 ES2-KING Expansion Canon，不是 Original ES2 歷史設定。
 
-## Expansion Playable Journey
+授權鏈：
 
-Expansion 只由 overlay 加入，沒有覆寫 Original 來源檔。
+`Original Login` → `Password Authentication（密碼驗證）` → `Account ID = king` → `KING Authorization（KING 授權）` → `Owner / Creator`
 
-| 功能 | 狀態 | 真實 Driver 結果 |
-|---|---|---|
-| KING 管理員 | PLAYABLE PASS | 本機 WIZLIST 測試 fixture 登入顯示 `(admin)`；fixture 不提交為產品帳號。 |
-| 天神殿・無極之境 | PLAYABLE PASS | `kingrealm` 進入 `/d/king/wuji_realm`，`look` 顯示房間與唯一 down 出口。 |
-| KING Creation | PLAYABLE PASS | `kingcreate list`、`kingcreate creation_mark` 成功，創世印記進入 inventory。 |
-| 易筋經 | PLAYABLE PASS | `kingmartial yijinjing 300` 回報 Lv.300／黑級無極境。 |
-| 霸天煉體訣 | PLAYABLE PASS | `kingmartial batian ji` 回報既定 Expansion Canon 階段。 |
-| 渾天寶鑑 | PLAYABLE PASS | `kingcanon huntian 10` 回報第十層玄宇宙。 |
-| 如來神掌／十方佛兵 | PLAYABLE PASS | `kingcanon rulai 11` 回報第十一式與對應佛兵；`kingcanon turn 4` 回報神輪四轉。 |
+Display Name（顯示名稱）不參與授權。遊戲權限層級為：
 
-以上 PASS 證明管理員可在真實 Driver 呼叫現有 Expansion runtime；它們尚未等同一般玩家透過任務、師承、戰鬥自然取得的完整 gameplay progression（遊戲進程），該部分維持 PARTIAL。
+`KING / Owner / Creator` > `Administrator / Wizard` > `Player` > `NPC`
 
-## 本機 Gate 與 Regression
+遊戲權限不會授予 Work Shell、OS Root、GitHub Token、GitHub Secrets、Cloud Credentials 或其他 Infrastructure Authority（基礎設施權限）。
 
-- Driver Build：PASS（CMake 4.4.3／Ninja 1.13.2，79 build steps）。
-- Driver Boot：PASS；Master object 成功，Telnet 4000 實際監聽。
-- M20 真實 Telnet Alpha：PASS（獨立重新連線與 persistence／持久化）。
-- M21～M24 Original Runtime Gates：PASS，對乾淨 Original tree 執行。
-- M25～M30 Static／Runtime／Final Audit：PASS，對整合 runtime 執行。
-- M26～M29 Static／Runtime Gates：PASS。
-- M30 TODO/FIXME/placeholder/STUB 掃描：PASS（既有掃描範圍未發現）。
+Alpha 密碼僅透過 Original ES2 正常登入系統輸入、驗證及雜湊保存；Repository、程式、文件、Workflow、Commit 與測試 fixture 沒有保存明文密碼。
 
-## Browser Entry（瀏覽器入口）
+## 3. KING OWNER PLAYABLE PASS
 
-Repository 已加入 `webtelnet/`：Chrome／Edge 頁面、WebSocket（網頁雙向通訊）橋接及 Telnet TCP 轉送。`npm run check` 可做語法檢查。
+**狀態：PASS。**
 
-本機整合測試已同時啟動 Neolith 與 bridge，使用 WebSocket client 連入 `/mud`，並實際收到 Original ES2 的「您的使用者代號」登入提示：PASS。此結果證明橋接程式可用，但不代表它已有公網網址。
+| 真實 Driver 步驟 | 結果 |
+|---|---|
+| Connect／Account Login／Password Authentication | PLAYABLE PASS |
+| KING Authorization／顯示 `(admin)` | PLAYABLE PASS |
+| Enter Game／look／score／inventory | PLAYABLE PASS |
+| movement／say | PLAYABLE PASS |
+| `kingcreate list` | PLAYABLE PASS |
+| `kingcreate creation_mark`／inventory | PLAYABLE PASS |
+| `kingrealm`／天神殿・無極之境／look | PLAYABLE PASS |
+| `kingmartial yijinjing 300` | PLAYABLE PASS：黑級無極境 |
+| `kingmartial batian ji` | PLAYABLE PASS |
+| `kingcanon huntian 10` | PLAYABLE PASS：玄宇宙 |
+| `kingcanon rulai 11` | PLAYABLE PASS：第十一式與阿賴耶識・歸墟神輪 |
+| `kingcanon turn 4` | PLAYABLE PASS：破八識 |
+| save／quit／relogin | PLAYABLE PASS |
+| Relogin 後再次執行 KING command | PLAYABLE PASS |
 
-目前不能提供使用者可開啟的公開網址，狀態為 `ENVIRONMENT-LIMITATION`：Work 臨時環境沒有可授權發布的公網 TCP/HTTP 端點；瀏覽器也不能直接連 raw Telnet。仍缺一個零成本或既有的公網執行位置、HTTPS/WSS 網域終端，以及在該位置同時常駐 Neolith 與 bridge。未購買、未部署任何服務。
+## 4. KING AUTHORIZATION ISOLATION PASS
 
-## 已知限制
+**狀態：PASS。**
 
-1. Original 的 `alchemist` 職業 daemon 缺失造成拜師後 `score` 職業顯示 `0`；保留為歷史原始碼缺口。
-2. 一般新角色的 `study`、有效 `enable`／`exert`／`perform`，以及 Expansion 的自然取得流程尚未完成真人端到端證明。
-3. Equipment PASS 使用管理 fixture，不代表新手自然裝備流程已驗收。
-4. WebTelnet 已具 repository 端最小實作，但未公開部署；目前不能由外部 Chrome／Edge 進入。
-5. GitHub Actions 狀態為 `ACTIONS-INFRA-BLOCKED`，不是 PASS 或程式 FAIL。
-6. PR #13 必須維持 Open，禁止 Merge；本工作不建立 M31。
+反向測試建立普通 Player 帳號，Display Name 同樣設定為 `KING`：
+
+- Original Login 顯示權限 `(player)`。
+- `score` 顯示不同 Account ID。
+- 嘗試 `kingcreate`、`kingrealm`、`kingmartial`、`kingcanon` 全部無法執行。
+- 沒有產生物品、移動至神域或寫入 Expansion 武學／Canon 狀態。
+
+授權程式同時要求：interactive（真人互動連線）＋精確 Account ID `king`＋Original admin 權限。一般 Player、同名角色及其他 Administrator 均不能取得 KING 專屬功能。
+
+## 5. Regression（回歸測試）
+
+- KING Owner Authorization Static：PASS。
+- M26 Static／Runtime Gate：PASS。
+- M27 Static／Runtime Gate：PASS。
+- M28 Static／Runtime Gate：PASS。
+- M29 Static／Runtime Gate：PASS。
+- M30 Runtime Gate：PASS。
+- Original 200 級技能上限：保留。
+- M28／M29 既定名稱、境界、招式與佛兵：未改寫。
+- Original preserved source：未修改；Owner 授權只由 Expansion overlay 套入獨立 Runtime。
+
+## 6. Web Client 與 WebSocket/Telnet Bridge
+
+Repository 的 `webtelnet/` 已完成：
+
+- 黑底文字終端、UTF-8 繁體中文。
+- MUD Output（遊戲輸出）。
+- Command Input（指令輸入）與 Enter 送出。
+- 自動捲動及 WebSocket（網頁雙向通訊）狀態。
+- Login／Password／Character Creation 與一般指令均以原始文字流傳送。
+- WebSocket → Telnet TCP `127.0.0.1:4000` bridge（橋接服務）。
+- Node 語法、套件鎖定及 WebSocket 收到真實 ES2 登入提示：PASS。
+
+Web Entry 與 Original mudlib 分離，沒有修改 Original 保存原始碼。
+
+## 7. Browser Acceptance 與 External Access
+
+`M30 BROWSER PLAYABLE PASS`：**尚未成立。**
+
+嘗試以真正 Chrome browser 開啟 Work 本機 Web Client 時，Work 執行環境連線中斷並回報 environment offline；因此沒有取得完整 Browser Journey 證據，不能用 HTML、Static 或 WebSocket 腳本冒充 Browser PASS。
+
+目前狀態：
+
+- Repository Web Client：完成。
+- WebSocket/Telnet Bridge：完成，本機協定整合 PASS。
+- 真正 Browser 全流程：`ENVIRONMENT-LIMITATION`。
+- Owner 外部 Chrome／Edge 公開 URL：不存在，不得虛構。
+- Work Public Port／Temporary Public URL／HTTPS forwarding：未取得可用端點。
+- 待完成：一個零成本或既有的公開 Hosting／External Access（主機託管／外部連線）位置，能同時常駐 Neolith 與 bridge，配置 HTTPS/WSS 後重跑 Browser Journey。
+
+沒有購買服務、填入信用卡、提高 GitHub Spending Budget 或啟用付費 Actions。
+
+## 8. PARTIAL／UNKNOWN
+
+- 一般玩家透過任務、師承或戰鬥自然取得 M28／M29 Expansion progression（遊戲進程）：PARTIAL。
+- M28／M29 傷害、命中、消耗、冷卻與絕對效果：UNKNOWN。
+- Original `alchemist` class daemon 缺失造成部分職業顯示問題：PARTIAL；未推測補造。
+- Original M5／M18 Evidence Gap：維持既有 PARTIAL／UNKNOWN。
+- 真正 Browser 的 login → play → quit → relogin 與 KING Journey：因 Work environment offline，維持 `ENVIRONMENT-LIMITATION`。
+
+## 9. GitHub 邊界
+
+PR #13 必須保持 Open／Not Merged。本工作不建立 M31、不新增大型 Expansion、不修改 Original ES2 歷史層。
