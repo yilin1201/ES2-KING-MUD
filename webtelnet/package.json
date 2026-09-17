@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node server.mjs",
-    "check": "node --check server.mjs"
+    "check": "node --check server.mjs",
+    "smoke": "node ../scripts/test_m30_deployment_smoke.mjs"
   },
   "dependencies": {
     "ws": "^8.18.0"

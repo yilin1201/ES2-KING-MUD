@@ -23,18 +23,32 @@
   const terminal = document.querySelector("#terminal");
   const command = document.querySelector("#command");
   const protocol = location.protocol === "https:" ? "wss:" : "ws:";
-  const socket = new WebSocket(`${protocol}//${location.host}/mud`);
-  socket.binaryType = "arraybuffer";
+  let socket;
+  let retryDelay = 1000;
   const decoder = new TextDecoder("utf-8");
   // ANSI（終端色彩控制碼）先移除；之後可在不碰 mudlib 的情況下加入彩色呈現。
   const append = data => {
     terminal.textContent += decoder.decode(data, { stream: true }).replace(/\x1b\[[0-9;?]*[ -/]*[@-~]/g, "");
     window.scrollTo(0, document.body.scrollHeight);
   };
-  socket.onopen = () => { status.textContent = "已連線 ES2-KING"; command.focus(); };
-  socket.onmessage = event => append(event.data);
-  socket.onclose = event => { status.textContent = `連線中斷 (${event.code})`; };
-  socket.onerror = () => { status.textContent = "WebSocket 橋接連線失敗"; };
+  function connect() {
+    status.textContent = "連線中……";
+    socket = new WebSocket(`${protocol}//${location.host}/mud`);
+    socket.binaryType = "arraybuffer";
+    socket.onopen = () => {
+      retryDelay = 1000;
+      status.textContent = "已連線 ES2-KING";
+      command.focus();
+    };
+    socket.onmessage = event => append(event.data);
+    socket.onclose = event => {
+      status.textContent = `連線中斷 (${event.code})，將自動重連`;
+      setTimeout(connect, retryDelay);
+      retryDelay = Math.min(retryDelay * 2, 10000);
+    };
+    socket.onerror = () => { status.textContent = "WebSocket 橋接連線失敗"; };
+  }
+  connect();
   document.querySelector("form").addEventListener("submit", event => {
     event.preventDefault();
     if (socket.readyState === WebSocket.OPEN) socket.send(command.value + "\r\n");

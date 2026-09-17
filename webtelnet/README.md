@@ -10,4 +10,8 @@ npm install
 npm start
 ```
 
-預設入口為 `http://127.0.0.1:8080`。可用 `WEBTELNET_PORT`、`ES2_HOST`、`ES2_PORT` 調整。公開使用時仍需一個可由公司瀏覽器到達、能同時連到 Neolith 的主機，並應以 HTTPS/WSS（加密網頁／加密 WebSocket）反向代理保護帳密。本工具不代表目前 Work 臨時環境已公開部署。
+預設入口為 `http://127.0.0.1:8080`。Deployment（部署）時 server 優先讀取 Hosting 提供的 `PORT`，監聽 `0.0.0.0:$PORT`；本機可用 `WEBTELNET_PORT`、`ES2_HOST`、`ES2_PORT` 調整。Client 會依目前頁面自動使用 `ws://`／`wss://`，不寫死 localhost。
+
+Health Check（健康檢查）為 `GET /health`。只有 Web service、bridge 與內部 Neolith `127.0.0.1:4000` 都可用時回 HTTP 200。
+
+Neolith `4000` 是內部 port，不得直接對 Internet publish（發布）。完整 Container 與 persistence（持久化）說明見 `M30_DEPLOYMENT_READINESS.md`。本工具不代表目前 Work 臨時環境已公開部署。

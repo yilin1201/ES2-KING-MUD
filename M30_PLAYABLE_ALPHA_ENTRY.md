@@ -122,3 +122,13 @@ Web Entry 與 Original mudlib 分離，沒有修改 Original 保存原始碼。
 ## 9. GitHub 邊界
 
 PR #13 必須保持 Open／Not Merged。本工作不建立 M31、不新增大型 Expansion、不修改 Original ES2 歷史層。
+
+## 10. Deployment Readiness（部署就緒）
+
+- Hosting-independent Container（不綁平台的容器）定義、單一 start script、`$PORT`、同源 WSS、`/health` 與 Deployment Smoke Test 已加入；細節見 `M30_DEPLOYMENT_READINESS.md`。
+- `mudlib/data` 已規劃由 `ES2_SAVE_DIR` 掛載 Persistent Volume；帳號、角色、KING 與 Expansion state 都位於此持久層。
+- Work 沒有 Docker／Podman／Buildah，Container Build 狀態為 `CONTAINER-ENVIRONMENT-LIMITATION`；本輪改以既有真實 Neolith Runtime 執行同一 start script 的等效 Linux 驗證。
+- 沒有 persistent disk 的 Hosting 維持 `PERSISTENCE-HOSTING-LIMITATION`。
+- `render.yaml` 只提供無 secret、無 disk 的相容設定，本輪沒有部署或購買服務。
+- `M30 BROWSER PLAYABLE PASS` 仍未成立；必須取得真實公開 HTTPS URL 並完成 Browser Journey 後才能更新。
+

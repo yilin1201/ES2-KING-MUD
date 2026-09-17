@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: es2-king-alpha
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: ES2_SAVE_DIR
+        value: /var/lib/es2-king/data
