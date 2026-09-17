@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-ROOT="${1:-.runtime/es2-king}"
+ROOT="${1:-.runtime/original-es2}"
 test -d "$ROOT"
 found=0
 for term in quest mission task reward query_temp set_temp add_temp clone_object experience exp; do

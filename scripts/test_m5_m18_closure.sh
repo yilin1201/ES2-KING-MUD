@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # M5/M18 Closure Static Test（收斂靜態測試）：確認證據缺口被明確保留，不能被誤報為完成。
-M5="${M5_CLOSURE_FILE:-m5_evidence_closure.md}"
-M18="${M18_CLOSURE_FILE:-m18_quest_closure.md}"
+M5="${M5_CLOSURE_FILE:-original_es2/research/m5_evidence_closure.md}"
+M18="${M18_CLOSURE_FILE:-original_es2/research/m18_quest_closure.md}"
 REG="${M18_REGISTRY_FILE:-original_es2/research/m18_quest_evidence_registry.md}"
 PLAN="${M18_PLAN_FILE:-original_es2/research/m18_quest_runtime_plan.md}"
 test -f "$M5"; test -f "$M18"; test -f "$REG"; test -f "$PLAN"
