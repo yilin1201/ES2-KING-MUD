@@ -24,6 +24,7 @@ const html = await readFile(new URL("../webtelnet/public/index.html", import.met
 const server = await readFile(new URL("../webtelnet/server.mjs", import.meta.url), "utf8");
 assert.match(server, /new TelnetTextFilter\(\)/);
 assert.match(server, /telnetText\.push\(data\)/);
+assert.match(server, /"content-type": "text\/html; charset=utf-8",\s*"cache-control": "no-store"/);
 assert.match(html, /<meta charset="utf-8">/);
 assert.match(html, /white-space:\s*pre;/);
 assert.match(html, /overflow-x:\s*auto;/);

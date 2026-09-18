@@ -36,7 +36,11 @@ const http = createServer(async (request, response) => {
     response.writeHead(404).end("Not found");
     return;
   }
-  response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
+  // 手機驗收必須取得目前部署版本，避免舊 HTML 快取掩蓋編碼或排版修正。
+  response.writeHead(200, {
+    "content-type": "text/html; charset=utf-8",
+    "cache-control": "no-store"
+  });
   createReadStream(join(here, "public", "index.html")).pipe(response);
 });
 
