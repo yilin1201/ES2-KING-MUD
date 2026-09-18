@@ -12,7 +12,9 @@ function getHealth() {
       response.on("end", () => {
         try {
           const status = JSON.parse(body);
-          if (response.statusCode !== 200 || !status.web || !status.bridge || !status.neolith) {
+          if (response.statusCode !== 200 || !status.web || !status.bridge || !status.neolith
+              || typeof status.build_commit !== "string" || status.build_commit.length === 0
+              || status.build_version !== "m30-public-runtime") {
             reject(new Error(`health not ready: ${response.statusCode} ${body}`));
             return;
           }
