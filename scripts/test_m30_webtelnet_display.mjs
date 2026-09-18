@@ -42,4 +42,12 @@ assert.match(html, /outputTail = \(outputTail \+ cleanText\)\.slice\(-256\);/);
 assert.doesNotMatch(html, /outputTail\s*\+=\s*command\.value/);
 assert.doesNotMatch(html, /console\.(?:log|debug)\(command\.value/);
 
-console.log("M30 WEBTELNET DISPLAY PASS（測試通過）：UTF-8 中文、Telnet 控制碼過濾、密碼輸入遮蔽與固定寬度排版檢查完整。");
+// Original Race Menu（種族選單）使用 get_char 單鍵操作；Web 表單必須轉譯顯示的完整種族名稱。
+assert.match(html, /const racePrompt = \/選擇你的角色所屬的種族/);
+assert.match(html, /choice === "human"/);
+assert.match(html, /socket\.send\("\\r"\);/);
+assert.match(html, /choice === "avatar"/);
+assert.match(html, /socket\.send\("\\x1b\[B"\);/);
+assert.match(html, /pendingRaceSelection && racePrompt\.test\(outputTail\)/);
+
+console.log("M30 WEBTELNET DISPLAY PASS（測試通過）：UTF-8 中文、Telnet 控制碼過濾、密碼遮蔽、Original 種族單鍵轉譯與固定寬度排版完整。");
