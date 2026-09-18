@@ -72,6 +72,28 @@ function checkClaimBrowserModule() {
   });
 }
 
+function checkCharacterBrowserModule() {
+  return new Promise((resolve, reject) => {
+    const request = http.get(new URL("/character-input.mjs", base), { timeout: 5000 }, response => {
+      let body = "";
+      response.setEncoding("utf8");
+      response.on("data", chunk => { body += chunk; });
+      response.on("end", () => {
+        if (response.statusCode !== 200
+            || !String(response.headers["content-type"] || "").startsWith("text/javascript")
+            || !body.includes("prepareCharacterChoice")
+            || !body.includes("followup: \" \"")) {
+          reject(new Error(`character browser module not ready: ${response.statusCode}`));
+          return;
+        }
+        resolve();
+      });
+    });
+    request.on("timeout", () => request.destroy(new Error("character browser module timeout")));
+    request.on("error", reject);
+  });
+}
+
 function checkLoginPrompt() {
   return new Promise((resolve, reject) => {
     const protocol = base.protocol === "https:" ? "wss:" : "ws:";
@@ -92,6 +114,7 @@ function checkLoginPrompt() {
 
 await checkHome();
 await checkClaimBrowserModule();
+await checkCharacterBrowserModule();
 await getHealth();
 await checkLoginPrompt();
 console.log("M30 DEPLOYMENT SMOKE PASS：HTTP → WebSocket → Bridge → Telnet :4000 → ES2 Login Prompt");

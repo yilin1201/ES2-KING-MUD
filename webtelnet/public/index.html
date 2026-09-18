@@ -27,6 +27,9 @@
     form { display: flex; gap: .5rem; position: sticky; bottom: 0; background: #080b10; padding: .75rem 0 max(.75rem, env(safe-area-inset-bottom)); }
     input { min-width: 0; flex: 1; padding: .7rem; font-size: 16px; background: #151b24; color: white; border: 1px solid #52606d; }
     button { padding: .7rem 1rem; font-size: 16px; }
+    /* Character Choice／角色選項：以足夠大的按鈕送出 Original get_char 單鍵，不改動原始創角邏輯。 */
+    #character-choices:not([hidden]) { display: flex; flex-wrap: wrap; gap: .5rem; padding: .5rem 0; }
+    #character-choices button { min-height: 44px; }
     @media (min-width: 601px) {
       /* Desktop 以實際字型的 80 個字元寬度建立畫布；置中容器，不改動終端文字對齊。 */
       #terminal-shell { width: 80ch; margin-inline: auto; font-family: var(--terminal-font); font-size: 15px; }
@@ -42,22 +45,25 @@
   <section id="terminal-shell" aria-label="ES2-KING 80欄終端">
     <div id="status">連線中……</div>
     <pre id="terminal" aria-live="polite"></pre>
+    <div id="character-choices" hidden aria-label="角色建立單鍵選單"></div>
     <form><input id="command" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="遊戲指令"><button>送出</button></form>
   </section>
 </main>
 <script type="module">
   import { MINIMUM_OWNER_CLAIM_BYTES, prepareOwnerClaim } from "/claim-input.mjs";
+  import { characterMenuFor, prepareCharacterChoice } from "/character-input.mjs";
 
   const status = document.querySelector("#status");
   const terminal = document.querySelector("#terminal");
   const command = document.querySelector("#command");
+  const characterChoices = document.querySelector("#character-choices");
   const protocol = location.protocol === "https:" ? "wss:" : "ws:";
   const mobileLayout = matchMedia("(max-width: 600px)");
   const terminalColumns = 80;
   let socket;
   let retryDelay = 1000;
   let outputTail = "";
-  let pendingRaceSelection = false;
+  let pendingCharacterFollowup = null;
   let claimPastePending = false;
   let claimCompositionActive = false;
 
@@ -66,7 +72,29 @@
   const passwordPrompt = /(請輸入密碼|請先輸入您原來的密碼|請輸入新密碼|請再輸入一次新密碼|請設定您的密碼|請再輸入一次您的密碼|KING Owner 一次性初始化權杖)[：:﹕]?\s*$/;
   const newPasswordPrompt = /(請輸入新密碼|請再輸入一次新密碼|請設定您的密碼|請再輸入一次您的密碼)[：:﹕]?\s*$/;
   const ownerClaimPrompt = /KING Owner 一次性初始化權杖[：:﹕]?\s*$/;
-  const racePrompt = /選擇你的角色所屬的種族[：:]?\s*$/;
+
+  function sendCharacterChoice(value) {
+    const prepared = prepareCharacterChoice(outputTail, value);
+    if (!prepared || socket.readyState !== WebSocket.OPEN) return false;
+    pendingCharacterFollowup = prepared.followup;
+    socket.send(prepared.bytes);
+    command.value = "";
+    return true;
+  }
+
+  function renderCharacterChoices() {
+    const menu = characterMenuFor(outputTail);
+    characterChoices.replaceChildren();
+    characterChoices.hidden = !menu;
+    if (!menu) return;
+    for (const option of menu.options) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = option.label;
+      button.addEventListener("click", () => sendCharacterChoice(option.value));
+      characterChoices.append(button);
+    }
+  }
 
   function protectSecretEntry() {
     const secret = passwordPrompt.test(outputTail);
@@ -79,7 +107,9 @@
       : "off";
     command.inputMode = ownerClaim ? "text" : "";
     command.setAttribute("aria-label", secret ? "密碼（輸入內容不顯示）" : "遊戲指令");
-    command.placeholder = !secret && racePrompt.test(outputTail) ? "輸入 human 或 avatar" : "";
+    const menu = characterMenuFor(outputTail);
+    command.placeholder = !secret && menu?.type === "race" ? "輸入 human 或 avatar，或點選上方按鈕" : "";
+    renderCharacterChoices();
   }
 
   // Original ES2 welcome 最長內容為 79 欄，採傳統 80 欄終端作為手機顯示基準。
@@ -147,10 +177,11 @@
     // 僅保留輸出末端以辨識可能跨 WebSocket 分段的提示文字；絕不把玩家輸入加入此緩衝。
     outputTail = (outputTail + cleanText).slice(-256);
     protectSecretEntry();
-    // Original 種族選單收到向下鍵後會重新繪製；等新提示抵達再送 Enter，避免兩個單鍵黏在一起。
-    if (pendingRaceSelection && racePrompt.test(outputTail)) {
-      pendingRaceSelection = false;
-      socket.send("\r");
+    // Original cursor 選單收到方向鍵後會重新繪製；等新提示抵達再送單一空白確認鍵。
+    if (pendingCharacterFollowup && characterMenuFor(outputTail)) {
+      const followup = pendingCharacterFollowup;
+      pendingCharacterFollowup = null;
+      socket.send(followup);
     }
     window.scrollTo(0, document.body.scrollHeight);
   };
@@ -182,13 +213,8 @@
     }
     if (socket.readyState === WebSocket.OPEN) {
       const choice = command.value.trim().toLowerCase();
-      if (racePrompt.test(outputTail) && choice === "human") {
-        // Original get_char（單鍵選單）以 Enter 選取目前預設的 human。
-        socket.send("\r");
-      } else if (racePrompt.test(outputTail) && choice === "avatar") {
-        // 先送終端向下鍵選到 avatar；重新顯示選單後再由上方邏輯送 Enter。
-        pendingRaceSelection = true;
-        socket.send("\x1b[B");
+      if (sendCharacterChoice(choice)) {
+        return;
       } else if (ownerClaimPrompt.test(outputTail)) {
         const prepared = prepareOwnerClaim(command.value);
         if (!prepared.acceptable) {

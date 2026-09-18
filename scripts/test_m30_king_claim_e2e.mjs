@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { access } from "node:fs/promises";
 import { constants } from "node:fs";
 import WebSocket from "../webtelnet/node_modules/ws/wrapper.mjs";
+import { prepareCharacterChoice } from "../webtelnet/public/character-input.mjs";
 
 const url = process.env.ES2_E2E_WS_URL;
 const saveDir = process.env.ES2_E2E_SAVE_DIR;
@@ -48,8 +49,36 @@ function session() {
       }, 25);
       socket.once("error", onError);
     }),
+    waitForAfter: (offset, text, timeout = 15000) => new Promise((resolve, reject) => {
+      const started = Date.now();
+      const onError = error => { clearInterval(timer); reject(error); };
+      const timer = setInterval(() => {
+        if (output.slice(offset).includes(text)) {
+          clearInterval(timer);
+          socket.off("error", onError);
+          resolve();
+        } else if (Date.now() - started > timeout) {
+          clearInterval(timer);
+          socket.off("error", onError);
+          reject(new Error(`等待新的 Runtime 提示逾時：${text}`));
+        }
+      }, 25);
+      socket.once("error", onError);
+    }),
     close: () => socket.close()
   };
+}
+
+async function sendBrowserChoice(current, value) {
+  const tail = current.output().slice(-512);
+  const prepared = prepareCharacterChoice(tail, value);
+  assert.ok(prepared, `Browser compatibility 應辨識選項：${value}`);
+  const offset = current.output().length;
+  current.send(prepared.bytes);
+  if (prepared.followup) {
+    await current.waitForAfter(offset, "選擇你的角色所屬的種族");
+    current.send(prepared.followup);
+  }
 }
 
 async function reachClaim(current) {
@@ -129,14 +158,13 @@ owner.send(`${kingPassword}\r\n`);
 await owner.waitFor("您的電子郵件地址");
 owner.send("none\r\n");
 await owner.waitFor("選擇你的角色所屬的種族");
-owner.send("\r");
+await sendBrowserChoice(owner, "human");
 await owner.waitFor("您要扮演的哪種性別");
-owner.send("M");
+await sendBrowserChoice(owner, "male");
 await owner.waitFor("您的顯示名稱");
 owner.send("KING\r\n");
 await owner.waitFor("您確定要創造這個角色嗎");
-// Browser 的空白送出使用 CRLF；確認建立不是種族選單的特殊單鍵分支。
-owner.send("\r\n");
+await sendBrowserChoice(owner, "yes");
 await owner.waitFor("目前權限: (admin)", 20000);
 await owner.waitFor("客棧大堂", 20000);
 await owner.waitFor("\n> ", 20000);
@@ -181,7 +209,7 @@ const normal = session();
 await normal.waitFor("您的使用者代號");
 normal.send("kinglook\r\n");
 await normal.waitFor("您確定嗎");
-normal.send("Y");
+await sendBrowserChoice(normal, "yes");
 await normal.waitFor("請設定您的密碼");
 normal.send(`${playerPassword}\r\n`);
 await normal.waitFor("請再輸入一次您的密碼");
@@ -189,13 +217,13 @@ normal.send(`${playerPassword}\r\n`);
 await normal.waitFor("您的電子郵件地址");
 normal.send("none\r\n");
 await normal.waitFor("選擇你的角色所屬的種族");
-normal.send("\r");
+await sendBrowserChoice(normal, "avatar");
 await normal.waitFor("您要扮演的哪種性別");
-normal.send("M");
+await sendBrowserChoice(normal, "female");
 await normal.waitFor("您的顯示名稱");
 normal.send("KING\r\n");
 await normal.waitFor("您確定要創造這個角色嗎");
-normal.send("\r\n");
+await sendBrowserChoice(normal, "yes");
 await normal.waitFor("目前權限: (player)", 20000);
 await normal.waitFor("客棧大堂", 20000);
 await new Promise(resolve => setTimeout(resolve, 1200));
