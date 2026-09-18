@@ -3,6 +3,7 @@ services:
     name: es2-king-alpha
     runtime: docker
     plan: free
+    branch: build/original-es2-races-phase2
     dockerfilePath: ./Dockerfile
     healthCheckPath: /health
     envVars:
