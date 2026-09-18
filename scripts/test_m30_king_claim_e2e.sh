@@ -6,7 +6,9 @@ SOURCE_RUNTIME="${1:-$REPO_ROOT/m30/.runtime/es2-king}"
 DRIVER_BIN="$(realpath "${ES2_DRIVER_BIN:-$SOURCE_RUNTIME/neolith/out/build/linux/src/Debug/neolith}")"
 TEMP_ROOT="$(mktemp -d)"
 WEB_PORT="$((44000 + $$ % 1000))"
-CLAIM_TOKEN="$(openssl rand -hex 32)"
+# 特殊字元相容測試：前導 ! 與 Base64 符號會觸發舊 Telnet 命令語意，必須仍能安全認領。
+CLAIM_TOKEN="${ES2_TEST_CLAIM_TOKEN:-!$(openssl rand -base64 48 | tr -d '\n')}"
+CLAIM_TRANSPORT="es2claim1:$(printf '%s' "$CLAIM_TOKEN" | od -An -tx1 -v | tr -d ' \n')"
 WRONG_TOKEN="$(openssl rand -hex 32)"
 KING_PASSWORD="$(openssl rand -hex 16)"
 PLAYER_PASSWORD="$(openssl rand -hex 16)"
@@ -95,12 +97,15 @@ ES2_E2E_PLAYER_PASSWORD="$PLAYER_PASSWORD" \
 node "$REPO_ROOT/scripts/test_m30_king_claim_e2e.mjs"
 
 # Secret Exposure Check（秘密洩漏檢查）：只判斷是否存在，不把秘密值印到報告。
-if grep -R -Fq -- "$CLAIM_TOKEN" "$TEMP_ROOT/mudlib/log" "$TEMP_ROOT/driver.stdout" "$TEMP_ROOT/bridge.stdout"; then
+if grep -R -Fq -- "$CLAIM_TOKEN" "$TEMP_ROOT/mudlib/log" "$TEMP_ROOT/driver.stdout" "$TEMP_ROOT/bridge.stdout" \
+  || grep -R -Fq -- "$CLAIM_TRANSPORT" "$TEMP_ROOT/mudlib/log" "$TEMP_ROOT/driver.stdout" "$TEMP_ROOT/bridge.stdout"; then
   echo "M30 KING CLAIM FAIL（測試失敗）：Claim Token 出現在 Runtime Log。" >&2
   exit 1
 fi
 if grep -R -Fq --exclude-dir=.git --exclude-dir=.runtime --exclude-dir=node_modules \
-  -- "$CLAIM_TOKEN" "$REPO_ROOT"; then
+  -- "$CLAIM_TOKEN" "$REPO_ROOT" \
+  || grep -R -Fq --exclude-dir=.git --exclude-dir=.runtime --exclude-dir=node_modules \
+  -- "$CLAIM_TRANSPORT" "$REPO_ROOT"; then
   echo "M30 KING CLAIM FAIL（測試失敗）：臨時 Claim Token 出現在 Repository artifact。" >&2
   exit 1
 fi

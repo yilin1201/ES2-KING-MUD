@@ -17,6 +17,7 @@ const exists = async path => {
   try { await access(path, constants.F_OK); return true; }
   catch { return false; }
 };
+const encodeClaim = value => "es2claim1:" + Buffer.from(value, "utf8").toString("hex");
 
 function session() {
   const socket = new WebSocket(url);
@@ -74,18 +75,26 @@ assert.equal(await exists(userFile), false);
 // Wrong Token（錯誤權杖）：只回覆一般失敗，不進入密碼或創角流程。
 const wrong = session();
 await reachClaim(wrong);
-wrong.send(`${wrongToken}\r\n`);
+wrong.send(`${encodeClaim(wrongToken)}\r\n`);
 await wrong.waitFor("Owner 初始化驗證失敗");
 assert.equal(wrong.output().includes("請設定您的密碼"), false);
 wrong.close();
+
+// 傳統 Telnet 相容：即使秘密以 ! 開頭，也必須由 I_NOESC 的 input_to 接收，不得當成命令逃逸。
+const rawSpecial = session();
+await reachClaim(rawSpecial);
+rawSpecial.send(`${claimToken}\r\n`);
+await rawSpecial.waitFor("請設定您的密碼");
+rawSpecial.close();
+await new Promise(resolve => setTimeout(resolve, 150));
 
 // Session Isolation（工作階段隔離）：第一條連線成功後，第二條連線即使輸入相同秘密也不能取得授權。
 const first = session();
 const second = session();
 await Promise.all([reachClaim(first), reachClaim(second)]);
-first.send(`${claimToken}\r\n`);
+first.send(`${encodeClaim(claimToken)}\r\n`);
 await first.waitFor("請設定您的密碼");
-second.send(`${claimToken}\r\n`);
+second.send(`${encodeClaim(claimToken)}\r\n`);
 await second.waitFor("Owner 初始化驗證失敗");
 assert.equal(second.output().includes("請設定您的密碼"), false);
 second.close();
@@ -95,7 +104,7 @@ first.close();
 await new Promise(resolve => setTimeout(resolve, 150));
 const abandoned = session();
 await reachClaim(abandoned);
-abandoned.send(`${claimToken}\r\n`);
+abandoned.send(`${encodeClaim(claimToken)}\r\n`);
 await abandoned.waitFor("請設定您的密碼");
 abandoned.close();
 await new Promise(resolve => setTimeout(resolve, 150));
@@ -103,7 +112,7 @@ await new Promise(resolve => setTimeout(resolve, 150));
 // 真正建立 KING：Token 只開門，後續完全沿用 Original 密碼、email、種族、性別與存檔流程。
 const owner = session();
 await reachClaim(owner);
-owner.send(`${claimToken}\r\n`);
+owner.send(`${encodeClaim(claimToken)}\r\n`);
 await owner.waitFor("請設定您的密碼");
 owner.send(`${kingPassword}\r\n`);
 await owner.waitFor("請再輸入一次您的密碼");
@@ -189,12 +198,13 @@ await new Promise(resolve => setTimeout(resolve, 800));
 for (const forbidden of ["KING 可建立項目", "進入天神殿・無極之境", "黑級無極境", "天舞梵輪・萬相歸墟"])
   assert.equal(normal.output().includes(forbidden), false, `普通玩家不得取得：${forbidden}`);
 
-const allOutput = [wrong, first, second, abandoned, owner, badPassword, relogin, normal]
+const allOutput = [wrong, rawSpecial, first, second, abandoned, owner, badPassword, relogin, normal]
   .map(current => current.output()).join("");
 assert.equal(allOutput.includes(claimToken), false, "Claim Token 不得出現在 WebSocket 輸出");
+assert.equal(allOutput.includes(encodeClaim(claimToken)), false, "Claim 傳輸值不得被 WebSocket 回顯");
 assert.equal(allOutput.includes(kingPassword), false, "KING 密碼不得出現在 WebSocket 輸出");
 assert.equal(allOutput.includes(playerPassword), false, "普通玩家密碼不得出現在 WebSocket 輸出");
 relogin.close();
 normal.close();
 
-console.log("M30 KING CLAIM E2E PASS（測試通過）：一次性 Token、Session 隔離、斷線失效、Original 創角／密碼雜湊、king.o、首次與重登後四個 KING 指令、save／quit／relogin 完整通過。秘密未輸出。");
+console.log("M30 KING CLAIM E2E PASS（測試通過）：特殊字元安全傳輸、一次性 Token、Session 隔離、斷線失效、Original 創角／密碼雜湊、king.o、首次與重登後四個 KING 指令、save／quit／relogin 完整通過。秘密未輸出。");

@@ -61,6 +61,7 @@
   // 此層不保存、不記錄也不解析密碼，避免 KING 秘密進入 Web、Bridge 或基礎設施設定。
   const passwordPrompt = /(請輸入密碼|請先輸入您原來的密碼|請輸入新密碼|請再輸入一次新密碼|請設定您的密碼|請再輸入一次您的密碼|KING Owner 一次性初始化權杖)[：:﹕]?\s*$/;
   const newPasswordPrompt = /(請輸入新密碼|請再輸入一次新密碼|請設定您的密碼|請再輸入一次您的密碼)[：:﹕]?\s*$/;
+  const ownerClaimPrompt = /KING Owner 一次性初始化權杖[：:﹕]?\s*$/;
   const racePrompt = /選擇你的角色所屬的種族[：:]?\s*$/;
 
   function protectSecretEntry() {
@@ -107,6 +108,13 @@
   if (document.fonts) document.fonts.ready.then(scheduleMobileFit);
   scheduleMobileFit();
 
+  // Claim Transport Encoding（認領傳輸編碼）：只在 Owner Claim Prompt 將 UTF-8 輸入轉成 ASCII hex。
+  // 這可避免特殊字元被 Telnet 當成控制命令；不保存、不記錄，也不改動 Original 密碼輸入。
+  function encodeOwnerClaim(value) {
+    const bytes = new TextEncoder().encode(value);
+    return "es2claim1:" + Array.from(bytes, byte => byte.toString(16).padStart(2, "0")).join("");
+  }
+
   // TextDecoder（文字解碼器）以串流 UTF-8 解碼，保留跨 WebSocket 資料塊的中文字元。
   const decoder = new TextDecoder("utf-8");
   // ANSI（終端色彩控制碼）先移除；之後可在不碰 mudlib 的情況下加入彩色呈現。
@@ -152,6 +160,8 @@
         // 先送終端向下鍵選到 avatar；重新顯示選單後再由上方邏輯送 Enter。
         pendingRaceSelection = true;
         socket.send("\x1b[B");
+      } else if (ownerClaimPrompt.test(outputTail)) {
+        socket.send(encodeOwnerClaim(command.value) + "\r\n");
       } else {
         socket.send(command.value + "\r\n");
       }

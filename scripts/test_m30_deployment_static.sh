@@ -39,5 +39,8 @@ grep -Fq 'chmod go+r "$LOGIN_D"' scripts/apply_es2_king_expansion.sh
 grep -Fq 'mudlib/bin/adm/daemons/logind.b' scripts/apply_es2_king_expansion.sh
 grep -Fq 'mudlib/bin/adm/daemons/cmd_d.b' scripts/apply_es2_king_expansion.sh
 grep -Fq 'ES2-KING OWNER COMMAND REHASH' scripts/apply_es2_king_expansion.sh
+grep -Fq 'input_to("get_owner_claim", 3, ob)' scripts/apply_es2_king_expansion.sh
+grep -Fq 'owner_claim_transport(secret)' scripts/apply_es2_king_expansion.sh
+grep -Fq 'encodeOwnerClaim(command.value)' webtelnet/public/index.html
 
 echo "M30 DEPLOYMENT STATIC（M30 部署靜態檢查）：PASS（測試通過）；Web 連接埠、WSS（加密 WebSocket）、Health Check（健康檢查）與 Telnet 對外暴露邊界均通過。"

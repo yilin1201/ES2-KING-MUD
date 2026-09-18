@@ -85,6 +85,19 @@ private int secure_owner_claim_equal(string supplied, string expected)
     return difference == 0;
 }
 
+// Claim Transport Encoding／認領傳輸編碼：公開 WebTelnet 將 UTF-8 Token 轉成純 ASCII hex，
+// 避免 Telnet 把開頭的 !、退格或其他控制意義字元當成命令；此編碼不記錄也不輸出秘密。
+private string owner_claim_transport(string value)
+{
+    int i;
+    string encoded;
+
+    encoded = "es2claim1:";
+    for (i = 0; i < strlen(value); i++)
+        encoded += sprintf("%02x", value[i] & 255);
+    return encoded;
+}
+
 private void reject_owner_claim(object ob)
 {
     write("\nOwner 初始化驗證失敗。\n\n");
@@ -94,7 +107,7 @@ private void reject_owner_claim(object ob)
 
 private void get_owner_claim(string token, object ob)
 {
-    string secret;
+    string expected, secret;
     mapping opts;
 
     write("\n");
@@ -114,8 +127,12 @@ private void get_owner_claim(string token, object ob)
     }
 
     secret = envsubst("${ES2_KING_CLAIM_TOKEN:-}");
-    if (strlen(secret) < 32 || !secure_owner_claim_equal(token, secret)) {
+    // 新版 WebTelnet 使用無控制字元的傳輸編碼；保留 raw 比對供傳統 Telnet 相容。
+    expected = strlen(token) >= 10 && token[0..9] == "es2claim1:"
+        ? owner_claim_transport(secret) : secret;
+    if (strlen(secret) < 32 || !secure_owner_claim_equal(token, expected)) {
         token = "";
+        expected = "";
         secret = "";
         reject_owner_claim(ob);
         return;
@@ -124,6 +141,7 @@ private void get_owner_claim(string token, object ob)
     owner_claim_link = ob;
     owner_claim_deadline = time() + LOGIN_TIMEOUT;
     token = "";
+    expected = "";
     secret = "";
 
     // 驗證成功後直接重用 Original confirm_id → password → character creation 全流程。
@@ -153,7 +171,8 @@ LPC
     if (arg == "king") {
         if (strlen(envsubst("${ES2_KING_CLAIM_TOKEN:-}")) >= 32) {
             write("\nKING Owner 一次性初始化權杖: ");
-            input_to("get_owner_claim", 1, ob);
+            // I_NOECHO | I_NOESC：遮蔽輸入，且禁止 Token 開頭的 ! 被當成命令逃逸。
+            input_to("get_owner_claim", 3, ob);
         } else {
             write("\nKING Owner 帳號尚未在此 Runtime 初始化，已拒絕公開註冊。\n\n");
             ob->delete("id");
