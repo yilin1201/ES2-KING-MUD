@@ -50,6 +50,28 @@ function checkHome() {
   });
 }
 
+function checkClaimBrowserModule() {
+  return new Promise((resolve, reject) => {
+    const request = http.get(new URL("/claim-input.mjs", base), { timeout: 5000 }, response => {
+      let body = "";
+      response.setEncoding("utf8");
+      response.on("data", chunk => { body += chunk; });
+      response.on("end", () => {
+        if (response.statusCode !== 200
+            || !String(response.headers["content-type"] || "").startsWith("text/javascript")
+            || !body.includes("MINIMUM_OWNER_CLAIM_BYTES = 32")
+            || !body.includes("prepareOwnerClaim")) {
+          reject(new Error(`claim browser module not ready: ${response.statusCode}`));
+          return;
+        }
+        resolve();
+      });
+    });
+    request.on("timeout", () => request.destroy(new Error("claim browser module timeout")));
+    request.on("error", reject);
+  });
+}
+
 function checkLoginPrompt() {
   return new Promise((resolve, reject) => {
     const protocol = base.protocol === "https:" ? "wss:" : "ws:";
@@ -69,6 +91,7 @@ function checkLoginPrompt() {
 }
 
 await checkHome();
+await checkClaimBrowserModule();
 await getHealth();
 await checkLoginPrompt();
 console.log("M30 DEPLOYMENT SMOKE PASS：HTTP → WebSocket → Bridge → Telnet :4000 → ES2 Login Prompt");

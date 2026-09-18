@@ -39,15 +39,19 @@ assert.match(html, /command\.type = secret \? "password" : "text";/);
 assert.match(html, /"new-password"/);
 assert.match(html, /"current-password"/);
 assert.match(html, /KING Owner 一次性初始化權杖/);
-assert.match(html, /function encodeOwnerClaim\(value\)/);
-assert.match(html, /new TextEncoder\(\)\.encode\(value\)/);
-assert.match(html, /"es2claim1:"/);
+assert.match(html, /prepareOwnerClaim/);
+assert.match(html, /MINIMUM_OWNER_CLAIM_BYTES/);
 assert.match(html, /ownerClaimPrompt\.test\(outputTail\)/);
-assert.match(html, /KING Claim 安全傳輸：HEX-V1 已送出/);
+assert.match(html, /KING Claim 安全傳輸：HEX-V1 已送出；輸入長度=/);
+assert.match(html, /至少需要 \$\{MINIMUM_OWNER_CLAIM_BYTES\} bytes，尚未送出/);
+assert.match(html, /command\.addEventListener\("paste"/);
+assert.match(html, /command\.addEventListener\("input"/);
+assert.match(html, /command\.addEventListener\("compositionend"/);
+assert.match(html, /claimPastePending \|\| claimCompositionActive/);
 assert.match(html, /outputTail = \(outputTail \+ cleanText\)\.slice\(-256\);/);
 assert.doesNotMatch(html, /outputTail\s*\+=\s*command\.value/);
 assert.doesNotMatch(html, /console\.(?:log|debug)\(command\.value/);
-assert.doesNotMatch(html, /encodeOwnerClaim\(command\.value\.trim\(\)\)/);
+assert.doesNotMatch(html, /prepareOwnerClaim\(command\.value\.trim\(\)\)/);
 
 // Original Race Menu（種族選單）使用 get_char 單鍵操作；Web 表單必須轉譯顯示的完整種族名稱。
 assert.match(html, /const racePrompt = \/選擇你的角色所屬的種族/);

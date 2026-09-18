@@ -38,6 +38,14 @@ const http = createServer(async (request, response) => {
     response.end(JSON.stringify({ web: true, bridge: true, neolith, build_commit: buildCommit, build_version: buildVersion }));
     return;
   }
+  if (pathname === "/claim-input.mjs") {
+    response.writeHead(200, {
+      "content-type": "text/javascript; charset=utf-8",
+      "cache-control": "no-store"
+    });
+    createReadStream(join(here, "public", "claim-input.mjs")).pipe(response);
+    return;
+  }
   if (pathname !== "/" && pathname !== "/index.html") {
     response.writeHead(404).end("Not found");
     return;

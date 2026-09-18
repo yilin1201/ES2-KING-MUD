@@ -45,7 +45,9 @@
     <form><input id="command" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="遊戲指令"><button>送出</button></form>
   </section>
 </main>
-<script>
+<script type="module">
+  import { MINIMUM_OWNER_CLAIM_BYTES, prepareOwnerClaim } from "/claim-input.mjs";
+
   const status = document.querySelector("#status");
   const terminal = document.querySelector("#terminal");
   const command = document.querySelector("#command");
@@ -56,6 +58,8 @@
   let retryDelay = 1000;
   let outputTail = "";
   let pendingRaceSelection = false;
+  let claimPastePending = false;
+  let claimCompositionActive = false;
 
   // Password Prompt（密碼輸入提示）只控制瀏覽器欄位是否遮蔽；密碼仍由 Original ES2 驗證與雜湊。
   // 此層不保存、不記錄也不解析密碼，避免 KING 秘密進入 Web、Bridge 或基礎設施設定。
@@ -66,10 +70,14 @@
 
   function protectSecretEntry() {
     const secret = passwordPrompt.test(outputTail);
+    const ownerClaim = ownerClaimPrompt.test(outputTail);
     command.type = secret ? "password" : "text";
-    command.autocomplete = secret
-      ? (newPasswordPrompt.test(outputTail) ? "new-password" : "current-password")
+    command.autocomplete = ownerClaim
+      ? "off"
+      : secret
+        ? (newPasswordPrompt.test(outputTail) ? "new-password" : "current-password")
       : "off";
+    command.inputMode = ownerClaim ? "text" : "";
     command.setAttribute("aria-label", secret ? "密碼（輸入內容不顯示）" : "遊戲指令");
     command.placeholder = !secret && racePrompt.test(outputTail) ? "輸入 human 或 avatar" : "";
   }
@@ -108,12 +116,27 @@
   if (document.fonts) document.fonts.ready.then(scheduleMobileFit);
   scheduleMobileFit();
 
-  // Claim Transport Encoding（認領傳輸編碼）：只在 Owner Claim Prompt 將 UTF-8 輸入轉成 ASCII hex。
-  // 這可避免特殊字元被 Telnet 當成控制命令；不保存、不記錄，也不改動 Original 密碼輸入。
-  function encodeOwnerClaim(value) {
-    const bytes = new TextEncoder().encode(value);
-    return "es2claim1:" + Array.from(bytes, byte => byte.toString(16).padStart(2, "0")).join("");
+  // Claim Input Observability／認領輸入可觀測性：只顯示 UTF-8 位元組長度，不顯示內容或指紋。
+  function updateOwnerClaimLength() {
+    if (!ownerClaimPrompt.test(outputTail)) return;
+    const prepared = prepareOwnerClaim(command.value);
+    status.textContent = `KING Claim 輸入長度：${prepared.byteLength} bytes`;
   }
+
+  // iPhone Safari 貼上完成後才讀取 DOM value；避免 paste default action 尚未落入欄位便判斷長度。
+  command.addEventListener("paste", () => {
+    claimPastePending = true;
+    requestAnimationFrame(() => {
+      claimPastePending = false;
+      updateOwnerClaimLength();
+    });
+  });
+  command.addEventListener("input", updateOwnerClaimLength);
+  command.addEventListener("compositionstart", () => { claimCompositionActive = true; });
+  command.addEventListener("compositionend", () => {
+    claimCompositionActive = false;
+    updateOwnerClaimLength();
+  });
 
   // TextDecoder（文字解碼器）以串流 UTF-8 解碼，保留跨 WebSocket 資料塊的中文字元。
   const decoder = new TextDecoder("utf-8");
@@ -149,8 +172,14 @@
     socket.onerror = () => { status.textContent = "WebSocket 橋接連線失敗"; };
   }
   connect();
-  document.querySelector("form").addEventListener("submit", event => {
+  const commandForm = document.querySelector("form");
+  commandForm.addEventListener("submit", event => {
     event.preventDefault();
+    // Mobile Paste Barrier／手機貼上屏障：等待 Safari 完成 paste／composition 後再送出。
+    if (ownerClaimPrompt.test(outputTail) && (claimPastePending || claimCompositionActive)) {
+      requestAnimationFrame(() => commandForm.requestSubmit(event.submitter));
+      return;
+    }
     if (socket.readyState === WebSocket.OPEN) {
       const choice = command.value.trim().toLowerCase();
       if (racePrompt.test(outputTail) && choice === "human") {
@@ -161,8 +190,14 @@
         pendingRaceSelection = true;
         socket.send("\x1b[B");
       } else if (ownerClaimPrompt.test(outputTail)) {
-        status.textContent = "KING Claim 安全傳輸：HEX-V1 已送出";
-        socket.send(encodeOwnerClaim(command.value) + "\r\n");
+        const prepared = prepareOwnerClaim(command.value);
+        if (!prepared.acceptable) {
+          status.textContent = `KING Claim 輸入長度：${prepared.byteLength} bytes；至少需要 ${MINIMUM_OWNER_CLAIM_BYTES} bytes，尚未送出。`;
+          command.focus();
+          return;
+        }
+        status.textContent = `KING Claim 安全傳輸：HEX-V1 已送出；輸入長度=${prepared.byteLength} bytes`;
+        socket.send(prepared.transport + "\r\n");
       } else {
         socket.send(command.value + "\r\n");
       }

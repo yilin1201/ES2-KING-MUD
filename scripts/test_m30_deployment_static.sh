@@ -10,6 +10,8 @@ node --check scripts/healthcheck_es2_king.mjs
 node --check scripts/test_m30_deployment_smoke.mjs
 node --check scripts/test_m30_king_reservation_e2e.mjs
 node --check scripts/test_m30_king_claim_e2e.mjs
+node --check scripts/test_m30_claim_browser_input.mjs
+node scripts/test_m30_claim_browser_input.mjs
 node scripts/test_m30_webtelnet_display.mjs
 node scripts/test_m30_mobile_responsive.mjs
 node scripts/test_m30_desktop_centering.mjs
@@ -42,6 +44,8 @@ grep -Fq 'ES2-KING OWNER COMMAND REHASH' scripts/apply_es2_king_expansion.sh
 grep -Fq 'input_to("get_owner_claim", 3, ob)' scripts/apply_es2_king_expansion.sh
 grep -Fq 'owner_claim_transport_decode(token)' scripts/apply_es2_king_expansion.sh
 grep -Fq 'Claim 安全診斷：' scripts/apply_es2_king_expansion.sh
-grep -Fq 'encodeOwnerClaim(command.value)' webtelnet/public/index.html
+grep -Fq 'prepareOwnerClaim(command.value)' webtelnet/public/index.html
+grep -Fq '至少需要 ${MINIMUM_OWNER_CLAIM_BYTES} bytes，尚未送出' webtelnet/public/index.html
+grep -Fq 'pathname === "/claim-input.mjs"' webtelnet/server.mjs
 
 echo "M30 DEPLOYMENT STATIC（M30 部署靜態檢查）：PASS（測試通過）；Web 連接埠、WSS（加密 WebSocket）、Health Check（健康檢查）與 Telnet 對外暴露邊界均通過。"
