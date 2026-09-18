@@ -55,11 +55,13 @@
   let socket;
   let retryDelay = 1000;
   let outputTail = "";
+  let pendingRaceSelection = false;
 
   // Password Prompt（密碼輸入提示）只控制瀏覽器欄位是否遮蔽；密碼仍由 Original ES2 驗證與雜湊。
   // 此層不保存、不記錄也不解析密碼，避免 KING 秘密進入 Web、Bridge 或基礎設施設定。
   const passwordPrompt = /(請輸入密碼|請先輸入您原來的密碼|請輸入新密碼|請再輸入一次新密碼|請設定您的密碼|請再輸入一次您的密碼)[：:﹕]?\s*$/;
   const newPasswordPrompt = /(請輸入新密碼|請再輸入一次新密碼|請設定您的密碼|請再輸入一次您的密碼)[：:﹕]?\s*$/;
+  const racePrompt = /選擇你的角色所屬的種族[：:]?\s*$/;
 
   function protectSecretEntry() {
     const secret = passwordPrompt.test(outputTail);
@@ -68,6 +70,7 @@
       ? (newPasswordPrompt.test(outputTail) ? "new-password" : "current-password")
       : "off";
     command.setAttribute("aria-label", secret ? "密碼（輸入內容不顯示）" : "遊戲指令");
+    command.placeholder = !secret && racePrompt.test(outputTail) ? "輸入 human 或 avatar" : "";
   }
 
   // Original ES2 welcome 最長內容為 79 欄，採傳統 80 欄終端作為手機顯示基準。
@@ -113,6 +116,11 @@
     // 僅保留輸出末端以辨識可能跨 WebSocket 分段的提示文字；絕不把玩家輸入加入此緩衝。
     outputTail = (outputTail + cleanText).slice(-256);
     protectSecretEntry();
+    // Original 種族選單收到向下鍵後會重新繪製；等新提示抵達再送 Enter，避免兩個單鍵黏在一起。
+    if (pendingRaceSelection && racePrompt.test(outputTail)) {
+      pendingRaceSelection = false;
+      socket.send("\r");
+    }
     window.scrollTo(0, document.body.scrollHeight);
   };
   function connect() {
@@ -135,7 +143,19 @@
   connect();
   document.querySelector("form").addEventListener("submit", event => {
     event.preventDefault();
-    if (socket.readyState === WebSocket.OPEN) socket.send(command.value + "\r\n");
+    if (socket.readyState === WebSocket.OPEN) {
+      const choice = command.value.trim().toLowerCase();
+      if (racePrompt.test(outputTail) && choice === "human") {
+        // Original get_char（單鍵選單）以 Enter 選取目前預設的 human。
+        socket.send("\r");
+      } else if (racePrompt.test(outputTail) && choice === "avatar") {
+        // 先送終端向下鍵選到 avatar；重新顯示選單後再由上方邏輯送 Enter。
+        pendingRaceSelection = true;
+        socket.send("\x1b[B");
+      } else {
+        socket.send(command.value + "\r\n");
+      }
+    }
     command.value = "";
   });
 </script></body></html>
