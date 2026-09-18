@@ -11,7 +11,135 @@ cp -a "$SOURCE/." "$TARGET/mudlib/"
 # 這是生成 Runtime 的相容層，不回寫或修改 Original ES2 保存來源。
 LOGIN_D="$TARGET/mudlib/adm/daemons/logind.c"
 RESERVATION_MARKER='ES2-KING PUBLIC OWNER ID RESERVATION'
-if ! grep -Fq "$RESERVATION_MARKER" "$LOGIN_D"; then
+CLAIM_MARKER='ES2-KING OWNER CLAIM FLOW'
+
+# 舊 Runtime 已有單純 Reservation 時，先移除舊區塊，再加入一次性 Owner Claim 相容層。
+if grep -Fq "$RESERVATION_MARKER" "$LOGIN_D" && ! grep -Fq "$CLAIM_MARKER" "$LOGIN_D"; then
+  temp_login="$(mktemp)"
+  awk -v marker="$RESERVATION_MARKER" '
+    index($0, marker) { removing=1; next }
+    removing && /^    }$/ { removing=0; skip_blank=1; next }
+    removing { next }
+    skip_blank && /^$/ { skip_blank=0; next }
+    { skip_blank=0; print }
+  ' "$LOGIN_D" > "$temp_login"
+  chmod --reference="$LOGIN_D" "$temp_login"
+  mv "$temp_login" "$LOGIN_D"
+fi
+
+if ! grep -Fq "$CLAIM_MARKER" "$LOGIN_D"; then
+  # Prototype（函式宣告）維持 LPC 在函式定義前的呼叫相容性。
+  prototype_line="$(grep -n -m1 '^private void get_id(string arg, object ob);' "$LOGIN_D" | cut -d: -f1)"
+  test -n "$prototype_line" || {
+    echo 'EXPANSION APPLY FAIL：找不到 Original get_id 宣告，無法加入 Owner Claim。' >&2
+    exit 1
+  }
+  temp_login="$(mktemp)"
+  head -n "$prototype_line" "$LOGIN_D" > "$temp_login"
+  printf '%s\n' 'private void get_owner_claim(string token, object ob);' >> "$temp_login"
+  tail -n "+$((prototype_line + 1))" "$LOGIN_D" >> "$temp_login"
+  chmod --reference="$LOGIN_D" "$temp_login"
+  mv "$temp_login" "$LOGIN_D"
+
+  # Claim Session（認領工作階段）只保存在 logind 記憶體，不寫入玩家資料或任何 Log。
+  definition_line="$(grep -n -m1 '^private void get_id (string arg, object ob) {' "$LOGIN_D" | cut -d: -f1)"
+  test -n "$definition_line" || {
+    echo 'EXPANSION APPLY FAIL：找不到 Original get_id 定義，無法加入 Owner Claim。' >&2
+    exit 1
+  }
+  temp_login="$(mktemp)"
+  head -n "$((definition_line - 1))" "$LOGIN_D" > "$temp_login"
+  cat >> "$temp_login" <<'LPC'
+// ES2-KING OWNER CLAIM FLOW／Owner 一次性安全初始化流程。
+// Token 只從 Runtime Secret 讀取；不保存、不記錄，也不授予遊戲外基礎設施權限。
+private object owner_claim_link;
+private int owner_claim_deadline;
+
+private void clear_stale_owner_claim()
+{
+    if (!objectp(owner_claim_link)
+    ||  !interactive(owner_claim_link)
+    ||  time() > owner_claim_deadline) {
+        owner_claim_link = 0;
+        owner_claim_deadline = 0;
+    }
+}
+
+// Constant-time comparison／固定時間比較：迴圈次數只依兩者最大長度，
+// 不在第一個錯誤字元提前返回，也不向 Client 洩漏長度或差異位置。
+private int secure_owner_claim_equal(string supplied, string expected)
+{
+    int i, supplied_length, expected_length, compare_length;
+    int supplied_byte, expected_byte, difference;
+
+    supplied_length = strlen(supplied);
+    expected_length = strlen(expected);
+    compare_length = supplied_length > expected_length ? supplied_length : expected_length;
+    difference = supplied_length ^ expected_length;
+
+    for (i = 0; i < compare_length; i++) {
+        supplied_byte = i < supplied_length ? supplied[i] : 0;
+        expected_byte = i < expected_length ? expected[i] : 0;
+        difference |= supplied_byte ^ expected_byte;
+    }
+    return difference == 0;
+}
+
+private void reject_owner_claim(object ob)
+{
+    write("\nOwner 初始化驗證失敗。\n\n");
+    ob->delete("id");
+    logon(ob);
+}
+
+private void get_owner_claim(string token, object ob)
+{
+    string secret;
+    mapping opts;
+
+    write("\n");
+    clear_stale_owner_claim();
+
+    // king.o 一旦存在，Claim 永久退出；之後只能走 Original 密碼驗證。
+    if (file_size(login_data("king")) != -1) {
+        ob->delete("id");
+        logon(ob);
+        return;
+    }
+
+    // 同一時間只允許一個已驗證 Session 進入創角，其他連線一律使用相同失敗訊息。
+    if (objectp(owner_claim_link) && owner_claim_link != ob) {
+        reject_owner_claim(ob);
+        return;
+    }
+
+    secret = envsubst("${ES2_KING_CLAIM_TOKEN:-}");
+    if (strlen(secret) < 32 || !secure_owner_claim_equal(token, secret)) {
+        token = "";
+        secret = "";
+        reject_owner_claim(ob);
+        return;
+    }
+
+    owner_claim_link = ob;
+    owner_claim_deadline = time() + LOGIN_TIMEOUT;
+    token = "";
+    secret = "";
+
+    // 驗證成功後直接重用 Original confirm_id → password → character creation 全流程。
+    opts = ([
+        "prompt": "",
+        "options": ({ "Y) 是", "N) 否" }),
+        "cursor": 0
+    ]);
+    confirm_id("Y", opts, ob);
+}
+
+LPC
+  tail -n "+$definition_line" "$LOGIN_D" >> "$temp_login"
+  chmod --reference="$LOGIN_D" "$temp_login"
+  mv "$temp_login" "$LOGIN_D"
+
   insertion_line="$(grep -n -m1 '^    mapping opts = (\[$' "$LOGIN_D" | cut -d: -f1)"
   test -n "$insertion_line" || {
     echo 'EXPANSION APPLY FAIL：找不到 Original 新帳號確認流程，無法安全保留 KING ID。' >&2
@@ -21,13 +149,16 @@ if ! grep -Fq "$RESERVATION_MARKER" "$LOGIN_D"; then
   head -n "$((insertion_line - 1))" "$LOGIN_D" > "$temp_login"
   cat >> "$temp_login" <<'LPC'
     // ES2-KING PUBLIC OWNER ID RESERVATION／公開 Owner 帳號保留。
-    // 既有 KING 存檔已在前段載入；走到這裡代表帳號不存在，禁止公開訪客建立。
+    // 只有 Runtime Secret 已安全設定時才顯示 Claim Prompt；未設定仍維持公開拒絕。
     if (arg == "king") {
-        write("\nKING Owner 帳號尚未在此 Runtime 初始化，已拒絕公開註冊。\n\n");
-        // 不銷毀互動登入物件；清除暫存 ID 後回到 Original 登入流程，
-        // 讓拒絕訊息與下一個安全提示完整送達 Telnet／WebSocket Client。
-        ob->delete("id");
-        logon(ob);
+        if (strlen(envsubst("${ES2_KING_CLAIM_TOKEN:-}")) >= 32) {
+            write("\nKING Owner 一次性初始化權杖: ");
+            input_to("get_owner_claim", 1, ob);
+        } else {
+            write("\nKING Owner 帳號尚未在此 Runtime 初始化，已拒絕公開註冊。\n\n");
+            ob->delete("id");
+            logon(ob);
+        }
         return;
     }
 
@@ -61,6 +192,50 @@ fi
 
 # 已生成過的舊 Runtime 可能沿用 mktemp 的 600；只補讀取權限，不授予任何 group／other 寫入權。
 chmod go+r "$LOGIN_D"
+
+# Command Reindex Compatibility／指令重索引相容層：只有實際管理員搜尋路徑包含
+# /cmds/adm/ 且指令檔存在時，才補入四個已定稿 KING 指令的 Runtime 記憶體索引。
+COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.c"
+COMMAND_REHASH_MARKER='ES2-KING OWNER COMMAND REHASH'
+if ! grep -Fq "$COMMAND_REHASH_MARKER" "$COMMAND_D"; then
+  temp_command="$(mktemp)"
+  awk -v marker="$COMMAND_REHASH_MARKER" '
+    /^    if\( !pointerp\(path\) \) return 0;/ && !inserted {
+      print
+      print ""
+      print "    // " marker "／不擴張一般玩家搜尋路徑。"
+      print "    if (member_array(\"/cmds/adm/\", path) >= 0"
+      print "    && member_array(verb, ({ \"kingcreate\", \"kingrealm\", \"kingmartial\", \"kingcanon\" })) >= 0"
+      print "    && file_size(\"/cmds/adm/\" + verb + \".c\") >= 0)"
+      print "        cache[verb + \".c\"] = ({ \"/cmds/adm/\" });"
+      inserted=1
+      next
+    }
+    { print }
+  ' "$COMMAND_D" > "$temp_command"
+  chmod --reference="$COMMAND_D" "$temp_command"
+  mv "$temp_command" "$COMMAND_D"
+fi
+
+# Selective Binary Cache Invalidation／選擇性二進位快取失效：只移除會遮蔽新版 logind，
+# 或會保存 Expansion 套用前指令索引的兩個舊 .b；其餘 Original binary cache 完整保留。
+# 下一次 Boot 會重新編譯，COMMAND_D 則沿用 Original 的首次路徑自動 rehash。
+for cached_binary in \
+  "$TARGET/mudlib/bin/adm/daemons/logind.b" \
+  "$TARGET/mudlib/bin/adm/daemons/cmd_d.b"
+do
+  if [[ -e "$cached_binary" ]]; then
+    unlink "$cached_binary"
+  fi
+done
+
+# Command Warm Load／指令預先載入：Neolith 第一次 call_other 新增 command object 時可能只完成載入；
+# 將四個既有 Owner 指令加入 Generated Runtime preload，確保首次玩家輸入即可執行且無需手動 reload。
+PRELOAD_FILE="$TARGET/mudlib/adm/etc/preload"
+for owner_command in kingcreate kingrealm kingmartial kingcanon; do
+  grep -Fqx "/cmds/adm/$owner_command" "$PRELOAD_FILE" \
+    || printf '%s\n' "/cmds/adm/$owner_command" >> "$PRELOAD_FILE"
+done
 
 # Owner provisioning／擁有者授權配置：只在獨立 Expansion Runtime 登錄帳號 ID；密碼仍由 Original 登入系統建立、雜湊與驗證。
 WIZLIST="$TARGET/mudlib/adm/etc/wizlist"

@@ -5,14 +5,16 @@ const base = new URL(process.argv[2] || `http://127.0.0.1:${process.env.PORT || 
 
 function getHealth() {
   return new Promise((resolve, reject) => {
-    const request = http.get(new URL("/health", base), { timeout: 5000 }, response => {
+    const request = http.get(new URL("/health/?probe=deployment", base), { timeout: 5000 }, response => {
       let body = "";
       response.setEncoding("utf8");
       response.on("data", chunk => { body += chunk; });
       response.on("end", () => {
         try {
           const status = JSON.parse(body);
-          if (response.statusCode !== 200 || !status.web || !status.bridge || !status.neolith
+          if (response.statusCode !== 200
+              || !String(response.headers["content-type"] || "").startsWith("application/json")
+              || !status.web || !status.bridge || !status.neolith
               || typeof status.build_commit !== "string" || status.build_commit.length === 0
               || status.build_version !== "m30-public-runtime") {
             reject(new Error(`health not ready: ${response.statusCode} ${body}`));
@@ -23,6 +25,27 @@ function getHealth() {
       });
     });
     request.on("timeout", () => request.destroy(new Error("health timeout")));
+    request.on("error", reject);
+  });
+}
+
+function checkHome() {
+  return new Promise((resolve, reject) => {
+    const request = http.get(new URL("/", base), { timeout: 5000 }, response => {
+      let body = "";
+      response.setEncoding("utf8");
+      response.on("data", chunk => { body += chunk; });
+      response.on("end", () => {
+        if (response.statusCode !== 200
+            || !String(response.headers["content-type"] || "").startsWith("text/html")
+            || !body.includes("ES2-KING WebTelnet")) {
+          reject(new Error(`home not ready: ${response.statusCode}`));
+          return;
+        }
+        resolve();
+      });
+    });
+    request.on("timeout", () => request.destroy(new Error("home timeout")));
     request.on("error", reject);
   });
 }
@@ -45,6 +68,7 @@ function checkLoginPrompt() {
   });
 }
 
+await checkHome();
 await getHealth();
 await checkLoginPrompt();
 console.log("M30 DEPLOYMENT SMOKE PASS：HTTP → WebSocket → Bridge → Telnet :4000 → ES2 Login Prompt");

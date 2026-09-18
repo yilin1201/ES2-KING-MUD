@@ -38,6 +38,7 @@ assert.match(html, /const passwordPrompt = \/\(/);
 assert.match(html, /command\.type = secret \? "password" : "text";/);
 assert.match(html, /"new-password"/);
 assert.match(html, /"current-password"/);
+assert.match(html, /KING Owner 一次性初始化權杖/);
 assert.match(html, /outputTail = \(outputTail \+ cleanText\)\.slice\(-256\);/);
 assert.doesNotMatch(html, /outputTail\s*\+=\s*command\.value/);
 assert.doesNotMatch(html, /console\.(?:log|debug)\(command\.value/);

@@ -9,10 +9,11 @@ node --check webtelnet/telnet.mjs
 node --check scripts/healthcheck_es2_king.mjs
 node --check scripts/test_m30_deployment_smoke.mjs
 node --check scripts/test_m30_king_reservation_e2e.mjs
+node --check scripts/test_m30_king_claim_e2e.mjs
 node scripts/test_m30_webtelnet_display.mjs
 node scripts/test_m30_mobile_responsive.mjs
 node scripts/test_m30_desktop_centering.mjs
-bash -n scripts/start_es2_king_web.sh scripts/prepare_es2_persistence.sh scripts/assert_m30_final_runtime.sh scripts/test_m30_final_runtime_permissions.sh scripts/test_m30_persistence_paths.sh scripts/test_m30_king_reservation_e2e.sh scripts/test_m30_production_equivalent_king_reservation.sh
+bash -n scripts/start_es2_king_web.sh scripts/prepare_es2_persistence.sh scripts/assert_m30_final_runtime.sh scripts/test_m30_final_runtime_permissions.sh scripts/test_m30_persistence_paths.sh scripts/test_m30_king_reservation_e2e.sh scripts/test_m30_king_claim_e2e.sh scripts/test_m30_production_equivalent_king_reservation.sh
 bash scripts/test_es2_cn_standard.sh
 
 grep -Fq 'EXPOSE 8080' Dockerfile
@@ -30,9 +31,13 @@ grep -Fq 'location.protocol === "https:" ? "wss:" : "ws:"' webtelnet/public/inde
 grep -Fq 'healthCheckPath: /health' render.yaml
 grep -Fq 'branch: build/original-es2-races-phase2' render.yaml
 grep -Fq 'build_commit: buildCommit' webtelnet/server.mjs
+grep -Fq 'pathname === "/health"' webtelnet/server.mjs
 grep -Fq 'bash scripts/assert_m30_final_runtime.sh /opt/es2-king/runtime' Dockerfile
 grep -Fq 'bash "$SCRIPT_DIR/assert_m30_final_runtime.sh" "$RUNTIME_DIR"' scripts/start_es2_king_web.sh
 grep -Fq 'chmod --reference="$LOGIN_D" "$temp_login"' scripts/apply_es2_king_expansion.sh
 grep -Fq 'chmod go+r "$LOGIN_D"' scripts/apply_es2_king_expansion.sh
+grep -Fq 'mudlib/bin/adm/daemons/logind.b' scripts/apply_es2_king_expansion.sh
+grep -Fq 'mudlib/bin/adm/daemons/cmd_d.b' scripts/apply_es2_king_expansion.sh
+grep -Fq 'ES2-KING OWNER COMMAND REHASH' scripts/apply_es2_king_expansion.sh
 
 echo "M30 DEPLOYMENT STATIC（M30 部署靜態檢查）：PASS（測試通過）；Web 連接埠、WSS（加密 WebSocket）、Health Check（健康檢查）與 Telnet 對外暴露邊界均通過。"

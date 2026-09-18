@@ -27,7 +27,9 @@ function neolithReachable() {
 }
 
 const http = createServer(async (request, response) => {
-  if (request.url === "/health") {
+  // URL Path（網址路徑）只比較標準化 pathname，讓 /health、/health/ 與查詢參數都能正常檢查。
+  const pathname = new URL(request.url || "/", "http://127.0.0.1").pathname.replace(/\/$/, "") || "/";
+  if (pathname === "/health") {
     const neolith = await neolithReachable();
     response.writeHead(neolith ? 200 : 503, {
       "content-type": "application/json; charset=utf-8",
@@ -36,7 +38,7 @@ const http = createServer(async (request, response) => {
     response.end(JSON.stringify({ web: true, bridge: true, neolith, build_commit: buildCommit, build_version: buildVersion }));
     return;
   }
-  if (request.url !== "/" && request.url !== "/index.html") {
+  if (pathname !== "/" && pathname !== "/index.html") {
     response.writeHead(404).end("Not found");
     return;
   }

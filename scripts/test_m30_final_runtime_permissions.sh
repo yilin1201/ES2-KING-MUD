@@ -15,6 +15,7 @@ chmod 755 "$TEMP_ROOT" "$TEMP_ROOT/runtime" "$TEMP_ROOT/runtime/mudlib"
 bash "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT/runtime"
 
 LOGIN_D="$TEMP_ROOT/runtime/mudlib/adm/daemons/logind.c"
+COMMAND_D="$TEMP_ROOT/runtime/mudlib/adm/daemons/cmd_d.c"
 bash "$REPO_ROOT/scripts/assert_m30_final_runtime.sh" "$TEMP_ROOT/runtime"
 
 # Work 隔離環境禁止 setuid；改以 Unix mode（Unix 權限模式）逐層證明非 owner 使用者可穿越、
@@ -29,15 +30,17 @@ for directory in "$TEMP_ROOT" "$TEMP_ROOT/runtime" "$TEMP_ROOT/runtime/mudlib" \
   }
 done
 
-mode="$(stat -c '%a' "$LOGIN_D")"
-permissions=$((8#$mode))
-(( (permissions & 0004) != 0 )) || {
-  echo "FINAL RUNTIME PERMISSION FAIL（最終執行環境權限失敗）：非 owner 無法讀取 logind.c。" >&2
-  exit 1
-}
-(( (permissions & 0022) == 0 )) || {
-  echo "FINAL RUNTIME PERMISSION FAIL（最終執行環境權限失敗）：group／other 不應寫入 logind.c。" >&2
-  exit 1
-}
+for runtime_source in "$LOGIN_D" "$COMMAND_D"; do
+  mode="$(stat -c '%a' "$runtime_source")"
+  permissions=$((8#$mode))
+  (( (permissions & 0004) != 0 )) || {
+    echo "FINAL RUNTIME PERMISSION FAIL（最終執行環境權限失敗）：非 owner 無法讀取 $runtime_source。" >&2
+    exit 1
+  }
+  (( (permissions & 0022) == 0 )) || {
+    echo "FINAL RUNTIME PERMISSION FAIL（最終執行環境權限失敗）：group／other 不應寫入 $runtime_source。" >&2
+    exit 1
+  }
+done
 
-echo "FINAL RUNTIME PERMISSION PASS（最終執行環境權限測試通過）：mode 證據確認非 root 使用者可穿越並讀取 logind.c、不可寫入；安全斷言內容亦通過。"
+echo "FINAL RUNTIME PERMISSION PASS（最終執行環境權限測試通過）：mode 證據確認非 root 使用者可穿越並讀取 logind.c／cmd_d.c、不可寫入；安全斷言內容亦通過。"
