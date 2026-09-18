@@ -24,8 +24,8 @@ export class TelnetTextFilter {
 
       if (this.state === "iac") {
         if (byte === IAC) {
-          // Telnet 使用 IAC IAC 表示資料中的單一 0xff；保留其資料語意。
-          output.push(IAC);
+          // Telnet 的 IAC IAC 代表單一 0xff，但 0xff 不可能是合法 UTF-8 文字；
+          // 此 Bridge 僅傳送文字，必須略過它，避免瀏覽器產生替代字元 �。
           this.state = "data";
         } else if (byte === WILL || byte === WONT || byte === DO || byte === DONT) {
           this.state = "negotiation-option";

@@ -10,7 +10,7 @@ const utf8 = Buffer.from(banner, "utf8");
 // 模擬 TCP 與 UTF-8 同時分段，並插入 Neolith Telnet negotiation／GA 控制序列。
 const chunks = [
   Buffer.concat([Buffer.from([255]), Buffer.from([251, 1]), utf8.subarray(0, 5)]),
-  Buffer.concat([utf8.subarray(5, 23), Buffer.from([255, 249]), utf8.subarray(23, 41)]),
+  Buffer.concat([utf8.subarray(5, 23), Buffer.from([255, 249, 255, 255]), utf8.subarray(23, 41)]),
   Buffer.concat([Buffer.from([255, 250, 24, 1, 255]), Buffer.from([240]), utf8.subarray(41)])
 ];
 
