@@ -33,6 +33,9 @@ if ! grep -Fq "$RESERVATION_MARKER" "$LOGIN_D"; then
 
 LPC
   tail -n "+$insertion_line" "$LOGIN_D" >> "$temp_login"
+  # mktemp（建立暫存檔）預設為 600；取代 Runtime 原檔前必須保留原有唯讀／穿越安全邊界，
+  # 否則 Docker 建置的 root 可讀、非 root 的 es2king 啟動時卻無法載入 logind.c。
+  chmod --reference="$LOGIN_D" "$temp_login"
   mv "$temp_login" "$LOGIN_D"
 fi
 
@@ -52,8 +55,12 @@ if [[ -n "$legacy_destruct_line" ]]; then
         logon(ob);
 LPC
   tail -n "+$((legacy_destruct_line + 1))" "$LOGIN_D" >> "$temp_login"
+  chmod --reference="$LOGIN_D" "$temp_login"
   mv "$temp_login" "$LOGIN_D"
 fi
+
+# 已生成過的舊 Runtime 可能沿用 mktemp 的 600；只補讀取權限，不授予任何 group／other 寫入權。
+chmod go+r "$LOGIN_D"
 
 # Owner provisioning／擁有者授權配置：只在獨立 Expansion Runtime 登錄帳號 ID；密碼仍由 Original 登入系統建立、雜湊與驗證。
 WIZLIST="$TARGET/mudlib/adm/etc/wizlist"
