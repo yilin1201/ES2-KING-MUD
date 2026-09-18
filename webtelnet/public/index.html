@@ -42,7 +42,7 @@
   <section id="terminal-shell" aria-label="ES2-KING 80欄終端">
     <div id="status">連線中……</div>
     <pre id="terminal" aria-live="polite"></pre>
-    <form><input id="command" autocomplete="off" aria-label="遊戲指令"><button>送出</button></form>
+    <form><input id="command" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="遊戲指令"><button>送出</button></form>
   </section>
 </main>
 <script>
@@ -54,6 +54,21 @@
   const terminalColumns = 80;
   let socket;
   let retryDelay = 1000;
+  let outputTail = "";
+
+  // Password Prompt（密碼輸入提示）只控制瀏覽器欄位是否遮蔽；密碼仍由 Original ES2 驗證與雜湊。
+  // 此層不保存、不記錄也不解析密碼，避免 KING 秘密進入 Web、Bridge 或基礎設施設定。
+  const passwordPrompt = /(請輸入密碼|請先輸入您原來的密碼|請輸入新密碼|請再輸入一次新密碼|請設定您的密碼|請再輸入一次您的密碼)[：:﹕]?\s*$/;
+  const newPasswordPrompt = /(請輸入新密碼|請再輸入一次新密碼|請設定您的密碼|請再輸入一次您的密碼)[：:﹕]?\s*$/;
+
+  function protectSecretEntry() {
+    const secret = passwordPrompt.test(outputTail);
+    command.type = secret ? "password" : "text";
+    command.autocomplete = secret
+      ? (newPasswordPrompt.test(outputTail) ? "new-password" : "current-password")
+      : "off";
+    command.setAttribute("aria-label", secret ? "密碼（輸入內容不顯示）" : "遊戲指令");
+  }
 
   // Original ES2 welcome 最長內容為 79 欄，採傳統 80 欄終端作為手機顯示基準。
   // 實際量測目前字型的 80 個等寬字元，再依 Viewport 寬度計算輸出字級；不縮放控制區。
@@ -93,7 +108,11 @@
   const decoder = new TextDecoder("utf-8");
   // ANSI（終端色彩控制碼）先移除；之後可在不碰 mudlib 的情況下加入彩色呈現。
   const append = data => {
-    terminal.textContent += decoder.decode(data, { stream: true }).replace(/\x1b\[[0-9;?]*[ -/]*[@-~]/g, "");
+    const cleanText = decoder.decode(data, { stream: true }).replace(/\x1b\[[0-9;?]*[ -/]*[@-~]/g, "");
+    terminal.textContent += cleanText;
+    // 僅保留輸出末端以辨識可能跨 WebSocket 分段的提示文字；絕不把玩家輸入加入此緩衝。
+    outputTail = (outputTail + cleanText).slice(-256);
+    protectSecretEntry();
     window.scrollTo(0, document.body.scrollHeight);
   };
   function connect() {
