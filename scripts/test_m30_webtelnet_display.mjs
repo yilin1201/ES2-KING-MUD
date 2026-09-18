@@ -33,4 +33,13 @@ assert.match(html, /word-break:\s*normal;/);
 assert.match(html, /-webkit-text-size-adjust:\s*100%;/);
 assert.doesNotMatch(html, /overflow-wrap:\s*anywhere/);
 
-console.log("M30 WEBTELNET DISPLAY PASS（測試通過）：UTF-8 中文、Telnet 控制碼過濾與手機固定寬度排版檢查完整。");
+// Public Login（公開登入）必須在瀏覽器本身遮蔽密碼，且不得儲存或記錄輸入內容。
+assert.match(html, /const passwordPrompt = \/\(/);
+assert.match(html, /command\.type = secret \? "password" : "text";/);
+assert.match(html, /"new-password"/);
+assert.match(html, /"current-password"/);
+assert.match(html, /outputTail = \(outputTail \+ cleanText\)\.slice\(-256\);/);
+assert.doesNotMatch(html, /outputTail\s*\+=\s*command\.value/);
+assert.doesNotMatch(html, /console\.(?:log|debug)\(command\.value/);
+
+console.log("M30 WEBTELNET DISPLAY PASS（測試通過）：UTF-8 中文、Telnet 控制碼過濾、密碼輸入遮蔽與固定寬度排版檢查完整。");
