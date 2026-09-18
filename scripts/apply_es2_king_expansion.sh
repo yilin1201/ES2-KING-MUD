@@ -23,13 +23,35 @@ if ! grep -Fq "$RESERVATION_MARKER" "$LOGIN_D"; then
     // ES2-KING PUBLIC OWNER ID RESERVATION／公開 Owner 帳號保留。
     // 既有 KING 存檔已在前段載入；走到這裡代表帳號不存在，禁止公開訪客建立。
     if (arg == "king") {
-        write("KING Owner 帳號尚未在此 Runtime 初始化，已拒絕公開註冊。\n");
-        destruct(ob);
+        write("\nKING Owner 帳號尚未在此 Runtime 初始化，已拒絕公開註冊。\n\n");
+        // 不銷毀互動登入物件；清除暫存 ID 後回到 Original 登入流程，
+        // 讓拒絕訊息與下一個安全提示完整送達 Telnet／WebSocket Client。
+        ob->delete("id");
+        logon(ob);
         return;
     }
 
 LPC
   tail -n "+$insertion_line" "$LOGIN_D" >> "$temp_login"
+  mv "$temp_login" "$LOGIN_D"
+fi
+
+# 舊版 Reservation 會立即 destruct 登入物件並留下 Driver 預設「>」；重複套用新版時就地升級。
+legacy_destruct_line="$(awk -v marker="$RESERVATION_MARKER" '
+  index($0, marker) { in_reservation=1; next }
+  in_reservation && /destruct\(ob\)/ { print NR; exit }
+  in_reservation && /^    }/ { exit }
+' "$LOGIN_D")"
+if [[ -n "$legacy_destruct_line" ]]; then
+  temp_login="$(mktemp)"
+  head -n "$((legacy_destruct_line - 1))" "$LOGIN_D" > "$temp_login"
+  cat >> "$temp_login" <<'LPC'
+        // 不銷毀互動登入物件；清除暫存 ID 後回到 Original 登入流程，
+        // 讓拒絕訊息與下一個安全提示完整送達 Telnet／WebSocket Client。
+        ob->delete("id");
+        logon(ob);
+LPC
+  tail -n "+$((legacy_destruct_line + 1))" "$LOGIN_D" >> "$temp_login"
   mv "$temp_login" "$LOGIN_D"
 fi
 
