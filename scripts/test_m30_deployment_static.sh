@@ -19,6 +19,7 @@ mkdir_block="$(sed -n '/^RUN mkdir -p/,/&& chown -R es2king:es2king/p' Dockerfil
 for directory in mudlib/bin mudlib/data mudlib/log; do
   grep -Fq "/opt/es2-king/runtime/$directory" <<<"$mkdir_block"
 done
+grep -Fq '&& chown es2king:es2king /opt/es2-king/runtime/mudlib' Dockerfile
 grep -Fq 'process.env.PORT || process.env.WEBTELNET_PORT || 8080' webtelnet/server.mjs
 grep -Fq 'location.protocol === "https:" ? "wss:" : "ws:"' webtelnet/public/index.html
 grep -Fq 'healthCheckPath: /health' render.yaml

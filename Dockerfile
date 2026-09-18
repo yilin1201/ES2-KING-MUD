@@ -64,10 +64,13 @@ COPY --from=builder /build/repository/scripts /opt/es2-king/scripts
 
 # Original Git tree 不保存執行時產生的 mudlib/bin；必須在 chown 前建立，
 # 同時再次保證 data／log 掛載點存在，避免 Runtime 初始化順序造成部署失敗。
+# data 會在啟動時改成符號連結；只開放 mudlib 父目錄的目錄項目變更權限，
+# 不遞迴改寫 Original ES2 保存檔案的擁有者。
 RUN mkdir -p \
       /opt/es2-king/runtime/mudlib/bin \
       /opt/es2-king/runtime/mudlib/data \
       /opt/es2-king/runtime/mudlib/log \
+    && chown es2king:es2king /opt/es2-king/runtime/mudlib \
     && chown -R es2king:es2king \
       /var/lib/es2-king \
       /opt/es2-king/runtime/mudlib/bin \

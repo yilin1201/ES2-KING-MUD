@@ -29,14 +29,24 @@ if [[ -L "$RUNTIME_DATA" ]]; then
     exit 1
   }
 elif [[ -d "$RUNTIME_DATA" ]]; then
-  # 容器映像中的空掛載點可安全替換；非空資料必須先成為 seed，避免遺失。
+  # 首次啟動可能遇到映像內殘留資料：先以不覆寫方式複製，再逐項確認目的端存在。
+  # 只有驗證完成後才移除舊目錄並建立連結，Persistence Guard 不允許靜默遺失資料。
   if find "$RUNTIME_DATA" -mindepth 1 -print -quit | grep -q .; then
     cp -a --update=none "$RUNTIME_DATA/." "$SAVE_DIR/"
+    while IFS= read -r -d '' source; do
+      relative="${source#"$RUNTIME_DATA"/}"
+      if [[ ! -e "$SAVE_DIR/$relative" && ! -L "$SAVE_DIR/$relative" ]]; then
+        echo "PERSISTENCE FAIL：Runtime data 項目尚未安全複製：$relative" >&2
+        exit 1
+      fi
+    done < <(find "$RUNTIME_DATA" -mindepth 1 -print0)
   fi
-  rmdir "$RUNTIME_DATA" 2>/dev/null || {
-    echo "PERSISTENCE FAIL：Runtime data 仍有未搬移項目。" >&2
+
+  rm -rf -- "$RUNTIME_DATA"
+  if [[ -e "$RUNTIME_DATA" || -L "$RUNTIME_DATA" ]]; then
+    echo "PERSISTENCE FAIL：無法替換 Runtime data；請檢查 mudlib 父目錄權限。" >&2
     exit 1
-  }
+  fi
   ln -s "$SAVE_DIR" "$RUNTIME_DATA"
 else
   ln -s "$SAVE_DIR" "$RUNTIME_DATA"
