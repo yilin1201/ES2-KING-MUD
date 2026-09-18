@@ -4,6 +4,7 @@ import { connect } from "node:net";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { WebSocketServer } from "ws";
+import { TelnetTextFilter } from "./telnet.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const webPort = Number(process.env.PORT || process.env.WEBTELNET_PORT || 8080);
@@ -43,9 +44,14 @@ const sockets = new WebSocketServer({ server: http, path: "/mud" });
 sockets.on("connection", (browser) => {
   // 每個瀏覽器連線各自建立一條 Telnet（文字終端連線協定）TCP 連線。
   const mud = connect({ host: mudHost, port: mudPort });
+  const telnetText = new TelnetTextFilter();
   mud.setTimeout(10000, () => mud.destroy(new Error("MUD connection timeout")));
   mud.once("connect", () => mud.setTimeout(0));
-  mud.on("data", (data) => browser.readyState === browser.OPEN && browser.send(data));
+  mud.on("data", (data) => {
+    // Neolith 使用 UTF-8，但 Telnet IAC 控制位元組不是文字；先剝離協定再交給瀏覽器解碼。
+    const text = telnetText.push(data);
+    if (text.length > 0 && browser.readyState === browser.OPEN) browser.send(text);
+  });
   mud.on("error", (error) => browser.close(1011, `MUD connection failed: ${error.message}`));
   mud.on("close", () => browser.close(1000, "MUD connection closed"));
   browser.on("message", (data) => mud.writable && mud.write(data));
