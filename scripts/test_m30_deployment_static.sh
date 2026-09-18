@@ -12,6 +12,13 @@ bash scripts/test_es2_cn_standard.sh
 
 grep -Fq 'EXPOSE 8080' Dockerfile
 ! grep -Eq 'EXPOSE[[:space:]]+4000' Dockerfile
+mkdir_line="$(grep -n '^RUN mkdir -p' Dockerfile | cut -d: -f1)"
+chown_line="$(grep -n '&& chown -R es2king:es2king' Dockerfile | cut -d: -f1)"
+test -n "$mkdir_line" && test -n "$chown_line" && (( mkdir_line < chown_line ))
+mkdir_block="$(sed -n '/^RUN mkdir -p/,/&& chown -R es2king:es2king/p' Dockerfile)"
+for directory in mudlib/bin mudlib/data mudlib/log; do
+  grep -Fq "/opt/es2-king/runtime/$directory" <<<"$mkdir_block"
+done
 grep -Fq 'process.env.PORT || process.env.WEBTELNET_PORT || 8080' webtelnet/server.mjs
 grep -Fq 'location.protocol === "https:" ? "wss:" : "ws:"' webtelnet/public/index.html
 grep -Fq 'healthCheckPath: /health' render.yaml

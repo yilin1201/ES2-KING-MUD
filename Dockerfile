@@ -62,7 +62,13 @@ COPY --from=builder /opt/es2-king /opt/es2-king
 COPY --from=builder /build/repository/webtelnet /opt/es2-king/webtelnet
 COPY --from=builder /build/repository/scripts /opt/es2-king/scripts
 
-RUN chown -R es2king:es2king \
+# Original Git tree 不保存執行時產生的 mudlib/bin；必須在 chown 前建立，
+# 同時再次保證 data／log 掛載點存在，避免 Runtime 初始化順序造成部署失敗。
+RUN mkdir -p \
+      /opt/es2-king/runtime/mudlib/bin \
+      /opt/es2-king/runtime/mudlib/data \
+      /opt/es2-king/runtime/mudlib/log \
+    && chown -R es2king:es2king \
       /var/lib/es2-king \
       /opt/es2-king/runtime/mudlib/bin \
       /opt/es2-king/runtime/mudlib/data \
