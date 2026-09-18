@@ -15,6 +15,9 @@ test -f "$RUNTIME_DIR/neolith.conf" || { echo "START FAIL：缺少 neolith.conf"
 test -f "$WEBTELNET_DIR/server.mjs" || { echo "START FAIL：缺少 WebSocket/Telnet Bridge" >&2; exit 1; }
 
 "$SCRIPT_DIR/prepare_es2_persistence.sh"
+# Startup Assertion（啟動斷言）：在 Neolith 啟動前再檢查容器最終 mudlib，
+# 防止錯誤映像、複製順序或舊 Overlay 讓公開服務退回不安全版本。
+bash "$SCRIPT_DIR/assert_m30_final_runtime.sh" "$RUNTIME_DIR"
 mkdir -p "$RUNTIME_DIR/mudlib/log"
 
 driver_pid=""
