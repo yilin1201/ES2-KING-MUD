@@ -16,6 +16,12 @@ grep -Fq "grep -Fqx 'king (admin)'" scripts/apply_es2_king_expansion.sh
 grep -Fq 'ES2-KING PUBLIC OWNER ID RESERVATION' scripts/apply_es2_king_expansion.sh
 grep -Fq 'if (arg == "king")' scripts/apply_es2_king_expansion.sh
 grep -Fq '已拒絕公開註冊' scripts/apply_es2_king_expansion.sh
+grep -Fq 'ob->delete("id")' scripts/apply_es2_king_expansion.sh
+grep -Fq 'logon(ob)' scripts/apply_es2_king_expansion.sh
+if sed -n "/if (arg == \"king\")/,/^[[:space:]]*}/p" scripts/apply_es2_king_expansion.sh | grep -Fq 'destruct(ob)'; then
+  echo 'KING OWNER STATIC FAIL：保留分支仍銷毀登入物件，可能遺留不明確的 Telnet session。' >&2
+  exit 1
+fi
 # 密碼不得成為 repository 設定；授權程式只能核對帳號 ID 與 Original 驗證後的權限。
 if rg -n 'KING_OWNER_PASSWORD|owner_password|set_password' es2_king_expansion scripts M30_PLAYABLE_ALPHA_ENTRY.md --glob '!test_king_owner_authorization_static.sh'; then
   echo 'KING OWNER STATIC FAIL：repository 出現 Owner 密碼設定介面。' >&2; exit 1
