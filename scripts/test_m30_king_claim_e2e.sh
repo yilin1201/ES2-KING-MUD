@@ -9,7 +9,7 @@ WEB_PORT="$((44000 + $$ % 1000))"
 # 特殊字元相容測試：前導 ! 與 Base64 符號會觸發舊 Telnet 命令語意，必須仍能安全認領。
 CLAIM_TOKEN="${ES2_TEST_CLAIM_TOKEN:-!$(openssl rand -base64 48 | tr -d '\n')}"
 CLAIM_TRANSPORT="es2claim1:$(printf '%s' "$CLAIM_TOKEN" | od -An -tx1 -v | tr -d ' \n')"
-WRONG_TOKEN="$(openssl rand -hex 32)"
+WRONG_TOKEN="?$(openssl rand -base64 48 | tr -d '\n')"
 KING_PASSWORD="$(openssl rand -hex 16)"
 PLAYER_PASSWORD="$(openssl rand -hex 16)"
 SOURCE_HASH_BEFORE="$(sha256sum "$SOURCE_RUNTIME/mudlib/adm/daemons/logind.c" | cut -d' ' -f1)"

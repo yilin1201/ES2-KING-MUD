@@ -161,6 +161,7 @@
         pendingRaceSelection = true;
         socket.send("\x1b[B");
       } else if (ownerClaimPrompt.test(outputTail)) {
+        status.textContent = "KING Claim 安全傳輸：HEX-V1 已送出";
         socket.send(encodeOwnerClaim(command.value) + "\r\n");
       } else {
         socket.send(command.value + "\r\n");

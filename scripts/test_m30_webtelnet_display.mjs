@@ -43,6 +43,7 @@ assert.match(html, /function encodeOwnerClaim\(value\)/);
 assert.match(html, /new TextEncoder\(\)\.encode\(value\)/);
 assert.match(html, /"es2claim1:"/);
 assert.match(html, /ownerClaimPrompt\.test\(outputTail\)/);
+assert.match(html, /KING Claim 安全傳輸：HEX-V1 已送出/);
 assert.match(html, /outputTail = \(outputTail \+ cleanText\)\.slice\(-256\);/);
 assert.doesNotMatch(html, /outputTail\s*\+=\s*command\.value/);
 assert.doesNotMatch(html, /console\.(?:log|debug)\(command\.value/);

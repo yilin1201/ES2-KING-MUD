@@ -78,7 +78,16 @@ await reachClaim(wrong);
 wrong.send(`${encodeClaim(wrongToken)}\r\n`);
 await wrong.waitFor("Owner 初始化驗證失敗");
 assert.equal(wrong.output().includes("請設定您的密碼"), false);
+assert.match(wrong.output(), /協定=HEX-V1；格式=VALID；輸入位元組=\d+；Runtime 位元組=\d+；長度=MATCH；比較=MISMATCH/);
 wrong.close();
+
+// Invalid Hex（無效十六進位）：格式錯誤必須安全拒絕，且不得嘗試猜測或回顯秘密。
+const invalidTransport = session();
+await reachClaim(invalidTransport);
+invalidTransport.send("es2claim1:zz\r\n");
+await invalidTransport.waitFor("格式=INVALID");
+assert.equal(invalidTransport.output().includes("請設定您的密碼"), false);
+invalidTransport.close();
 
 // 傳統 Telnet 相容：即使秘密以 ! 開頭，也必須由 I_NOESC 的 input_to 接收，不得當成命令逃逸。
 const rawSpecial = session();
@@ -198,7 +207,7 @@ await new Promise(resolve => setTimeout(resolve, 800));
 for (const forbidden of ["KING 可建立項目", "進入天神殿・無極之境", "黑級無極境", "天舞梵輪・萬相歸墟"])
   assert.equal(normal.output().includes(forbidden), false, `普通玩家不得取得：${forbidden}`);
 
-const allOutput = [wrong, rawSpecial, first, second, abandoned, owner, badPassword, relogin, normal]
+const allOutput = [wrong, invalidTransport, rawSpecial, first, second, abandoned, owner, badPassword, relogin, normal]
   .map(current => current.output()).join("");
 assert.equal(allOutput.includes(claimToken), false, "Claim Token 不得出現在 WebSocket 輸出");
 assert.equal(allOutput.includes(encodeClaim(claimToken)), false, "Claim 傳輸值不得被 WebSocket 回顯");

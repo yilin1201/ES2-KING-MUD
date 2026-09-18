@@ -85,29 +85,49 @@ private int secure_owner_claim_equal(string supplied, string expected)
     return difference == 0;
 }
 
-// Claim Transport Encoding／認領傳輸編碼：公開 WebTelnet 將 UTF-8 Token 轉成純 ASCII hex，
-// 避免 Telnet 把開頭的 !、退格或其他控制意義字元當成命令；此編碼不記錄也不輸出秘密。
-private string owner_claim_transport(string value)
+private int owner_claim_hex_nibble(int value)
 {
-    int i;
-    string encoded;
-
-    encoded = "es2claim1:";
-    for (i = 0; i < strlen(value); i++)
-        encoded += sprintf("%02x", value[i] & 255);
-    return encoded;
+    if (value >= '0' && value <= '9') return value - '0';
+    if (value >= 'a' && value <= 'f') return value - 'a' + 10;
+    if (value >= 'A' && value <= 'F') return value - 'A' + 10;
+    return -1;
 }
 
-private void reject_owner_claim(object ob)
+// Claim Transport Decode／認領傳輸解碼：WebTelnet 只傳送 ASCII hex，避開 Telnet 控制字元。
+// 解碼值只存在本次 LPC 呼叫記憶體；不保存、不記錄、不回傳 Client。
+private string owner_claim_transport_decode(string value)
+{
+    int high, i, low;
+    string decoded, payload;
+
+    if (strlen(value) < 10 || value[0..9] != "es2claim1:") return 0;
+    payload = value[10..];
+    if (strlen(payload) % 2) return 0;
+
+    decoded = "";
+    for (i = 0; i < strlen(payload); i += 2) {
+        high = owner_claim_hex_nibble(payload[i]);
+        low = owner_claim_hex_nibble(payload[i + 1]);
+        if (high < 0 || low < 0) return 0;
+        decoded += sprintf("%c", high * 16 + low);
+    }
+    return decoded;
+}
+
+private void reject_owner_claim(object ob, string diagnostic)
 {
     write("\nOwner 初始化驗證失敗。\n\n");
+    // Safe Observability／安全可觀測性：只顯示傳輸狀態與長度，不顯示 Token、片段或 Hash。
+    if (stringp(diagnostic) && strlen(diagnostic))
+        write("Claim 安全診斷：" + diagnostic + "\n\n");
     ob->delete("id");
     logon(ob);
 }
 
 private void get_owner_claim(string token, object ob)
 {
-    string expected, secret;
+    int encoded_mode, format_valid, supplied_length;
+    string diagnostic, secret, supplied;
     mapping opts;
 
     write("\n");
@@ -122,26 +142,37 @@ private void get_owner_claim(string token, object ob)
 
     // 同一時間只允許一個已驗證 Session 進入創角，其他連線一律使用相同失敗訊息。
     if (objectp(owner_claim_link) && owner_claim_link != ob) {
-        reject_owner_claim(ob);
+        reject_owner_claim(ob, "狀態=SESSION-BUSY；未執行秘密比較。");
         return;
     }
 
     secret = envsubst("${ES2_KING_CLAIM_TOKEN:-}");
-    // 新版 WebTelnet 使用無控制字元的傳輸編碼；保留 raw 比對供傳統 Telnet 相容。
-    expected = strlen(token) >= 10 && token[0..9] == "es2claim1:"
-        ? owner_claim_transport(secret) : secret;
-    if (strlen(secret) < 32 || !secure_owner_claim_equal(token, expected)) {
+    encoded_mode = strlen(token) >= 10 && token[0..9] == "es2claim1:";
+    supplied = encoded_mode ? owner_claim_transport_decode(token) : token;
+    format_valid = stringp(supplied);
+    supplied_length = format_valid ? strlen(supplied) : -1;
+
+    if (strlen(secret) < 32 || !format_valid || !secure_owner_claim_equal(supplied, secret)) {
+        diagnostic = sprintf(
+            "協定=%s；格式=%s；輸入位元組=%d；Runtime 位元組=%d；長度=%s；比較=MISMATCH。",
+            encoded_mode ? "HEX-V1" : "RAW",
+            format_valid ? "VALID" : "INVALID",
+            supplied_length,
+            strlen(secret),
+            supplied_length == strlen(secret) ? "MATCH" : "MISMATCH"
+        );
         token = "";
-        expected = "";
+        supplied = "";
         secret = "";
-        reject_owner_claim(ob);
+        reject_owner_claim(ob, diagnostic);
+        diagnostic = "";
         return;
     }
 
     owner_claim_link = ob;
     owner_claim_deadline = time() + LOGIN_TIMEOUT;
     token = "";
-    expected = "";
+    supplied = "";
     secret = "";
 
     // 驗證成功後直接重用 Original confirm_id → password → character creation 全流程。
