@@ -28,7 +28,8 @@
     button { padding: .7rem 1rem; font-size: 16px; }
     @media (max-width: 600px) {
       main { padding-top: .5rem; padding-left: max(.5rem, env(safe-area-inset-left)); padding-right: max(.5rem, env(safe-area-inset-right)); }
-      #terminal { min-height: 70vh; font-size: 14px; }
+      /* 只縮放終端輸出；輸入框與按鈕維持 16px，避免 Safari 自動放大與觸控區過小。 */
+      #terminal { min-height: 70vh; font-size: var(--mobile-terminal-font-size, 14px); }
     }
   </style>
 </head>
@@ -42,8 +43,45 @@
   const terminal = document.querySelector("#terminal");
   const command = document.querySelector("#command");
   const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+  const mobileLayout = matchMedia("(max-width: 600px)");
+  const terminalColumns = 80;
   let socket;
   let retryDelay = 1000;
+
+  // Original ES2 welcome 最長內容為 79 欄，採傳統 80 欄終端作為手機顯示基準。
+  // 實際量測目前字型的 80 個等寬字元，再依 Viewport 寬度計算輸出字級；不縮放控制區。
+  function fitMobileTerminal() {
+    terminal.style.removeProperty("--mobile-terminal-font-size");
+    if (!mobileLayout.matches) return;
+
+    const probe = document.createElement("span");
+    probe.textContent = "0".repeat(terminalColumns);
+    probe.setAttribute("aria-hidden", "true");
+    Object.assign(probe.style, {
+      position: "absolute",
+      visibility: "hidden",
+      whiteSpace: "pre",
+      fontFamily: getComputedStyle(terminal).fontFamily,
+      fontSize: "100px",
+      fontWeight: "normal",
+      letterSpacing: "0"
+    });
+    document.body.append(probe);
+    const measuredWidth = probe.getBoundingClientRect().width;
+    probe.remove();
+
+    if (measuredWidth > 0 && terminal.clientWidth > 0) {
+      const fittedSize = Math.floor((100 * terminal.clientWidth / measuredWidth) * 1000) / 1000;
+      terminal.style.setProperty("--mobile-terminal-font-size", `${fittedSize}px`);
+    }
+  }
+
+  const scheduleMobileFit = () => requestAnimationFrame(fitMobileTerminal);
+  window.addEventListener("resize", scheduleMobileFit, { passive: true });
+  mobileLayout.addEventListener("change", scheduleMobileFit);
+  if (document.fonts) document.fonts.ready.then(scheduleMobileFit);
+  scheduleMobileFit();
+
   // TextDecoder（文字解碼器）以串流 UTF-8 解碼，保留跨 WebSocket 資料塊的中文字元。
   const decoder = new TextDecoder("utf-8");
   // ANSI（終端色彩控制碼）先移除；之後可在不碰 mudlib 的情況下加入彩色呈現。
