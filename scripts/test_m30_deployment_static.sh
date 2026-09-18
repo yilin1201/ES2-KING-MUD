@@ -8,10 +8,11 @@ node --check webtelnet/server.mjs
 node --check webtelnet/telnet.mjs
 node --check scripts/healthcheck_es2_king.mjs
 node --check scripts/test_m30_deployment_smoke.mjs
+node --check scripts/test_m30_king_reservation_e2e.mjs
 node scripts/test_m30_webtelnet_display.mjs
 node scripts/test_m30_mobile_responsive.mjs
 node scripts/test_m30_desktop_centering.mjs
-bash -n scripts/start_es2_king_web.sh scripts/prepare_es2_persistence.sh scripts/test_m30_persistence_paths.sh
+bash -n scripts/start_es2_king_web.sh scripts/prepare_es2_persistence.sh scripts/test_m30_persistence_paths.sh scripts/test_m30_king_reservation_e2e.sh
 bash scripts/test_es2_cn_standard.sh
 
 grep -Fq 'EXPOSE 8080' Dockerfile
