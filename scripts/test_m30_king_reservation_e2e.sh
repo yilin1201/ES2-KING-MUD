@@ -33,7 +33,10 @@ cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
 
 # 每次使用乾淨資料目錄，證明拒絕流程不會偷偷產生 KING 登入或角色存檔。
 mkdir -p "$TEMP_ROOT/mudlib/data/login/k" "$TEMP_ROOT/mudlib/data/user/k" "$TEMP_ROOT/mudlib/log"
-bash "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
+if [[ "${ES2_E2E_SKIP_OVERLAY:-0}" != "1" ]]; then
+  bash "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
+fi
+bash "$REPO_ROOT/scripts/assert_m30_final_runtime.sh" "$TEMP_ROOT"
 
 (
   cd "$TEMP_ROOT"
