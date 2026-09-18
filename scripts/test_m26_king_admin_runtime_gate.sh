@@ -13,6 +13,8 @@ done
 
 # Public Runtime／公開執行環境：既有帳號先走密碼登入，缺少存檔時才拒絕註冊 KING ID。
 grep -Fq 'ES2-KING PUBLIC OWNER ID RESERVATION' "$LOGIN_D"
+grep -Fq 'ob->delete("id")' "$LOGIN_D"
+grep -Fq 'logon(ob)' "$LOGIN_D"
 existing_line="$(grep -n -m1 'file_size (login_data (arg)) != -1' "$LOGIN_D" | cut -d: -f1)"
 reservation_line="$(grep -n -m1 'ES2-KING PUBLIC OWNER ID RESERVATION' "$LOGIN_D" | cut -d: -f1)"
 test -n "$existing_line" && test -n "$reservation_line" && (( existing_line < reservation_line ))
