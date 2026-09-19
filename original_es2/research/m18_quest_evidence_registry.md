@@ -48,3 +48,14 @@
 - **Track B — Story/Area Quest**：官方設計概念 CONFIRMED，但具體歷史任務 Source 仍 SOURCE_REQUIRED。
 
 兩者不互相覆蓋，也不把 qlist 當成 Original Quest 的唯一模型。
+
+## 第五階段 5H Story/Area Quest Source Recovery
+
+外部 ES2 家族 Source 已找到一條可完整追蹤的 Story/Area Quest 候選：**步玄派桃林入門鏈**。
+
+`daemon/class/scholar/master.c`：駱雲舟首次拒絕時設定 `marks/書生=1`，要求玩家先走東邊桃林；`daemon/class/scholar/entrance.c` 只有持有該 mark 才允許向東，並設定 `taolin_steps=3`；`d/choyin/taolin.c` 透過讀 note、依詩句缺字判斷方向，正確路徑逐步降低 steps、錯誤增加 steps，完成後設定 `marks/桃林=1` 並送回 entrance；再次拜師時 master 檢查 `marks/桃林`，成功 recruit、清除兩個 marks。
+
+候選鏈因此閉合為：
+`NPC 提示/mark → Room gate → 桃林解謎 → completion mark → 回 NPC → recruit/class`。
+
+判定：`CORROBORATED_RUNTIME_CANDIDATE / STORY-QUEST CHAIN CLOSED`。這與 taedlar legacy Quest 文件所描述「事件／故事／提示／動作／職業相關 Quest」的設計原則相符，但外部 content 的精確版本仍未升級為目標正式站 Canon。
