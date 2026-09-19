@@ -53,7 +53,8 @@ ES2-KING 專案中文名稱統一使用「刑天」。歷史資料若出現「�
 - Dex 身法
 - Int 悟性
 - Wis 慧根
-- Cor 定力
+- Cor 膽識
+- Cps 定力
 - 屬性生成公式
 - 種族 Bonus / Penalty
 
