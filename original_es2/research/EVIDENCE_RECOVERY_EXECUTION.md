@@ -94,3 +94,15 @@ Annihilator/taedlar 官方 Repository README 明確說明：GitHub initial commi
 - Quest persistence architecture：`CORROBORATED_RUNTIME`。
 - Exact qlist values / 朱鴻雪 content version：仍 `VERSION_SOURCE_PENDING`。
 - M18 仍不直接升級為目標 Original `CONFIRMED_RUNTIME`。
+
+
+## 第五階段 5F — Class / Lengmei Boundary Recovery
+
+直接檢查 taedlar official `v1.4` tree：`mudlib/daemon/class/fighter.c` 存在，但內容只提供武者 rank／稱謂（武者、在下、英雄、傢伙），沒有冷梅莊、梅影風、拜師條件或技能公式。tree 未找到 lunmay/lengmei/mei/may 對應區域或 NPC Source。
+
+因此可確認：
+- Fighter Class 基礎 Daemon：`CONFIRMED_SOURCE`。
+- 冷梅莊／梅影風作為 Fighter 師門：仍由外部歷史玩家／人物資料交叉支持，official v1.4 tree 未提供 Runtime Source。
+- 不得把 `fighter.c` 的存在解讀成冷梅莊 Runtime 已保存。
+
+這使 M15/M11 的邊界更清楚：Class Engine 與 School Content 是不同層；可先維持 Fighter Class Engine，不必等待冷梅莊 Source，但 School/NPC 不補造。
