@@ -52,12 +52,21 @@
 
 ## CLOSURE（6）
 
-- `original_es2/research/m18_quest_closure.md`
-- `original_es2/research/m23_core_gameplay_integration.md`
-- `original_es2/research/m24_system_data_integrity.md`
-- `original_es2/research/m25_release_candidate.md`
-- `original_es2/research/m30_completion_matrix.md`
-- `original_es2/research/m5_evidence_closure.md`
+### Original Baseline Closure（仍有效的 Original 基線）
+
+- `original_es2/research/closure/m5_evidence_closure.md`
+- `original_es2/research/closure/m18_quest_closure.md`
+- `original_es2/research/closure/m23_core_gameplay_integration.md`
+- `original_es2/research/closure/m24_system_data_integrity.md`
+- `original_es2/research/closure/m25_release_candidate.md`
+
+以上保存 Original ES2 對應里程碑的證據邊界；不等同目前 Public Acceptance 狀態。
+
+### Historical Closure — Current 已取代目前狀態判定
+
+- `original_es2/research/closure/m30_completion_matrix.md`
+
+M30 Completion Matrix 保存當時結案矩陣，但其 M30 PASS 敘述不得覆蓋目前 `docs/status/CURRENT_M30_STATUS.md` 的 Public Race Selection BLOCKER。
 
 ## STATUS-HISTORICAL（2）
 
@@ -70,6 +79,6 @@
 - `results/`：2 份。
 - `status_history/`：2 份。
 - EVIDENCE：原位保守保存。
-- CLOSURE：本輪不搬移，避免擴大變更範圍。
+- CLOSURE：6 份已完成 3C 分流至 `closure/`；5 份屬 Original Baseline Closure，1 份 M30 Completion Matrix 屬 Historical Closure。
 
 本輪沒有執行 Runtime／Regression／GitHub Actions；屬純文件路徑治理。
