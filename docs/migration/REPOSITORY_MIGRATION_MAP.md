@@ -254,3 +254,13 @@
 ## 第三階段 3B — Original Research 實體分流
 
 2026-09-19 完成逐份檔名引用檢查。14 份候選在 Repository 內未發現其他檔案引用，因此安全搬移：`plans/` 10 份、`results/` 2 份、`status_history/` 2 份。Original EVIDENCE 共 19 份維持原位，不刪除、不任意合併；CLOSURE 本輪亦維持原位。未執行 Runtime、Regression Test 或 GitHub Actions。
+
+
+## 第三階段 3C — Original Closure 分類
+
+2026-09-19 完成 6 份 Closure 逐份內容與 Repository 檔名引用檢查；未發現其他檔案引用舊路徑，因此搬入 `original_es2/research/closure/`。
+
+- Original Baseline Closure（仍有效的 Original 基線）：M5、M18、M23、M24、M25，共 5 份。其證據邊界仍有效，但不代表目前 Public Acceptance。
+- Historical Closure（歷史結案、Current 已取代目前狀態判定）：M30 Completion Matrix，共 1 份。保留歷史內容，但目前 M30 狀態必須以 `docs/status/CURRENT_M30_STATUS.md` 為準。
+- 所有 Closure 原始正文均保留；僅新增治理 Banner（分類提示）並調整路徑。
+- 未刪除／合併 Original Evidence；未執行 Runtime、Regression Test 或 GitHub Actions。
