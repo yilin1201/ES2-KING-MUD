@@ -320,3 +320,10 @@ Owner 確認 Original 正確欄位為 `cor=膽識`、`cps=定力`。已校正 `o
 建立 `original_es2/research/EXTERNAL_EVIDENCE_RECOVERY_REGISTER.md`。外部 Recovery 發現 `mudchina/es2` 與 `MudRen/ES2-utf8` 保存多份實際 `quest/qlist*.c`，內含 quest/type/time/exp/pot/score 欄位；因目標 Original 版本世系尚未閉合，先列 `CORROBORATED_CANDIDATE`，不直接搬入 Runtime 或採用數值。M18 Evidence Registry 已同步。
 
 外部歷史玩家／人物頁另交叉支持冷梅莊 `fighter.lunmay`、梅影風身分、位置方向與裝備；仍不足以確認 NPC LPC path/HP/完整 skill mapping。Race initializer 尚未取得新直接證據。下一步 5C 追 Quest qlist 的呼叫端、保存端與 reward 鏈。
+
+
+## 第五階段 5C — Quest Source Chain Recovery
+
+外部 ES2 Source 已追出「殺」型 Quest 候選 Runtime 鏈：`QUEST_D/qlist → u/cloud/npc/god.c 派任務 → quest/task_time/quest_factor → cmds/usr/quest.c 查詢 → combatd 擊殺完成判定 → exp/pot/score → quest 清除/tfinished`。M18 因此提升為 `CORROBORATED_RUNTIME_CANDIDATE / KILL-QUEST CHAIN CLOSED`，但版本世系尚未鎖定，故不把外部數值直接搬入目標 Original Runtime。
+
+下一步 5D 追玩家 quest/task_time/tfinished/quest_factor 是否由一般 Save/DBASE 機制持久化，並比較外部保存庫與 taedlar v1.3b lineage。未修改 Runtime，未手動 rerun Actions。
