@@ -1,6 +1,6 @@
 # Original ES2 七職業與門派證據基線
 
-> 證據標籤：`[Confirmed Source]`（使用者提供之 Original ES2 職業／門派截圖）
+> 證據狀態：`ARCHIVED_SOURCE`（歷史封存來源；使用者提供之 Original ES2 職業／門派截圖）。舊標籤 `[Confirmed Source]` 僅保留歷史相容語意，不等同 Original LPC Source Code。
 >
 > 規則：截圖中清楚可辨識的中文名稱與英文識別碼才列入；低解析度文字不自行猜測。
 
