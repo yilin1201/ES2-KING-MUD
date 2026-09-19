@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# M17 Runtime Gate（實機證據閘門）：只讀 bootstrap 後的 Original ES2 上游程式樹。
+# M17 Runtime Gate（實機證據閘門）：只讀 bootstrap 後的 Original ES2 上游程式樹。\n# 第五階段 5Q：關鍵字或常見 room 結構只代表 Candidate discovery，不可標成完整世界 Runtime PASS。
 RUNTIME_ROOT="${1:-.runtime/original-es2}"
 
 if [[ ! -d "$RUNTIME_ROOT" ]]; then
@@ -40,7 +40,7 @@ echo "---- 區域目錄候選"
 find "$RUNTIME_ROOT" -maxdepth 3 -type d \( -path '*/d/*' -o -name 'd' \) 2>/dev/null | head -n 100 || true
 
 if [[ "$found_world" -eq 0 ]]; then
-  echo "M17 Runtime Gate PASS：第一批區域關鍵詞與常見房間結構未在目前公開上游找到；地圖與 path 保持 UNKNOWN，不補造。"
+  echo "M17 Runtime Gate UNKNOWN：第一批區域關鍵詞與常見房間結構未在目前公開上游找到；地圖與 path 保持 UNKNOWN，不補造。"
 else
-  echo "M17 Runtime Gate PASS：找到候選世界／房間證據；需逐檔核對 LPC 的 path、inherit、short、long、exits 與 clone 後才能升級為 CONFIRMED_RUNTIME。"
+  echo "M17 Runtime Gate CANDIDATE：找到候選世界／房間證據；需逐檔核對 LPC 的 path、inherit、short、long、exits 與 clone 後才能升級為 CONFIRMED_RUNTIME。"
 fi
