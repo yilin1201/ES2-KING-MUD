@@ -53,9 +53,9 @@ Render Free 沒有 Persistent Disk（永久磁碟）。Repository 的持久化�
 ## 6. 歷史文件定位
 
 以下保留作 Historical Evidence（歷史證據），不可單獨覆蓋本文件：
-- `M30_ALPHA_FINAL_AUDIT.md`
-- `M30_PLAYABLE_ALPHA_ENTRY.md`
-- `M30_DEPLOYMENT_READINESS.md`
+- `docs/history/m30/M30_ALPHA_FINAL_AUDIT.md`
+- `docs/history/m30/M30_PLAYABLE_ALPHA_ENTRY.md`
+- `docs/history/m30/M30_DEPLOYMENT_READINESS.md`
 - `original_es2/runtime/*`
 - `es2_king_expansion/runtime/*_result.md`
 
