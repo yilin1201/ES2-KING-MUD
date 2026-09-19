@@ -79,3 +79,10 @@ Do not create a guessed `headless.c`. Continue archive/source recovery. Once Ori
 2. 不以 Google Sites attribute cap 取代 initializer。
 3. 不以高等玩家 Score 反推出生值。
 4. Race Evidence Gate 可 PASS「證據存在／ID 已鎖」，但不得寫成「歷史 Race Runtime 已完整恢復」。
+
+
+## 第五階段 5R — Race Source Recovery Search Round 2
+
+再次對 taedlar/es2_mudlib、MudRen/ES2-utf8、mudchina/es2 搜尋 historical race daemon／headless/yaksa/rainnar/blackteeth/malik 組合。未找到可用的遺失 race daemon 或 initializer。taedlar 仍只有 `who.c` 等介面保存多個歷史 race ID，不能由此推導出生公式。
+
+本輪結果為 **NO NEW INITIALIZER SOURCE**。這不是刪除 P0，而是避免反覆把相同 ID evidence 誤認成公式 evidence；P0 維持 SOURCE_PENDING，等待不同 archive/source channel。
