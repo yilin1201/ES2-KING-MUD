@@ -23,12 +23,12 @@
 - 判定：**HISTORICAL CONFLICT**。可能為版本差異；不得自行選一值覆蓋另一值。
 - 狀態：OPEN。
 
-## C-004 八屬性代碼 cor/cps 中文對應
+## C-004 八屬性代碼 cor/cps 中文對應 — RESOLVED
 
-- `historical_race_registry.json` 目前寫：`cps=膽識`、`cor=定力`。
-- `es2_google_sites_index.md` 目前校正敘述寫：`cor=膽識`、`cps=定力`。
-- 判定：**INTERNAL EVIDENCE CONFLICT**，屬高風險欄位映射；會影響 Race/Score/Runtime 解讀。
-- 狀態：**DECISION/VERIFICATION REQUIRED**。在取得 Original 顯示或 Source 的直接欄位證據前，不自動改任一方。
+- 專案 Owner 確認 Original 正確對應：`cor=膽識`、`cps=定力`。
+- `es2_google_sites_index.md` 原校正敘述正確。
+- `historical_race_registry.json` 舊值寫反，已於第四階段 4C 校正為 `cor=膽識`、`cps=定力`。
+- 判定：**RESOLVED / OWNER-CONFIRMED**。後續 Race、Score、Runtime 欄位統一採此映射。
 
 ## C-005 人類族 Original ID
 
@@ -39,4 +39,4 @@
 
 ## 4B 原則
 
-以上衝突全部保留原始證據，不修改來源正文。C-001～C-003 可安全以「版本／歷史衝突」形式並存；C-004 涉及核心欄位映射，需優先考證或 Owner 提供已確認實機證據後才能校正。
+以上衝突全部保留原始證據，不修改來源正文。C-001～C-003 可安全以「版本／歷史衝突」形式並存；C-004 已由 Owner 確認並完成欄位校正；C-001～C-003 仍以版本／歷史衝突並存，C-005 維持 SOURCE-PENDING。
