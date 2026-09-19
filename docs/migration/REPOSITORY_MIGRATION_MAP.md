@@ -57,9 +57,9 @@
 | 36 | `AGENTS.md` | CANON | KEEP | MEDIUM | 專案規範/入口 |
 | 37 | `Dockerfile` | CANON | KEEP | HIGH | 部署/Repository 固定位置 |
 | 38 | `ES2_CN_STANDARD.md` | CANON | KEEP | MEDIUM | 專案規範/入口 |
-| 39 | `M30_ALPHA_FINAL_AUDIT.md` | HISTORICAL | MOVE | MEDIUM | 搬至 docs/history/m30；搬前校正引用 |
-| 40 | `M30_DEPLOYMENT_READINESS.md` | HISTORICAL | MOVE | MEDIUM | 搬至 docs/history/m30；搬前校正引用 |
-| 41 | `M30_PLAYABLE_ALPHA_ENTRY.md` | HISTORICAL | MOVE | MEDIUM | 搬至 docs/history/m30；搬前校正引用 |
+| 39 | `docs/history/m30/M30_ALPHA_FINAL_AUDIT.md` | HISTORICAL | MOVE | MEDIUM | 搬至 docs/history/m30；搬前校正引用 |
+| 40 | `docs/history/m30/M30_DEPLOYMENT_READINESS.md` | HISTORICAL | MOVE | MEDIUM | 搬至 docs/history/m30；搬前校正引用 |
+| 41 | `docs/history/m30/M30_PLAYABLE_ALPHA_ENTRY.md` | HISTORICAL | MOVE | MEDIUM | 搬至 docs/history/m30；搬前校正引用 |
 | 42 | `README.md` | CANON | KEEP | MEDIUM | 專案規範/入口 |
 | 43 | `ROADMAP_M0_M30.md` | CANON | KEEP | MEDIUM | 專案規範/入口 |
 | 44 | `docs/DOCUMENT_GOVERNANCE_ZH_TW.md` | CANON | KEEP | MEDIUM | 專案規範/入口 |
