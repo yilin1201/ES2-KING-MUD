@@ -46,3 +46,7 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 ## 4D 狀態標籤治理
 
 已建立 `EVIDENCE_STATUS_STANDARD.md`。本輪優先修正三份最容易把「截圖已確認」誤讀為「Original Source Code 已確認」的文件；其餘 Evidence 保留正文與歷史標籤，透過相容規則統一解讀，避免為改標籤而大量改寫歷史證據。
+
+## 4E Runtime 可用性
+
+已建立 `EVIDENCE_RUNTIME_USABILITY_MATRIX.md`，把 Evidence 分成 `IMPLEMENTABLE`、`PARTIAL_IMPLEMENTABLE`、`REFERENCE_ONLY`、`SOURCE_REQUIRED`、`CONFLICT_BLOCKED`。此分類只代表證據是否足以支持安全重建，不等同 Runtime/Public PASS。
