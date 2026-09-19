@@ -39,3 +39,24 @@
 2. **Race initializer 尚未突破**：外部保存庫仍未找到 headless/yaksa 等歷史 daemon。
 3. **冷梅莊證據加強**：梅影風的 `fighter.lunmay`、人物身分、位置方向與裝備獲得外部交叉支持；Runtime path/數值仍未知。
 4. 下一階段 5C 應先追 Quest qlist 的**呼叫端與保存端**：誰載入 qlist、如何派任務、如何完成、如何發放 exp/pot/score；只有鏈條閉合後才考慮升級為可重建 Runtime。
+
+
+## 第五階段 5E — Official Lineage Boundary Check
+
+### taedlar official repository
+
+- README 明確：GitHub initial commit 基於 ES2 Mudlib v1.3b；main 為 v1.5+；v1.4 branch 為 legacy MudOS/FluffOS 相容版本。
+- 直接檢查 taedlar `v1.4` tree：Class 僅見 `commoner.c`、`fighter.c`，未見 `quest/qlist*.c`、`u/cloud/npc/god.c` 或 headless/yaksa 等歷史 Race initializer。
+- main tree 亦未見這批 Quest content，但保存 `docs/legacy/wiz/quest`，證明「Quest」在 ES2 官方開發文化中也指區域式解謎／事件鏈，不應把外部 qlist 的隨機任務系統誤認為所有 Original Quest 的唯一模型。
+
+### 重要分類修正
+
+外部 qlist/朱鴻雪鏈應命名為 **Random Task Quest Candidate（隨機任務型 Quest 候選）**，而不是代表整個 Original Quest 系統。官方 legacy Quest 文件描述的則是區域式謎題／門派／物品／技能事件鏈。兩者可以同時存在，語意不同，不構成衝突。
+
+### 5E 結論
+
+1. M18 應拆成兩條 Recovery Track：
+   - Track A：Random Task Quest（qlist/朱鴻雪/combatd），目前 chain closed candidate。
+   - Track B：Story/Area Quest（區域解謎事件鏈），官方文件確認設計概念存在，但具體任務 Source 仍待回收。
+2. 不把 qlist 數值或朱鴻雪直接升級為目標正式站 Canon。
+3. 不因 taedlar v1.4/main 缺少 qlist 就判定歷史正式站沒有該系統；這只能證明官方現存 tree 未保存該 content。
