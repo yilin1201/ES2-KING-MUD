@@ -273,3 +273,10 @@
 辨識出 `score_interface_spec.md` 本身明確標示 `[PROJECT-CANON]`，屬 ES2-KING 正式介面模板而非 Original 歷史證據；Repository 搜尋未發現其他檔案引用舊檔名後，已安全移至 `es2_king_expansion/canon/interface/score_interface_spec.md`，正文保留並加上歸屬提示。
 
 本輪未執行 Runtime、Regression Test 或 GitHub Actions；PR #13 維持 Open，未進 M31。
+
+
+## 第四階段 4B — Evidence 衝突治理
+
+建立 `original_es2/research/EVIDENCE_CONFLICT_REGISTER.md`。目前辨識 5 類：刑天/形天命名衝突、黑齒業力 3/5、夜叉業力 35/30、cor/cps 中文欄位映射衝突、人類族 Original ID 待考證。所有來源正文維持不變；未因衝突刪除或合併 Evidence。
+
+其中 cor/cps 為高風險核心欄位映射，暫不自動校正，待直接 Original Source／實機證據確認；其他歷史衝突以版本差異並存方式治理。
