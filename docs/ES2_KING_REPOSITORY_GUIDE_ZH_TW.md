@@ -36,9 +36,9 @@ ES2-CN 中文規範。技術名詞第一次出現需有繁中名稱與白話用�
 正式鎖定 M0～M30。M0～M25 以 Original 保存/重建為主；M26～M30 為 ES2-KING Expansion。PR #13 不 Merge。
 
 ### M30 三份文件
-- `M30_ALPHA_FINAL_AUDIT.md`：M0～M30 稽核矩陣。
-- `M30_PLAYABLE_ALPHA_ENTRY.md`：本機 Neolith/KING 可玩證據。
-- `M30_DEPLOYMENT_READINESS.md`：Docker、Web、持久化、Render 部署架構。
+- `docs/history/m30/M30_ALPHA_FINAL_AUDIT.md`：M0～M30 稽核矩陣。
+- `docs/history/m30/M30_PLAYABLE_ALPHA_ENTRY.md`：本機 Neolith/KING 可玩證據。
+- `docs/history/m30/M30_DEPLOYMENT_READINESS.md`：Docker、Web、持久化、Render 部署架構。
 
 注意：這些是「歷史驗收紀錄」，其中部分 Browser/Render 描述已早於目前公開 Render 實機進度，不應把舊文字當成最新 Runtime 狀態。
 
