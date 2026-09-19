@@ -280,3 +280,8 @@
 建立 `original_es2/research/EVIDENCE_CONFLICT_REGISTER.md`。目前辨識 5 類：刑天/形天命名衝突、黑齒業力 3/5、夜叉業力 35/30、cor/cps 中文欄位映射衝突、人類族 Original ID 待考證。所有來源正文維持不變；未因衝突刪除或合併 Evidence。
 
 其中 cor/cps 為高風險核心欄位映射，暫不自動校正，待直接 Original Source／實機證據確認；其他歷史衝突以版本差異並存方式治理。
+
+
+## 第四階段 4C — Attribute Mapping 一致性校正
+
+Owner 確認 Original 正確欄位為 `cor=膽識`、`cps=定力`。已校正 `original_es2/data/historical_race_registry.json`、`original_es2/systems/character_foundation.md` 與 `original_es2/races/headless.md` 中的反向／舊標示；`original_es2/ui/score_interface.md` 與 `es2_google_sites_index.md` 原本即為正確映射，未改動。此為資料一致性修正，未執行 Runtime 或 Regression Test。
