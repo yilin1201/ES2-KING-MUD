@@ -3,8 +3,9 @@ import { characterMenuFor, prepareCharacterChoice } from "../webtelnet/public/ch
 
 const race = "選擇你的角色所屬的種族：";
 assert.equal(characterMenuFor(race).type, "race");
-assert.deepEqual(prepareCharacterChoice(race, "human"), { bytes: " ", followup: null });
-assert.deepEqual(prepareCharacterChoice(race, "avatar"), { bytes: "\x1b[B", followup: " " });
+// Public Neolith get_char 的邏輯 Enter 使用 CR（回車）；不要再以單一空白模擬確認。
+assert.deepEqual(prepareCharacterChoice(race, "human"), { bytes: "\r", followup: null });
+assert.deepEqual(prepareCharacterChoice(race, "avatar"), { bytes: "\x1b[B", followup: "\r" });
 
 const gender = "您要扮演的哪種性別(外觀)的角色? ";
 assert.equal(characterMenuFor(gender).type, "gender");
