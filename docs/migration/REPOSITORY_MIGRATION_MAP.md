@@ -264,3 +264,12 @@
 - Historical Closure（歷史結案、Current 已取代目前狀態判定）：M30 Completion Matrix，共 1 份。保留歷史內容，但目前 M30 狀態必須以 `docs/status/CURRENT_M30_STATUS.md` 為準。
 - 所有 Closure 原始正文均保留；僅新增治理 Banner（分類提示）並調整路徑。
 - 未刪除／合併 Original Evidence；未執行 Runtime、Regression Test 或 GitHub Actions。
+
+
+## 第四階段 4A — Original Evidence 治理
+
+2026-09-19 完成 Original Research Evidence 第一輪來源分級與交叉關係盤點，建立 `original_es2/research/EVIDENCE_MASTER_INDEX.md`。原 19 份候選中，18 份確認為 Original Evidence 並原位保守保存；沒有任何 Evidence 因內容相似而刪除或合併。
+
+辨識出 `score_interface_spec.md` 本身明確標示 `[PROJECT-CANON]`，屬 ES2-KING 正式介面模板而非 Original 歷史證據；Repository 搜尋未發現其他檔案引用舊檔名後，已安全移至 `es2_king_expansion/canon/interface/score_interface_spec.md`，正文保留並加上歸屬提示。
+
+本輪未執行 Runtime、Regression Test 或 GitHub Actions；PR #13 維持 Open，未進 M31。
