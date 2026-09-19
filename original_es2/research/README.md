@@ -10,7 +10,7 @@
 4. CLOSURE（結案）：里程碑結論／邊界；若與 CURRENT 衝突，以 `docs/status/CURRENT_M30_STATUS.md` 為準。
 5. STATUS-HISTORICAL（舊狀態）：只代表撰寫當時，不得用來啟動重複測試。
 
-## EVIDENCE（19）
+## EVIDENCE（18）
 
 - `original_es2/research/es2_google_sites_index.md`
 - `original_es2/research/m16_npc_item_evidence_registry.md`
@@ -30,7 +30,10 @@
 - `original_es2/research/original_study_formula_m12.md`
 - `original_es2/research/original_study_learning_m12.md`
 - `original_es2/research/original_world_map_google_sites_evidence.md`
-- `original_es2/research/score_interface_spec.md`
+
+> Evidence 詳細來源分級與交叉關係請見 `original_es2/research/EVIDENCE_MASTER_INDEX.md`。
+>
+> `score_interface_spec.md` 已確認為 ES2-KING PROJECT-CANON，不屬 Original Evidence；第四階段 4A 已移至 `es2_king_expansion/canon/interface/score_interface_spec.md`。
 
 ## PLAN（10）
 
