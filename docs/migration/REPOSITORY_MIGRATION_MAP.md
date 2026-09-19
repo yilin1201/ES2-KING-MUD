@@ -4,6 +4,7 @@
 > 基準 Head：`481c29f68980059083adc2a5d18fbd6568508b59`  
 > 總檔案數：223  
 > 第一批實體整理：COMPLETED（根目錄三份 M30 歷史報告已移至 `docs/history/m30/`）。
+> 第三階段 3B：COMPLETED（Original research 14 份零引用 PLAN／RESULT／STATUS-HISTORICAL 已分流；Evidence 原位保留）。
 
 ## 判讀
 
@@ -248,3 +249,8 @@
 ## 下一批候選
 
 下一批先做「邏輯分類索引」，不搬動 `scripts/`、`.github/workflows/`、`webtelnet/` 或 Runtime 程式。原因是這些屬 HIGH 引用風險；若要實體重構，需在 M30 Public Acceptance 後另做路徑依賴遷移。
+
+
+## 第三階段 3B — Original Research 實體分流
+
+2026-09-19 完成逐份檔名引用檢查。14 份候選在 Repository 內未發現其他檔案引用，因此安全搬移：`plans/` 10 份、`results/` 2 份、`status_history/` 2 份。Original EVIDENCE 共 19 份維持原位，不刪除、不任意合併；CLOSURE 本輪亦維持原位。未執行 Runtime、Regression Test 或 GitHub Actions。
