@@ -17,15 +17,15 @@
 | Code | ES2 中文名稱 | 狀態 |
 |---|---|---|
 | `str` | 臂力 | [Player Memory / Archived] |
-| `cps` | 膽識 | [Archived] |
+| `cor` | 膽識 | [Owner-confirmed / Archived] |
 | `int` | 悟性 | [Archived / Player Record] |
 | `spi` | 靈性 | [Archived / Player Record] |
-| `cor` | 定力 | [Archived / Player Record] |
+| `cps` | 定力 | [Owner-confirmed / Archived / Player Record] |
 | `dex` | 機敏 | [Archived / Player Record] |
 | `con` | 根骨 | [Confirmed / Archived] |
 | `wis` | 慧根 | [Archived / Player Record] |
 
-注意：`str` 正式採用專案擁有者確認用語「臂力」，不使用「膂力」。
+注意：`str` 正式採用專案擁有者確認用語「臂力」，不使用「膂力」。第四階段 4C 另由專案擁有者確認 `cor=膽識`、`cps=定力`；舊文件若有反向映射不得再沿用。
 
 ## 3. 角色資源
 
