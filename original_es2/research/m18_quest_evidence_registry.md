@@ -33,3 +33,9 @@
 外部保存 Source 已可串起「殺」型 Quest 候選鏈：`QUEST_D → qlist/query_quest → 朱鴻雪 NPC 派發 → quest/task_time/quest_factor → combatd 擊殺判定 → combat_exp/potential/score reward → quest 清除/tfinished 更新`。
 
 狀態提升為 `CORROBORATED_RUNTIME_CANDIDATE / KILL-QUEST CHAIN CLOSED`，但**不是目標 Original CONFIRMED_RUNTIME**：外部庫版本世系與玩家 quest 欄位 persistence 尚待核對；物品「尋」型分支可見被註解的 accept_object 候選，暫不宣告啟用。
+
+## 第五階段 5D Persistence 更新
+
+外部歷史 Source 的 Quest 狀態使用一般 `set()` 寫入玩家 dbase，而 `feature/dbase.c` 只把 `tmp_dbase` 標為不保存；user 繼承 F_SAVE，F_SAVE 以 save_object/restore_object 保存。taedlar 現行 ES2 仍保留相同一般 dbase／temporary dbase 與 F_SAVE 架構。因此 Quest state persistence architecture 可列 `CORROBORATED_RUNTIME`。
+
+但 taedlar current tree 已不含 qlist/朱鴻雪 Quest content，故外部 qlist 精確數值與正式站版本仍 `VERSION_SOURCE_PENDING`，不得直接採為 Original 真值。
