@@ -1,6 +1,6 @@
 # Original ES2 Evidence Master Index（證據總索引）
 
-> 第四階段 4A。目的：建立 19 份 Original Research Evidence 的來源分級與主題索引；**本階段不搬移、不刪除、不合併 Evidence 正文**。
+> 第四階段 4A。目的：建立 Original Research Evidence 的來源分級與主題索引；**本階段不搬移、不刪除、不合併 Evidence 正文**。
 
 ## 證據優先原則
 
@@ -26,8 +26,11 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 | `original_study_formula_m12.md` | Study 精確公式 | Original Source | Formula Evidence | 比 Learning 文件更精確的公式層 | KEEP |
 | `original_study_learning_m12.md` | Study 行為 | Original Source | Behavioral Evidence | 與 Formula 互補，不合併 | KEEP |
 | `original_world_map_google_sites_evidence.md` | 國家地圖 | Archived Screenshot | Visual Evidence | 與 M17/M21 Runtime 世界證據互補 | KEEP |
-| `score_interface_spec.md` | Score 介面 | PROJECT-CANON + Evidence Boundary | Mixed / Needs separation later | 含 ES2-KING Canon，不應當純 Original Evidence | REVIEW |
 
 ## 4A 結論
 
-目前沒有任何一組 Evidence 適合直接去重刪除。M16→M22、M17→M21 是不同里程碑／不同證據成熟度；Study Formula／Learning 是公式與行為兩層；Race Google Sites／Reconstruction 是不同來源層。唯一需要後續治理的是 `score_interface_spec.md`：它明確標示 PROJECT-CANON，混在 Original Research Evidence 目錄中，應在 4B 評估移至 ES2-KING Canon/介面規格位置，但在未完成引用檢查前不搬動。
+目前沒有任何一組 Evidence 適合直接去重刪除。M16→M22、M17→M21 是不同里程碑／不同證據成熟度；Study Formula／Learning 是公式與行為兩層；Race Google Sites／Reconstruction 是不同來源層。`score_interface_spec.md` 已於 4A 確認為 ES2-KING PROJECT-CANON 並移出 Original Evidence。第四階段 4B 已建立 `EVIDENCE_CONFLICT_REGISTER.md`，集中保存來源衝突，不覆寫任何 Evidence 正文。
+
+## 4B 衝突摘要
+
+目前已登錄：刑天/形天命名、黑齒業力 3/5、夜叉業力 35/30、cor/cps 中文欄位映射，以及人類族 Original ID 待考證。詳見 `original_es2/research/EVIDENCE_CONFLICT_REGISTER.md`。
