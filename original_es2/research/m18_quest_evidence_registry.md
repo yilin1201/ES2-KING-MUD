@@ -39,3 +39,12 @@
 外部歷史 Source 的 Quest 狀態使用一般 `set()` 寫入玩家 dbase，而 `feature/dbase.c` 只把 `tmp_dbase` 標為不保存；user 繼承 F_SAVE，F_SAVE 以 save_object/restore_object 保存。taedlar 現行 ES2 仍保留相同一般 dbase／temporary dbase 與 F_SAVE 架構。因此 Quest state persistence architecture 可列 `CORROBORATED_RUNTIME`。
 
 但 taedlar current tree 已不含 qlist/朱鴻雪 Quest content，故外部 qlist 精確數值與正式站版本仍 `VERSION_SOURCE_PENDING`，不得直接採為 Original 真值。
+
+## 第五階段 5E Quest 類型分流
+
+官方 taedlar `docs/legacy/wiz/quest` 將 Quest 描述為區域內一連串事件／故事／解謎，可導向物品、技能、門派或職業；外部 qlist/朱鴻雪則是另一種「隨機任務型 Quest」。因此 M18 後續分兩條：
+
+- **Track A — Random Task Quest**：qlist → NPC → combatd；已有外部 chain-closed candidate。
+- **Track B — Story/Area Quest**：官方設計概念 CONFIRMED，但具體歷史任務 Source 仍 SOURCE_REQUIRED。
+
+兩者不互相覆蓋，也不把 qlist 當成 Original Quest 的唯一模型。
