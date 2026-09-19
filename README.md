@@ -52,4 +52,13 @@ ES2-KING-MUD/
 
 目前先建立 Race 種族資料庫與 Original / Expansion 分離架構，再逐步擴展 Attribute、Health、Class、Guild、Skill、Martial Arts、Combat、Weapon、Armor、NPC、World、Quest 與 Lifecycle。
 
-詳細工作規則請見 `AGENTS.md`；資料來源與證據規則請見 `docs/SOURCES.md`。
+## 專案導覽（Owner 建議閱讀順序）
+
+1. `docs/status/CURRENT_M30_STATUS.md` — **目前唯一即時開發狀態入口**，先看這份。
+2. `ROADMAP_M0_M30.md` — M0～M30 正式鎖定路線。
+3. `docs/ES2_KING_REPOSITORY_GUIDE_ZH_TW.md` — 目前 Repository 中文分類導覽。
+4. `docs/DOCUMENT_GOVERNANCE_ZH_TW.md` — 文件去重、Current／Canon／Evidence／Historical 分流規則。
+5. `AGENTS.md` — 開發與 Original 保存規則。
+6. `docs/SOURCES.md` — 資料來源與證據制度。
+
+舊 M30 Audit／Playable／Deployment 文件屬歷史驗收紀錄；目前狀態以 `CURRENT_M30_STATUS.md` 為準，避免因讀到舊文件而重複測試已完成項目。
