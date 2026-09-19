@@ -351,3 +351,16 @@ Owner 確認 Original 正確欄位為 `cor=膽識`、`cps=定力`。已校正 `o
 5J：建立 `original_es2/research/RECOVERY_ARCHITECTURE_MAP.md`，明確分離「可安全重建的介面」與「仍不可採用的版本內容／猜測值」。Race initializer 與 human-clan Original ID 繼續維持 P0 SOURCE_PENDING。
 
 本批次未修改 Runtime、未手動 rerun Actions、未 Merge PR #13、未進 M31。
+
+
+## 第五階段 5K–5N — Evidence-to-Runtime Gate Hardening
+
+5K：新增 `original_es2/research/M18_EVIDENCE_TO_RUNTIME_FIELD_MAP.md`，逐欄區分 CORROBORATED、CANDIDATE、VERSION_SOURCE_PENDING、UNKNOWN，防止外部 qlist/NPC 數值直接進目標 Original Runtime。
+
+5L：M18 Reconstruction Spec 分成 Random Task Quest 與 Story/Area Quest；Runtime 升級必須有 trigger/progress/completion/result/persistence 五段證據。
+
+5M：修正 `scripts/test_m18_quest_runtime_gate.sh` 的誤導性 PASS 文案。關鍵字搜尋現在只輸出 CANDIDATE 或 UNKNOWN，不再把「找到 quest 字串」標成完整任務 Runtime PASS。這是測試語意校正，沒有改遊戲 Runtime。
+
+5N：重新核對 Race P0 邊界。Google Sites attribute cap 不等於 birth initializer；human_clan 仍非 Original ID；外部 Class/Quest Source 未補回 historical race daemon。禁止猜測 race initializer 的規則維持。
+
+本批次未 Merge PR #13、未進 M31、未手動 rerun GitHub Actions。5M 僅修改 Gate 輸出判定文字，不需因既知 ACTIONS-INFRA-BLOCKED 手動觸發 CI。
