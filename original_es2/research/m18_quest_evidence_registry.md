@@ -21,3 +21,9 @@
 - 不以 ES2-KING Expansion（擴充設定）任務反推 Original。
 - 不因檔名含 `quest` 就宣告它是完整任務系統。
 - 不自行設定任務經驗值、掉落率、擊殺數或 NPC path。
+
+## 第五階段 5B 外部 Recovery 更新
+
+外部 ES2 保存庫 `mudchina/es2` 與 `MudRen/ES2-utf8` 發現多份實際 `quest/qlist*.c`，其 entry 含 quest、quest_type、time、exp_bonus、pot_bonus、score。因版本 lineage（來源世系）尚未完成，暫列 `CORROBORATED_CANDIDATE`，**不直接把其中數值升級為目標 Original Runtime 真值**。
+
+因此「任務資料表候選」已有程式證據，但任務主控／NPC trigger／progress save／completion/reward 呼叫鏈仍為 `SOURCE_REQUIRED`。下一步追 qlist 呼叫端。
