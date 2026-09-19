@@ -1,6 +1,6 @@
 # Original ES2 種族設定：Google Sites 原始頁面證據
 
-> 證據標籤：`[Confirmed Source]`（使用者提供之 Original ES2 Google Sites 原始頁面截圖／明確補充）
+> 證據狀態：`ARCHIVED_SOURCE`（歷史封存來源；使用者提供之 Original ES2 Google Sites 原始頁面截圖／明確補充）。若欄位另由 Owner 明確確認，個別註記，不把整份截圖證據升級為 LPC Source。
 >
 > 開發規則：本文件只記錄實際確認資料，不使用 ES2-KING Runtime 暫定 25／50 數值補空白，也不把推測寫成 Original 設定。
 
