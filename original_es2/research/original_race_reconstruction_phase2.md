@@ -61,3 +61,21 @@ Current searched repositories contain no historical `mudlib/daemon/race/headless
 ## Next implementation gate
 
 Do not create a guessed `headless.c`. Continue archive/source recovery. Once Original formulas are recovered, implement live 形天 creation and verify creation, score, persistence/relogin, movement, and combat, then run the full regression gate before merge review.
+
+
+## 第五階段 5N — Race P0 Recovery Boundary Recheck
+
+依目前 Evidence Master/Conflict Register/Google Sites race table 重新核對 P0：
+
+- 11 個歷史 selectable ID／名稱／業力有 Archived Gameplay 與部分 Original Source 支持，但黑齒 3/5、夜叉 35/30 保留版本衝突。
+- Google Sites 已提供各族「初始屬性上限」與精／氣／神等設定；**上限不是出生 initializer 公式**，不得把上限直接寫成固定出生值。
+- `human_clan` 仍只是 ES2-KING Reconstruction ID；Original 第二人類族 ID 未取得 Source。
+- 外部 ES2 family repositories 的大量 Class/Quest content 並未補回 headless/yaksa 等 race daemon，因此 P0 initializer 缺口沒有因第五階段其他突破而消失。
+
+### Runtime Gate 維持
+
+在找到直接 race daemon／birth initializer／可信歷史創角公式前：
+1. 不新增猜測的 historical race daemon。
+2. 不以 Google Sites attribute cap 取代 initializer。
+3. 不以高等玩家 Score 反推出生值。
+4. Race Evidence Gate 可 PASS「證據存在／ID 已鎖」，但不得寫成「歷史 Race Runtime 已完整恢復」。
