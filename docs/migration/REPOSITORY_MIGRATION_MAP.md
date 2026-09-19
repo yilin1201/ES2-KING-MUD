@@ -306,3 +306,10 @@ Owner 確認 Original 正確欄位為 `cor=膽識`、`cps=定力`。已校正 `o
 建立 `original_es2/research/EVIDENCE_RECOVERY_BACKLOG.md`，依 P0/P1/P2 排定 Quest、人類族 Original ID、Race initializer、冷梅莊／NPC、世界地圖與遺失 Class Daemon 的證據補完順序。
 
 另確認 4E 後 GitHub PR event 自動觸發大量 Actions run 並標示 failure；抽查 M30 Alpha `35439403202`、M21-M30 Roadmap `35439403256`、Driver Build `35439403040`，均在約 5–10 秒內結束。4E 僅為 docs 變更，且專案既有零付費 Actions infrastructure block；不 rerun、不提高 Budget。Job log 端目前無可用 blob，因此不把這批結果解讀成 Runtime regression。
+
+
+## 第五階段 5A — Evidence Recovery 實際執行
+
+由第四階段治理轉入實際 Evidence Recovery。建立 `original_es2/research/EVIDENCE_RECOVERY_EXECUTION.md`，先以 Repository 現存資料重新核對 P0/P1：Quest 完整鏈仍 `SOURCE_REQUIRED`；人類族 Original ID 維持 `SOURCE_PENDING`；歷史 Race initializer 僅 `PARTIAL_IMPLEMENTABLE`；冷梅莊／梅影風人物文字證據可保留，但 NPC LPC path/HP/skill mapping 仍 `SOURCE_REQUIRED`。
+
+本輪沒有任何 UNKNOWN 被無證據升級為 CONFIRMED_RUNTIME，也未修改 Runtime。下一階段 5B 可轉向既知外部 Original Source／Archive 線索考證。
