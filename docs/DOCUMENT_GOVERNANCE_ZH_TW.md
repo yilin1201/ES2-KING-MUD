@@ -20,7 +20,7 @@
 
 為 Owner 與後續開發工具的第一入口。
 
-舊的 `M30_ALPHA_FINAL_AUDIT.md`、`M30_PLAYABLE_ALPHA_ENTRY.md`、`M30_DEPLOYMENT_READINESS.md` 保留作歷史證據，不再單獨用來判斷「現在是否完成」。
+舊的 `docs/history/m30/M30_ALPHA_FINAL_AUDIT.md`、`docs/history/m30/M30_PLAYABLE_ALPHA_ENTRY.md`、`docs/history/m30/M30_DEPLOYMENT_READINESS.md` 保留作歷史證據，不再單獨用來判斷「現在是否完成」。
 
 ## 3. 去重原則
 
