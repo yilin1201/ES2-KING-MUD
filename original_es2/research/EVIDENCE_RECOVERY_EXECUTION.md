@@ -38,3 +38,33 @@ Quest、人類族 Original ID、歷史 Race initializer、梅影風 NPC Runtime 
 ## 下一步
 
 5B 轉向 Repository 之外的既知 Original Source／Archive 線索，優先追 Quest、Race daemon、冷梅莊 NPC；若仍找不到，保持 UNKNOWN，並改處理 P1 可交叉驗證的 Class Daemon／World path。
+
+
+## 第五階段 5C — Quest Source Chain Recovery
+
+外部 ES2 保存庫已找到可連接的 Quest 程式鏈候選（版本世系仍待鎖定，因此以下先列 `CORROBORATED_RUNTIME_CANDIDATE`）：
+
+1. `include/globals.h` 定義 `QUEST_D(x) = /quest/qlist + x`。
+2. `u/cloud/npc/god.c` 的朱鴻雪 NPC 以玩家 `combat_exp`、`tfinished` 選擇 qlist 等級，呼叫 `QUEST_D(tag)->query_quest()` 取得任務。
+3. 派任務時把 mapping 寫入玩家 `quest`，並寫入 `task_time = time() + quest["time"]` 與 `quest_factor`。
+4. `cmds/usr/quest.c` 讀取玩家 `quest` 與 `task_time`，顯示任務目標及剩餘時間。
+5. `adm/daemons/combatd.c` 在 NPC 死亡時檢查：killer 有 quest、victim 名稱符合 quest 目標、task_time 尚未過期。
+6. 條件成立後，以 qlist 的 `exp_bonus/pot_bonus/score` 為基礎計算獎勵，更新 `combat_exp/potential/score`，清除 `quest`，並更新 `tfinished`。
+
+### 已閉合範圍
+
+對「殺」型 Quest，外部候選 Source 已形成：
+
+`qlist → NPC 派任務 → 玩家 quest/task_time 狀態 → combatd 擊殺完成判定 → exp/pot/score reward → quest 清除/tfinished 更新`
+
+這已不是單一 qlist 檔，而是一條可追的 Runtime 候選鏈。
+
+### 尚未閉合
+
+- 目標天朝帝國 Original 正式站與該外部保存庫的**版本世系**尚未證明一致，因此數值不得直接搬入目前 Original Runtime。
+- `尋`（物品交付）分支在 `god.c` 中存在舊 `accept_object` 邏輯，但該區塊被註解，不能宣告當時正式 Runtime 必然啟用。
+- 玩家 `quest/task_time/tfinished/quest_factor` 是否全部經一般 Save 系統持久化，仍需下一輪直接追 F_SAVE / dbase 保存範圍。
+
+### 5C 判定
+
+M18 從「只有 Quest 資料表候選」提升為 **`CORROBORATED_RUNTIME_CANDIDATE / KILL-QUEST CHAIN CLOSED`**。仍不升級為目標 Original `CONFIRMED_RUNTIME`，直到版本世系與 persistence（持久化保存）完成核對。
