@@ -2,6 +2,10 @@
 
 > 第四階段 4A。目的：建立 Original Research Evidence 的來源分級與主題索引；**本階段不搬移、不刪除、不合併 Evidence 正文**。
 
+## 證據狀態標準
+
+統一狀態與舊標籤相容規則請見 `original_es2/research/EVIDENCE_STATUS_STANDARD.md`。Google Sites／截圖類資料統一屬 `ARCHIVED_SOURCE`，不得與 Original LPC `CONFIRMED_SOURCE` 混為同一層級。
+
 ## 證據優先原則
 
 Original Source（原始程式／官方保存來源） > Archived Source（歷史網站／截圖／封存） > Archived Gameplay Record（歷史實機紀錄） > Player Record（玩家紀錄） > Reconstruction（重建推論）。來源衝突時並列保存，不自行融合。
@@ -17,15 +21,15 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 | `m22_npc_item_evidence_registry.md` | NPC/物品 Runtime | Original Runtime | Registry | 補強 M16；不是重複刪除候選 | KEEP |
 | `original_apprentice_m14.md` | 師徒 | Original Source | Baseline | 與 M23 核心玩法交叉 | KEEP |
 | `original_class_reconstruction_m11.md` | 職業 Runtime | Original Source | Baseline | 與門派截圖證據互補 | KEEP |
-| `original_class_school_evidence.md` | 七職業/門派 | Archived Screenshot | Baseline | 與 M11 Runtime 證據互補 | KEEP |
+| `original_class_school_evidence.md` | 七職業/門派 | ARCHIVED_SOURCE | Baseline | 與 M11 Runtime 證據互補 | KEEP |
 | `original_martial_force_m13.md` | 武學/內功 | Original Source | Baseline | 與 M23 核心玩法交叉 | KEEP |
-| `original_race_google_sites_evidence.md` | 種族設定 | Archived Screenshot | Baseline | 與 Race Reconstruction 來源不同 | KEEP |
+| `original_race_google_sites_evidence.md` | 種族設定 | ARCHIVED_SOURCE | Baseline | 與 Race Reconstruction 來源不同 | KEEP |
 | `original_race_reconstruction_phase2.md` | 種族重建 | Source + Archived Gameplay | Reconstruction Baseline | 保留版本/命名衝突，不與網站證據融合 | KEEP |
 | `original_race_runtime_baseline_m10.tsv` | 種族 Runtime 基線 | Runtime Dataset | Machine-readable Evidence | 與 Race 文件配對 | KEEP |
 | `original_skill_reconstruction_m12.md` | 技能 | Original Source + Reconstruction | Baseline | 與 Study 文件互補 | KEEP |
 | `original_study_formula_m12.md` | Study 精確公式 | Original Source | Formula Evidence | 比 Learning 文件更精確的公式層 | KEEP |
 | `original_study_learning_m12.md` | Study 行為 | Original Source | Behavioral Evidence | 與 Formula 互補，不合併 | KEEP |
-| `original_world_map_google_sites_evidence.md` | 國家地圖 | Archived Screenshot | Visual Evidence | 與 M17/M21 Runtime 世界證據互補 | KEEP |
+| `original_world_map_google_sites_evidence.md` | 國家地圖 | ARCHIVED_SOURCE | Visual Evidence | 與 M17/M21 Runtime 世界證據互補 | KEEP |
 
 ## 4A 結論
 
@@ -38,3 +42,7 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 ## 4C 欄位一致性基線
 
 八屬性代碼固定為：`str=臂力`、`cor=膽識`、`int=悟性`、`spi=靈性`、`cps=定力`、`dex=機敏`、`con=根骨`、`wis=慧根`。後續 Evidence/Canon/Runtime 新增或修改資料均不得再使用舊的 cor/cps 反向映射。
+
+## 4D 狀態標籤治理
+
+已建立 `EVIDENCE_STATUS_STANDARD.md`。本輪優先修正三份最容易把「截圖已確認」誤讀為「Original Source Code 已確認」的文件；其餘 Evidence 保留正文與歷史標籤，透過相容規則統一解讀，避免為改標籤而大量改寫歷史證據。
