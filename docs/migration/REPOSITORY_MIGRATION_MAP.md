@@ -299,3 +299,10 @@ Owner 確認 Original 正確欄位為 `cor=膽識`、`cps=定力`。已校正 `o
 建立 `original_es2/research/EVIDENCE_RUNTIME_USABILITY_MATRIX.md`，以 `IMPLEMENTABLE`、`PARTIAL_IMPLEMENTABLE`、`REFERENCE_ONLY`、`SOURCE_REQUIRED`、`CONFLICT_BLOCKED` 區分 Evidence 對 Original Runtime 重建的可用程度。
 
 可直接依現存證據維護的核心包括 Skill、Study、Apprentice、Snow World、Snow NPC/Item；Character/Score、Class、Force、Lifecycle、Race Framework 僅能重建已確認部分。Quest、未保存歷史 World/NPC、遺失 Race initializer 與人類族 Original ID 仍需 Evidence Recovery。Race 業力版本衝突保持並存，不選定單一 Original 真值。本輪未修改 Runtime，未執行 Regression Test 或 GitHub Actions。
+
+
+## 第四階段 4F — Evidence Recovery Backlog + Actions Failure Review
+
+建立 `original_es2/research/EVIDENCE_RECOVERY_BACKLOG.md`，依 P0/P1/P2 排定 Quest、人類族 Original ID、Race initializer、冷梅莊／NPC、世界地圖與遺失 Class Daemon 的證據補完順序。
+
+另確認 4E 後 GitHub PR event 自動觸發大量 Actions run 並標示 failure；抽查 M30 Alpha `35439403202`、M21-M30 Roadmap `35439403256`、Driver Build `35439403040`，均在約 5–10 秒內結束。4E 僅為 docs 變更，且專案既有零付費 Actions infrastructure block；不 rerun、不提高 Budget。Job log 端目前無可用 blob，因此不把這批結果解讀成 Runtime regression。
