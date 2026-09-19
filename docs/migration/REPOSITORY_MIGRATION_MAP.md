@@ -364,3 +364,16 @@ Owner 確認 Original 正確欄位為 `cor=膽識`、`cps=定力`。已校正 `o
 5N：重新核對 Race P0 邊界。Google Sites attribute cap 不等於 birth initializer；human_clan 仍非 Original ID；外部 Class/Quest Source 未補回 historical race daemon。禁止猜測 race initializer 的規則維持。
 
 本批次未 Merge PR #13、未進 M31、未手動 rerun GitHub Actions。5M 僅修改 Gate 輸出判定文字，不需因既知 ACTIONS-INFRA-BLOCKED 手動觸發 CI。
+
+
+## 第五階段 5O–5R — Class/World Runtime Mapping + Race Recovery Round 2
+
+5O：新增 `CLASS_SCHOOL_EVIDENCE_TO_RUNTIME_MAP.md`，將七職業、official Fighter daemon、Apprentice/Relation interface、外部 master NPC、冷梅莊／梅影風分層；通用 Apprentice PASS 不再等同冷梅莊 Runtime PASS。
+
+5P：新增 `WORLD_EVENT_RUNTIME_MAP.md`，定義 Navigation/Event/Class Guild/School Room 的證據門檻。
+
+5Q：校正 `test_m17_world_runtime_gate.sh`，關鍵字／room 結構搜尋只能輸出 CANDIDATE 或 UNKNOWN，不再產生誤導性的 World Runtime PASS。
+
+5R：再次搜尋 taedlar、MudRen、mudchina 的 headless/yaksa/rainnar/blackteeth/malik historical race daemon／initializer；無新公式 Source。taedlar who.c 仍只支持 ID 存在，不能反推 initializer。P0 保持 SOURCE_PENDING。
+
+本批次未修改遊戲 Runtime；5Q 僅修正 Gate 語意。未手動 rerun Actions、未 Merge PR #13、未進 M31。
