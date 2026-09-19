@@ -338,3 +338,16 @@ Owner 確認 Original 正確欄位為 `cor=膽識`、`cps=定力`。已校正 `o
 5F：taedlar v1.4 的 `daemon/class/fighter.c` 直接確認 Fighter Class 基礎 Daemon，但只含武者 rank/稱謂；未保存冷梅莊／梅影風 Runtime Source。Class Engine 與 School Content 分層維持，後者不補造。
 
 本段均為 Evidence Recovery／文件更新，未修改 Runtime、未手動 rerun Actions、未 Merge PR #13、未進 M31。
+
+
+## 第五階段 5G–5J — Class/Story Quest/World Architecture Recovery
+
+5G：外部 ES2 家族 Source 找到 Scholar/Taoist/Bonze/Fighter/Swordsman 多組 master NPC 與入門事件鏈；先列 `CORROBORATED_RUNTIME_CANDIDATE`，不因 MudRen/mudchina 同源 fork 雙重計票，也不直接搬 NPC 數值。
+
+5H：閉合步玄派桃林 Story/Area Quest 候選鏈：駱雲舟設定 marks/書生 → entrance gate/taolin_steps → 桃林 note 方向解謎 → marks/桃林 → 回 master recruit/class。狀態為 `STORY-QUEST CHAIN CLOSED CANDIDATE`。
+
+5I：World/School cross-reference 顯示房間可分 Navigation Room、Event Room、Class Guild Room；桃林是 Event Room，水煙閣是 Class Guild Room。此分類作為 Runtime Reconstruction 的證據架構，不代表目標地圖內容已全部確認。
+
+5J：建立 `original_es2/research/RECOVERY_ARCHITECTURE_MAP.md`，明確分離「可安全重建的介面」與「仍不可採用的版本內容／猜測值」。Race initializer 與 human-clan Original ID 繼續維持 P0 SOURCE_PENDING。
+
+本批次未修改 Runtime、未手動 rerun Actions、未 Merge PR #13、未進 M31。
