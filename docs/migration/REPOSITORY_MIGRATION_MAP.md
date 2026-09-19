@@ -285,3 +285,10 @@
 ## 第四階段 4C — Attribute Mapping 一致性校正
 
 Owner 確認 Original 正確欄位為 `cor=膽識`、`cps=定力`。已校正 `original_es2/data/historical_race_registry.json`、`original_es2/systems/character_foundation.md` 與 `original_es2/races/headless.md` 中的反向／舊標示；`original_es2/ui/score_interface.md` 與 `es2_google_sites_index.md` 原本即為正確映射，未改動。此為資料一致性修正，未執行 Runtime 或 Regression Test。
+
+
+## 第四階段 4D — Evidence Status Standard
+
+建立 `original_es2/research/EVIDENCE_STATUS_STANDARD.md`，統一 Original Research 證據狀態：`CONFIRMED_SOURCE`、`CONFIRMED_RUNTIME`、`ARCHIVED_SOURCE`、`ARCHIVED_GAMEPLAY`、`PLAYER_RECORD`、`RECONSTRUCTION`、`UNKNOWN`、`SOURCE_PENDING`、`CONFLICT`。舊標籤保留相容映射，不為改標籤而重寫歷史 Evidence。
+
+優先修正三份 Google Sites／截圖型 Evidence 的頂層狀態：Class/School、Race、World Map 均明確列為 `ARCHIVED_SOURCE`，避免舊 `[Confirmed Source]` 被誤讀為 Original LPC Source Code。Evidence 事實正文未刪除、未合併；未執行 Runtime、Regression Test 或 GitHub Actions。
