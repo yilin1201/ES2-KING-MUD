@@ -68,3 +68,29 @@ Quest、人類族 Original ID、歷史 Race initializer、梅影風 NPC Runtime 
 ### 5C 判定
 
 M18 從「只有 Quest 資料表候選」提升為 **`CORROBORATED_RUNTIME_CANDIDATE / KILL-QUEST CHAIN CLOSED`**。仍不升級為目標 Original `CONFIRMED_RUNTIME`，直到版本世系與 persistence（持久化保存）完成核對。
+
+
+## 第五階段 5D — Quest Persistence + Version Lineage
+
+### Persistence（持久化保存）
+
+外部歷史保存庫的 `feature/dbase.c` 明確區分：一般 `mapping dbase` 與 `nosave mapping tmp_dbase`；Quest 鏈使用 `me->set("quest")`、`set("task_time")`、`set("quest_factor")`、`set("tfinished")`，均寫入一般 dbase，而不是 temp dbase。
+
+`obj/user.c` 繼承 `F_SAVE`，`feature/save.c` 以 `save_object()` 保存 user object；`cmds/usr/save.c` 會呼叫 `me->save()`。因此在這個歷史 Source lineage 中，上述 Quest 欄位具備隨一般玩家 dbase 存檔／restore 的結構條件。
+
+現行 Annihilator/taedlar ES2 Source 仍保留相同核心模型：user 繼承 `F_SAVE`、一般 `dbase` 可保存、`tmp_dbase` 為 static temporary mapping、F_SAVE 使用 `save_object/restore_object`。這是跨版本的 Persistence 架構佐證。
+
+判定：**Quest state persistence mechanism = CORROBORATED_RUNTIME**；但某一歷史正式站是否對每次 Quest 操作立即呼叫 save，與 server crash 前最後狀態，不能由此推成自動即時保存。
+
+### Version Lineage（版本世系）
+
+Annihilator/taedlar 官方 Repository README 明確說明：GitHub initial commit 基於 ES2 Mudlib v1.3b；目前 main 已是 v1.5+，另有 v1.4 legacy branch。現行 taedlar tree 已不含歷史 `quest/qlist*.c` 與朱鴻雪 Quest NPC，因此外部 MudRen/mudchina Quest content 不能直接宣稱等於 taedlar current Original Source。
+
+然而 Quest 保存庫的核心 F_SAVE/DBASE/User 結構與 taedlar 現行 lineage 高度一致，支持它們源自同一 ES2 Mudlib 家族；這只能建立 **family lineage corroboration（同源家族佐證）**，不能證明目標天朝帝國正式站的精確版本與 Quest 數值。
+
+### 5D 結論
+
+- Kill Quest chain：`CORROBORATED_RUNTIME_CANDIDATE / CHAIN CLOSED`。
+- Quest persistence architecture：`CORROBORATED_RUNTIME`。
+- Exact qlist values / 朱鴻雪 content version：仍 `VERSION_SOURCE_PENDING`。
+- M18 仍不直接升級為目標 Original `CONFIRMED_RUNTIME`。
