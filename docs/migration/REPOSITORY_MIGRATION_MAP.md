@@ -313,3 +313,10 @@ Owner 確認 Original 正確欄位為 `cor=膽識`、`cps=定力`。已校正 `o
 由第四階段治理轉入實際 Evidence Recovery。建立 `original_es2/research/EVIDENCE_RECOVERY_EXECUTION.md`，先以 Repository 現存資料重新核對 P0/P1：Quest 完整鏈仍 `SOURCE_REQUIRED`；人類族 Original ID 維持 `SOURCE_PENDING`；歷史 Race initializer 僅 `PARTIAL_IMPLEMENTABLE`；冷梅莊／梅影風人物文字證據可保留，但 NPC LPC path/HP/skill mapping 仍 `SOURCE_REQUIRED`。
 
 本輪沒有任何 UNKNOWN 被無證據升級為 CONFIRMED_RUNTIME，也未修改 Runtime。下一階段 5B 可轉向既知外部 Original Source／Archive 線索考證。
+
+
+## 第五階段 5B — External Original Source / Archive Recovery
+
+建立 `original_es2/research/EXTERNAL_EVIDENCE_RECOVERY_REGISTER.md`。外部 Recovery 發現 `mudchina/es2` 與 `MudRen/ES2-utf8` 保存多份實際 `quest/qlist*.c`，內含 quest/type/time/exp/pot/score 欄位；因目標 Original 版本世系尚未閉合，先列 `CORROBORATED_CANDIDATE`，不直接搬入 Runtime 或採用數值。M18 Evidence Registry 已同步。
+
+外部歷史玩家／人物頁另交叉支持冷梅莊 `fighter.lunmay`、梅影風身分、位置方向與裝備；仍不足以確認 NPC LPC path/HP/完整 skill mapping。Race initializer 尚未取得新直接證據。下一步 5C 追 Quest qlist 的呼叫端、保存端與 reward 鏈。
