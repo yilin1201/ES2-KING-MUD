@@ -33,4 +33,8 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 
 ## 4B 衝突摘要
 
-目前已登錄：刑天/形天命名、黑齒業力 3/5、夜叉業力 35/30、cor/cps 中文欄位映射，以及人類族 Original ID 待考證。詳見 `original_es2/research/EVIDENCE_CONFLICT_REGISTER.md`。
+目前已登錄：刑天/形天命名、黑齒業力 3/5、夜叉業力 35/30，以及人類族 Original ID 待考證。`cor=膽識`、`cps=定力` 已於 4C 由 Owner 確認並完成資料校正，不再列為未解衝突。詳見 `original_es2/research/EVIDENCE_CONFLICT_REGISTER.md`。
+
+## 4C 欄位一致性基線
+
+八屬性代碼固定為：`str=臂力`、`cor=膽識`、`int=悟性`、`spi=靈性`、`cps=定力`、`dex=機敏`、`con=根骨`、`wis=慧根`。後續 Evidence/Canon/Runtime 新增或修改資料均不得再使用舊的 cor/cps 反向映射。
