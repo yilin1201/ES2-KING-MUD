@@ -292,3 +292,10 @@ Owner 確認 Original 正確欄位為 `cor=膽識`、`cps=定力`。已校正 `o
 建立 `original_es2/research/EVIDENCE_STATUS_STANDARD.md`，統一 Original Research 證據狀態：`CONFIRMED_SOURCE`、`CONFIRMED_RUNTIME`、`ARCHIVED_SOURCE`、`ARCHIVED_GAMEPLAY`、`PLAYER_RECORD`、`RECONSTRUCTION`、`UNKNOWN`、`SOURCE_PENDING`、`CONFLICT`。舊標籤保留相容映射，不為改標籤而重寫歷史 Evidence。
 
 優先修正三份 Google Sites／截圖型 Evidence 的頂層狀態：Class/School、Race、World Map 均明確列為 `ARCHIVED_SOURCE`，避免舊 `[Confirmed Source]` 被誤讀為 Original LPC Source Code。Evidence 事實正文未刪除、未合併；未執行 Runtime、Regression Test 或 GitHub Actions。
+
+
+## 第四階段 4E — Evidence → Runtime Usability Matrix
+
+建立 `original_es2/research/EVIDENCE_RUNTIME_USABILITY_MATRIX.md`，以 `IMPLEMENTABLE`、`PARTIAL_IMPLEMENTABLE`、`REFERENCE_ONLY`、`SOURCE_REQUIRED`、`CONFLICT_BLOCKED` 區分 Evidence 對 Original Runtime 重建的可用程度。
+
+可直接依現存證據維護的核心包括 Skill、Study、Apprentice、Snow World、Snow NPC/Item；Character/Score、Class、Force、Lifecycle、Race Framework 僅能重建已確認部分。Quest、未保存歷史 World/NPC、遺失 Race initializer 與人類族 Original ID 仍需 Evidence Recovery。Race 業力版本衝突保持並存，不選定單一 Original 真值。本輪未修改 Runtime，未執行 Regression Test 或 GitHub Actions。
