@@ -21,3 +21,19 @@
 2. 只有名稱相似、舊聊天模擬或 ES2-KING Expansion 設定，不足以升級 Runtime 證據。
 3. 房間 short／long（短名／描述）、exits（出口）、NPC clone（載入非玩家角色）與物品放置位置都需逐項核對。
 4. M17 Runtime Gate 找到候選檔案後，先人工／程式逐檔驗證，再更新此表。
+
+
+## 第五階段 5I — World/School Source Cross-reference
+
+外部 ES2 家族 Source 可將部分「世界房間」與「職業／門派事件」直接連接：
+
+- `daemon/class/scholar/entrance.c` 曼雩台：西接 `/d/choyin/bridge5`，東接桃林，並 clone Scholar master。
+- `d/choyin/taolin.c` 桃林：不是純地圖房，而是具有 read/go 解謎邏輯、玩家 `taolin_steps` 與 `marks/桃林` 狀態的事件房。
+- `d/waterfog/guildhall.c` 水煙閣正廳：`CLASS_GUILD`，明示「加入武者同盟後向各大門派拜師」，並 clone Fighter champion/master/executioner。
+
+因此 World Runtime 應區分：
+1. **Navigation Room（導航房間）**：只負責出口／位置。
+2. **Event Room（事件房間）**：房間本身承載 Quest/School state transition。
+3. **Class Guild Room（職業公會房）**：連接 Class Engine 與 School NPC。
+
+此分類由外部 Source 直接觀察得到，先列 `CORROBORATED_RUNTIME_CANDIDATE`；不代表所有目標 Original 地圖都已回收。
