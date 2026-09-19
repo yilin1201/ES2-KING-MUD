@@ -1,6 +1,6 @@
 # Original ES2 國家地圖：Google Sites 圖像證據
 
-> 證據標籤：`[Confirmed Source]`（使用者提供之 Original ES2 Google Sites「國家地圖」頁面截圖）
+> 證據狀態：`ARCHIVED_SOURCE`（歷史封存來源；使用者提供之 Original ES2 Google Sites「國家地圖」頁面截圖）。此狀態表示圖像來源可追溯，不等同 Original LPC Source Code。
 
 ## 用途
 
