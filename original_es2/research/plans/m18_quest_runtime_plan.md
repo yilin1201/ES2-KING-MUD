@@ -23,3 +23,24 @@
 ## 完成條件
 
 建立可重現 Runtime Gate（實機證據閘門）與 Evidence Registry（證據登錄表），並由 GitHub Actions（GitHub 自動測試流程）自動執行。找到候選程式不等於任務已重建；必須核對完整觸發→進度→完成→獎勵鏈後才能升級。
+
+
+## 第五階段 5L — Reconstruction Spec 更新
+
+M18 後續 Runtime 重建分成兩種模型：
+
+### Model A — Random Task Quest
+
+giver/daemon 取得任務資料 → 寫入 persistent player state → 顯示目標／時間 → gameplay completion hook（例如 combat kill）→ reward/result → 清除／更新完成狀態。
+
+### Model B — Story/Area Quest
+
+NPC/room 觸發 → persistent mark/flag → room/action gate → puzzle/event progress → completion flag → 返回 NPC/下一事件 → class/item/skill/story result。
+
+### 安全實作規則
+
+1. Engine interface（引擎介面）可依已交叉支持的 Source 模型重建。
+2. Quest content（任務內容）逐欄依 `M18_EVIDENCE_TO_RUNTIME_FIELD_MAP.md` 決定是否可用。
+3. `VERSION_SOURCE_PENDING`、`UNKNOWN` 不進正式 Original Runtime。
+4. Candidate 可用於測試 fixture（測試樣本）時，必須清楚標示 Reconstruction/Test，不得冒充 Original Canon。
+5. Runtime Gate 不再以「搜尋到 quest 關鍵字」作完整鏈 PASS；後續 Gate 應驗證 trigger/progress/completion/result/persistence 五段。
