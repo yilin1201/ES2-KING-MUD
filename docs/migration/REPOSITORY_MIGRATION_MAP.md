@@ -327,3 +327,14 @@ Owner 確認 Original 正確欄位為 `cor=膽識`、`cps=定力`。已校正 `o
 外部 ES2 Source 已追出「殺」型 Quest 候選 Runtime 鏈：`QUEST_D/qlist → u/cloud/npc/god.c 派任務 → quest/task_time/quest_factor → cmds/usr/quest.c 查詢 → combatd 擊殺完成判定 → exp/pot/score → quest 清除/tfinished`。M18 因此提升為 `CORROBORATED_RUNTIME_CANDIDATE / KILL-QUEST CHAIN CLOSED`，但版本世系尚未鎖定，故不把外部數值直接搬入目標 Original Runtime。
 
 下一步 5D 追玩家 quest/task_time/tfinished/quest_factor 是否由一般 Save/DBASE 機制持久化，並比較外部保存庫與 taedlar v1.3b lineage。未修改 Runtime，未手動 rerun Actions。
+
+
+## 第五階段 5D–5F — Quest Persistence / Lineage / Class Boundary
+
+5D：確認外部歷史 Source 中 Quest 狀態寫入一般 player dbase，user/F_SAVE 透過 save_object/restore_object 保存；taedlar 現行 Source 仍保留同一 dbase/temp-dbase/F_SAVE 核心模型。Quest persistence architecture 列 `CORROBORATED_RUNTIME`，但 qlist 精確內容仍 `VERSION_SOURCE_PENDING`。
+
+5E：檢查 taedlar official main/v1.4 邊界。官方現存 tree 未保存 qlist/朱鴻雪 content，但 legacy Quest 文件明確描述 Story/Area Quest（區域解謎事件鏈）。M18 因此分成 Random Task Quest 與 Story/Area Quest 兩條 Recovery Track，避免把外部 qlist 誤當全部 Original Quest。
+
+5F：taedlar v1.4 的 `daemon/class/fighter.c` 直接確認 Fighter Class 基礎 Daemon，但只含武者 rank/稱謂；未保存冷梅莊／梅影風 Runtime Source。Class Engine 與 School Content 分層維持，後者不補造。
+
+本段均為 Evidence Recovery／文件更新，未修改 Runtime、未手動 rerun Actions、未 Merge PR #13、未進 M31。
