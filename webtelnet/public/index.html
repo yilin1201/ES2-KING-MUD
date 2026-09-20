@@ -226,14 +226,9 @@
     }
     if (socket.readyState === WebSocket.OPEN) {
       const choice = command.value.trim().toLowerCase();
-      // Public Race Text Path／公開種族文字路徑：Generated Runtime 已能直接接受 human/avatar。
-      // 不再模擬方向鍵、空白、CR 或 CRLF；Original get_char 是單次 callback，完整 race ID 本身即可作為一次輸入。
-      const activeMenu = characterMenuFor(outputTail);
-      if (activeMenu?.type === "race" && ["human", "人類", "avatar"].includes(choice)) {
-        socket.send(choice === "人類" ? "human" : choice);
-        command.value = "";
-        return;
-      } else if (sendCharacterChoice(choice)) {
+      // Character Menu／創角選單統一走 Original get_char 的「單鍵」協定。
+      // 不再讓文字 human/avatar 走另一條 WebSocket 特例，避免 Public 與 E2E 使用不同輸入路徑。
+      if (sendCharacterChoice(choice)) {
         return;
       } else if (ownerClaimPrompt.test(outputTail)) {
         const prepared = prepareOwnerClaim(command.value);
