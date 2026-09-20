@@ -80,7 +80,7 @@ sockets.on("connection", (browser) => {
     if (!mud.writable) return;
     // 只記錄位元組數，不記錄內容，讓 Public blocker 可判斷 Browser→Bridge 是否真的有送資料且不洩漏秘密。
     console.log(`[public-session ${sessionId}] browser-to-mud bytes=${data.length}`);
-    mud.write(data);
+    // ws 的 message data 在 Node 端是 Buffer；明確轉成單一 Buffer 寫入 TCP，保留一次 WebSocket message = 一次 get_char 輸入的位元組邊界。\n    mud.write(Buffer.from(data));
   });
   browser.on("close", () => { console.log(`[public-session ${sessionId}] websocket-close`); mud.destroy(); });
   browser.on("error", () => mud.destroy());
