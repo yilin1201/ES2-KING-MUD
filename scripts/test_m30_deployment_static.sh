@@ -46,6 +46,9 @@ grep -Fq 'ES2-KING OWNER COMMAND REHASH' scripts/apply_es2_king_expansion.sh
 grep -Fq 'input_to("get_owner_claim", 3, ob)' scripts/apply_es2_king_expansion.sh
 grep -Fq 'owner_claim_transport_decode(token)' scripts/apply_es2_king_expansion.sh
 grep -Fq 'Claim 安全診斷：' scripts/apply_es2_king_expansion.sh
+grep -Fq 'ES2-KING PUBLIC CHARACTER TEXT INPUT' scripts/apply_es2_king_expansion.sh
+grep -Fq 'socket.send((choice === "人類" ? "human" : choice) + "\\r\\n")' webtelnet/public/index.html
+grep -Fq 'browser-to-mud bytes=' webtelnet/server.mjs
 grep -Fq 'prepareOwnerClaim(command.value)' webtelnet/public/index.html
 grep -Fq '至少需要 ${MINIMUM_OWNER_CLAIM_BYTES} bytes，尚未送出' webtelnet/public/index.html
 grep -Fq 'pathname === "/claim-input.mjs"' webtelnet/server.mjs
