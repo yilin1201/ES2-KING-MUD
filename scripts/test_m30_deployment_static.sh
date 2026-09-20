@@ -49,6 +49,7 @@ grep -Fq 'Claim 安全診斷：' scripts/apply_es2_king_expansion.sh
 grep -Fq 'ES2-KING PUBLIC CHARACTER TEXT INPUT' scripts/apply_es2_king_expansion.sh
 grep -Fq 'socket.send((choice === "人類" ? "human" : choice) + "\\r\\n")' webtelnet/public/index.html
 grep -Fq 'browser-to-mud bytes=' webtelnet/server.mjs
+grep -Fq 'mud.write(Buffer.from(data))' webtelnet/server.mjs
 grep -Fq 'prepareOwnerClaim(command.value)' webtelnet/public/index.html
 grep -Fq '至少需要 ${MINIMUM_OWNER_CLAIM_BYTES} bytes，尚未送出' webtelnet/public/index.html
 grep -Fq 'pathname === "/claim-input.mjs"' webtelnet/server.mjs
