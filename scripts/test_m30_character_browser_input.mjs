@@ -20,4 +20,4 @@ assert.equal(prepareCharacterChoice("您的顯示名稱: ", "human"), null);
 
 console.log("M30 CHARACTER BROWSER INPUT PASS（測試通過）：Race、Gender、Confirm 均只產生 Original get_char 所需單鍵序列。");
 
-// Public form path regression marker：index.html 必須保留 human 單鍵空白 fallback；此處由部署前 static assertion 檢查。\n
+// Public form path regression marker：index.html 必須共用 sendCharacterChoice。\n
