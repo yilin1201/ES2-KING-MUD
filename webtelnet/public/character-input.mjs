@@ -34,8 +34,8 @@ export function prepareCharacterChoice(outputTail, rawValue) {
 
   if (menu.type === "race") {
     // Race Line Input／種族整行輸入：Public iPhone 不再依賴 get_char 的 CR 或方向鍵。
-    if (value === "human" || value === "人類") return { bytes: "human\n", followup: null };
-    if (value === "avatar") return { bytes: "avatar\n", followup: null };
+    if (value === "human" || value === "人類") return { bytes: "ES2RACE:human", followup: null };
+    if (value === "avatar") return { bytes: "ES2RACE:avatar", followup: null };
   }
   if (menu.type === "gender") {
     if (["female", "f", "女性", "女"].includes(value)) return { bytes: "F", followup: null };
