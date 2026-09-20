@@ -14,7 +14,7 @@ const mudPort = Number(process.env.ES2_PORT || 4000);
 // 不讀取或輸出其他環境變數，避免洩漏 Secret（秘密資料）。
 const buildCommit = process.env.RENDER_GIT_COMMIT || process.env.ES2_BUILD_COMMIT || "unknown";
 const buildVersion = process.env.ES2_BUILD_VERSION || "m30-public-runtime";
-const characterTransportVersion = "race-line-lf-v1";
+const characterTransportVersion = "race-bridge-crlf-v2";
 
 // HTTP（網頁傳輸協定）只提供固定入口頁，避免把檔案系統暴露給瀏覽器。
 function neolithReachable() {
@@ -81,7 +81,14 @@ sockets.on("connection", (browser) => {
     if (!mud.writable) return;
     // 只記錄位元組數，不記錄內容，讓 Public blocker 可判斷 Browser→Bridge 是否真的有送資料且不洩漏秘密。
     console.log(`[public-session ${sessionId}] browser-to-mud bytes=${data.length}`);
-    // ws 的 message data 在 Node 端是 Buffer；明確轉成單一 Buffer 寫入 TCP，保留一次 WebSocket message = 一次 get_char 輸入的位元組邊界。
+    // Character Transport／角色輸入傳輸：Race 使用明確的 WebSocket 訊息封套，
+    // Bridge 在伺服器端轉成 Telnet 標準 CRLF，避免 iPhone Safari、WebSocket 與 Neolith 對 LF/CRLF 解讀不同。
+    const incoming = Buffer.from(data).toString("utf8");
+    if (incoming === "ES2RACE:human" || incoming === "ES2RACE:avatar") {
+      mud.write(Buffer.from(incoming.slice("ES2RACE:".length) + "\r\n", "utf8"));
+      return;
+    }
+    // 其他 Original get_char／一般文字輸入維持原始位元組。
     mud.write(Buffer.from(data));
   });
   browser.on("close", () => { console.log(`[public-session ${sessionId}] websocket-close`); mud.destroy(); });
