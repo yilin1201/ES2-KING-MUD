@@ -230,7 +230,7 @@
       // 使用單一 LF（換行）避免 Telnet/Neolith 將 CRLF 拆成「Race 輸入 + 下一狀態空輸入」。
       const activeMenu = characterMenuFor(outputTail);
       if (activeMenu?.type === "race" && ["human", "人類", "avatar"].includes(choice)) {
-        socket.send((choice === "人類" ? "human" : choice) + "\n");
+        socket.send("ES2RACE:" + (choice === "人類" ? "human" : choice));
         command.value = "";
         return;
       } else if (sendCharacterChoice(choice)) {
