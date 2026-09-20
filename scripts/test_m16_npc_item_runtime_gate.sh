@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# M16 Runtime Gate（實機證據閘門）：
+# M16 Runtime Gate（實機證據閘門）：\n# 第五階段 5S：搜尋結果只分 UNKNOWN／CANDIDATE；候選證據不得標成完整 Runtime PASS。
 # 只檢查 bootstrap 後的乾淨 Original ES2 上游程式樹，不把 ES2-KING 擴充資料當成 Original 證據。
 RUNTIME_ROOT="${1:-.runtime/original-es2}"
 
@@ -44,7 +44,7 @@ for term in "${terms[@]}"; do
 done
 
 if [[ "$found" -eq 0 ]]; then
-  echo "M16 Runtime Gate PASS：第一批 NPC／裝備／物品在目前公開上游未找到可確認 Runtime source；精確 path、HP、技能等級與裝備屬性保持 unknown，不補造。"
+  echo "M16 Runtime Gate UNKNOWN：第一批 NPC／裝備／物品在目前公開上游未找到可確認 Runtime source；精確 path、HP、技能等級與裝備屬性保持 UNKNOWN，不補造。"
 else
-  echo "M16 Runtime Gate PASS：找到候選 Original Runtime 證據；下一階段需逐檔核對 LPC（Lars Pensjö C，傳統 MUD 程式語言）內容後才可升級為已確認資料。"
+  echo "M16 Runtime Gate CANDIDATE：找到候選 Original Runtime 證據；需逐檔核對 LPC（Lars Pensjö C，傳統 MUD 程式語言）內容後才可升級為 CONFIRMED_RUNTIME。"
 fi
