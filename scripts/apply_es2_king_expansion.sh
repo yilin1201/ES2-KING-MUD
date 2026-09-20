@@ -196,7 +196,8 @@ LPC
   head -n "$((insertion_line - 1))" "$LOGIN_D" > "$temp_login"
   cat >> "$temp_login" <<'LPC'
     // ES2-KING PUBLIC OWNER ID RESERVATION／公開 Owner 帳號保留。
-    // 只有 Runtime Secret 已安全設定時才顯示 Claim Prompt；未設定仍維持公開拒絕。
+    // 重要：既有 king.o 必須在此之前已被 Original file_size(login_data(arg)) 分支接走。
+    // 只有「檔案不存在」的首次 king 才能進 Claim，避免既有帳號被送回初始化輪迴。
     if (arg == "king") {
         if (strlen(envsubst("${ES2_KING_CLAIM_TOKEN:-}")) >= 32) {
             write("\nKING Owner 一次性初始化權杖: ");
