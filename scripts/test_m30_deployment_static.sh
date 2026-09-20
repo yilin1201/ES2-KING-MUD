@@ -50,9 +50,11 @@ grep -Fq 'ES2-KING PUBLIC CHARACTER TEXT INPUT' scripts/apply_es2_king_expansion
 # Race Line Input／種族整行輸入：部署前即鎖定 Public、Runtime、E2E 三者使用相同契約。
 grep -Fq 'input_to ("get_race", ob)' scripts/apply_es2_king_expansion.sh
 grep -Fq 'value === "human" || value === "人類"' webtelnet/public/character-input.mjs
-grep -Fq 'return { bytes: "human\n", followup: null }' webtelnet/public/character-input.mjs
-grep -Fq 'return { bytes: "avatar\n", followup: null }' webtelnet/public/character-input.mjs
-grep -Fq 'socket.send((choice === "人類" ? "human" : choice) + "\n")' webtelnet/public/index.html
+grep -Fq 'return { bytes: "ES2RACE:human", followup: null }' webtelnet/public/character-input.mjs
+grep -Fq 'return { bytes: "ES2RACE:avatar", followup: null }' webtelnet/public/character-input.mjs
+grep -Fq 'socket.send("ES2RACE:" + (choice === "人類" ? "human" : choice))' webtelnet/public/index.html
+grep -Fq 'incoming === "ES2RACE:human" || incoming === "ES2RACE:avatar"' webtelnet/server.mjs
+grep -Fq 'race-bridge-crlf-v2' webtelnet/server.mjs
 grep -Fq 'characterMenuFor("選擇你的角色所屬的種族 (human/avatar): ")' scripts/test_m30_character_browser_input.mjs
 ! grep -Fq 'socket.send(choice === "人類" ? "human" : choice)' webtelnet/public/index.html
 grep -Fq 'if (sendCharacterChoice(choice))' webtelnet/public/index.html
