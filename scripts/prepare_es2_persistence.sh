@@ -13,6 +13,14 @@ test -d "$RUNTIME_DIR/mudlib" || {
 
 mkdir -p "$SAVE_DIR"
 
+# Hosting Persistence Mode／主機保存模式：Render Free 等無 Persistent Disk 的環境會在重新部署後清空本機檔案。
+# 明確輸出 EPHEMERAL，避免把「本次 Runtime 可 save」誤認為「跨部署永久保存」。
+if [[ "${ES2_PERSISTENCE_MODE:-ephemeral}" == "persistent" ]]; then
+  echo "ES2 PERSISTENCE MODE：PERSISTENT（跨部署保存由外部持久磁碟提供）"
+else
+  echo "ES2 PERSISTENCE MODE：EPHEMERAL（本次 Runtime 內可保存；重新部署後帳號資料可能重建）"
+fi
+
 # Persistent Volume（持久磁碟）首次掛載時只補初始資料，絕不覆寫既有玩家存檔。
 if [[ -d "$SEED_DIR" ]]; then
   cp -a --update=none "$SEED_DIR/." "$SAVE_DIR/"
