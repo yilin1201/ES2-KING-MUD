@@ -226,9 +226,14 @@
     }
     if (socket.readyState === WebSocket.OPEN) {
       const choice = command.value.trim().toLowerCase();
-      // Character Menu／創角選單統一走 Original get_char 的「單鍵」協定。
-      // 不再讓文字 human/avatar 走另一條 WebSocket 特例，避免 Public 與 E2E 使用不同輸入路徑。
-      if (sendCharacterChoice(choice)) {
+      // Race Line Input／種族整行輸入：Runtime 已改成 input_to，因此直接送完整 human/avatar + LF。
+      // 使用單一 LF（換行）避免 Telnet/Neolith 將 CRLF 拆成「Race 輸入 + 下一狀態空輸入」。
+      const activeMenu = characterMenuFor(outputTail);
+      if (activeMenu?.type === "race" && ["human", "人類", "avatar"].includes(choice)) {
+        socket.send((choice === "人類" ? "human" : choice) + "\n");
+        command.value = "";
+        return;
+      } else if (sendCharacterChoice(choice)) {
         return;
       } else if (ownerClaimPrompt.test(outputTail)) {
         const prepared = prepareOwnerClaim(command.value);
