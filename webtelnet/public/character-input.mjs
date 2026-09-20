@@ -1,6 +1,6 @@
 // Character Creation Compatibility／角色建立相容：把網頁文字或按鈕轉成 Original get_char 單鍵。
 // 不變更 Original 種族、性別或確認邏輯；只避免表單 CRLF 與多餘文字污染下一個輸入狀態。
-export const RACE_PROMPT = /選擇你的角色所屬的種族[：:]?\s*$/;
+export const RACE_PROMPT = /選擇你的角色所屬的種族(?:\s*\(human\/avatar\))?[：:]?\s*$/;
 export const GENDER_PROMPT = /您要扮演的哪種性別\(外觀\)的角色[?？]?\s*$/;
 export const CONFIRM_PROMPT = /(?:使用 .+ 這個代號將會創造一個新的人物﹐您確定嗎|您確定要創造這個角色嗎|您要重新創造這個角色嗎|您要將另一個連線中的相同人物趕出去﹐取而代之嗎)[?？]?\s*$/;
 
