@@ -243,6 +243,37 @@ fi
 # 已生成過的舊 Runtime 可能沿用 mktemp 的 600；只補讀取權限，不授予任何 group／other 寫入權。
 chmod go+r "$LOGIN_D"
 
+# Public Character Creation Compatibility／公開創角相容層：
+# Browser 表單送來完整文字 human/avatar，而 Original get_char 只消費單鍵；
+# 在 Generated Runtime 的 get_race 入口直接接受完整種族 ID，避免 WebSocket/Telnet 的 CR/空白鍵語意差異。
+# Original 保存來源不修改；只有獨立 ES2-KING Runtime 套用此相容層。
+CHARACTER_COMPAT_MARKER='ES2-KING PUBLIC CHARACTER TEXT INPUT'
+if ! grep -Fq "$CHARACTER_COMPAT_MARKER" "$LOGIN_D"; then
+  temp_login="$(mktemp)"
+  awk -v marker="$CHARACTER_COMPAT_MARKER" '
+    /^private void get_race \(string race, mixed opts, object ob\) \{/ && !inserted {
+      print
+      print "    // " marker "／WebTelnet 可直接送 human/avatar 完整 ID。"
+      print "    // 其他終端仍走 Original cursor_translate，不改變傳統單鍵操作。"
+      print "    if (race == \"human\" || race == \"avatar\") {"
+      print "        // 已是合法完整 ID，不需游標翻譯。"
+      print "    } else {"
+      print "        string translated = cursor_translate(race, opts);"
+      print "        if (stringp(translated)) race = translated;"
+      print "    }"
+      inserted=1
+      next
+    }
+    # 舊函式原本宣告 choice 並以 choice 驅動 switch；改由已正規化的 race 驅動。
+    inserted && /    string choice = cursor_translate \(race, opts\);/ { next }
+    inserted && /    switch \(choice \? choice : race\) \{/ { print "    switch (race) {"; next }
+    inserted && /write \(\"\\r\" CLR HIY \"選擇 \" \+ choice/ { gsub(/choice/, "race"); print; next }
+    { print }
+  ' "$LOGIN_D" > "$temp_login"
+  chmod --reference="$LOGIN_D" "$temp_login"
+  mv "$temp_login" "$LOGIN_D"
+fi
+
 # Command Reindex Compatibility／指令重索引相容層：只有實際管理員搜尋路徑包含
 # /cmds/adm/ 且指令檔存在時，才補入四個已定稿 KING 指令的 Runtime 記憶體索引。
 COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.c"
