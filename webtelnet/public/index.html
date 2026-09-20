@@ -64,6 +64,7 @@
   let retryDelay = 1000;
   let outputTail = "";
   let pendingCharacterFollowup = null;
+  let pendingCharacterFollowupTimer = null;
   let claimPastePending = false;
   let claimCompositionActive = false;
 
@@ -78,6 +79,17 @@
     if (!prepared || socket.readyState !== WebSocket.OPEN) return false;
     pendingCharacterFollowup = prepared.followup;
     socket.send(prepared.bytes);
+    // iPhone/Public Neolith：get_char 的方向鍵重畫可能只含 ANSI 游標控制，WebTelnet 會先剝除 ANSI，
+    // 因此不能只等「可辨識的新 prompt」才送確認鍵。Race follow-up 加短延遲保底，避免 avatar 卡住；human 無 follow-up。
+    if (pendingCharacterFollowup) {
+      clearTimeout(pendingCharacterFollowupTimer);
+      pendingCharacterFollowupTimer = setTimeout(() => {
+        if (!pendingCharacterFollowup || socket.readyState !== WebSocket.OPEN) return;
+        const followup = pendingCharacterFollowup;
+        pendingCharacterFollowup = null;
+        socket.send(followup);
+      }, 120);
+    }
     command.value = "";
     return true;
   }
@@ -181,6 +193,7 @@
     if (pendingCharacterFollowup && characterMenuFor(outputTail)) {
       const followup = pendingCharacterFollowup;
       pendingCharacterFollowup = null;
+      clearTimeout(pendingCharacterFollowupTimer);
       socket.send(followup);
     }
     window.scrollTo(0, document.body.scrollHeight);
@@ -213,7 +226,13 @@
     }
     if (socket.readyState === WebSocket.OPEN) {
       const choice = command.value.trim().toLowerCase();
-      if (sendCharacterChoice(choice)) {
+      // Race menu 的第一項 human 已是目前游標；Public get_char 對 WebSocket 傳入 CR 的行為在 iPhone 實機仍卡住。
+      // 直接送單鍵空白，這是 Original cursor_translate 明確支援的「確認目前選項」鍵，且不帶 CRLF 污染下一狀態。
+      if (characterMenuFor(outputTail)?.type === "race" && ["human", "人類"].includes(choice)) {
+        socket.send(" ");
+        command.value = "";
+        return;
+      } else if (sendCharacterChoice(choice)) {
         return;
       } else if (ownerClaimPrompt.test(outputTail)) {
         const prepared = prepareOwnerClaim(command.value);
