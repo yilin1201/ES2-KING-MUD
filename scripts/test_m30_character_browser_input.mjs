@@ -5,8 +5,8 @@ const race = "選擇你的角色所屬的種族：";
 assert.equal(characterMenuFor(race).type, "race");
 assert.equal(characterMenuFor("選擇你的角色所屬的種族 (human/avatar): ").type, "race");
 // Race Line Input／種族整行輸入：Public 與 E2E 使用同一條文字輸入路徑。
-assert.deepEqual(prepareCharacterChoice(race, "human"), { bytes: "human\r\n", followup: null });
-assert.deepEqual(prepareCharacterChoice(race, "avatar"), { bytes: "avatar\r\n", followup: null });
+assert.deepEqual(prepareCharacterChoice(race, "human"), { bytes: "human\\r\\n", followup: null });
+assert.deepEqual(prepareCharacterChoice(race, "avatar"), { bytes: "avatar\\r\\n", followup: null });
 
 const gender = "您要扮演的哪種性別(外觀)的角色? ";
 assert.equal(characterMenuFor(gender).type, "gender");
