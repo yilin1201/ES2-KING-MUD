@@ -226,10 +226,11 @@
     }
     if (socket.readyState === WebSocket.OPEN) {
       const choice = command.value.trim().toLowerCase();
-      // Race menu 的第一項 human 已是目前游標；Public get_char 對 WebSocket 傳入 CR 的行為在 iPhone 實機仍卡住。
-      // 直接送單鍵空白，這是 Original cursor_translate 明確支援的「確認目前選項」鍵，且不帶 CRLF 污染下一狀態。
-      if (characterMenuFor(outputTail)?.type === "race" && ["human", "人類"].includes(choice)) {
-        socket.send(" ");
+      // Public Race Text Path／公開種族文字路徑：Generated Runtime 已能直接接受 human/avatar。
+      // 不再模擬方向鍵、空白或 CR，避免 iPhone → WebSocket → Telnet → get_char 各層對控制鍵解讀不同。
+      const activeMenu = characterMenuFor(outputTail);
+      if (activeMenu?.type === "race" && ["human", "人類", "avatar"].includes(choice)) {
+        socket.send((choice === "人類" ? "human" : choice) + "\r\n");
         command.value = "";
         return;
       } else if (sendCharacterChoice(choice)) {
