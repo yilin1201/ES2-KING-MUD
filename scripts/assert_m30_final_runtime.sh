@@ -24,7 +24,7 @@ grep -Fq 'owner_claim_transport_decode(token)' "$LOGIN_D"
 grep -Fq 'secure_owner_claim_equal(supplied, secret)' "$LOGIN_D"
 grep -Fq 'Claim 安全診斷：' "$LOGIN_D"
 grep -Fq '比較=MISMATCH' "$LOGIN_D"
-grep -Fq 'envsubst("${ES2_KING_CLAIM_TOKEN:-}")' "$LOGIN_D"
+grep -Fq 'envsubst("${ES2_KING_CLAIM_TOKEN:-}")' "$LOGIN_D"\n# Public Character Text Input（公開創角文字輸入）必須真的存在於 Neolith 最終載入的 logind。\ngrep -Fq 'ES2-KING PUBLIC CHARACTER TEXT INPUT' "$LOGIN_D"\ngrep -Fq 'if (race == "human" || race == "avatar")' "$LOGIN_D"
 grep -Fq 'ES2-KING OWNER COMMAND REHASH' "$COMMAND_D"
 for command in kingcreate kingrealm kingmartial kingcanon; do
   grep -Fqx "/cmds/adm/$command" "$PRELOAD_FILE"
@@ -37,4 +37,4 @@ if grep -Fq 'destruct(ob)' <<<"$reservation_block"; then
   exit 1
 fi
 
-echo "FINAL RUNTIME OVERLAY ASSERTION PASS（最終執行環境覆蓋層斷言通過）：新版 KING 保留流程已存在於 Neolith 實際載入的 logind.c。"
+echo "FINAL RUNTIME OVERLAY ASSERTION PASS（最終執行環境覆蓋層斷言通過）：新版 KING 保留流程與 Public Race Text 相容層已存在於 Neolith 實際載入的 logind.c。"
