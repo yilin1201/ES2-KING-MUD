@@ -16,7 +16,8 @@ function getHealth() {
               || !String(response.headers["content-type"] || "").startsWith("application/json")
               || !status.web || !status.bridge || !status.neolith
               || typeof status.build_commit !== "string" || status.build_commit.length === 0
-              || status.build_version !== "m30-public-runtime"\n              || status.character_transport !== "race-line-lf-v1") {
+              || status.build_version !== "m30-public-runtime"
+              || status.character_transport !== "race-line-lf-v1") {
             reject(new Error(`health not ready: ${response.statusCode} ${body}`));
             return;
           }
@@ -82,7 +83,11 @@ function checkCharacterBrowserModule() {
         if (response.statusCode !== 200
             || !String(response.headers["content-type"] || "").startsWith("text/javascript")
             || !body.includes("prepareCharacterChoice")
-            || !body.includes('bytes: "human\\n"')\n            || !body.includes('bytes: "avatar\\n"')\n            || !body.includes("prepareCharacterChoice")) {
+            || !body.includes('bytes: "human\
+"')
+            || !body.includes('bytes: "avatar\
+"')
+            || !body.includes("prepareCharacterChoice")) {
           reject(new Error(`character browser module not ready: ${response.statusCode}`));
           return;
         }
