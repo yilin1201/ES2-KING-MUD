@@ -133,12 +133,10 @@ private void get_owner_claim(string token, object ob)
     write("\n");
     clear_stale_owner_claim();
 
-    // king.o 一旦存在，Claim 永久退出；之後只能走 Original 密碼驗證。
-    if (file_size(login_data("king")) != -1) {
-        ob->delete("id");
-        logon(ob);
-        return;
-    }
+    // 注意：送出 Claim 後的同一個 Session 可能已經建立 king.o。
+    // 這時不能把玩家踢回 logon，否則會形成「Claim → Welcome → ID」輪迴。
+    // king.o 是否存在只在 get_id() 決定走既有帳號密碼登入或首次 Claim；
+    // 已進入 get_owner_claim() 就完成本次驗證，再直接接 Original confirm_id 流程。
 
     // 同一時間只允許一個已驗證 Session 進入創角，其他連線一律使用相同失敗訊息。
     if (objectp(owner_claim_link) && owner_claim_link != ob) {
