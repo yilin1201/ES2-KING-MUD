@@ -3,8 +3,10 @@ import { characterMenuFor, prepareCharacterChoice } from "../webtelnet/public/ch
 
 const race = "選擇你的角色所屬的種族：";
 assert.equal(characterMenuFor(race).type, "race");
-// Compatibility helper 仍保留 CR；Public form submit 對 human 另以 Original cursor_translate 明確支援的單鍵空白確認。\nassert.deepEqual(prepareCharacterChoice(race, "human"), { bytes: "\r", followup: null });
-assert.deepEqual(prepareCharacterChoice(race, "avatar"), { bytes: "\x1b[B", followup: "\r" });
+assert.equal(characterMenuFor("選擇你的角色所屬的種族 (human/avatar): ").type, "race");
+// Race Line Input／種族整行輸入：Public 與 E2E 使用同一條文字輸入路徑。
+assert.deepEqual(prepareCharacterChoice(race, "human"), { bytes: "human\r\n", followup: null });
+assert.deepEqual(prepareCharacterChoice(race, "avatar"), { bytes: "avatar\r\n", followup: null });
 
 const gender = "您要扮演的哪種性別(外觀)的角色? ";
 assert.equal(characterMenuFor(gender).type, "gender");
@@ -18,6 +20,4 @@ assert.deepEqual(prepareCharacterChoice(confirm, "是"), { bytes: "Y", followup:
 assert.deepEqual(prepareCharacterChoice(confirm, "no"), { bytes: "N", followup: null });
 assert.equal(prepareCharacterChoice("您的顯示名稱: ", "human"), null);
 
-console.log("M30 CHARACTER BROWSER INPUT PASS（測試通過）：Race、Gender、Confirm 均只產生 Original get_char 所需單鍵序列。");
-
-// Public form path regression marker：index.html 必須共用 sendCharacterChoice。\n
+console.log("M30 CHARACTER BROWSER INPUT PASS（測試通過）：Race 使用整行文字；Gender、Confirm 保留 Original 單鍵序列。");
