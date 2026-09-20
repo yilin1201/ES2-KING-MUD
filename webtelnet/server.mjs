@@ -13,7 +13,7 @@ const mudPort = Number(process.env.ES2_PORT || 4000);
 // Build Identity（建置版本識別）：Render 提供的公開 Commit SHA 只用於核對部署版本，
 // 不讀取或輸出其他環境變數，避免洩漏 Secret（秘密資料）。
 const buildCommit = process.env.RENDER_GIT_COMMIT || process.env.ES2_BUILD_COMMIT || "unknown";
-const buildVersion = process.env.ES2_BUILD_VERSION || "m30-public-runtime";
+const buildVersion = process.env.ES2_BUILD_VERSION || "m30-public-runtime";\nconst characterTransportVersion = "race-line-lf-v1";
 
 // HTTP（網頁傳輸協定）只提供固定入口頁，避免把檔案系統暴露給瀏覽器。
 function neolithReachable() {
@@ -35,7 +35,7 @@ const http = createServer(async (request, response) => {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "no-store"
     });
-    response.end(JSON.stringify({ web: true, bridge: true, neolith, build_commit: buildCommit, build_version: buildVersion }));
+    response.end(JSON.stringify({ web: true, bridge: true, neolith, build_commit: buildCommit, build_version: buildVersion, character_transport: characterTransportVersion }));
     return;
   }
   if (pathname === "/claim-input.mjs" || pathname === "/character-input.mjs") {
