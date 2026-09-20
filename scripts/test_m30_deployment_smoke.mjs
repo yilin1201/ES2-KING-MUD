@@ -83,11 +83,9 @@ function checkCharacterBrowserModule() {
         if (response.statusCode !== 200
             || !String(response.headers["content-type"] || "").startsWith("text/javascript")
             || !body.includes("prepareCharacterChoice")
-            || !body.includes('bytes: "human\
-"')
-            || !body.includes('bytes: "avatar\
-"')
-            || !body.includes("prepareCharacterChoice")) {
+            || !body.includes("race-line")
+            || !body.includes("human")
+            || !body.includes("avatar")) {
           reject(new Error(`character browser module not ready: ${response.statusCode}`));
           return;
         }
@@ -98,7 +96,6 @@ function checkCharacterBrowserModule() {
     request.on("error", reject);
   });
 }
-
 function checkLoginPrompt() {
   return new Promise((resolve, reject) => {
     const protocol = base.protocol === "https:" ? "wss:" : "ws:";
