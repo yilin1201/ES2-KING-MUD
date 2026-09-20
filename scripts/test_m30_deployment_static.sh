@@ -47,7 +47,8 @@ grep -Fq 'input_to("get_owner_claim", 3, ob)' scripts/apply_es2_king_expansion.s
 grep -Fq 'owner_claim_transport_decode(token)' scripts/apply_es2_king_expansion.sh
 grep -Fq 'Claim 安全診斷：' scripts/apply_es2_king_expansion.sh
 grep -Fq 'ES2-KING PUBLIC CHARACTER TEXT INPUT' scripts/apply_es2_king_expansion.sh
-grep -Fq 'socket.send((choice === "人類" ? "human" : choice) + "\\r\\n")' webtelnet/public/index.html
+! grep -Fq 'socket.send(choice === "人類" ? "human" : choice)' webtelnet/public/index.html
+grep -Fq 'if (sendCharacterChoice(choice))' webtelnet/public/index.html
 grep -Fq 'browser-to-mud bytes=' webtelnet/server.mjs
 grep -Fq 'mud.write(Buffer.from(data))' webtelnet/server.mjs
 grep -Fq 'prepareOwnerClaim(command.value)' webtelnet/public/index.html
