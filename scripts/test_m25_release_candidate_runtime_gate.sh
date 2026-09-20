@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT="${1:-.runtime/original-es2}/mudlib"
 
-# Runtime Gate／執行閘門：鎖定候選版實機旅程所需的最小完整介面。
+# Runtime Gate／執行閘門：鎖定候選版實機旅程所需的最小完整介面。\n# 第五階段 5U：此 PASS 僅代表 RC interface readiness（候選版介面就緒），不等於 Public Device E2E 驗收。
 for file in obj/login.c obj/user.c adm/daemons/logind.c cmds/std/look.c cmds/usr/score.c cmds/usr/inventory.c cmds/usr/help.c cmds/usr/save.c cmds/usr/quit.c d/snow/inn_hall.c d/snow/inn_kitchen.c feature/save.c; do
   test -f "$ROOT/$file" || { echo "M25 RUNTIME FAIL：缺少 $file"; exit 1; }
 done
@@ -24,4 +24,4 @@ done
 grep -Fq '"west" : __DIR__"inn_kitchen"' "$ROOT/d/snow/inn_hall.c"
 grep -Fq '"east" : __DIR__"inn_hall"' "$ROOT/d/snow/inn_kitchen.c"
 
-echo 'M25 RELEASE CANDIDATE RUNTIME PASS／登入、指令、移動、保存與重新載入介面完整。'
+echo 'M25 RELEASE CANDIDATE INTERFACE PASS／登入、指令、移動、保存與重新載入的 RC 必要介面完整；不代表 Public Device E2E PASS。'
