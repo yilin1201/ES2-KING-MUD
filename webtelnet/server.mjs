@@ -59,8 +59,12 @@ const http = createServer(async (request, response) => {
 });
 
 const sockets = new WebSocketServer({ server: http, path: "/mud" });
+let publicSessionSequence = 0;
 sockets.on("connection", (browser) => {
   // 每個瀏覽器連線各自建立一條 Telnet（文字終端連線協定）TCP 連線。
+  // Public Session ID（公開工作階段編號）只用於除錯生命週期，不記錄玩家輸入、密碼或 Claim Token。
+  const sessionId = ++publicSessionSequence;
+  console.log(`[public-session ${sessionId}] websocket-open`);
   const mud = connect({ host: mudHost, port: mudPort });
   const telnetText = new TelnetTextFilter();
   mud.setTimeout(10000, () => mud.destroy(new Error("MUD connection timeout")));
@@ -72,8 +76,13 @@ sockets.on("connection", (browser) => {
   });
   mud.on("error", (error) => browser.close(1011, `MUD connection failed: ${error.message}`));
   mud.on("close", () => browser.close(1000, "MUD connection closed"));
-  browser.on("message", (data) => mud.writable && mud.write(data));
-  browser.on("close", () => mud.destroy());
+  browser.on("message", (data) => {
+    if (!mud.writable) return;
+    // 只記錄位元組數，不記錄內容，讓 Public blocker 可判斷 Browser→Bridge 是否真的有送資料且不洩漏秘密。
+    console.log(`[public-session ${sessionId}] browser-to-mud bytes=${data.length}`);
+    mud.write(data);
+  });
+  browser.on("close", () => { console.log(`[public-session ${sessionId}] websocket-close`); mud.destroy(); });
   browser.on("error", () => mud.destroy());
 });
 
