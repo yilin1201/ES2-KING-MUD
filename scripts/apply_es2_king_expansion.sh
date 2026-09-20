@@ -243,14 +243,62 @@ fi
 chmod go+r "$LOGIN_D"
 
 # Public Character Creation Compatibility／公開創角相容層：
-# Browser 表單送來完整文字 human/avatar；Original get_char 會把輸入原樣交給 callback。
-# Original get_race 本來就有 switch(choice ? choice : race)，因此完整 race ID 可直接被接受；
-# 不需要改寫 Original 函式，也避免產生 choice 未宣告等 LPC 編譯風險。
-# 此處只放 Marker 供 Final Runtime Assertion 確認 Generated Runtime 採用文字輸入契約。
+# WebSocket/Telnet 對 get_char 的 CR（回車）傳輸在 Public iPhone 上不可靠。
+# 保留 Original 種族資料與後續 get_gender 流程，只把 Race 入口改成 input_to 文字輸入；
+# human/avatar 因此以完整一行傳入，避免再次依賴單鍵 CR／方向鍵。
 CHARACTER_COMPAT_MARKER='ES2-KING PUBLIC CHARACTER TEXT INPUT'
 if ! grep -Fq "$CHARACTER_COMPAT_MARKER" "$LOGIN_D"; then
-  printf '\n// %s／WebTelnet 直接送 human/avatar；Original get_race 原生接受完整 ID。\n' \
-    "$CHARACTER_COMPAT_MARKER" >> "$LOGIN_D"
+  python3 - "$LOGIN_D" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+text = path.read_text()
+old = '''    mapping opts = ([
+        "prompt": "選擇你的角色所屬的種族: ",
+        "options": user_race,
+        "option_hints": (: call_other, CHAR_D, "hint_user_race" :),
+        "cursor": 0
+    ]);
+    get_char ("get_race", 1, opts, ob);
+}
+
+private void get_race (string race, mixed opts, object ob) {
+    string choice = cursor_translate (race, opts);
+    switch (choice ? choice : race) {'''
+new = '''    write ("選擇你的角色所屬的種族 (human/avatar): ");
+    input_to ("get_race", ob);
+}
+
+// ES2-KING PUBLIC CHARACTER TEXT INPUT／Public WebTelnet Race 使用完整文字行，避開 get_char 的 CR 傳輸差異。
+private void get_race (string race, object ob) {
+    switch (race) {'''
+if old not in text:
+    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_email → get_race Race 區段。")
+text = text.replace(old, new, 1)
+old_retry = '''        default:
+            get_char ("get_race", 1, opts, ob);
+            return;
+    }
+
+    int kar'''
+new_retry = '''        default:
+            write ("請輸入 human 或 avatar: ");
+            input_to ("get_race", ob);
+            return;
+    }
+
+    int kar'''
+start = text.index("// ES2-KING PUBLIC CHARACTER TEXT INPUT")
+tail = text[start:]
+if old_retry not in tail:
+    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_race retry 區段。")
+tail = tail.replace(old_retry, new_retry, 1)
+text = text[:start] + tail
+text = text.replace('write ("\\r" CLR HIY "選擇 " + choice + " 這個種族會累積 " + kar + " 點業力。\\n" NOR);',
+                    'write ("\\r" CLR HIY "選擇 " + race + " 這個種族會累積 " + kar + " 點業力。\\n" NOR);', 1)
+path.write_text(text)
+PY
 fi
 
 # Command Reindex Compatibility／指令重索引相容層：只有實際管理員搜尋路徑包含
