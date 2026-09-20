@@ -33,11 +33,9 @@ export function prepareCharacterChoice(outputTail, rawValue) {
   const value = rawValue.trim().toLowerCase();
 
   if (menu.type === "race") {
-    // Original cursor_translate 接受 CR（Carriage Return，回車）作為目前游標選項的確認鍵。
-    // Public Neolith 的 get_char 路徑不能可靠地把單一空白當成邏輯 Enter，因此 WebTelnet 明確送 CR。
-    if (value === "human" || value === "人類") return { bytes: "\r", followup: null };
-    // avatar 先送 KEY_DOWN（向下鍵）移動游標；等 Original 重畫選單後，再以 CR 確認目前選項。
-    if (value === "avatar") return { bytes: "\x1b[B", followup: "\r" };
+    // Race Line Input／種族整行輸入：Public iPhone 不再依賴 get_char 的 CR 或方向鍵。
+    if (value === "human" || value === "人類") return { bytes: "human\r\n", followup: null };
+    if (value === "avatar") return { bytes: "avatar\r\n", followup: null };
   }
   if (menu.type === "gender") {
     if (["female", "f", "女性", "女"].includes(value)) return { bytes: "F", followup: null };
