@@ -16,7 +16,7 @@ function getHealth() {
               || !String(response.headers["content-type"] || "").startsWith("application/json")
               || !status.web || !status.bridge || !status.neolith
               || typeof status.build_commit !== "string" || status.build_commit.length === 0
-              || status.build_version !== "m30-public-runtime") {
+              || status.build_version !== "m30-public-runtime"\n              || status.character_transport !== "race-line-lf-v1") {
             reject(new Error(`health not ready: ${response.statusCode} ${body}`));
             return;
           }
