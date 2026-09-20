@@ -19,7 +19,7 @@
 
 ## 任務邊界
 
-M18 已確認任務、進度與獎勵存在候選程式，但目前尚無完整「觸發→進度→完成→獎勵」鏈可安全宣告為完整 Original Quest Runtime（任務實機系統）。因此任務完整循環維持 `UNKNOWN`（未知），不為達成 M23 而補造。
+第五階段 Recovery 已在外部 ES2 family Source 閉合 Random Task Quest 與一條 Story/Area Quest 的候選鏈，但版本世系尚未鎖定為目標正式站。因此 M23 的 Original baseline 仍不得把 Quest 宣告為目標 `CONFIRMED_RUNTIME`；現況應讀作 `CORROBORATED_RUNTIME_CANDIDATE`，不為達成 M23 而搬入未鎖版本內容。
 
 ## Original／Expansion 分離
 
