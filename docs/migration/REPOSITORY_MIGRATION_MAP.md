@@ -377,3 +377,16 @@ Owner 確認 Original 正確欄位為 `cor=膽識`、`cps=定力`。已校正 `o
 5R：再次搜尋 taedlar、MudRen、mudchina 的 headless/yaksa/rainnar/blackteeth/malik historical race daemon／initializer；無新公式 Source。taedlar who.c 仍只支持 ID 存在，不能反推 initializer。P0 保持 SOURCE_PENDING。
 
 本批次未修改遊戲 Runtime；5Q 僅修正 Gate 語意。未手動 rerun Actions、未 Merge PR #13、未進 M31。
+
+
+## 第五階段 5S–5V — M11–M25 Gate Semantics Audit
+
+5S：M16 NPC/Item discovery gate 與 M17/M18 同類，已把「找不到也 PASS／找到候選也 PASS」修正為 UNKNOWN/CANDIDATE。
+
+5T：新增 `M11_M25_RUNTIME_GATE_SEMANTICS_AUDIT.md`。稽核結論：M16/M17/M18 是 discovery search，禁止 PASS；M19/M21/M22/M23/M24 是指定 Source assertion，可保留範圍限定的 PASS；M25 為 RC interface readiness，不等於 Public Device E2E。
+
+5U：`test_m25_release_candidate_runtime_gate.sh` 輸出改為 `RELEASE CANDIDATE INTERFACE PASS`，明確排除 Public Device E2E 語意。
+
+5V：同步歷史 Closure。M23 Quest 邊界更新為已有外部 chain-closed candidate、但未鎖目標版本；M24 更新為 Quest persistence architecture 已有佐證，但目標 Original 跨登入完整驗收仍未完成。Closure 仍是 baseline/historical，不覆蓋 CURRENT M30 狀態。
+
+本批次未修改遊戲 Runtime；僅 Gate 語意與 Evidence/Closure 文件校正。未手動 rerun Actions、未 Merge PR #13、未進 M31。
