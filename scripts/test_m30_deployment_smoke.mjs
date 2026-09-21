@@ -117,6 +117,9 @@ function checkLoginPrompt() {
 await checkHome();
 await checkClaimBrowserModule();
 await checkCharacterBrowserModule();
-await getHealth();
+const health = await getHealth();
+if (process.env.ES2_EXPECT_BUILD_COMMIT && health.build_commit !== process.env.ES2_EXPECT_BUILD_COMMIT) {
+  throw new Error(`Public Runtime 版本不符：expected=${process.env.ES2_EXPECT_BUILD_COMMIT} actual=${health.build_commit}`);
+}
 await checkLoginPrompt();
 console.log("M30 DEPLOYMENT SMOKE PASS：HTTP → WebSocket → Bridge → Telnet :4000 → ES2 Login Prompt");
