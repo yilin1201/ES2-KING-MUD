@@ -274,10 +274,8 @@ new = '''    write ("選擇你的角色所屬的種族 (human/avatar): ");
 private void get_race (string race, object ob) {
     // Line Normalization／整行輸入正規化：不同 Telnet／WebSocket Client 可能把 CR/LF 保留在 input_to 字串尾端。
     // Race 只接受既定 human/avatar；先去除前後空白與換行，避免桌機與 iPhone 都卡在同一輸入點。
-    while (strlen(race) > 0 && (race[0] == ' ' || race[0] == '\\r' || race[0] == '\\n' || race[0] == '\\t'))
-        race = race[1..];
-    while (strlen(race) > 0 && (race[<1] == ' ' || race[<1] == '\\r' || race[<1] == '\\n' || race[<1] == '\\t'))
-        race = race[0..<2];
+    // Neolith input_to 會交付一行文字；只接受精確 human/avatar。
+    // 不使用較新 LPC 的負索引／切片語法，維持 Original ES2 Driver 可編譯相容性。
     switch (race) {'''
 if old not in text:
     raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_email → get_race Race 區段。")
