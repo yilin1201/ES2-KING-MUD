@@ -58,6 +58,8 @@ grep -Fq 'return { bytes: "ES2RACE:avatar", followup: null }' webtelnet/public/c
 grep -Fq 'socket.send("ES2RACE:" + (choice === "人類" ? "human" : choice))' webtelnet/public/index.html
 grep -Fq 'incoming === "ES2RACE:human" || incoming === "ES2RACE:avatar"' webtelnet/server.mjs
 grep -Fq 'Runtime Adaptive Race' webtelnet/server.mjs
+grep -Fq 'mud.write(Buffer.from(race + "\\n", "utf8"))' webtelnet/server.mjs
+! grep -Fq 'mud.write(Buffer.from(race + "\\r\\n", "utf8"))' webtelnet/server.mjs
 grep -Fq 'race-runtime-adaptive-v3' webtelnet/server.mjs
 grep -Fq 'characterMenuFor("選擇你的角色所屬的種族 (human/avatar): ")' scripts/test_m30_character_browser_input.mjs
 ! grep -Fq 'socket.send(choice === "人類" ? "human" : choice)' webtelnet/public/index.html
