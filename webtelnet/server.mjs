@@ -94,7 +94,7 @@ sockets.on("connection", (browser) => {
       const lineRace = /選擇你的角色所屬的種族\s*\(human\/avatar\)/.test(runtimeTail)
         || /請輸入 human 或 avatar/.test(runtimeTail);
       if (lineRace) {
-        mud.write(Buffer.from(race + "\r\n", "utf8"));
+        mud.write(Buffer.from(race + "\n", "utf8"));
       } else if (race === "human") {
         // Original cursor 預設停在 human；CR 確認目前選項。
         mud.write(Buffer.from("\r", "utf8"));
