@@ -44,6 +44,9 @@ grep -Fq 'mudlib/bin/adm/daemons/logind.b' scripts/apply_es2_king_expansion.sh
 grep -Fq 'mudlib/bin/adm/daemons/cmd_d.b' scripts/apply_es2_king_expansion.sh
 grep -Fq 'ES2-KING OWNER COMMAND REHASH' scripts/apply_es2_king_expansion.sh
 grep -Fq 'input_to("get_owner_claim", 3, ob)' scripts/apply_es2_king_expansion.sh
+# Original LPC Compatibility／舊 Driver 相容：Race callback 不得再引入較新 LPC 的負索引切片。
+! grep -Fq 'race[<1]' scripts/apply_es2_king_expansion.sh
+! grep -Fq 'race[0..<2]' scripts/apply_es2_king_expansion.sh
 grep -Fq 'owner_claim_transport_decode(token)' scripts/apply_es2_king_expansion.sh
 grep -Fq 'Claim 安全診斷：' scripts/apply_es2_king_expansion.sh
 grep -Fq 'ES2-KING PUBLIC CHARACTER TEXT INPUT' scripts/apply_es2_king_expansion.sh
