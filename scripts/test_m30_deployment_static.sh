@@ -61,6 +61,8 @@ grep -Fq 'characterMenuFor("選擇你的角色所屬的種族 (human/avatar): ")
 grep -Fq 'if (sendCharacterChoice(choice))' webtelnet/public/index.html
 grep -Fq 'browser-to-mud bytes=' webtelnet/server.mjs
 grep -Fq 'mud.write(Buffer.from(data))' webtelnet/server.mjs
+grep -Fq 'runtimeTail = (runtimeTail + text).slice(-1024)' webtelnet/server.mjs
+grep -Fq 'mud.write(Buffer.from("\\r", "utf8"))' webtelnet/server.mjs
 grep -Fq 'prepareOwnerClaim(command.value)' webtelnet/public/index.html
 grep -Fq '至少需要 ${MINIMUM_OWNER_CLAIM_BYTES} bytes，尚未送出' webtelnet/public/index.html
 grep -Fq 'pathname === "/claim-input.mjs"' webtelnet/server.mjs
