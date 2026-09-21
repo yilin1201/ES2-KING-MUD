@@ -83,7 +83,7 @@ function checkCharacterBrowserModule() {
         if (response.statusCode !== 200
             || !String(response.headers["content-type"] || "").startsWith("text/javascript")
             || !body.includes("prepareCharacterChoice")
-            || !body.includes("ES2RACE:human")
+            || !body.includes('bytes: "ES2RACE:human"')
             || !body.includes("human")
             || !body.includes("avatar")) {
           reject(new Error(`character browser module not ready: ${response.statusCode}`));
