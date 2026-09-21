@@ -173,6 +173,13 @@ await owner.waitFor("\n> ", 20000);
 await new Promise(resolve => setTimeout(resolve, 1200));
 owner.send("look\r\n");
 await new Promise(resolve => setTimeout(resolve, 300));
+// Playability Core／可玩化核心：確認建角後不只登入成功，基本角色資訊與物品指令也能被 Runtime 接收。
+// 這裡以「回到命令提示」作為跨 Original 版本的穩定判定，避免硬編歷史輸出文案。
+for (const command of ["score", "inventory"]) {
+  const offset = owner.output().length;
+  owner.send(command + "\r\n");
+  await owner.waitForAfter(offset, "\n> ", 10000);
+}
 await verifyKingCommands(owner);
 assert.equal(await exists(loginFile), true, "KING login save 必須建立");
 assert.equal(await exists(userFile), true, "KING user save 必須建立");
