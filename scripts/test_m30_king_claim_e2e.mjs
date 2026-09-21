@@ -189,15 +189,15 @@ for (const command of ["score", "inventory"]) {
   await owner.waitForAfter(lookOffset, "\n> ", 10000);
   const lookText = owner.output().slice(lookOffset);
   const exitMatch = lookText.match(/明顯的出口(?:有|是)?[^：:]*[：:]?\\s*([^。\\n]+)/);
-  if (exitMatch) {
-    const firstExit = exitMatch[1].trim().split(/[、,，\\s]+/)[0].replace(/[。；;].*$/, "");
-    if (firstExit) {
-      const moveOffset = owner.output().length;
-      owner.send(firstExit + "\r\n");
-      await owner.waitForAfter(moveOffset, "\n> ", 10000);
-      assert.notEqual(owner.output().slice(moveOffset), "", "Movement Runtime 必須回傳世界輸出");
-    }
-  }
+  assert.ok(exitMatch, "Movement Runtime 必須從起始房間取得至少一個出口；沒有出口不能算可玩 PASS");
+  const firstExit = exitMatch[1].trim().split(/[、,，\\s]+/)[0].replace(/[。；;].*$/, "");
+  assert.ok(firstExit, "Movement Runtime 必須解析出可執行的第一個出口");
+  const moveOffset = owner.output().length;
+  owner.send(firstExit + "\r\n");
+  await owner.waitForAfter(moveOffset, "\n> ", 10000);
+  const moveText = owner.output().slice(moveOffset);
+  assert.ok(moveText.length > 0, "Movement Runtime 必須回傳世界輸出");
+  assert.equal(/沒有這個方向|你不能往那|無法往/.test(moveText), false, "Movement Runtime 不得以失敗方向回到提示");
 }
 await verifyKingCommands(owner);
 assert.equal(await exists(loginFile), true, "KING login save 必須建立");
