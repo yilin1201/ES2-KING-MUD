@@ -14,7 +14,7 @@ const mudPort = Number(process.env.ES2_PORT || 4000);
 // 不讀取或輸出其他環境變數，避免洩漏 Secret（秘密資料）。
 const buildCommit = process.env.RENDER_GIT_COMMIT || process.env.ES2_BUILD_COMMIT || "unknown";
 const buildVersion = process.env.ES2_BUILD_VERSION || "m30-public-runtime";
-const characterTransportVersion = "race-bridge-crlf-v2";
+const characterTransportVersion = "race-runtime-adaptive-v3";
 
 // HTTP（網頁傳輸協定）只提供固定入口頁，避免把檔案系統暴露給瀏覽器。
 function neolithReachable() {
@@ -68,11 +68,13 @@ sockets.on("connection", (browser) => {
   console.log(`[public-session ${sessionId}] websocket-open`);
   const mud = connect({ host: mudHost, port: mudPort });
   const telnetText = new TelnetTextFilter();
+  let runtimeTail = "";
   mud.setTimeout(10000, () => mud.destroy(new Error("MUD connection timeout")));
   mud.once("connect", () => mud.setTimeout(0));
   mud.on("data", (data) => {
     // Neolith 使用 UTF-8，但 Telnet IAC 控制位元組不是文字；先剝離協定再交給瀏覽器解碼。
     const text = telnetText.push(data);
+    runtimeTail = (runtimeTail + text).slice(-1024);
     if (text.length > 0 && browser.readyState === browser.OPEN) browser.send(text);
   });
   mud.on("error", (error) => browser.close(1011, `MUD connection failed: ${error.message}`));
@@ -85,7 +87,22 @@ sockets.on("connection", (browser) => {
     // Bridge 在伺服器端轉成 Telnet 標準 CRLF，避免 iPhone Safari、WebSocket 與 Neolith 對 LF/CRLF 解讀不同。
     const incoming = Buffer.from(data).toString("utf8");
     if (incoming === "ES2RACE:human" || incoming === "ES2RACE:avatar") {
-      mud.write(Buffer.from(incoming.slice("ES2RACE:".length) + "\r\n", "utf8"));
+      const race = incoming.slice("ES2RACE:".length);
+      // Runtime Adaptive Race／Runtime 自適應種族輸入：
+      // 新 Runtime 使用 input_to 文字行；尚未更新的 Original Runtime 仍使用 get_char 游標選單。
+      // 依實際 Prompt 選擇傳輸，讓 Public 部署新舊不同步時仍可完成 Race。
+      const lineRace = /選擇你的角色所屬的種族\s*\(human\/avatar\)/.test(runtimeTail)
+        || /請輸入 human 或 avatar/.test(runtimeTail);
+      if (lineRace) {
+        mud.write(Buffer.from(race + "\r\n", "utf8"));
+      } else if (race === "human") {
+        // Original cursor 預設停在 human；CR 確認目前選項。
+        mud.write(Buffer.from("\r", "utf8"));
+      } else {
+        // Original avatar 為第二項；ANSI Down 移到下一項後再確認。
+        mud.write(Buffer.from("\x1b[B", "binary"));
+        setTimeout(() => { if (mud.writable) mud.write(Buffer.from("\r", "utf8")); }, 80);
+      }
       return;
     }
     // 其他 Original get_char／一般文字輸入維持原始位元組。
