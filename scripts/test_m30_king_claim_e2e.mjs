@@ -180,6 +180,25 @@ for (const command of ["score", "inventory"]) {
   owner.send(command + "\r\n");
   await owner.waitForAfter(offset, "\n> ", 10000);
 }
+
+// Movement Gate／移動可玩化閘門：不硬編起始房間出口名稱，先以 Original look 的「明顯的出口」讀出第一個出口。
+// 實際送出移動命令後，必須再次回到命令提示，證明角色已進入一般世界指令循環，而非只停在創角完成畫面。
+{
+  const lookOffset = owner.output().length;
+  owner.send("look\r\n");
+  await owner.waitForAfter(lookOffset, "\n> ", 10000);
+  const lookText = owner.output().slice(lookOffset);
+  const exitMatch = lookText.match(/明顯的出口(?:有|是)?[^：:]*[：:]?\\s*([^。\\n]+)/);
+  if (exitMatch) {
+    const firstExit = exitMatch[1].trim().split(/[、,，\\s]+/)[0].replace(/[。；;].*$/, "");
+    if (firstExit) {
+      const moveOffset = owner.output().length;
+      owner.send(firstExit + "\r\n");
+      await owner.waitForAfter(moveOffset, "\n> ", 10000);
+      assert.notEqual(owner.output().slice(moveOffset), "", "Movement Runtime 必須回傳世界輸出");
+    }
+  }
+}
 await verifyKingCommands(owner);
 assert.equal(await exists(loginFile), true, "KING login save 必須建立");
 assert.equal(await exists(userFile), true, "KING user save 必須建立");
