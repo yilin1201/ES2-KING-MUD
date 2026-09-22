@@ -51,7 +51,8 @@ grep -Fq 'owner_claim_transport_decode(token)' scripts/apply_es2_king_expansion.
 grep -Fq 'Claim 安全診斷：' scripts/apply_es2_king_expansion.sh
 grep -Fq 'ES2-KING PUBLIC CHARACTER TEXT INPUT' scripts/apply_es2_king_expansion.sh
 # Race Line Input／種族整行輸入：部署前即鎖定 Public、Runtime、E2E 三者使用相同契約。
-grep -Fq 'input_to ("get_race", ob)' scripts/apply_es2_king_expansion.sh
+grep -Fq 'input_to ("get_race", 0, ob)' scripts/apply_es2_king_expansion.sh
+! grep -Fq 'input_to ("get_race", ob)' scripts/apply_es2_king_expansion.sh
 grep -Fq 'value === "human" || value === "人類"' webtelnet/public/character-input.mjs
 grep -Fq 'return { bytes: "ES2RACE:human", followup: null }' webtelnet/public/character-input.mjs
 grep -Fq 'return { bytes: "ES2RACE:avatar", followup: null }' webtelnet/public/character-input.mjs
