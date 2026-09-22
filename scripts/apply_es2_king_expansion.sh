@@ -267,14 +267,14 @@ private void get_race (string race, mixed opts, object ob) {
     string choice = cursor_translate (race, opts);
     switch (choice ? choice : race) {'''
 new = '''    write ("選擇你的角色所屬的種族 (human/avatar): ");
-    input_to ("get_race", ob);
+    input_to ("get_race", 0, ob);
 }
 
 // ES2-KING PUBLIC CHARACTER TEXT INPUT／Public WebTelnet Race 使用完整文字行，避開 get_char 的 CR 傳輸差異。
 private void get_race (string race, object ob) {
     // Line Normalization／整行輸入正規化：不同 Telnet／WebSocket Client 可能把 CR/LF 保留在 input_to 字串尾端。
     // Race 只接受既定 human/avatar；先去除前後空白與換行，避免桌機與 iPhone 都卡在同一輸入點。
-    // Neolith input_to 會交付一行文字；只接受精確 human/avatar。
+    // Neolith/MudOS input_to 第二參數是 flags；0 表示一般文字輸入，第三參數 ob 才會成為 callback 的額外參數。\n    // 只接受精確 human/avatar。
     // 不使用較新 LPC 的負索引／切片語法，維持 Original ES2 Driver 可編譯相容性。
     switch (race) {'''
 if old not in text:
@@ -288,7 +288,7 @@ old_retry = '''        default:
     int kar'''
 new_retry = '''        default:
             write ("請輸入 human 或 avatar: ");
-            input_to ("get_race", ob);
+            input_to ("get_race", 0, ob);
             return;
     }
 
