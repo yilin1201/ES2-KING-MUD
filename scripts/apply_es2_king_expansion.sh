@@ -273,12 +273,9 @@ new = '''    write ("選擇你的角色所屬的種族：\\n  1. Human（人類�
 // ES2-KING PUBLIC CHARACTER TEXT INPUT／Public WebTelnet Race 使用完整文字行，避開 get_char 的 CR 傳輸差異。
 private void get_race (string race, object ob) {
     // Numeric Race／數字種族：Public WebTelnet 固定提交 1 或 2；Runtime 再映射回 Original human/avatar。
-    // 不在此處依賴較新字串 trim API，維持 Original ES2 Driver 相容。
-    // Neolith/MudOS input_to 第二參數是 flags；0 表示一般文字輸入，第三參數 ob 才會成為 callback 的額外參數。
-    // 只接受精確 human/avatar。
-    // 不使用較新 LPC 的負索引／切片語法，維持 Original ES2 Driver 可編譯相容性。
-    if (race == "1") race = "human";
-    else if (race == "2") race = "avatar";
+    // Neolith input_to 可能保留 Telnet 行尾；明確接受數字及常見 CR/LF 形式，不依賴新版 trim API。
+    if (race == "1" || race == "1\\r" || race == "1\\n" || race == "1\\r\\n") race = "human";
+    else if (race == "2" || race == "2\\r" || race == "2\\n" || race == "2\\r\\n") race = "avatar";
     switch (race) {'''
 if old not in text:
     raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_email → get_race Race 區段。")
