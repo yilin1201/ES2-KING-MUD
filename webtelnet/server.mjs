@@ -84,7 +84,7 @@ sockets.on("connection", (browser) => {
     // 只記錄位元組數，不記錄內容，讓 Public blocker 可判斷 Browser→Bridge 是否真的有送資料且不洩漏秘密。
     console.log(`[public-session ${sessionId}] browser-to-mud bytes=${data.length}`);
     // Character Transport／角色輸入傳輸：Race 使用明確的 WebSocket 訊息封套，
-    // Bridge 在伺服器端依 Runtime 模式轉換；line-input 只送單一 LF，避免 CRLF 被下一個 get_char 狀態誤吃。
+    // Bridge 在伺服器端依 Runtime 模式轉換；line-input 使用 Telnet 標準 CRLF 完成整行提交，避免 Neolith 只收到 LF 而持續等待。
     const incoming = Buffer.from(data).toString("utf8");
     if (["ES2RACE:1", "ES2RACE:2", "ES2RACE:human", "ES2RACE:avatar"].includes(incoming)) {
       const choice = incoming.slice("ES2RACE:".length);
@@ -96,7 +96,7 @@ sockets.on("connection", (browser) => {
         || /選擇你的角色所屬的種族\s*\(human\/avatar\)/.test(runtimeTail)
         || /請輸入 human 或 avatar/.test(runtimeTail);
       if (lineRace) {
-        mud.write(Buffer.from((choice === "1" || choice === "2" ? choice : race) + "\n", "utf8"));
+        mud.write(Buffer.from((choice === "1" || choice === "2" ? choice : race) + "\r\n", "utf8"));
       } else if (race === "human") {
         // Original cursor 預設停在 human；CR 確認目前選項。
         mud.write(Buffer.from("\r", "utf8"));
