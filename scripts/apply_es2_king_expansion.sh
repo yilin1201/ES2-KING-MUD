@@ -266,7 +266,7 @@ old = '''    mapping opts = ([
 private void get_race (string race, mixed opts, object ob) {
     string choice = cursor_translate (race, opts);
     switch (choice ? choice : race) {'''
-new = '''    write ("選擇你的角色所屬的種族 (human/avatar): ");
+new = '''    write ("選擇你的角色所屬的種族：\\n  1. Human（人類）\\n  2. Avatar\\n請輸入編號 1 或 2: ");
     input_to ("get_race", 0, ob);
 }
 
@@ -288,7 +288,7 @@ old_retry = '''        default:
 
     int kar'''
 new_retry = '''        default:
-            write ("請輸入 human 或 avatar: ");
+            write ("請輸入編號 1 或 2: ");
             input_to ("get_race", 0, ob);
             return;
     }
