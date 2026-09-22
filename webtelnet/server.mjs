@@ -14,7 +14,7 @@ const mudPort = Number(process.env.ES2_PORT || 4000);
 // 不讀取或輸出其他環境變數，避免洩漏 Secret（秘密資料）。
 const buildCommit = process.env.RENDER_GIT_COMMIT || process.env.ES2_BUILD_COMMIT || "unknown";
 const buildVersion = process.env.ES2_BUILD_VERSION || "m30-public-runtime";
-const characterTransportVersion = "race-numeric-lf-v5";
+const characterTransportVersion = "race-numeric-state-v6";
 
 // HTTP（網頁傳輸協定）只提供固定入口頁，避免把檔案系統暴露給瀏覽器。
 function neolithReachable() {
@@ -69,12 +69,16 @@ sockets.on("connection", (browser) => {
   const mud = connect({ host: mudHost, port: mudPort });
   const telnetText = new TelnetTextFilter();
   let runtimeTail = "";
+  let numericRaceActive = false;
   mud.setTimeout(10000, () => mud.destroy(new Error("MUD connection timeout")));
   mud.once("connect", () => mud.setTimeout(0));
   mud.on("data", (data) => {
     // Neolith 使用 UTF-8，但 Telnet IAC 控制位元組不是文字；先剝離協定再交給瀏覽器解碼。
     const text = telnetText.push(data);
     runtimeTail = (runtimeTail + text).slice(-1024);
+    // Race State／種族狀態：一旦 Runtime 顯示數字 Race 提示，就保持到真正進入 Gender，避免提示後的「>」雜訊讓 Public iPhone 失去 Race 封套路徑。
+    if (/請輸入編號 1 或 2/.test(text)) numericRaceActive = true;
+    if (/您要扮演的哪種性別/.test(text)) numericRaceActive = false;
     if (text.length > 0 && browser.readyState === browser.OPEN) browser.send(text);
   });
   mud.on("error", (error) => browser.close(1011, `MUD connection failed: ${error.message}`));
@@ -92,13 +96,15 @@ sockets.on("connection", (browser) => {
       // Runtime Adaptive Race／Runtime 自適應種族輸入：
       // 新 Runtime 使用 input_to 文字行；尚未更新的 Original Runtime 仍使用 get_char 游標選單。
       // 依實際 Prompt 選擇傳輸，讓 Public 部署新舊不同步時仍可完成 Race。
-      const lineRace = /請輸入編號 1 或 2/.test(runtimeTail)
+      const lineRace = numericRaceActive
+        || /請輸入編號 1 或 2/.test(runtimeTail)
         || /選擇你的角色所屬的種族\s*\(human\/avatar\)/.test(runtimeTail)
         || /請輸入 human 或 avatar/.test(runtimeTail);
       if (lineRace) {
         // Neolith input_to 以 LF 完成文字行；Public 實機顯示 CRLF 會留下額外空輸入並出現「>」。
         // Race 封套只在這個明確 prompt 使用單一 LF，不影響一般 Original Telnet 輸入。
         mud.write(Buffer.from((choice === "1" || choice === "2" ? choice : race) + "\n", "utf8"));
+        // 保持 numericRaceActive，直到 Runtime 實際輸出 Gender；若 Race callback 拒絕輸入，下一次 1/2 仍走同一安全路徑。
       } else if (race === "human") {
         // Original cursor 預設停在 human；CR 確認目前選項。
         mud.write(Buffer.from("\r", "utf8"));
