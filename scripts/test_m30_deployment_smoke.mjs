@@ -17,7 +17,7 @@ function getHealth() {
               || !status.web || !status.bridge || !status.neolith
               || typeof status.build_commit !== "string" || status.build_commit.length === 0
               || status.build_version !== "m30-public-runtime"
-              || status.character_transport !== "race-numeric-lf-v5") {
+              || status.character_transport !== "race-numeric-state-v6") {
             reject(new Error(`health not ready: ${response.statusCode} ${body}`));
             return;
           }
