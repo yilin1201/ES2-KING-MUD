@@ -27,4 +27,9 @@ ES2_E2E_SKIP_OVERLAY=1 \
 ES2_DRIVER_BIN="${ES2_DRIVER_BIN:-$SOURCE_RUNTIME/neolith/out/build/linux/src/Debug/neolith}" \
 bash "$REPO_ROOT/scripts/test_m30_king_reservation_e2e.sh" "$TEMP_ROOT/runtime"
 
-echo "M30 PRODUCTION-EQUIVALENT KING RESERVATION PASS（等同正式部署的 KING 保留測試通過）：最終 Runtime tree 已完成拒絕訊息、登入返回與 king.o 不建立驗證。"
+# Production-equivalent Playable Gate／正式等效可玩閘門：
+# Reservation 只證明 KING ID 不會被搶註；可登入驗收前還必須跑完整 Claim→Race→Gender→世界→重登。
+ES2_DRIVER_BIN="${ES2_DRIVER_BIN:-$SOURCE_RUNTIME/neolith/out/build/linux/src/Debug/neolith}" \
+bash "$REPO_ROOT/scripts/test_m30_king_claim_e2e.sh" "$TEMP_ROOT/runtime"
+
+echo "M30 PRODUCTION-EQUIVALENT KING RESERVATION + PLAYABLE PASS（等同正式部署的 KING 保留測試通過）：最終 Runtime tree 已完成拒絕訊息、登入返回與 king.o 不建立驗證。"
