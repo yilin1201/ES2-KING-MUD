@@ -14,10 +14,16 @@ WORKDIR /build/repository
 COPY . .
 
 # Original ES2（原版天朝帝國）固定到已考證 commit；Expansion 只套入獨立 Runtime。
-RUN git clone --recurse-submodules https://github.com/taedlar/es2_mudlib.git /opt/es2-king/runtime \
-    && git -C /opt/es2-king/runtime checkout "$ORIGINAL_ES2_COMMIT" \
-    && git -C /opt/es2-king/runtime submodule update --init --recursive \
-    && scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime \
+# 分段建置讓 Render Build Log 能直接指出失敗階段，避免單一長鏈只回報 exit code 1。
+RUN echo "[M30 BUILD 1/5] Clone Original ES2" \
+    && git clone --recurse-submodules https://github.com/taedlar/es2_mudlib.git /opt/es2-king/runtime
+RUN echo "[M30 BUILD 2/5] Checkout verified Original commit" \
+    && git -C /opt/es2-king/runtime checkout "$ORIGINAL_ES2_COMMIT"
+RUN echo "[M30 BUILD 3/5] Update Original submodules" \
+    && git -C /opt/es2-king/runtime submodule update --init --recursive
+RUN echo "[M30 BUILD 4/5] Apply ES2-KING Expansion overlay" \
+    && scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime
+RUN echo "[M30 BUILD 5/5] Assert final playable Runtime" \
     && bash scripts/assert_m30_final_runtime.sh /opt/es2-king/runtime
 
 # 與既有 Bootstrap 相同：只在生成的 ES2-KING Runtime 關閉歷史 anti-spam，
