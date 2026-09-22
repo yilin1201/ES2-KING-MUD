@@ -160,8 +160,11 @@ owner.send(`${kingPassword}\r\n`);
 await owner.waitFor("您的電子郵件地址");
 owner.send("none\r\n");
 await owner.waitFor("選擇你的角色所屬的種族");
+const ownerRaceOffset = owner.output().length;
 await sendBrowserChoice(owner, "human");
-await owner.waitFor("您要扮演的哪種性別");
+// Race Runtime Gate／種族實機閘門：必須是送出封套後的新輸出進入 Gender，
+// 不接受前段緩衝誤命中，才能證明 input_to callback 真正完成。
+await owner.waitForAfter(ownerRaceOffset, "您要扮演的哪種性別");
 await sendBrowserChoice(owner, "male");
 await owner.waitFor("您的顯示名稱");
 owner.send("KING\r\n");
@@ -245,8 +248,9 @@ normal.send(`${playerPassword}\r\n`);
 await normal.waitFor("您的電子郵件地址");
 normal.send("none\r\n");
 await normal.waitFor("選擇你的角色所屬的種族");
+const normalRaceOffset = normal.output().length;
 await sendBrowserChoice(normal, "avatar");
-await normal.waitFor("您要扮演的哪種性別");
+await normal.waitForAfter(normalRaceOffset, "您要扮演的哪種性別");
 await sendBrowserChoice(normal, "female");
 await normal.waitFor("您的顯示名稱");
 normal.send("KING\r\n");
