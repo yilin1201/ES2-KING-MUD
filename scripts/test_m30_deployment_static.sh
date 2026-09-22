@@ -64,7 +64,6 @@ grep -Fq 'socket.send("ES2RACE:" + raceChoice)' webtelnet/public/index.html
 grep -Fq '["ES2RACE:1", "ES2RACE:2", "ES2RACE:human", "ES2RACE:avatar"].includes(incoming)' webtelnet/server.mjs
 grep -Fq 'Runtime Adaptive Race' webtelnet/server.mjs
 grep -Fq 'choice === "1" || choice === "2" ? choice : race' webtelnet/server.mjs
-grep -Fq 'choice === "1" || choice === "2" ? choice : race' webtelnet/server.mjs
 grep -Fq '+ "\\r\\n", "utf8"))' webtelnet/server.mjs
 grep -Fq 'race-numeric-v4' webtelnet/server.mjs
 grep -Fq 'characterMenuFor("請輸入編號 1 或 2: ")' scripts/test_m30_character_browser_input.mjs
