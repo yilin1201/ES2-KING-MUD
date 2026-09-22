@@ -56,16 +56,17 @@ test "$(grep -Fc 'input_to ("get_race", 0, ob);' scripts/apply_es2_king_expansio
 # Race Callback ABI／種族回呼介面：首次輸入與 retry 都必須把 ob 當第三參數傳給 callback。
 ! grep -Fq 'input_to ("get_race", ob)' scripts/apply_es2_king_expansion.sh
 ! grep -Fq 'callback 的額外參數。\\n' scripts/apply_es2_king_expansion.sh
-grep -Fq 'value === "human" || value === "人類"' webtelnet/public/character-input.mjs
-grep -Fq 'return { bytes: "ES2RACE:human", followup: null }' webtelnet/public/character-input.mjs
-grep -Fq 'return { bytes: "ES2RACE:avatar", followup: null }' webtelnet/public/character-input.mjs
-grep -Fq 'socket.send("ES2RACE:" + (choice === "人類" ? "human" : choice))' webtelnet/public/index.html
-grep -Fq 'incoming === "ES2RACE:human" || incoming === "ES2RACE:avatar"' webtelnet/server.mjs
+grep -Fq '["1", "human", "人類"].includes(value)' webtelnet/public/character-input.mjs
+grep -Fq 'return { bytes: "ES2RACE:1", followup: null }' webtelnet/public/character-input.mjs
+grep -Fq 'return { bytes: "ES2RACE:2", followup: null }' webtelnet/public/character-input.mjs
+grep -Fq '["1", "2", "human", "人類", "avatar"].includes(choice)' webtelnet/public/index.html
+grep -Fq 'socket.send("ES2RACE:" + raceChoice)' webtelnet/public/index.html
+grep -Fq '["ES2RACE:1", "ES2RACE:2", "ES2RACE:human", "ES2RACE:avatar"].includes(incoming)' webtelnet/server.mjs
 grep -Fq 'Runtime Adaptive Race' webtelnet/server.mjs
-grep -Fq 'mud.write(Buffer.from(race + "\\n", "utf8"))' webtelnet/server.mjs
+grep -Fq 'choice === "1" || choice === "2" ? choice : race' webtelnet/server.mjs
 ! grep -Fq 'mud.write(Buffer.from(race + "\\r\\n", "utf8"))' webtelnet/server.mjs
 grep -Fq 'race-runtime-adaptive-v3' webtelnet/server.mjs
-grep -Fq 'characterMenuFor("選擇你的角色所屬的種族 (human/avatar): ")' scripts/test_m30_character_browser_input.mjs
+grep -Fq 'characterMenuFor("請輸入編號 1 或 2: ")' scripts/test_m30_character_browser_input.mjs
 ! grep -Fq 'socket.send(choice === "人類" ? "human" : choice)' webtelnet/public/index.html
 grep -Fq 'if (sendCharacterChoice(choice))' webtelnet/public/index.html
 grep -Fq 'browser-to-mud bytes=' webtelnet/server.mjs
