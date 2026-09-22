@@ -277,16 +277,21 @@ private void get_race (string race, object ob) {
     // Neolith/MudOS input_to 第二參數是 flags；0 表示一般文字輸入，第三參數 ob 才會成為 callback 的額外參數。
     // 只接受精確 human/avatar。
     // 不使用較新 LPC 的負索引／切片語法，維持 Original ES2 Driver 可編譯相容性。
-    switch (race) {
+    switch (race) {'''
+if old not in text:
+    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_email → get_race Race 區段。")
+text = text.replace(old, new, 1)
+# Numeric Race／數字種族：只修改生成後 Runtime 的 switch，不污染 Python replacement 字串本身。
+race_marker = "// ES2-KING PUBLIC CHARACTER TEXT INPUT"
+race_start = text.index(race_marker)
+switch_at = text.index("    switch (race) {", race_start) + len("    switch (race) {")
+text = text[:switch_at] + """
         case "1":
             race = "human";
             break;
         case "2":
             race = "avatar";
-            break;'''
-if old not in text:
-    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_email → get_race Race 區段。")
-text = text.replace(old, new, 1)
+            break;""" + text[switch_at:]
 old_retry = '''        default:
             get_char ("get_race", 1, opts, ob);
             return;
