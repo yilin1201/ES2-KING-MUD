@@ -86,15 +86,17 @@ sockets.on("connection", (browser) => {
     // Character Transport／角色輸入傳輸：Race 使用明確的 WebSocket 訊息封套，
     // Bridge 在伺服器端依 Runtime 模式轉換；line-input 只送單一 LF，避免 CRLF 被下一個 get_char 狀態誤吃。
     const incoming = Buffer.from(data).toString("utf8");
-    if (incoming === "ES2RACE:human" || incoming === "ES2RACE:avatar") {
-      const race = incoming.slice("ES2RACE:".length);
+    if (["ES2RACE:1", "ES2RACE:2", "ES2RACE:human", "ES2RACE:avatar"].includes(incoming)) {
+      const choice = incoming.slice("ES2RACE:".length);
+      const race = choice === "1" ? "human" : choice === "2" ? "avatar" : choice;
       // Runtime Adaptive Race／Runtime 自適應種族輸入：
       // 新 Runtime 使用 input_to 文字行；尚未更新的 Original Runtime 仍使用 get_char 游標選單。
       // 依實際 Prompt 選擇傳輸，讓 Public 部署新舊不同步時仍可完成 Race。
-      const lineRace = /選擇你的角色所屬的種族\s*\(human\/avatar\)/.test(runtimeTail)
+      const lineRace = /請輸入編號 1 或 2/.test(runtimeTail)
+        || /選擇你的角色所屬的種族\s*\(human\/avatar\)/.test(runtimeTail)
         || /請輸入 human 或 avatar/.test(runtimeTail);
       if (lineRace) {
-        mud.write(Buffer.from(race + "\n", "utf8"));
+        mud.write(Buffer.from((choice === "1" || choice === "2" ? choice : race) + "\n", "utf8"));
       } else if (race === "human") {
         // Original cursor 預設停在 human；CR 確認目前選項。
         mud.write(Buffer.from("\r", "utf8"));
