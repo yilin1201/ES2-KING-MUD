@@ -84,7 +84,7 @@ sockets.on("connection", (browser) => {
     // 只記錄位元組數，不記錄內容，讓 Public blocker 可判斷 Browser→Bridge 是否真的有送資料且不洩漏秘密。
     console.log(`[public-session ${sessionId}] browser-to-mud bytes=${data.length}`);
     // Character Transport／角色輸入傳輸：Race 使用明確的 WebSocket 訊息封套，
-    // Bridge 在伺服器端轉成 Telnet 標準 CRLF，避免 iPhone Safari、WebSocket 與 Neolith 對 LF/CRLF 解讀不同。
+    // Bridge 在伺服器端依 Runtime 模式轉換；line-input 只送單一 LF，避免 CRLF 被下一個 get_char 狀態誤吃。
     const incoming = Buffer.from(data).toString("utf8");
     if (incoming === "ES2RACE:human" || incoming === "ES2RACE:avatar") {
       const race = incoming.slice("ES2RACE:".length);
