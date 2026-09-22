@@ -32,8 +32,11 @@ test "$(grep -Fc 'input_to ("get_race", 0, ob);' "$LOGIN_D")" -eq 2
 ! grep -Fq 'callback 的額外參數。\n' "$LOGIN_D"
 grep -Fq 'private void get_race (string race, object ob)' "$LOGIN_D"
 ! grep -Fq 'switch (choice ? choice : race)' "$LOGIN_D"
+grep -Fq 'case "1":' "$LOGIN_D"
 grep -Fq 'case "human":' "$LOGIN_D"
+grep -Fq 'case "2":' "$LOGIN_D"
 grep -Fq 'case "avatar":' "$LOGIN_D"
+grep -Fq '請輸入編號 1 或 2' "$LOGIN_D"
 grep -Fq 'ES2-KING OWNER COMMAND REHASH' "$COMMAND_D"
 for command in kingcreate kingrealm kingmartial kingcanon; do
   grep -Fqx "/cmds/adm/$command" "$PRELOAD_FILE"
