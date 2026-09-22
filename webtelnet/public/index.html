@@ -120,7 +120,7 @@
     command.inputMode = ownerClaim ? "text" : "";
     command.setAttribute("aria-label", secret ? "密碼（輸入內容不顯示）" : "遊戲指令");
     const menu = characterMenuFor(outputTail);
-    command.placeholder = !secret && menu?.type === "race" ? "輸入 human 或 avatar，或點選上方按鈕" : "";
+    command.placeholder = !secret && menu?.type === "race" ? "輸入 1 或 2，或點選上方按鈕" : "";
     renderCharacterChoices();
   }
 
@@ -229,8 +229,9 @@
       // Race Line Input／種族整行輸入：Runtime 已改成 input_to，因此直接送完整 human/avatar + LF。
       // 使用單一 LF（換行）避免 Telnet/Neolith 將 CRLF 拆成「Race 輸入 + 下一狀態空輸入」。
       const activeMenu = characterMenuFor(outputTail);
-      if (activeMenu?.type === "race" && ["human", "人類", "avatar"].includes(choice)) {
-        socket.send("ES2RACE:" + (choice === "人類" ? "human" : choice));
+      if (activeMenu?.type === "race" && ["1", "2", "human", "人類", "avatar"].includes(choice)) {
+        const raceChoice = choice === "人類" ? "1" : choice === "human" ? "1" : choice === "avatar" ? "2" : choice;
+        socket.send("ES2RACE:" + raceChoice);
         command.value = "";
         return;
       } else if (sendCharacterChoice(choice)) {
