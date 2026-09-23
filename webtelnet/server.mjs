@@ -14,7 +14,7 @@ const mudPort = Number(process.env.ES2_PORT || 4000);
 // 不讀取或輸出其他環境變數，避免洩漏 Secret（秘密資料）。
 const buildCommit = process.env.RENDER_GIT_COMMIT || process.env.ES2_BUILD_COMMIT || "unknown";
 const buildVersion = process.env.ES2_BUILD_VERSION || "m30-public-runtime";
-const characterTransportVersion = "race-telnet-cr-v8";
+const characterTransportVersion = "race-telnet-crlf-v9";
 
 // HTTP（網頁傳輸協定）只提供固定入口頁，避免把檔案系統暴露給瀏覽器。
 function neolithReachable() {
@@ -101,9 +101,9 @@ sockets.on("connection", (browser) => {
         || /選擇你的角色所屬的種族\s*\(human\/avatar\)/.test(runtimeTail)
         || /請輸入 human 或 avatar/.test(runtimeTail);
       if (lineRace) {
-        // Telnet Line Submit／Telnet 整行送出：Neolith/MudOS 的互動輸入以 CR（回車）結束。
-        // CRLF 會被視為 CR 完成輸入後再留下 LF，Public 實機因此可能出現多個空白「>」；Race 封套固定只送 CR。
-        mud.write(Buffer.from((choice === "1" || choice === "2" ? choice : race) + "\r", "utf8"));
+        // Telnet Line Submit／Telnet 整行送出：依固定 Neolith Driver 的 copy_chars() 原始碼，
+        // 非 SINGLE_CHAR 模式的 lone CR 會被丟棄；只有 CRLF/CR-NUL 才建立 newline。Race 使用 input_to，因此必須送 CRLF。
+        mud.write(Buffer.from((choice === "1" || choice === "2" ? choice : race) + "\r\n", "utf8"));
         // 保持 numericRaceActive，直到 Runtime 實際輸出 Gender；若 Race callback 拒絕輸入，下一次 1/2 仍走同一安全路徑。
       } else if (race === "human") {
         // Original cursor 預設停在 human；CR 確認目前選項。
