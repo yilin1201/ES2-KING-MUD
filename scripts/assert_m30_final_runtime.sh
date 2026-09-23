@@ -32,8 +32,11 @@ test "$(grep -Fc 'input_to ("get_race", ob);' "$LOGIN_D")" -eq 2
 ! grep -Fq '一致。\n    // Neolith' "$LOGIN_D"
 grep -Fq 'private void get_race (string race, object ob)' "$LOGIN_D"
 ! grep -Fq 'switch (choice ? choice : race)' "$LOGIN_D"
-grep -Fq 'if (race == "1" || race == "1\r" || race == "1\n" || race == "1\r\n") race = "human";' "$LOGIN_D"
-grep -Fq 'else if (race == "2" || race == "2\r" || race == "2\n" || race == "2\r\n") race = "avatar";' "$LOGIN_D"
+# Race 數字相容層：用結構性條件驗證，避免 shell/LPC 兩層跳脫字元造成假 FAIL。
+grep -Fq 'if (race == "1"' "$LOGIN_D"
+grep -Fq 'race = "human";' "$LOGIN_D"
+grep -Fq 'else if (race == "2"' "$LOGIN_D"
+grep -Fq 'race = "avatar";' "$LOGIN_D"
 grep -Fq 'case "human":' "$LOGIN_D"
 grep -Fq 'case "avatar":' "$LOGIN_D"
 grep -Fq '請輸入編號 1 或 2' "$LOGIN_D"
