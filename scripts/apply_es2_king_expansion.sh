@@ -267,13 +267,13 @@ private void get_race (string race, mixed opts, object ob) {
     string choice = cursor_translate (race, opts);
     switch (choice ? choice : race) {'''
 new = '''    write ("選擇你的角色所屬的種族：\\n  1. Human（人類）\\n  2. Avatar\\n請輸入編號 1 或 2: ");
-    input_to ("get_race", 0, ob);
+    input_to ("get_race", ob);
 }
 
 // ES2-KING PUBLIC CHARACTER TEXT INPUT／Public WebTelnet Race 使用完整文字行，避開 get_char 的 CR 傳輸差異。
 private void get_race (string race, object ob) {
     // Numeric Race／數字種族：Public WebTelnet 固定提交 1 或 2；Runtime 再映射回 Original human/avatar。
-    // Neolith input_to 可能保留 Telnet 行尾；明確接受數字及常見 CR/LF 形式，不依賴新版 trim API。
+    // Original ES2 input_to 第二參數就是 callback 額外參數；直接傳入 ob，與 get_email/get_name 的原始 ABI 一致。\n    // Neolith input_to 可能保留 Telnet 行尾；明確接受數字及常見 CR/LF 形式，不依賴新版 trim API。
     if (race == "1" || race == "1\\r" || race == "1\\n" || race == "1\\r\\n") race = "human";
     else if (race == "2" || race == "2\\r" || race == "2\\n" || race == "2\\r\\n") race = "avatar";
     switch (race) {'''
@@ -288,7 +288,7 @@ old_retry = '''        default:
     int kar'''
 new_retry = '''        default:
             write ("請輸入編號 1 或 2: ");
-            input_to ("get_race", 0, ob);
+            input_to ("get_race", ob);
             return;
     }
 
