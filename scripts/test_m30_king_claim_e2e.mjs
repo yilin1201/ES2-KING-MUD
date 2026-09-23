@@ -75,7 +75,7 @@ async function sendBrowserChoice(current, value) {
   assert.ok(prepared, `Browser compatibility 應辨識選項：${value}`);
   const offset = current.output().length;
   current.send(prepared.bytes);
-  // Race Envelope／種族封套由 WebTelnet Bridge 自行轉成 Neolith 所需的單一 CR（回車）；
+  // Race Envelope／種族封套由 WebTelnet Bridge 自行轉成 Neolith line-input 所需的 CRLF（回車換行）；
   // E2E 不直接注入 human/avatar 行，確保測到的就是 Public Browser 相同路徑。
   if (prepared.followup) {
     await current.waitForAfter(offset, "選擇你的角色所屬的種族");
