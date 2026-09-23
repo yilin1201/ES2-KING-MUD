@@ -14,7 +14,7 @@ const mudPort = Number(process.env.ES2_PORT || 4000);
 // 不讀取或輸出其他環境變數，避免洩漏 Secret（秘密資料）。
 const buildCommit = process.env.RENDER_GIT_COMMIT || process.env.ES2_BUILD_COMMIT || "unknown";
 const buildVersion = process.env.ES2_BUILD_VERSION || "m30-public-runtime";
-const characterTransportVersion = "race-numeric-state-v6";
+const characterTransportVersion = "race-telnet-crlf-v7";
 
 // HTTP（網頁傳輸協定）只提供固定入口頁，避免把檔案系統暴露給瀏覽器。
 function neolithReachable() {
@@ -101,9 +101,9 @@ sockets.on("connection", (browser) => {
         || /選擇你的角色所屬的種族\s*\(human\/avatar\)/.test(runtimeTail)
         || /請輸入 human 或 avatar/.test(runtimeTail);
       if (lineRace) {
-        // Neolith input_to 以 LF 完成文字行；Public 實機顯示 CRLF 會留下額外空輸入並出現「>」。
-        // Race 封套只在這個明確 prompt 使用單一 LF，不影響一般 Original Telnet 輸入。
-        mud.write(Buffer.from((choice === "1" || choice === "2" ? choice : race) + "\n", "utf8"));
+        // Telnet Line Submit／Telnet 整行送出：input_to 由 Telnet 文字行觸發，使用標準 CRLF。
+        // 先前只送 LF 的方式在 Public iPhone 上可顯示輸入卻不一定觸發 Neolith callback，因此 Race 會停在原提示。
+        mud.write(Buffer.from((choice === "1" || choice === "2" ? choice : race) + "\r\n", "utf8"));
         // 保持 numericRaceActive，直到 Runtime 實際輸出 Gender；若 Race callback 拒絕輸入，下一次 1/2 仍走同一安全路徑。
       } else if (race === "human") {
         // Original cursor 預設停在 human；CR 確認目前選項。
