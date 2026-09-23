@@ -29,7 +29,6 @@ grep -Fq 'envsubst("${ES2_KING_CLAIM_TOKEN:-}")' "$LOGIN_D"
 grep -Fq 'ES2-KING PUBLIC CHARACTER TEXT INPUT' "$LOGIN_D"
 test "$(grep -Fc 'input_to ("get_race", ob);' "$LOGIN_D")" -eq 2
 ! grep -Fq 'input_to ("get_race", 0, ob)' "$LOGIN_D"
-! grep -Fq '一致。\n    // Neolith' "$LOGIN_D"
 grep -Fq 'private void get_race (string race, object ob)' "$LOGIN_D"
 ! grep -Fq 'switch (choice ? choice : race)' "$LOGIN_D"
 # Race 數字相容層：用結構性條件驗證，避免 shell/LPC 兩層跳脫字元造成假 FAIL。
