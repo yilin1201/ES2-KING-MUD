@@ -5,6 +5,7 @@ RUNTIME_DIR="${1:-${ES2_RUNTIME_DIR:-/opt/es2-king/runtime}}"
 LOGIN_D="$RUNTIME_DIR/mudlib/adm/daemons/logind.c"
 COMMAND_D="$RUNTIME_DIR/mudlib/adm/daemons/cmd_d.c"
 PRELOAD_FILE="$RUNTIME_DIR/mudlib/adm/etc/preload"
+NEOLITH_COMM="$RUNTIME_DIR/neolith/src/comm.c"
 
 test -f "$LOGIN_D" || {
   echo "FINAL RUNTIME ASSERTION FAIL（最終執行環境斷言失敗）：找不到 $LOGIN_D" >&2
@@ -39,6 +40,11 @@ grep -Fq 'race = "avatar";' "$LOGIN_D"
 grep -Fq 'case "human":' "$LOGIN_D"
 grep -Fq 'case "avatar":' "$LOGIN_D"
 grep -Fq '請輸入編號 1 或 2' "$LOGIN_D"
+# Pinned Driver Contract／固定 Driver 契約：Race 的 input_to 是整行模式；Neolith copy_chars() 明確只在 CRLF/CR-NUL 建立 newline，lone CR 會被丟棄。
+test -f "$NEOLITH_COMM"
+grep -Fq "case '\\r': /* CR */" "$NEOLITH_COMM"
+grep -Fq "from[i] == '\\n' || from[i] == '\\0'" "$NEOLITH_COMM"
+grep -Fq "lone CR is dropped" "$NEOLITH_COMM"
 grep -Fq 'ES2-KING OWNER COMMAND REHASH' "$COMMAND_D"
 for command in kingcreate kingrealm kingmartial kingcanon; do
   grep -Fqx "/cmds/adm/$command" "$PRELOAD_FILE"
