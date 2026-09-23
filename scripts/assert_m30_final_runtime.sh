@@ -27,8 +27,8 @@ grep -Fq '比較=MISMATCH' "$LOGIN_D"
 grep -Fq 'envsubst("${ES2_KING_CLAIM_TOKEN:-}")' "$LOGIN_D"
 # Public Character Text Input（公開創角文字輸入）必須真的存在於 Neolith 最終載入的 logind。
 grep -Fq 'ES2-KING PUBLIC CHARACTER TEXT INPUT' "$LOGIN_D"
-test "$(grep -Fc 'input_to ("get_race", 0, ob);' "$LOGIN_D")" -eq 2
-! grep -Fq 'input_to ("get_race", ob)' "$LOGIN_D"
+test "$(grep -Fc 'input_to ("get_race", ob);' "$LOGIN_D")" -eq 2
+! grep -Fq 'input_to ("get_race", 0, ob)' "$LOGIN_D"
 ! grep -Fq 'callback 的額外參數。\n' "$LOGIN_D"
 grep -Fq 'private void get_race (string race, object ob)' "$LOGIN_D"
 ! grep -Fq 'switch (choice ? choice : race)' "$LOGIN_D"
