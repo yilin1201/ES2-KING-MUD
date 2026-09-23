@@ -274,9 +274,9 @@ new = '''    write ("選擇你的角色所屬的種族：\\n  1. Human（人類�
 private void get_race (string race, object ob) {
     // Numeric Race／數字種族：Public WebTelnet 固定提交 1 或 2；Runtime 再映射回 Original human/avatar。
     // Original ES2 input_to 第二參數就是 callback 額外參數；直接傳入 ob，與 get_email/get_name 的原始 ABI 一致。
-    // Neolith input_to 可能保留 Telnet 行尾；明確接受數字及常見 CR/LF 形式，不依賴新版 trim API。
-    if (race == "1" || race == "1\\r" || race == "1\\n" || race == "1\\r\\n") race = "human";
-    else if (race == "2" || race == "2\\r" || race == "2\\n" || race == "2\\r\\n") race = "avatar";
+    // input_to 回呼取得的是已完成的一行文字；只接受 Public 定義的數字或 Original ID，不把 Telnet 行尾當成角色資料。
+    if (race == "1") race = "human";
+    else if (race == "2") race = "avatar";
     switch (race) {'''
 if old not in text:
     raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_email → get_race Race 區段。")
