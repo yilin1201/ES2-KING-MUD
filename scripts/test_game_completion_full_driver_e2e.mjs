@@ -24,9 +24,18 @@ const runStage = async (stage, fn) => {
   }
 };
 
-const socket = new WebSocket(url);
+let socket;
 let output = "";
-socket.on("message", data => { output += Buffer.from(data).toString("utf8"); });
+
+async function connect() {
+  output = "";
+  socket = new WebSocket(url);
+  socket.on("message", data => { output += Buffer.from(data).toString("utf8"); });
+  await new Promise((resolve, reject) => {
+    socket.once("open", resolve);
+    socket.once("error", reject);
+  });
+}
 
 const waitForAfter = (offset, matcher, timeout = 20000) => new Promise((resolve, reject) => {
   const started = Date.now();
@@ -49,15 +58,19 @@ async function command(text, matcher = "> ", timeout = 20000) {
   return waitForAfter(offset, matcher, timeout);
 }
 
-await new Promise((resolve, reject) => {
-  socket.once("open", resolve);
-  socket.once("error", reject);
-});
+await connect();
 await waitForAfter(0, "您的使用者代號");
 await command("king", "請輸入密碼");
 await command(password, "目前權限: (admin)");
 await waitForAfter(0, "客棧大堂");
 await new Promise(resolve => setTimeout(resolve, 1200));
+
+// Core Player Journey／核心玩家旅程：明確以玩家指令驗證進入世界、場景、狀態、物品與移動，
+// 後續五段沿用同一條連線，不以管理員傳送取代這一段 Movement 證據。
+assert.match(await command("look"), /客棧大堂/);
+assert.match(await command("score"), /KING|目前權限|等級|經驗/);
+await command("inventory");
+assert.match(await command("west"), /廚房/);
 
 await runStage("npc", async () => {
   // NPC Interaction／NPC 互動：真實載入店小二，查看 NPC 並執行其 Vendor action。
@@ -102,6 +115,9 @@ await runStage("skills", async () => {
 
 // School / Apprentice／門派與拜師：進入 Original 私塾，實際觸發陳維俠收徒對話並再次拜師完成關係。
 await runStage("school", async () => {
+  // Original MAX_COMMAND_PER_SECOND／每秒指令上限：前四段已在同一 Session 連續操作，
+  // 進入門派段前跨過限速窗口，避免把真人可用功能誤判成指令不存在。
+  await new Promise(resolve => setTimeout(resolve, 2500));
   await command("goto /d/snow/school", "私塾");
   const schoolNpc = await command("look chen");
   assert.match(schoolNpc, /陳維俠|牙山居士/);
@@ -116,5 +132,24 @@ await runStage("school", async () => {
   const score = await command("score");
   assert.match(score, /龍圖丹派弟子|方士|alchemist/);
 });
+
+// Character Lifecycle／角色生命週期：同一 Full Journey 完成存檔、離線與新連線重登，
+// 第二次登入必須重新通過 Original 密碼驗證並回到遊戲世界。
+assert.match(await command("save"), /檔案儲存完畢/);
+const quitOffset = output.length;
+socket.send("quit\r\n");
+await waitForAfter(quitOffset, "歡迎下次再來");
+socket.close();
+await new Promise(resolve => setTimeout(resolve, 150));
+
+await connect();
+await waitForAfter(0, "您的使用者代號");
+await command("king", "請輸入密碼");
+await command(password, "目前權限: (admin)");
+await waitForAfter(0, "> ");
+assert.match(await command("look"), /私塾|客棧大堂|天神殿|無極之境/);
+await command("score");
+await command("inventory");
+console.log("E2E_LIFECYCLE_PASS:save-quit-relogin");
 
 socket.close();

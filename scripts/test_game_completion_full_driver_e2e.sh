@@ -104,8 +104,8 @@ ES2_E2E_KING_PASSWORD="$TEST_PASSWORD" \
 ES2_E2E_START_STAGE="$ES2_E2E_START_STAGE" \
 node "$REPO_ROOT/scripts/test_game_completion_full_driver_e2e.mjs" | tee "$JOURNEY_LOG"
 
-# Completion Proof／完成證據：五個 stage marker 必須全部存在才允許 Full Journey PASS。
-# 若使用局部重跑模式，只驗證本次 start stage 之後的 marker。
+# Completion Proof／完成證據：五個 stage marker 與角色生命週期 marker 必須全部存在，
+# 才能把單一 Driver Journey 標記為完整 PASS。
 case "$ES2_E2E_START_STAGE" in
   npc) required="npc items combat skills school" ;;
   items) required="items combat skills school" ;;
@@ -115,7 +115,14 @@ case "$ES2_E2E_START_STAGE" in
   *) echo "FULL DRIVER JOURNEY FAIL：未知 stage $ES2_E2E_START_STAGE" >&2; exit 1 ;;
 esac
 for stage in $required; do
-  grep -Fq "E2E_STAGE_PASS:$stage" "$JOURNEY_LOG" || { echo "FULL DRIVER JOURNEY FAIL：缺少 $stage Runtime PASS marker。" >&2; exit 1; }
+  grep -Fq "E2E_STAGE_PASS:$stage" "$JOURNEY_LOG" || {
+    echo "FULL DRIVER JOURNEY FAIL：缺少 $stage Runtime PASS marker。" >&2
+    exit 1
+  }
 done
+grep -Fq "E2E_LIFECYCLE_PASS:save-quit-relogin" "$JOURNEY_LOG" || {
+  echo "FULL DRIVER JOURNEY FAIL：缺少 save／quit／relogin Runtime PASS marker。" >&2
+  exit 1
+}
 
 echo "FULL DRIVER JOURNEY PASS（測試通過）：NPC、物品／裝備、戰鬥、技能、門派／拜師已由單一 Neolith Session 完成。"
