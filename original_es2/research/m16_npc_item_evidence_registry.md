@@ -43,3 +43,15 @@ M16 第一階段 GitHub Actions（GitHub 自動測試流程）已成功執行 Ru
 - 把梅影風模擬 HP／內力寫進 Original 登錄表；
 - 把猜測的 `/d/lengmei/npc/meiyingfeng` 等路徑標成 Original 已確認；
 - 把 ES2-KING Expansion 的設定誤標為 Original Runtime 證據。
+
+
+## Vovo2000 補強（2026-09-25）
+
+來源：`vovo2000_es2_character_historical_evidence.md`（Archived Source，topic 29232 graph 已 DEPTH EXHAUSTED）。
+
+- 冷梅莊：新增交叉支持梅影風、梅嵐武、楊子陵之師門／家族關係；梅嵐武為梅影風長子與接班人，歷史文字明示其冷梅劍法承自父親；楊子陵為冷梅派第一代弟子排行第四。
+- 封山派：補足柳東蘆→柳淳風／柳新雨／柳繪心人物鏈；柳東蘆為掌門與前武林盟主。
+- 其他可登錄人物：郭布、白齊、正閒、魯熙年、陳維俠、大觀和尚、駱易、魚鐵山、高慎、安懶道人、劉乙忘玄等。
+- 歷史指令線索：魯熙年資料明示 `enlist`；城隍爺資料明示死亡鬼魂需 `register` 才能進入輪迴流程。
+- 種族人物例：劉乙忘玄=厭火族；田由=形天族；黃天霸／韓夫人=夜叉族。
+- 以上提升的是人物、關係、裝備與命令「存在性」的歷史可信度；NPC LPC path、HP、技能數值、掉落率仍 UNKNOWN。
