@@ -38,3 +38,17 @@
 ## 4E 邊界
 
 本矩陣只決定「證據是否足以支持實作」，不代表功能已通過 Public Acceptance（公開裝置驗收）。任何 Runtime 修改仍需依專案 Gate 規則做對應的最小必要驗證；本階段本身不執行 Runtime、Regression Test（回歸測試）或 GitHub Actions（GitHub 自動測試流程）。
+
+
+## 第二階段：新增實機 Evidence → Runtime 對應
+
+| 領域 | 新 Evidence | 可用性 | Runtime 對應 | 下一個最小 Gate |
+|---|---|---|---|---|
+| 梅影風核心 Skills | `mei_yingfeng_skills_runtime_evidence.md` | IMPLEMENTABLE（名稱／ID／acquire 關係） | M15 冷梅資料、後續梅影風 NPC/skill reconstruction | 驗證五項 ID 與 `acquire seven from may`；未知前置條件不補造 |
+| 冷梅歷史內容 | `pixnet_clert2201_historical_gameplay_evidence.md` | PARTIAL_IMPLEMENTABLE | M15 Evidence/Data；Expansion 明鏡止水必須分層 | 只導入有直接證據欄位 |
+| Login／創角／初期操作 | `es2_actual_login_character_runtime_evidence_part1.md` | PARTIAL_IMPLEMENTABLE | WebTelnet compatibility + Full Driver expected behavior | 逐格補 Prompt/Command/Output 後再收斂 E2E matcher |
+| 寒梅心法命名 | Gameplay screenshot + PIXNET | IMPLEMENTABLE | Expansion `lengmei_d.c` compatibility naming | 正名為寒梅心法；舊冷梅心法僅 alias |
+
+### 重複文件整合規則
+
+M16/M22、M17/M21 等不同里程碑 Evidence 不刪除、不合併正文；Master Index 負責主題聚合。Plan/Result/Closure/Status-Historical 保留原路徑，Current 文件只引用，不複製其舊狀態。
