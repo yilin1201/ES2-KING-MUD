@@ -336,3 +336,8 @@ Board 資料應作為「時間化 Evidence」保存：它能證明某機制在�
 
 ---
 本檔是持續增量式 Evidence Registry。新的 PIXNET 深層回收結果應追加在本檔或拆成子 Registry，不能覆蓋舊 Evidence 而失去歷史來源。
+
+
+## 21. 梅影風實機 Skills 交叉證據
+
+另見 `mei_yingfeng_skills_runtime_evidence.md`。實際遊戲 Skills 截圖已將以下五項提升為 **Runtime Gameplay CONFIRMED**：寒梅心法（`hainmay force`）、傲梅暗劍訣（`advance_lunmay`）、冷梅劍法（`lunmay`）、梅影身法（`mayin`）、七巧如意手（`seven`）。其中寒梅心法與本 PIXNET 歷史資料形成雙重 Evidence。
