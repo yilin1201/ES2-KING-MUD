@@ -7,5 +7,7 @@ services:
     dockerfilePath: ./Dockerfile
     healthCheckPath: /health
     envVars:
+      - key: ES2_BUILD_SHA
+        value: game-completion-track
       - key: ES2_SAVE_DIR
         value: /var/lib/es2-king/data
