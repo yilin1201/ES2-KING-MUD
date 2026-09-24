@@ -52,3 +52,15 @@
 ### 重複文件整合規則
 
 M16/M22、M17/M21 等不同里程碑 Evidence 不刪除、不合併正文；Master Index 負責主題聚合。Plan/Result/Closure/Status-Historical 保留原路徑，Current 文件只引用，不複製其舊狀態。
+
+
+## Vovo2000 Evidence → Runtime 補強（2026-09-25）
+
+| 領域 | 新增 Evidence | 更新後可用範圍 | 仍不可補造 |
+|---|---|---|---|
+| NPC / Item | Vovo2000 ES2 人物資料鏡像 | 人物、門派／家族關係、已明示裝備、部分職業與種族 | NPC path、HP、技能數值、掉落 |
+| World / Lore | 主線、歷史、神話資料 | 雪亭鎮故事起點、神器／人物／十三精靈名稱與關係 | room tree、exits、spawn |
+| Lifecycle | 城隍爺／地府人物資料 | `register` 與死亡→陰間→輪迴之歷史概念 | command LPC、flags、cost、reincarnation formula |
+| Race examples | NPC 種族標記 | 厭火／形天／夜叉之歷史人物例 | initializer、業力、能力公式 |
+
+Vovo2000 為 Archived Source：可補「內容存在性與關係」，不可單獨把欄位升級成 `CONFIRMED_RUNTIME`。
