@@ -99,6 +99,7 @@ ES2_TEST_PORT="$WEB_PORT" node -e '
 
 ES2_E2E_WS_URL="ws://127.0.0.1:$WEB_PORT/mud" \
 ES2_E2E_KING_PASSWORD="$TEST_PASSWORD" \
+ES2_E2E_START_STAGE="${ES2_E2E_START_STAGE:-npc}" \
 node "$REPO_ROOT/scripts/test_game_completion_full_driver_e2e.mjs"
 
 echo "FULL DRIVER JOURNEY PASS（測試通過）：NPC、物品／裝備、戰鬥、技能、門派／拜師已由單一 Neolith Session 完成。"
