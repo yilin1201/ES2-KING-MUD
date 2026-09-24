@@ -8,18 +8,97 @@
     "role_zh_tw": "冷梅莊莊主、門派掌門、武者師父",
     "class_route": "fighter.lunmay",
     "class_route_note_zh_tw": "歷史攻略所記錄的冷梅莊武者職業路線。",
-    "location_note_zh_tw": "歷史攻略記錄為水嵐武陵客棧北方一帶的冷梅莊路線；尚未取得可確認的 Original NPC LPC path。"
+    "location_note_zh_tw": "歷史攻略記錄為水嵐武陵客棧北方一帶的冷梅莊路線；尚未取得可確認的 Original NPC LPC path。",
+    "family_and_school_evidence_zh_tw": [
+      "梅嵐武：梅影風長子、冷梅莊接班人；Archived Source 明示冷梅劍法承自其父。",
+      "楊子陵：冷梅派第一代弟子排行第四；由梅影風收養。"
+    ]
   },
   "confirmed_martial_arts": [
-    {"name_zh_tw": "冷梅劍法", "note_zh_tw": "冷梅莊核心劍法。"},
-    {"name_zh_tw": "傲梅暗劍訣", "note_zh_tw": "歷史實戰紀錄可見其殺招。"},
-    {"name_zh_tw": "梅影身法", "note_zh_tw": "歷史冷梅劍士進階條件之一。"},
-    {"name_zh_tw": "七巧如意手", "note_zh_tw": "只確認技能存在，不補造招式效果。"},
-    {"name_zh_tw": "寒梅心法", "note_zh_tw": "冷梅莊內功／心法體系。"}
+    {
+      "name_zh_tw": "冷梅劍法",
+      "note_zh_tw": "冷梅莊核心劍法。"
+    },
+    {
+      "name_zh_tw": "傲梅暗劍訣",
+      "note_zh_tw": "歷史實戰紀錄可見其殺招。"
+    },
+    {
+      "name_zh_tw": "梅影身法",
+      "note_zh_tw": "歷史冷梅劍士進階條件之一。"
+    },
+    {
+      "name_zh_tw": "七巧如意手",
+      "note_zh_tw": "只確認技能存在，不補造招式效果。"
+    },
+    {
+      "name_zh_tw": "寒梅心法",
+      "note_zh_tw": "冷梅莊內功／心法體系。"
+    }
   ],
-  "confirmed_equipment": ["銀霜鎧", "奔雲靴", "梅花白襖", "流雲清玉帶", "白玉戒指", "寒霜劍", "冰雪匕"],
-  "confirmed_ao_mei_moves": ["雪蛇弄梅", "梅厲風行", "暗劍難防", "愛霜恨雪"],
-  "story_links_zh_tw": ["梅夫人尋藥／九轉冰心丹／寒梅玉珮", "魚鐵山刺殺柳東蘆消息線", "劉乙忘玄相關武林事件"],
-  "unknown_original_fields": ["npc_lpc_path", "hp", "skill_levels", "attributes", "complete_set_skill", "complete_map_skill"],
-  "separation_rule_zh_tw": "明鏡止水・極意覺醒等後期擴充不得寫回 Original ES2；若採用只能存在 ES2-KING Expansion 層。"
+  "confirmed_equipment": [
+    "銀霜鎧",
+    "奔雲靴",
+    "梅花白襖",
+    "流雲清玉帶",
+    "白玉戒指",
+    "寒霜劍",
+    "冰雪匕"
+  ],
+  "confirmed_ao_mei_moves": [
+    "雪蛇弄梅",
+    "梅厲風行",
+    "暗劍難防",
+    "愛霜恨雪"
+  ],
+  "story_links_zh_tw": [
+    "梅夫人尋藥／九轉冰心丹／寒梅玉珮",
+    "魚鐵山刺殺柳東蘆消息線",
+    "劉乙忘玄相關武林事件"
+  ],
+  "unknown_original_fields": [
+    "npc_lpc_path",
+    "hp",
+    "skill_levels",
+    "attributes",
+    "complete_set_skill",
+    "complete_map_skill"
+  ],
+  "separation_rule_zh_tw": "明鏡止水・極意覺醒等後期擴充不得寫回 Original ES2；若採用只能存在 ES2-KING Expansion 層。",
+  "additional_archived_sources": [
+    "original_es2/research/pixnet_clert2201_historical_gameplay_evidence.md",
+    "original_es2/research/vovo2000_es2_character_historical_evidence.md",
+    "original_es2/research/mei_yingfeng_skills_runtime_evidence.md"
+  ],
+  "confirmed_skill_ids": [
+    {
+      "name_zh_tw": "寒梅心法",
+      "skill_id": "hainmay force",
+      "level_in_gameplay_evidence": 200
+    },
+    {
+      "name_zh_tw": "傲梅暗劍訣",
+      "skill_id": "advance_lunmay",
+      "level_in_gameplay_evidence": 200
+    },
+    {
+      "name_zh_tw": "冷梅劍法",
+      "skill_id": "lunmay",
+      "level_in_gameplay_evidence": 195
+    },
+    {
+      "name_zh_tw": "梅影身法",
+      "skill_id": "mayin",
+      "level_in_gameplay_evidence": 195
+    },
+    {
+      "name_zh_tw": "七巧如意手",
+      "skill_id": "seven",
+      "level_in_gameplay_evidence": 186
+    }
+  ],
+  "confirmed_commands": [
+    "acquire seven from may"
+  ],
+  "evidence_boundary_zh_tw": "Vovo2000 補足人物關係／裝備／世界史；實機 Skills 截圖補足五項 skill ID 與當時畫面等級。NPC LPC path、屬性、完整技能配置仍不得猜測。"
 }
