@@ -108,7 +108,6 @@ node "$REPO_ROOT/scripts/test_game_completion_full_driver_e2e.mjs" | tee "$JOURN
 
 # Completion Proof／完成證據：五個 stage marker 必須全部存在才允許 Full Journey PASS。
 # 若使用局部重跑模式，只驗證本次 start stage 之後的 marker。
-for stage in "${stages[@]:-}"; do :; done 2>/dev/null || true
 case "$ES2_E2E_START_STAGE" in
   npc) required="npc items combat skills school" ;;
   items) required="items combat skills school" ;;
