@@ -50,3 +50,8 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 ## 4E Runtime 可用性
 
 已建立 `EVIDENCE_RUNTIME_USABILITY_MATRIX.md`，把 Evidence 分成 `IMPLEMENTABLE`、`PARTIAL_IMPLEMENTABLE`、`REFERENCE_ONLY`、`SOURCE_REQUIRED`、`CONFLICT_BLOCKED`。此分類只代表證據是否足以支持安全重建，不等同 Runtime/Public PASS。
+
+
+## PIXNET Historical Gameplay Evidence
+
+- `pixnet_clert2201_historical_gameplay_evidence.md` — 「紅塵偶遇／緒方殘炎」東方故事2歷史實機、攻略、武學、NPC、任務、物品、地圖、Rank、Books、天賦與 Board 更新證據。狀態：IN PROGRESS；未達 DEPTH EXHAUSTED。
