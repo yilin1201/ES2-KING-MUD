@@ -68,3 +68,5 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 | `es2_actual_login_character_runtime_evidence_part1.md` | Login／創角／初期操作錄影 | Actual Gameplay Video | PARTIAL CONFIRMED / 持續逐格 |
 
 以上屬 Historical Gameplay Evidence，不與 Original LPC Source 混級；但可用於校正 Reconstruction 與 Full Driver expected behavior。
+
+- `vovo2000_es2_character_historical_evidence.md` — Vovo2000 VOA ACT #7 ES2 人物資料鏡像與投稿連結圖；三頁主串及可達 ES2 子頁已逐層確認。包含 NPC/職業/門派/裝備、冷梅莊、封山派、陰間 Lifecycle、種族顯示、主線/歷史/神話。狀態：**DEPTH EXHAUSTED（以 topic 29232 可達 ES2 graph 為邊界）**。
