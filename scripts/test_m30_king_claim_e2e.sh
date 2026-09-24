@@ -12,6 +12,7 @@ CLAIM_TRANSPORT="es2claim1:$(printf '%s' "$CLAIM_TOKEN" | od -An -tx1 -v | tr -d
 WRONG_TOKEN="?$(openssl rand -base64 48 | tr -d '\n')"
 KING_PASSWORD="$(openssl rand -hex 16)"
 PLAYER_PASSWORD="$(openssl rand -hex 16)"
+GAME_COMPLETION_FIXTURE_DIR="${ES2_GAME_COMPLETION_FIXTURE_DIR:-}"
 SOURCE_HASH_BEFORE="$(sha256sum "$SOURCE_RUNTIME/mudlib/adm/daemons/logind.c" | cut -d' ' -f1)"
 driver_pid=""
 bridge_pid=""
@@ -95,6 +96,23 @@ ES2_E2E_WRONG_TOKEN="$WRONG_TOKEN" \
 ES2_E2E_KING_PASSWORD="$KING_PASSWORD" \
 ES2_E2E_PLAYER_PASSWORD="$PLAYER_PASSWORD" \
 node "$REPO_ROOT/scripts/test_m30_king_claim_e2e.mjs"
+
+# Game Completion Fixture／遊戲完成測試角色：只在本機明確指定輸出目錄時，
+# 從「真正完成 save / quit / relogin 的 Runtime」複製 KING save_object 結果。
+# Login save 可能含 Original password hash，因此不提交 Repository；fixture 只供同一台開發機後續 Full Journey 使用。
+if [[ -n "$GAME_COMPLETION_FIXTURE_DIR" ]]; then
+  case "$GAME_COMPLETION_FIXTURE_DIR" in
+    "$REPO_ROOT"/.runtime/*|.runtime/*) ;;
+    *) echo "M30 KING CLAIM FAIL：Game Completion fixture 只允許 .runtime 測試路徑。" >&2; exit 1 ;;
+  esac
+  rm -rf -- "$GAME_COMPLETION_FIXTURE_DIR"
+  mkdir -p "$GAME_COMPLETION_FIXTURE_DIR/login" "$GAME_COMPLETION_FIXTURE_DIR/user"
+  cp "$TEMP_ROOT/mudlib/data/login/k/king.o" "$GAME_COMPLETION_FIXTURE_DIR/login/king.o"
+  cp "$TEMP_ROOT/mudlib/data/user/k/king.o" "$GAME_COMPLETION_FIXTURE_DIR/user/king.o"
+  chmod 600 "$GAME_COMPLETION_FIXTURE_DIR/login/king.o" "$GAME_COMPLETION_FIXTURE_DIR/user/king.o"
+  printf '%s\n' 'LOCAL ONLY：由 M30 real Runtime 產生；可能含 Original password hash，禁止 commit。' > "$GAME_COMPLETION_FIXTURE_DIR/README.LOCAL_ONLY"
+  echo "GAME COMPLETION FIXTURE READY：已由 real Runtime 產生本機 KING fixture。"
+fi
 
 # Secret Exposure Check（秘密洩漏檢查）：只判斷是否存在，不把秘密值印到報告。
 if grep -R -Fq -- "$CLAIM_TOKEN" "$TEMP_ROOT/mudlib/log" "$TEMP_ROOT/driver.stdout" "$TEMP_ROOT/bridge.stdout" \
