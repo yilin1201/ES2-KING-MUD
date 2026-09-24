@@ -5,7 +5,7 @@ set -euo pipefail
 # 目的：讓 Game Completion Track 的 Runtime 測試不再依賴 Public WebTelnet 創角。
 # 邊界：只允許明確指定的測試資料目錄；不修改 Original source，也不接受正式 ES2_SAVE_DIR。
 TARGET="${1:-.runtime/game-completion-data}"
-FIXTURE="${2:-tests/fixtures/game_completion/king}"
+FIXTURE="${2:-.runtime/game-completion-fixture/king}"
 
 case "$TARGET" in
   .runtime/game-completion-data|.runtime/game-completion-data/*) ;;
