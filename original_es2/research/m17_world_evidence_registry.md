@@ -37,3 +37,10 @@
 3. **Class Guild Room（職業公會房）**：連接 Class Engine 與 School NPC。
 
 此分類由外部 Source 直接觀察得到，先列 `CORROBORATED_RUNTIME_CANDIDATE`；不代表所有目標 Original 地圖都已回收。
+
+
+## Vovo2000 世界觀補強（2026-09-25）
+
+Archived Source 現已直接支持：雪亭鎮是故事起點；世界主線涉及嵐城、旋芒寶劍、穿靈寶劍、寒於寶衣、侮天鬼與杞庸／金烏。並保存寒於氏十三精靈：金烏、銀蟾、大鵬、天龍、澤獸、鳳凰、赤魈、青蛛、濁魚、旱魃、穹氤、域摩、區冥，以及「六神、四鬼、三靈」分類。
+
+因此「雪亭鎮」由僅舊模擬名稱提升為 `CONFIRMED_TEXT` 的歷史世界名稱／故事起點；但房間 path、出口、NPC clone、出生點仍 UNKNOWN，不因此建立猜測地圖。
