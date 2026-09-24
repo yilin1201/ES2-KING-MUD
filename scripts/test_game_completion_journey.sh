@@ -29,9 +29,15 @@ for gate in \
   test_m27_wuji_realm_runtime_gate.sh \
   test_m28_martial_runtime_gate.sh \
   test_m29_canon_runtime_gate.sh \
-  test_m30_alpha_runtime_gate.sh
+  test_m30_alpha_runtime_gate.sh \
+  test_game_completion_quest_evidence.sh
 do
-  bash "$REPO_ROOT/scripts/$gate" "$SOURCE_RUNTIME/mudlib"
+  if [[ "$gate" == "test_game_completion_quest_evidence.sh" ]]; then
+    # Quest 是 Evidence gap，不得阻塞其餘可驗證 gameplay；狀態保留 BLOCKED/UNKNOWN。
+    bash "$REPO_ROOT/scripts/$gate" "$SOURCE_RUNTIME/mudlib" || [[ $? -eq 2 ]]
+  else
+    bash "$REPO_ROOT/scripts/$gate" "$SOURCE_RUNTIME/mudlib"
+  fi
 done
 
 echo "GAME COMPLETION JOURNEY READY：real Runtime Test Character 與 M21-M30 gameplay gates 已就緒；下一步執行單一 Driver Journey。"
