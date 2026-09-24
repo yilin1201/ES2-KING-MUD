@@ -16,7 +16,7 @@ private string *mingjing_moves = ({
 
 private void create() { seteuid(getuid()); }
 
-string force_name() { return "冷梅心法"; }
+// Historical Runtime Evidence／歷史實機證據：梅影風 Skills 顯示「寒梅心法 (hainmay force)」。\nstring force_name() { return "寒梅心法"; }\n// Compatibility Alias／相容別名：保留早期 ES2-KING「冷梅心法」稱呼，不改寫 Original Evidence。\nstring force_compatibility_alias() { return "冷梅心法"; }\nstring force_skill_id() { return "hainmay force"; }
 string sword_name() { return "冷梅劍法"; }
 string state_name() { return "明鏡止水"; }
 
