@@ -8,6 +8,7 @@ assert.ok(url && password);
 const stages = ["npc", "items", "combat", "skills", "school"];
 assert.ok(stages.includes(startStage));
 const shouldRun = stage => stages.indexOf(stage) >= stages.indexOf(startStage);
+const pass = stage => console.log(`E2E_STAGE_PASS:${stage}`);
 
 const socket = new WebSocket(url);
 let output = "";
@@ -51,7 +52,7 @@ if (shouldRun("npc")) {
   assert.match(npcLook, /店小二|list 看可以點什麼菜/);
   const npcList = await command("list");
   assert.match(npcList, /店小二|價錢|包子|饅頭|雞/);
-  console.log("NPC PASS（測試通過）");
+  pass("npc");
 }
 
 // Items / Equipment／物品與裝備：取得 Original 木劍、裝備後由 inventory 確認。
@@ -63,7 +64,7 @@ if (shouldRun("items")) {
   assert.match(wield, /裝備(?:一把)?木劍作武器/);
   const inventory = await command("inventory");
   assert.match(inventory, /木劍/);
-  console.log("ITEMS EQUIPMENT PASS（測試通過）");
+  pass("items");
 }
 
 // Combat／戰鬥：在可戰鬥房間向 Original NPC 發動真實 kill，等待攻防輸出後由巫師 halt 安全停止。
@@ -76,7 +77,7 @@ if (shouldRun("combat")) {
   // KING 的 halt 名稱會解析到管理員關機指令；測試以離開戰鬥房間安全結束隔離戰鬥，
   // 避免關閉 Driver，也不更動 Original command precedence（指令優先順序）。
   await command("goto /d/snow/inn_hall", "客棧大堂");
-  console.log("COMBAT PASS（測試通過）");
+  pass("combat");
 }
 
 // Skills／技能：既有 KING fixture 的 Expansion 武學進度必須由真正 Runtime 指令讀取，
@@ -86,7 +87,7 @@ if (shouldRun("skills")) {
   assert.match(martial, /易筋經 Lv\.300／黑級無極境/);
   const skills = await command("skills");
   assert.match(skills, /技能狀態|目前並沒有學會任何技能/);
-  console.log("SKILLS PASS（測試通過）");
+  pass("skills");
 }
 
 // School / Apprentice／門派與拜師：進入 Original 私塾，實際觸發陳維俠收徒對話並再次拜師完成關係。
@@ -104,7 +105,7 @@ if (shouldRun("school")) {
   assert.doesNotMatch(apprentice, /似乎沒有收你為徒的打算|什麼\?\?/);
   const score = await command("score");
   assert.match(score, /龍圖丹派弟子|方士|alchemist/);
-  console.log("SCHOOL APPRENTICE PASS（測試通過）");
+  pass("school");
 }
 
 socket.close();
