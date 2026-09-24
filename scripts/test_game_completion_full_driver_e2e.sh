@@ -97,8 +97,6 @@ ES2_TEST_PORT="$WEB_PORT" node -e '
   probe();
 '
 
-ES2_E2E_WS_URL="ws://127.0.0.1:$WEB_PORT/mud" \
-ES2_E2E_KING_PASSWORD="$TEST_PASSWORD" \
 JOURNEY_LOG="$TEMP_ROOT/full-driver-journey.log"
 ES2_E2E_START_STAGE="${ES2_E2E_START_STAGE:-npc}"
 ES2_E2E_WS_URL="ws://127.0.0.1:$WEB_PORT/mud" \
