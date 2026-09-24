@@ -34,9 +34,9 @@ for gate in \
 do
   if [[ "$gate" == "test_game_completion_quest_evidence.sh" ]]; then
     # Quest 是 Evidence gap，不得阻塞其餘可驗證 gameplay；狀態保留 BLOCKED/UNKNOWN。
-    bash "$REPO_ROOT/scripts/$gate" "$SOURCE_RUNTIME/mudlib" || [[ $? -eq 2 ]]
+    bash "$REPO_ROOT/scripts/$gate" "$SOURCE_RUNTIME" || [[ $? -eq 2 ]]
   else
-    bash "$REPO_ROOT/scripts/$gate" "$SOURCE_RUNTIME/mudlib"
+    bash "$REPO_ROOT/scripts/$gate" "$SOURCE_RUNTIME"
   fi
 done
 

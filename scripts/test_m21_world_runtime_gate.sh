@@ -9,9 +9,15 @@ test -d "$SNOW" || { echo "M21 RUNTIME FAIL：缺少保存區域 $SNOW"; exit 1;
 
 # 目前公開上游只確認 snow；若上游增加區域，先要求人工考證而不是靜默改寫基線。
 mapfile -t areas < <(find "$WORLD" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)
-[[ "${#areas[@]}" -eq 1 && "${areas[0]}" == "snow" ]] || {
-  echo "M21 RUNTIME FAIL：上游區域清單已改變，需重新考證：${areas[*]}"; exit 1;
+# Expansion Isolation／擴充隔離：Game Completion 的整合 Runtime 可包含已驗證的 M27 king Overlay，
+# 但 Original 區域基線仍只能是 snow；任何其他目錄都必須重新考證。
+mapfile -t original_areas < <(printf '%s\n' "${areas[@]}" | grep -vx 'king')
+[[ "${#original_areas[@]}" -eq 1 && "${original_areas[0]}" == "snow" ]] || {
+  echo "M21 RUNTIME FAIL：Original 區域清單已改變，需重新考證：${original_areas[*]}"; exit 1;
 }
+if [[ " ${areas[*]} " == *" king "* ]]; then
+  test -f "$WORLD/king/wuji_realm.c" || { echo "M21 RUNTIME FAIL：king Overlay 缺少 M27 無極之境證據。"; exit 1; }
+fi
 
 all_c="$(find "$SNOW" -type f -name '*.c' | wc -l | tr -d ' ')"
 root_c="$(find "$SNOW" -maxdepth 1 -type f -name '*.c' | wc -l | tr -d ' ')"
@@ -29,4 +35,4 @@ grep -Fq '"east" : __DIR__"square_w"' "$SNOW/inn_hall.c"
 grep -Fq '"east" : __DIR__"square"' "$SNOW/square_w.c"
 grep -Fq 'inherit TEMPLE' "$SNOW/small_temple.c"
 
-echo "M21 WORLD RUNTIME PASS／Original 保存區域=${areas[*]}，房間候選=$root_c，全內容程式=$all_c。"
+echo "M21 WORLD RUNTIME PASS／Original 保存區域=${original_areas[*]}，房間候選=$root_c，全內容程式=$all_c；已知 Expansion 區域保持隔離。"

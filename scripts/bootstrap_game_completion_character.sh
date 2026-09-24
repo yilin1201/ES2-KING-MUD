@@ -6,9 +6,11 @@ set -euo pipefail
 # 邊界：只允許明確指定的測試資料目錄；不修改 Original source，也不接受正式 ES2_SAVE_DIR。
 TARGET="${1:-.runtime/game-completion-data}"
 FIXTURE="${2:-.runtime/game-completion-fixture/king}"
+REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 
 case "$TARGET" in
-  .runtime/game-completion-data|.runtime/game-completion-data/*) ;;
+  .runtime/game-completion-data|.runtime/game-completion-data/*|\
+  "$REPO_ROOT"/.runtime/game-completion-data|"$REPO_ROOT"/.runtime/game-completion-data/*) ;;
   *) echo "GAME COMPLETION BOOTSTRAP FAIL：只允許 .runtime/game-completion-data 測試路徑。" >&2; exit 1 ;;
 esac
 

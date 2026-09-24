@@ -183,7 +183,9 @@ await new Promise(resolve => setTimeout(resolve, 300));
 for (const command of ["score", "inventory"]) {
   const offset = owner.output().length;
   owner.send(command + "\r\n");
-  await owner.waitForAfter(offset, "\n> ", 10000);
+  // Command Prompt／命令提示：Public／本機 Driver 可能以 LF、CR 或無前置換行回傳；
+  // offset 已限定為本次指令後的新輸出，因此只鎖定穩定的「> 」本體。
+  await owner.waitForAfter(offset, "> ", 10000);
 }
 
 // Movement Gate／移動可玩化閘門：不硬編起始房間出口名稱，先以 Original look 的「明顯的出口」讀出第一個出口。
@@ -191,15 +193,15 @@ for (const command of ["score", "inventory"]) {
 {
   const lookOffset = owner.output().length;
   owner.send("look\r\n");
-  await owner.waitForAfter(lookOffset, "\n> ", 10000);
+  await owner.waitForAfter(lookOffset, "> ", 10000);
   const lookText = owner.output().slice(lookOffset);
-  const exitMatch = lookText.match(/明顯的出口(?:有|是)?[^：:]*[：:]?\\s*([^。\\n]+)/);
+  const exitMatch = lookText.match(/(?:這裡)?(?:唯一的|明顯的)出口(?:有|是)?\s*([^。\n]+)/);
   assert.ok(exitMatch, "Movement Runtime 必須從起始房間取得至少一個出口；沒有出口不能算可玩 PASS");
-  const firstExit = exitMatch[1].trim().split(/[、,，\\s]+/)[0].replace(/[。；;].*$/, "");
+  const firstExit = exitMatch[1].trim().split(/(?:[、,，\s]+|和)/)[0].replace(/[。；;].*$/, "");
   assert.ok(firstExit, "Movement Runtime 必須解析出可執行的第一個出口");
   const moveOffset = owner.output().length;
   owner.send(firstExit + "\r\n");
-  await owner.waitForAfter(moveOffset, "\n> ", 10000);
+  await owner.waitForAfter(moveOffset, "> ", 10000);
   const moveText = owner.output().slice(moveOffset);
   assert.ok(moveText.length > 0, "Movement Runtime 必須回傳世界輸出");
   assert.equal(/沒有這個方向|你不能往那|無法往/.test(moveText), false, "Movement Runtime 不得以失敗方向回到提示");

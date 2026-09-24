@@ -44,6 +44,10 @@ test -x "$DRIVER_BIN"
 mkdir -p "$TEMP_ROOT"
 cp -a "$SOURCE_RUNTIME/mudlib" "$TEMP_ROOT/mudlib"
 cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
+# Driver Contract Evidence／Driver 契約證據：Final Runtime Assertion 需要核對
+# Neolith 的 CR/LF 處理；只複製唯讀來源證據，不複製或重建整套 Driver。
+mkdir -p "$TEMP_ROOT/neolith/src"
+cp "$SOURCE_RUNTIME/neolith/src/comm.c" "$TEMP_ROOT/neolith/src/comm.c"
 mkdir -p "$TEMP_ROOT/mudlib/data/login/k" "$TEMP_ROOT/mudlib/data/user/k" "$TEMP_ROOT/mudlib/log"
 bash "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
 bash "$REPO_ROOT/scripts/assert_m30_final_runtime.sh" "$TEMP_ROOT"
