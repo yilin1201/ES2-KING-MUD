@@ -18,7 +18,7 @@
 | Combat | LOCAL PASS | M23 core gameplay gate |
 | Skills / Study / Force | LOCAL PASS | M12/M13/M23 gates |
 | School / Apprentice | LOCAL PASS | M11/M14/M23 gates |
-| Quest | BLOCKED | 已證實 Runtime interface；完整歷史任務鏈 Evidence 仍 UNKNOWN，不可自行補成 Original Canon |
+| Quest | BLOCKED | Pinned Original tree 僅找到 `docs/legacy/wiz/quest`；沒有足夠玩家 Quest Runtime Evidence，維持 UNKNOWN，不自行補成 Canon |
 | Character lifecycle | LOCAL PASS | M19/M24 gates |
 | save / quit / relogin | LOCAL PASS | M25/M30 Owner E2E 歷史證據 |
 | KING Authorization | LOCAL PASS | M26 + Owner isolation E2E 歷史證據 |
