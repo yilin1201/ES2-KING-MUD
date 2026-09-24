@@ -40,3 +40,13 @@
 ## 4B 原則
 
 以上衝突全部保留原始證據，不修改來源正文。C-001～C-003 可安全以「版本／歷史衝突」形式並存；C-004 已由 Owner 確認並完成欄位校正；C-001～C-003 仍以版本／歷史衝突並存，C-005 維持 SOURCE-PENDING。
+
+
+## C-006 寒梅心法 vs 冷梅心法
+
+- PIXNET Historical Gameplay Evidence：記載「寒梅心法」。
+- 梅影風實際 Skills 畫面：`寒梅心法 (hainmay force)`，Runtime Gameplay CONFIRMED。
+- ES2-KING 先前 Project Canon／`lengmei_d.c`：使用「冷梅心法」。
+- 判定：**HISTORICAL NAME CONFIRMED / PROJECT NAMING CONFLICT**。
+- 處理：Original/Historical 層以「寒梅心法」保存；後續 Expansion Runtime 應正名，若需要相容則「冷梅心法」僅作 compatibility alias。
+- 狀態：OPEN — 等 Runtime 名稱校正與相關測試同步後 RESOLVED。
