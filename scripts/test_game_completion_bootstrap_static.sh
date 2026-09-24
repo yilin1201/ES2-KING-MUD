@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT="scripts/bootstrap_game_completion_character.sh"
 test -f "$SCRIPT"
 grep -Fq '.runtime/game-completion-data' "$SCRIPT"
-grep -Fq 'tests/fixtures/game_completion/king' "$SCRIPT"
+grep -Fq '.runtime/game-completion-fixture/king' "$SCRIPT"
 grep -Fq '不得猜測 Original ES2 save_object 格式' "$SCRIPT"
 grep -Fq 'ES2_KING_CLAIM_TOKEN' "$SCRIPT"
 grep -Fq 'es2claim1:' "$SCRIPT"
