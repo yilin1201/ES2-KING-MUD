@@ -55,3 +55,5 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 ## PIXNET Historical Gameplay Evidence
 
 - `pixnet_clert2201_historical_gameplay_evidence.md` — 「紅塵偶遇／緒方殘炎」東方故事2歷史實機、攻略、武學、NPC、任務、物品、地圖、Rank、Books、天賦與 Board 更新證據。狀態：IN PROGRESS；未達 DEPTH EXHAUSTED。
+
+- `mei_yingfeng_skills_runtime_evidence.md` — 梅影風實際 Skills 畫面：寒梅心法、傲梅暗劍訣、冷梅劍法、梅影身法、七巧如意手五項 Runtime CONFIRMED。
