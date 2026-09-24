@@ -49,4 +49,4 @@
 - ES2-KING 先前 Project Canon／`lengmei_d.c`：使用「冷梅心法」。
 - 判定：**HISTORICAL NAME CONFIRMED / PROJECT NAMING CONFLICT**。
 - 處理：Original/Historical 層以「寒梅心法」保存；後續 Expansion Runtime 應正名，若需要相容則「冷梅心法」僅作 compatibility alias。
-- 狀態：OPEN — 等 Runtime 名稱校正與相關測試同步後 RESOLVED。
+- 狀態：PARTIALLY RESOLVED — Expansion `lengmei_d.c` 已正名為「寒梅心法」，並保留「冷梅心法」compatibility alias；尚待可用 Neolith Runtime 的最小驗證後關閉。
