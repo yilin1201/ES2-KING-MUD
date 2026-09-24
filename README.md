@@ -62,3 +62,5 @@ ES2-KING-MUD/
 6. `docs/SOURCES.md` — 資料來源與證據制度。
 
 舊 M30 Audit／Playable／Deployment 文件屬歷史驗收紀錄；目前狀態以 `CURRENT_M30_STATUS.md` 為準，避免因讀到舊文件而重複測試已完成項目。
+
+7. `docs/REPOSITORY_MASTER_CLASSIFICATION_ZH_TW.md` — **Owner 主分類總表**；用五層模型快速定位 Current、Original Evidence、Reconstruction、Expansion、Engineering。
