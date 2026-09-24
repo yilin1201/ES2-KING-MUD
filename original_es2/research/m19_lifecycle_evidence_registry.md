@@ -28,3 +28,10 @@
 - 寺廟復活是否另有費用、冷卻或前置條件。
 
 以上內容在取得完整 Original Runtime 證據前不得補造，也不得由 ES2-KING Expansion（擴充內容）反推。
+
+
+## Vovo2000 歷史 Lifecycle 補強（2026-09-25）
+
+Archived Source 的城隍爺人物資料明確描述：陽間人物死亡成為鬼魂後，需向城隍爺執行 `register` 才能繼續往生／輪迴，否則成為孤魂野鬼；另有地府鬼卒與鬼城地氣塔守將左國益的歷史人物資料。
+
+這使「死亡→鬼魂→陰間→城隍爺／register→輪迴」提升為 `CONFIRMED_TEXT` 的歷史流程概念，補足現有 Runtime 只確認到鬼魂／寺廟復活入口的缺口。但 `register` LPC、城隍爺 path、移動位置、旗標、費用、輪迴公式與永久效果仍為 `SOURCE_REQUIRED`，不得用文字描述反推實作。
