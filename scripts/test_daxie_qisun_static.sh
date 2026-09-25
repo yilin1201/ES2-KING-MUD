@@ -19,6 +19,10 @@ for form in sunpi sunrou sunjin sungu sunmai sunqi qisun; do
   grep -Fq "\"$form\"" "$ROOT/daemon/skill/daxie_qisun_blade.c"
 done
 grep -Fq 'target->receive_damage' "$ROOT/daemon/skill/daxie_qisun_blade.c"
+grep -Fq 'target->add_temp("apply/armor", -balance_penalty)' "$ROOT/daemon/skill/daxie_qisun_blade.c"
+grep -Fq 'target->consume_stat("sen", damage, actor)' "$ROOT/daemon/skill/daxie_qisun_blade.c"
+grep -Fq 'target->consume_stat("gin", damage, actor)' "$ROOT/daemon/skill/daxie_qisun_blade.c"
+grep -Fq 'es2_king/daxie_qisun/block_perform' "$ROOT/cmds/std/perform.c"
 grep -Fq 'actor->set_skill("kuxiao force", level)' "$ROOT/adm/daemons/kingmartiald.c"
 grep -Fq 'actor->set_skill("daxie qisun blade", level)' "$ROOT/adm/daemons/kingmartiald.c"
 grep -Fq 'Expansion Overlay' "$ROOT/cmds/std/perform.c"

@@ -30,6 +30,8 @@ int main(object me, string arg)
     string act, martial_skill, target_id, trg;
 
     if (me->is_busy()) return notify_fail("你現在沒有空﹗\n");
+    if (me->query_temp("es2_king/daxie_qisun/block_perform"))
+        return notify_fail("大邪絕息斬封住了你的氣海，暫時無法施展絕招。\n");
     if (!arg) return notify_fail("指令格式﹕perform <技能:絕招> [on <目標>]\n");
 
     // Canon Short Form／正式短指令：perform sunpi 或 perform sunpi on target。

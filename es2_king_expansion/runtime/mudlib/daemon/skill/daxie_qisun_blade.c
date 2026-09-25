@@ -12,6 +12,10 @@ private mapping balance_damage = ([
     "sungu" : 5, "sunmai" : 6, "sunqi" : 7, "qisun" : 12,
 ]);
 
+// 每層 -1 與額外精／神消耗同屬 Expansion Gameplay Balance Parameter；
+// 它們讓 Canon 效果可在既有 Combat Runtime 生效，但不宣稱為 Original 數值。
+private int balance_penalty = 1;
+
 private mapping aliases = ([
     "leiting" : "sunpi", "aotianmo" : "sunrou", "tougu" : "sunjin",
     "xiaoku" : "sungu", "wuchang" : "sunmai", "juexi" : "sunqi",
@@ -82,7 +86,7 @@ private int activate_jinshen(object actor)
     return 1;
 }
 
-private void add_qisun_state(object target, string form)
+private void add_qisun_state(object actor, object target, string form, int damage)
 {
     string path;
 
@@ -90,6 +94,27 @@ private void add_qisun_state(object target, string form)
     if (!target->query_temp(path)) {
         target->set_temp(path, 1);
         target->add_temp("es2_king/daxie_qisun/stacks", 1);
+        switch (form) {
+        case "sunpi":
+            target->add_temp("apply/armor", -balance_penalty);
+            break;
+        case "sunrou":
+            target->add_temp("apply/move", -balance_penalty);
+            break;
+        case "sunjin":
+            target->start_busy(2);
+            break;
+        case "sungu":
+            target->add_temp("apply/defense", -balance_penalty);
+            break;
+        case "sunmai":
+            target->consume_stat("sen", damage, actor);
+            break;
+        case "sunqi":
+            target->consume_stat("gin", damage, actor);
+            target->set_temp("es2_king/daxie_qisun/block_perform", 1);
+            break;
+        }
     }
 }
 
@@ -103,6 +128,10 @@ private int explode_qisun(object actor, object target)
 
     damage = balance_damage["qisun"] + stacks;
     target->receive_damage(damage, actor, actor);
+    // 引爆時解除本套七損施加的暫時 Combat modifier，不碰目標原有加成。
+    target->add_temp("apply/armor", balance_penalty);
+    target->add_temp("apply/move", balance_penalty);
+    target->add_temp("apply/defense", balance_penalty);
     target->delete_temp("es2_king/daxie_qisun");
 
     // 15% 自損出自已定稿 Expansion 設計；只消耗既有 kee，不改寫 Original 公式。
@@ -136,11 +165,8 @@ int perform_action(object actor, string form, object target)
 
     damage = balance_damage[form];
     target->receive_damage(damage, actor, actor);
-    add_qisun_state(target, form);
+    add_qisun_state(actor, target, form, damage);
     stacks = target->query_temp("es2_king/daxie_qisun/stacks");
-
-    // 寒霜透骨的 2 回合 Busy 屬已定稿 Expansion 設計範圍。
-    if (form == "sunjin") target->start_busy(2);
 
     message_vision(HIM "$N使出「" + form_names[form] + "」，大邪刀煞侵入$n命脈！\n" NOR,
         actor, target);
@@ -148,4 +174,3 @@ int perform_action(object actor, string form, object target)
         form_effects[form], damage, stacks));
     return 1;
 }
-
