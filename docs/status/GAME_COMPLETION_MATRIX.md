@@ -1,38 +1,38 @@
 # ES2-KING Game Completion Matrix
 
-> Track Start：2026-09-24  
+> Updated：2026-09-25  
 > Branch：`build/original-es2-races-phase2`  
-> Public Race checkpoint：`a2ed6d2`  
-> PR #13：OPEN / NOT MERGED  
+> Runtime Evidence Head（執行證據版本）：`07b865ce4a8ac9689e64580cc605f045e5cea0aa`  
+> PR #13：OPEN（開啟） / NOT MERGED（未合併）  
 > 原則：preserve → understand → rebuild → expand。
 
-此矩陣只記錄 Game Completion Track。Public Compatibility（Race / WebTelnet / iPhone / Render）是獨立 Release Gate，不得阻塞遊戲 Runtime 開發。
+此矩陣只記錄 Game Completion Track（遊戲完整可玩性主線）。Public Compatibility（公開環境相容性）與 Render（外部部署）是獨立 Release Gate（發布關卡），本階段保持待驗證。
 
-| 系統 | 狀態 | 目前證據／下一個 Gate |
+| 系統 | 狀態 | 本次 Runtime 證據／邊界 |
 |---|---|---|
-| Original ES2 Runtime | LOCAL PASS | M20/M25 既有 real Driver / RC 證據；重新驗證時不得把歷史 PASS 冒充本次執行 |
-| World / Map | LOCAL PASS | M17/M21 world runtime gates |
-| Movement | LOCAL PASS | M17/M21/M25 movement gates |
-| NPC | LOCAL PASS | M16/M22 runtime gates |
-| Items / Equipment | LOCAL PASS | M16/M22 runtime gates |
-| Combat | LOCAL PASS | M23 core gameplay gate |
-| Skills / Study / Force | LOCAL PASS | M12/M13/M23 gates |
-| School / Apprentice | LOCAL PASS | M11/M14/M23 gates |
-| Quest | BLOCKED | Pinned Original tree 僅找到 `docs/legacy/wiz/quest`；沒有足夠玩家 Quest Runtime Evidence，維持 UNKNOWN，不自行補成 Canon |
-| Character lifecycle | LOCAL PASS | M19/M24 gates |
-| save / quit / relogin | LOCAL PASS | M25/M30 Owner E2E 歷史證據 |
-| KING Authorization | LOCAL PASS | M26 + Owner isolation E2E 歷史證據 |
-| 天神殿／無極之境 | LOCAL PASS | M27 |
-| Expansion 武學 | LOCAL PASS | M28/M29；未定義數值仍 UNKNOWN |
-| Developer Bootstrap | IN PROGRESS | 建立不依賴 Public 創角的獨立 Test Character seed |
-| Full Game Journey | IN PROGRESS | Bootstrap 完成後串接單一 Runtime journey |
-| Public Compatibility | BLOCKED | 獨立 Release Gate；不阻塞本矩陣 |
-| Game Completion Track | IN PROGRESS | 先完成 Bootstrap → Full Game Journey |
+| Original ES2 Runtime | RUNTIME PASS | 同一 Neolith Full Driver Journey 實際執行 |
+| World / Map | RUNTIME PASS | Enter World、Look、Movement 已在完整流程通過 |
+| Movement | RUNTIME PASS | 真實 Driver 移動流程通過 |
+| NPC | RUNTIME PASS | NPC interaction 實際通過 |
+| Items / Equipment | RUNTIME PASS | 物品與裝備流程實際通過 |
+| Combat | RUNTIME PASS | 戰鬥流程實際通過 |
+| Skills / Study / Force | RUNTIME PASS | Skills 流程實際通過；既有 M12/M13 行為保持 |
+| School / Apprentice | RUNTIME PASS | 門派／師徒流程實際通過 |
+| Quest | UNKNOWN | Original Evidence 不足；不自行補造 Quest Canon、流程或數值 |
+| Character lifecycle | RUNTIME PASS | Character、Enter World 與生命週期串接通過 |
+| Save / Quit / Relogin | RUNTIME PASS | 同一完整 Journey 實際完成存檔、離開與重新登入 |
+| KING Authorization | RUNTIME PASS | 重用既有 KING fixture 與授權流程 |
+| 天神殿／無極之境 | RUNTIME PASS | 既有 M27 Runtime 證據保持有效 |
+| Expansion 武學 | RUNTIME PASS | 既有 M28/M29 Runtime 證據保持有效；未定義 Original 數值仍 UNKNOWN |
+| Developer Bootstrap | COMPLETE | 已完成且供 Full Driver Journey 重用 |
+| Full Game Journey | PLAYABLE PASS | `Connect → Login → Character → Enter World → Look → Score → Inventory → Movement → NPC → Items/Equipment → Combat → Skills → School/Apprentice → Save → Quit → Relogin` |
+| Public Compatibility | PENDING / NOT TESTED | 獨立 Release Gate；本階段未執行 |
+| Render | PENDING / NOT TESTED | 獨立 Deployment Gate（部署關卡）；本階段未執行 |
+| Game Completion Track | PLAYABLE PASS | 五個缺口段落與完整 Journey 均取得真實 Neolith Runtime 證據 |
 
 ## 狀態規則
 
-僅使用：`NOT STARTED`、`IN PROGRESS`、`BLOCKED`、`LOCAL PASS`、`PUBLIC PASS`、`COMPLETE`。
-
-- LOCAL PASS：已有實際本機／Runtime 測試證據，但尚未完成 Public Device 驗收。
-- COMPLETE：該系統所需 Evidence、Runtime 與本 Track 驗收全部完成。
-- BLOCKED：必須明確記錄外部依賴或 Evidence 缺口；不得因此停止其他可獨立開發項目。
+- `RUNTIME PASS`：已由真正 Neolith Driver 執行通過，不是 Static PASS（靜態檢查通過）。
+- `PLAYABLE PASS`：完整玩家流程在單一真實 Driver Journey 中通過。
+- `UNKNOWN`：Original 史料不足，禁止推測或補造。
+- `PENDING / NOT TESTED`：本階段沒有執行，不能標示 PASS 或 FAIL。

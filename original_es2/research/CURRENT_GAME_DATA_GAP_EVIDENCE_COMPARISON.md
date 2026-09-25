@@ -24,7 +24,7 @@
 | 人類族 Original ID | missing | none | SOURCE_PENDING | human_clan remains reconstruction-only |
 | blackteeth/yaksa karma | conflicting | none resolving versions | CONFLICT_BLOCKED | preserve both values |
 | login/character prompts | partial video evidence | actual gameplay video Part 1 | PARTIAL_IMPLEMENTABLE | extract exact prompt/output before tightening E2E |
-| Full Driver five gameplay stages | no current execution proof | evidence improves expected content only | RUNTIME_REQUIRED | run existing single-session E2E; no static PASS substitution |
+| Full Driver five gameplay stages | previously lacked current execution proof | Runtime Evidence Head `07b865ce4a8ac9689e64580cc605f045e5cea0aa` completed the single-session Neolith journey | PLAYABLE PASS | preserve Evidence/Runtime separation; no static substitution |
 
 ## Auto-comparison buckets
 
@@ -56,8 +56,8 @@
 
 ## Game Completion impact
 
-No unresolved historical field above is allowed to block the already-defined playable core unless the runtime directly requires it. Current playable blocker remains real execution proof of:
-`NPC → Items/Equipment → Combat → Skills → School/Apprentice`,
-then the full journey through Save/Quit/Relogin.
+No unresolved historical field above is allowed to invalidate the playable core unless the runtime directly requires it. The required real execution proof has now completed:
 
-Quest remains UNKNOWN where target Original evidence is insufficient and is not fabricated merely to raise completion percentage.
+`Connect → Login → Character → Enter World → Look → Score → Inventory → Movement → NPC → Items/Equipment → Combat → Skills → School/Apprentice → Save → Quit → Relogin`
+
+Therefore GAME COMPLETION = PLAYABLE PASS. Evidence status remains independent: Quest stays UNKNOWN where target Original evidence is insufficient and is not fabricated merely to raise completion percentage. Public Compatibility and Render remain PENDING / NOT TESTED for this stage.

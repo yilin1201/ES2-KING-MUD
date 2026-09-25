@@ -269,9 +269,11 @@ Evidence Recovery 不再阻塞目前 Playable Core。
 其中 Full Driver 五段核心：
 `NPC → Items/Equipment → Combat → Skills → School/Apprentice`
 
-必須以實際 Neolith Runtime 執行證明，不能用文件／Historical Evidence 取代 PASS。
+Runtime Evidence Head `07b865ce4a8ac9689e64580cc605f045e5cea0aa` 已以真正 Neolith Driver 完成單一完整 Journey；NPC、Items / Equipment、Combat、Skills、School / Apprentice、Save / Quit / Relogin 全部為 RUNTIME PASS（真實執行環境通過），Full Driver Runtime Gate（完整 Driver 執行關卡）為 PLAYABLE PASS（實際可遊玩驗收通過）。
 
-Quest 若目標 Original Evidence 不足，維持 UNKNOWN，不為了提高完成度自行補造。
+此 Runtime 結果不改寫 Evidence 層：Historical Evidence（歷史證據）與 Original Source（原始來源）仍依來源等級判定；Runtime PASS 不會把未證實的 Original 史實提升為 CONFIRMED。
+
+Quest 若目標 Original Evidence 不足，維持 UNKNOWN，不為了提高完成度自行補造。Public Compatibility（公開環境相容性）與 Render（外部部署）本階段均為 PENDING / NOT TESTED（待驗證／未測試）。
 
 ## 15. Master 結論
 

@@ -156,12 +156,15 @@ Historical/Original 顯示「寒梅心法」已有雙重 Evidence。後續 Runti
 
 `Connect/Login → Character → Enter World → NPC → Items/Equipment → Combat → Skills → School/Apprentice → Save/Quit/Relogin`
 
-目前最重要未取得的新證據仍是**單一 Neolith Full Driver Journey 實際執行**：
-`NPC → Items/Equipment → Combat → Skills → School/Apprentice`
+Runtime Evidence Head `07b865ce4a8ac9689e64580cc605f045e5cea0aa` 已完成**單一 Neolith Full Driver Journey（完整真實 Driver 流程）**：
 
-Quest 因 Original Evidence 不足維持 UNKNOWN，不虛構 Canon。
+`Connect → Login → Character → Enter World → Look → Score → Inventory → Movement → NPC → Items/Equipment → Combat → Skills → School/Apprentice → Save → Quit → Relogin`
 
-新取得的實機影片與 Skills 截圖應逐步轉成 Journey expected input/output，降低 E2E 測試對猜測路徑與文字的依賴。
+其中 NPC、Items / Equipment、Combat、Skills、School / Apprentice、Save / Quit / Relogin 全部為 RUNTIME PASS（真實執行環境通過），因此 **GAME COMPLETION = PLAYABLE PASS（遊戲完整可玩性通過）**。
+
+Quest 因 Original Evidence 不足維持 UNKNOWN，不虛構 Canon。Public Compatibility 與 Render 為獨立發布／部署關卡，本階段維持 PENDING / NOT TESTED（待驗證／未測試）。
+
+新取得的實機影片與 Skills 截圖仍應逐步轉成 Journey expected input/output；此 Evidence 工作用於提升可追溯性，不撤銷已取得的 Runtime PASS。
 
 ## 9. 文件命名／新增規則
 
@@ -181,7 +184,7 @@ Quest 因 Original Evidence 不足維持 UNKNOWN，不虛構 Canon。
 
 現在不大搬 `scripts/`、`.github/workflows/`、Runtime 路徑，因為會產生大量 path regression。
 
-只有在 Game Completion Full Driver PASS 後，才考慮第二階段實體整理：
+Game Completion Full Driver 已達 PLAYABLE PASS；只有在 Owner 另行授權實體重構後，才考慮第二階段整理：
 - scripts 分 build/test/deploy；
 - workflows 分 original/expansion/release；
 - research 新 Evidence 依 source/gameplay/registry 分子目錄。
