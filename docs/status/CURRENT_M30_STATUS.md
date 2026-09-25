@@ -36,10 +36,15 @@
 
 | Release Gate（發布關卡） | 狀態 |
 |---|---|
-| Public Compatibility（公開環境相容性） | PENDING / NOT TESTED（待驗證／本階段未測試） |
-| Render（外部部署平台） | PENDING / NOT TESTED（待驗證／本階段未測試） |
+| Primary Public Runtime（主要公開執行環境） | `ES2-KING-MUD`／https://es2-king-mud.onrender.com |
+| Repository / Render Sync（版本同步） | PASS（測試通過）：公開 `/health` 的 `build_commit` = `0c260ee1bfb1630016b858ae0e96a68f4eb17900` |
+| Public Runtime Chain（公開執行鏈） | PASS（測試通過）：HTTPS → WSS → Bridge → Neolith；`web`、`bridge`、`neolith` 均為 `true` |
+| Public Race Runtime（公開種族執行流程） | PASS（測試通過）：真實公開 WSS 完成 Account → Password → Email → Race → Gender → Character → Enter Game |
+| Public Device Acceptance（公開裝置驗收） | PENDING（待 Owner 使用 iPhone Safari 在 Primary URL 最終確認） |
+| Public Compatibility（公開環境相容性） | PARTIAL（程式與公開 Runtime 已通過；只剩 Owner Device Gate） |
+| Temporary Validation Service（臨時驗證服務） | `es2-king-alpha`：TEMP / UNCHANGED（臨時／未修改，不是主線） |
 
-這兩項是獨立 Release Gate，不回頭阻塞已取得的 Game Completion Runtime 證據；本階段未執行 Public 或 Render 驗證。
+Public Gate 是獨立 Release Gate，不回頭阻塞已取得的 Game Completion Runtime 證據。`heros-mud-rebuild` 屬另一獨立專案，未修改。
 
 ## 4. 已知 Hosting 限制
 
