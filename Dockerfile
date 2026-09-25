@@ -60,7 +60,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PORT=8080
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates libcurl4 libstdc++6 nodejs \
+    && apt-get install -y --no-install-recommends ca-certificates libcurl4 libstdc++6 nodejs python3 python3-psycopg2 \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --create-home --uid 10001 es2king \
     && mkdir -p /var/lib/es2-king

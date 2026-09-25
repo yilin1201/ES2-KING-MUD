@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# 本測試驗證既有 local backing 相容性，不應誤連正式 Neon。
+unset DATABASE_URL
 
 REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 TEMP_ROOT="$(mktemp -d)"
@@ -36,4 +38,6 @@ mkdir -p "$TEMP_ROOT/runtime/mudlib/data"
 "$REPO_ROOT/scripts/prepare_es2_persistence.sh"
 grep -Fqx 'new-player-progress' "$TEMP_ROOT/runtime/mudlib/data/user/k/king.o"
 
-echo "M30 PERSISTENCE PATH PASS：in-mudlib Driver 寫入路徑、backing 同步與 process restart 還原均通過"
+python3 -m py_compile "$REPO_ROOT/scripts/es2_neon_persistence.py"
+grep -Fq 'CREATE TABLE IF NOT EXISTS es2_persistence_snapshots' "$REPO_ROOT/db/migrations/001_es2_persistence.sql"
+echo "M30 PERSISTENCE PATH PASS：in-mudlib Driver 寫入路徑、backing 同步、process restart 還原與 Neon bridge 靜態檢查均通過"

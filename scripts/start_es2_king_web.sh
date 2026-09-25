@@ -65,11 +65,13 @@ node -e '
   probe();
 ' || { echo "START FAIL：Neolith ${ES2_HOST}:${ES2_PORT} 未在 60 秒內啟動。" >&2; exit 1; }
 
-# Persistence Sync Loop／持久化同步迴圈：只同步 Original 已完成的 save 檔案，不讀取或輸出內容。
+# Persistence Sync Loop／持久化同步迴圈：單次 Neon 網路錯誤不殺死同步程序，留下錯誤並持續重試。
 (
   while true; do
     sleep "${ES2_PERSISTENCE_SYNC_INTERVAL:-2}"
-    bash "$SCRIPT_DIR/sync_es2_persistence.sh"
+    if ! bash "$SCRIPT_DIR/sync_es2_persistence.sh"; then
+      echo "PERSISTENCE SYNC WARN：durable sync 失敗；將於下一輪重試。" >&2
+    fi
   done
 ) &
 persistence_pid=$!
