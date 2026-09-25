@@ -22,6 +22,7 @@ mkdir -p "$RUNTIME_DIR/mudlib/log"
 
 driver_pid=""
 bridge_pid=""
+persistence_pid=""
 cleanup() {
   if [[ -n "$bridge_pid" ]] && kill -0 "$bridge_pid" 2>/dev/null; then
     kill "$bridge_pid" 2>/dev/null || true
@@ -31,6 +32,12 @@ cleanup() {
     kill "$driver_pid" 2>/dev/null || true
     wait "$driver_pid" 2>/dev/null || true
   fi
+  if [[ -n "$persistence_pid" ]] && kill -0 "$persistence_pid" 2>/dev/null; then
+    kill "$persistence_pid" 2>/dev/null || true
+    wait "$persistence_pid" 2>/dev/null || true
+  fi
+  # Final Flush／最後同步：Driver 停止寫入後再保存一次，避免正常 Restart 遺失最後一筆 save。
+  bash "$SCRIPT_DIR/sync_es2_persistence.sh" || true
 }
 trap cleanup EXIT INT TERM
 
@@ -57,6 +64,15 @@ node -e '
   }
   probe();
 ' || { echo "START FAIL：Neolith ${ES2_HOST}:${ES2_PORT} 未在 60 秒內啟動。" >&2; exit 1; }
+
+# Persistence Sync Loop／持久化同步迴圈：只同步 Original 已完成的 save 檔案，不讀取或輸出內容。
+(
+  while true; do
+    sleep "${ES2_PERSISTENCE_SYNC_INTERVAL:-2}"
+    bash "$SCRIPT_DIR/sync_es2_persistence.sh"
+  done
+) &
+persistence_pid=$!
 
 cd "$WEBTELNET_DIR"
 node server.mjs &

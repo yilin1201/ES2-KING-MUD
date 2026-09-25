@@ -17,7 +17,7 @@ node scripts/test_m30_character_browser_input.mjs
 node scripts/test_m30_webtelnet_display.mjs
 node scripts/test_m30_mobile_responsive.mjs
 node scripts/test_m30_desktop_centering.mjs
-bash -n scripts/start_es2_king_web.sh scripts/prepare_es2_persistence.sh scripts/assert_m30_final_runtime.sh scripts/test_m30_final_runtime_permissions.sh scripts/test_m30_persistence_paths.sh scripts/test_m30_king_reservation_e2e.sh scripts/test_m30_king_claim_e2e.sh scripts/test_m30_production_equivalent_king_reservation.sh
+bash -n scripts/start_es2_king_web.sh scripts/prepare_es2_persistence.sh scripts/sync_es2_persistence.sh scripts/assert_m30_final_runtime.sh scripts/test_m30_final_runtime_permissions.sh scripts/test_m30_persistence_paths.sh scripts/test_m30_king_reservation_e2e.sh scripts/test_m30_king_claim_e2e.sh scripts/test_m30_production_equivalent_king_reservation.sh
 bash scripts/test_es2_cn_standard.sh
 
 grep -Fq 'EXPOSE 8080' Dockerfile
