@@ -330,12 +330,16 @@ if ! grep -Fq "$COMMAND_REHASH_MARKER" "$COMMAND_D"; then
   mv "$temp_command" "$COMMAND_D"
 fi
 
-# Selective Binary Cache Invalidation／選擇性二進位快取失效：只移除會遮蔽新版 logind，
-# 或會保存 Expansion 套用前指令索引的兩個舊 .b；其餘 Original binary cache 完整保留。
+# Selective Binary Cache Invalidation／選擇性二進位快取失效：只移除會遮蔽新版 logind、
+# 指令索引或本次 Expansion 武學的特定舊 .b；其餘 Original binary cache 完整保留。
 # 下一次 Boot 會重新編譯，COMMAND_D 則沿用 Original 的首次路徑自動 rehash。
 for cached_binary in \
   "$TARGET/mudlib/bin/adm/daemons/logind.b" \
-  "$TARGET/mudlib/bin/adm/daemons/cmd_d.b"
+  "$TARGET/mudlib/bin/adm/daemons/cmd_d.b" \
+  "$TARGET/mudlib/bin/adm/daemons/kingmartiald.b" \
+  "$TARGET/mudlib/bin/cmds/std/perform.b" \
+  "$TARGET/mudlib/bin/daemon/skill/kuxiao_force.b" \
+  "$TARGET/mudlib/bin/daemon/skill/daxie_qisun_blade.b"
 do
   if [[ -e "$cached_binary" ]]; then
     unlink "$cached_binary"
@@ -345,6 +349,12 @@ done
 # Command Warm Load／指令預先載入：Neolith 第一次 call_other 新增 command object 時可能只完成載入；
 # 將四個既有 Owner 指令加入 Generated Runtime preload，確保首次玩家輸入即可執行且無需手動 reload。
 PRELOAD_FILE="$TARGET/mudlib/adm/etc/preload"
+# Expansion Skill Warm Load／擴充技能預先載入：先註冊哭笑門心法與大邪七損刀，
+# 讓第一次 perform 即可載入正確 daemon，不需要 Owner 手動 update／rehash。
+for expansion_skill in kuxiao_force daxie_qisun_blade; do
+  grep -Fqx "/daemon/skill/$expansion_skill" "$PRELOAD_FILE" \
+    || printf '%s\n' "/daemon/skill/$expansion_skill" >> "$PRELOAD_FILE"
+done
 for owner_command in kingcreate kingrealm kingmartial kingcanon; do
   grep -Fqx "/cmds/adm/$owner_command" "$PRELOAD_FILE" \
     || printf '%s\n' "/cmds/adm/$owner_command" >> "$PRELOAD_FILE"

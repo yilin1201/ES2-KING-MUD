@@ -35,3 +35,16 @@ int set_batian(object actor, string phase)
     actor->set("es2_king/batian_lianti_jue", phase);
     return 1;
 }
+
+// KING Test Provisioning／KING 測試配置：只授予已定稿 Expansion 武學，
+// 等級仍服從 Original set_skill 的 200 級上限，不建立平行技能資料庫。
+int set_daxie(object actor, int level)
+{
+    if (!authorized(actor) || level < 1 || level > 200) return 0;
+    actor->set_skill("kuxiao force", level);
+    actor->set_skill("daxie qisun blade", level);
+    actor->map_skill("force", "kuxiao force");
+    actor->map_skill("sword", "daxie qisun blade");
+    actor->set("es2_king/daxie_level", level);
+    return 1;
+}
