@@ -6,7 +6,7 @@
 > PR #13：OPEN（開啟） / NOT MERGED（未合併）  
 > 原則：preserve → understand → rebuild → expand。
 
-此矩陣只記錄 Game Completion Track（遊戲完整可玩性主線）。Public Compatibility（公開環境相容性）與 Render（外部部署）是獨立 Release Gate（發布關卡），本階段保持待驗證。
+此矩陣記錄 Game Completion Track（遊戲完整可玩性主線）與獨立 Public Release Gate（公開發布關卡）。主要公開執行環境固定為 `ES2-KING-MUD`；`es2-king-alpha` 僅為 TEMP / UNCHANGED（臨時／未修改）。
 
 | 系統 | 狀態 | 本次 Runtime 證據／邊界 |
 |---|---|---|
@@ -26,8 +26,11 @@
 | Expansion 武學 | RUNTIME PASS | 既有 M28/M29 Runtime 證據保持有效；未定義 Original 數值仍 UNKNOWN |
 | Developer Bootstrap | COMPLETE | 已完成且供 Full Driver Journey 重用 |
 | Full Game Journey | PLAYABLE PASS | `Connect → Login → Character → Enter World → Look → Score → Inventory → Movement → NPC → Items/Equipment → Combat → Skills → School/Apprentice → Save → Quit → Relogin` |
-| Public Compatibility | PENDING / NOT TESTED | 獨立 Release Gate；本階段未執行 |
-| Render | PENDING / NOT TESTED | 獨立 Deployment Gate（部署關卡）；本階段未執行 |
+| Primary Public Runtime | DEPLOYED / SYNCED | `ES2-KING-MUD`；公開 `/health` 的 Commit 與 Branch HEAD `0c260ee1bfb1630016b858ae0e96a68f4eb17900` 一致 |
+| Public Race Runtime | RUNTIME PASS | 真實公開 WSS 完成 Race → Gender → Character → Enter Game；不是 Static PASS |
+| Public Device Acceptance | PENDING | 尚需 Owner 使用 iPhone Safari 在 Primary URL 最終確認 Race UI |
+| Public Compatibility | PARTIAL | 公開 Runtime PASS；Owner Device Gate 尚未完成 |
+| Render | RUNTIME PASS | HTTPS、WSS、Bridge、Neolith 與 Login Prompt 已在 Primary Service 實測通過 |
 | Game Completion Track | PLAYABLE PASS | 五個缺口段落與完整 Journey 均取得真實 Neolith Runtime 證據 |
 
 ## 狀態規則
@@ -35,4 +38,5 @@
 - `RUNTIME PASS`：已由真正 Neolith Driver 執行通過，不是 Static PASS（靜態檢查通過）。
 - `PLAYABLE PASS`：完整玩家流程在單一真實 Driver Journey 中通過。
 - `UNKNOWN`：Original 史料不足，禁止推測或補造。
-- `PENDING / NOT TESTED`：本階段沒有執行，不能標示 PASS 或 FAIL。
+- `PENDING`：只剩指定的 Owner 真實裝置驗收，不能用自動測試冒充。
+- `PARTIAL`：公開程式與 Runtime 已通過，但 Owner Device Gate 尚未完成。
