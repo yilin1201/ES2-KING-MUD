@@ -4,7 +4,7 @@ set -euo pipefail
 # Static Regression（靜態回歸測試）：
 # 不啟動 MUD（Multi-User Dungeon，多人文字角色扮演遊戲），直接檢查 M16 證據文件是否守住 Original／Expansion 邊界。
 REGISTRY="original_es2/research/m16_npc_item_evidence_registry.md"
-PLAN="original_es2/research/m16_npc_item_runtime_plan.md"
+PLAN="original_es2/research/plans/m16_npc_item_runtime_plan.md"
 
 for file in "$REGISTRY" "$PLAN"; do
   if [[ ! -f "$file" ]]; then

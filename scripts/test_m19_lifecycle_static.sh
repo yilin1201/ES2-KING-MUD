@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Static Regression／靜態回歸：確認研究文件保留已確認證據與 UNKNOWN 邊界。
 REGISTRY="original_es2/research/m19_lifecycle_evidence_registry.md"
-PLAN="original_es2/research/m19_lifecycle_runtime_plan.md"
+PLAN="original_es2/research/plans/m19_lifecycle_runtime_plan.md"
 
 for file in "$REGISTRY" "$PLAN"; do
   [[ -f "$file" ]] || { echo "M19 STATIC FAIL：缺少 $file"; exit 1; }

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MATRIX="original_es2/research/m30_completion_matrix.md"
+MATRIX="original_es2/research/closure/m30_completion_matrix.md"
 ROADMAP="ROADMAP_M0_M30.md"
 test -f "$MATRIX"; test -f "$ROADMAP"
 for m in $(seq 1 30); do grep -Fq "M${m}" "$MATRIX" || { echo "M30 STATIC FAIL：缺少 M$m"; exit 1; }; done
 
 # Completion evidence／完成證據：M1-M29 必須有實際結果、測試或研究檔，不接受空白里程碑。
-for f in original_es2/runtime/m25_release_candidate_result.md original_es2/research/m24_system_data_integrity.md es2_king_expansion/runtime/m26_king_admin_result.md es2_king_expansion/runtime/m27_wuji_realm_result.md es2_king_expansion/runtime/m28_martial_result.md es2_king_expansion/runtime/m29_canon_result.md; do
+for f in original_es2/runtime/m25_release_candidate_result.md original_es2/research/closure/m24_system_data_integrity.md es2_king_expansion/runtime/m26_king_admin_result.md es2_king_expansion/runtime/m27_wuji_realm_result.md es2_king_expansion/runtime/m28_martial_result.md es2_king_expansion/runtime/m29_canon_result.md; do
   test -f "$f" || { echo "M30 STATIC FAIL：缺少完成證據 $f"; exit 1; }
 done
 

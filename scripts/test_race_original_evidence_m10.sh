@@ -4,7 +4,7 @@
 set -euo pipefail
 
 EVIDENCE="original_es2/research/original_race_google_sites_evidence.md"
-PLAN="original_es2/research/original_race_runtime_reconstruction_plan.md"
+PLAN="original_es2/research/plans/original_race_runtime_reconstruction_plan.md"
 
 # Evidence／證據檔必須存在，並包含 11 個歷史種族 ID。
 test -f "$EVIDENCE"

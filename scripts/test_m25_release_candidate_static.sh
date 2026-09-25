@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DOC="original_es2/research/m25_release_candidate.md"
+DOC="original_es2/research/closure/m25_release_candidate.md"
 RESULT="original_es2/runtime/m25_release_candidate_result.md"
 ROADMAP="ROADMAP_M0_M30.md"
 

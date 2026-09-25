@@ -19,8 +19,8 @@ jobs:
         run: bash scripts/bootstrap_original_es2.sh
       - name: M21-M24 regression／重跑完整化階段回歸
         run: |
-          bash scripts/test_m21_world_content_static.sh
-          bash scripts/test_m21_world_content_runtime_gate.sh .runtime/original-es2
+          bash scripts/test_m21_world_static.sh
+          bash scripts/test_m21_world_runtime_gate.sh .runtime/original-es2
           bash scripts/test_m22_npc_item_static.sh
           bash scripts/test_m22_npc_item_runtime_gate.sh .runtime/original-es2
           bash scripts/test_m23_core_gameplay_static.sh

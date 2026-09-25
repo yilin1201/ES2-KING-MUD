@@ -4,7 +4,7 @@
 set -euo pipefail
 
 RESEARCH="original_es2/research/original_study_learning_m12.md"
-PLAN="original_es2/research/original_study_runtime_plan_m12.md"
+PLAN="original_es2/research/plans/original_study_runtime_plan_m12.md"
 FORMULA="original_es2/research/original_study_formula_m12.md"
 
 test -f "$RESEARCH"
