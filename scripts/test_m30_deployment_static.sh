@@ -34,6 +34,9 @@ grep -Fq 'process.env.PORT || process.env.WEBTELNET_PORT || 8080' webtelnet/serv
 grep -Fq 'location.protocol === "https:" ? "wss:" : "ws:"' webtelnet/public/index.html
 grep -Fq 'healthCheckPath: /health' render.yaml
 grep -Fq 'branch: build/original-es2-races-phase2' render.yaml
+# Secret Injection／秘密注入：Blueprint 必須要求 Render 端提供 Claim Token，禁止把值寫進 Repository。
+grep -A1 -F 'key: ES2_KING_CLAIM_TOKEN' render.yaml | grep -Fq 'sync: false'
+! grep -Eq 'ES2_KING_CLAIM_TOKEN:[[:space:]]*[^[:space:]]' render.yaml
 grep -Fq 'build_commit: buildCommit' webtelnet/server.mjs
 grep -Fq 'pathname === "/health"' webtelnet/server.mjs
 grep -Fq 'bash scripts/assert_m30_final_runtime.sh /opt/es2-king/runtime' Dockerfile
@@ -64,15 +67,15 @@ grep -Fq 'socket.send("ES2RACE:" + raceChoice)' webtelnet/public/index.html
 grep -Fq '["ES2RACE:1", "ES2RACE:2", "ES2RACE:human", "ES2RACE:avatar"].includes(incoming)' webtelnet/server.mjs
 grep -Fq 'Runtime Adaptive Race' webtelnet/server.mjs
 grep -Fq 'choice === "1" || choice === "2" ? choice : race' webtelnet/server.mjs
-grep -Fq '+ "\\n", "utf8"))' webtelnet/server.mjs
-grep -Fq 'race-numeric-lf-v5' webtelnet/server.mjs
+grep -Fq '+ "\r\n", "utf8"))' webtelnet/server.mjs
+grep -Fq 'race-telnet-crlf-v9' webtelnet/server.mjs
 grep -Fq 'characterMenuFor("請輸入編號 1 或 2: ")' scripts/test_m30_character_browser_input.mjs
 ! grep -Fq 'socket.send(choice === "人類" ? "human" : choice)' webtelnet/public/index.html
 grep -Fq 'if (sendCharacterChoice(choice))' webtelnet/public/index.html
 grep -Fq 'browser-to-mud bytes=' webtelnet/server.mjs
 grep -Fq 'mud.write(Buffer.from(data))' webtelnet/server.mjs
 grep -Fq 'runtimeTail = (runtimeTail + text).slice(-1024)' webtelnet/server.mjs
-grep -Fq 'mud.write(Buffer.from("\\r", "utf8"))' webtelnet/server.mjs
+grep -Fq 'mud.write(Buffer.from("\r", "utf8"))' webtelnet/server.mjs
 grep -Fq 'prepareOwnerClaim(command.value)' webtelnet/public/index.html
 grep -Fq '至少需要 ${MINIMUM_OWNER_CLAIM_BYTES} bytes，尚未送出' webtelnet/public/index.html
 grep -Fq 'pathname === "/claim-input.mjs"' webtelnet/server.mjs

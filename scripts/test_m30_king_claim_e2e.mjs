@@ -209,6 +209,9 @@ for (const command of ["score", "inventory"]) {
 await verifyKingCommands(owner);
 assert.equal(await exists(loginFile), true, "KING login save 必須建立");
 assert.equal(await exists(userFile), true, "KING user save 必須建立");
+// Original Command Throttle／原版指令節流：KING 指令驗證後等待角色可再次接收指令，
+// 避免測試速度遠快於真人而讓 Original anti-spam 將 save 拒絕，這不改變遊戲 Runtime 邏輯。
+await new Promise(resolve => setTimeout(resolve, 1200));
 owner.send("save\r\n");
 await owner.waitFor("檔案儲存完畢");
 owner.send("quit\r\n");
