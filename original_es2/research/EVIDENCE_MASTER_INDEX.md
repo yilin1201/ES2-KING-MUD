@@ -70,3 +70,5 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 以上屬 Historical Gameplay Evidence，不與 Original LPC Source 混級；但可用於校正 Reconstruction 與 Full Driver expected behavior。
 
 - `vovo2000_es2_character_historical_evidence.md` — Vovo2000 VOA ACT #7 ES2 人物資料鏡像與投稿連結圖；三頁主串及可達 ES2 子頁已逐層確認。包含 NPC/職業/門派/裝備、冷梅莊、封山派、陰間 Lifecycle、種族顯示、主線/歷史/神話。狀態：**DEPTH EXHAUSTED（以 topic 29232 可達 ES2 graph 為邊界）**。
+
+- `EVIDENCE_MASTER_SUMMARY_ZH_TW.md` — **最新中文 Evidence Master Summary**：統整實際遊戲影片、梅影風實機 Skills、PIXNET、Vovo2000、冷梅／封山、World Lore、Lifecycle、Race，以及 Reconstruction/Expansion 隔離與目前真正缺口。後續新增 Evidence 優先由此總覽進入 Gap Comparison。
