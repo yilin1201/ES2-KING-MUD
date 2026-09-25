@@ -30,6 +30,10 @@ test -x "$DRIVER_BIN"
 test -f "$SOURCE_RUNTIME/neolith.conf"
 cp -a "$SOURCE_RUNTIME/mudlib" "$TEMP_ROOT/mudlib"
 cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
+# Production-equivalent Assertion／正式部署等效斷言：最終 Runtime 檢查會核對 Neolith Telnet 原始碼；
+# 測試沙盒只複製必要的唯讀 comm.c，不另行建置 Driver，也不擴大測試資料範圍。
+mkdir -p "$TEMP_ROOT/neolith/src"
+cp "$SOURCE_RUNTIME/neolith/src/comm.c" "$TEMP_ROOT/neolith/src/comm.c"
 
 # 每次使用乾淨資料目錄，證明拒絕流程不會偷偷產生 KING 登入或角色存檔。
 mkdir -p "$TEMP_ROOT/mudlib/data/login/k" "$TEMP_ROOT/mudlib/data/user/k" "$TEMP_ROOT/mudlib/log"
