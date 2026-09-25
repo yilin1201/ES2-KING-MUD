@@ -15,6 +15,7 @@ done
 grep -Fq 'valid_enable(string usage)' "$ROOT/daemon/skill/kuxiao_force.c"
 grep -Fq 'actor->skill_mapped("force") == "kuxiao force"' "$ROOT/daemon/skill/daxie_qisun_blade.c"
 grep -Fq '大邪金身已啟動；反震、減傷與持續時間仍為 UNKNOWN' "$ROOT/daemon/skill/daxie_qisun_blade.c"
+grep -Fq 'actor->delete("es2_king/daxie_jinshen")' "$ROOT/daemon/skill/daxie_qisun_blade.c"
 for form in sunpi sunrou sunjin sungu sunmai sunqi qisun; do
   grep -Fq "\"$form\"" "$ROOT/daemon/skill/daxie_qisun_blade.c"
 done

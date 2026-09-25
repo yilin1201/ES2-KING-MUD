@@ -78,6 +78,14 @@ private int activate_jinshen(object actor)
     if (!kuxiao_ready(actor))
         return notify_fail("大邪金身必須先學會並啟用哭笑門心法。\n");
 
+    // Toggle Off／切換關閉：同一個既有 perform 指令即可安全結束狀態，
+    // 不需要另建平行狀態管理指令，也不虛構持續時間。
+    if (actor->query("es2_king/daxie_jinshen")) {
+        actor->delete("es2_king/daxie_jinshen");
+        message_vision(HIG "$N收斂大邪魔元，結束「大邪金身」狀態。\n" NOR, actor);
+        return 1;
+    }
+
     actor->set("es2_king/daxie_jinshen", 1);
     message_vision(HIG "$N運起哭笑門心法，大邪魔元凝聚成「大邪金身」狀態。\n" NOR,
         actor);

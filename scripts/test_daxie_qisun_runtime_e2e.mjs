@@ -44,13 +44,23 @@ await waitForAfter(0, "您的使用者代號");
 await command("king", "請輸入密碼");
 await command(password, "目前權限: (admin)");
 await waitForAfter(0, "> ");
+assert.match(await command("look"), /客棧大堂|私塾|天神殿|無極之境/);
+assert.match(await command("score"), /KING|目前權限|等級|經驗/);
+await command("inventory");
+assert.match(await command("skills"), /技能狀態|目前並沒有學會任何技能/);
+console.log("DAXIE_STAGE_PASS:login-look-score-inventory-skills");
 
 // Dependency Gate／相依條件：沒有哭笑門心法時，大邪金身必須拒絕施展。
 assert.match(await command("perform jinshen"), /必須先學會並啟用哭笑門心法/);
 console.log("DAXIE_STAGE_PASS:jinshen-negative");
+await new Promise(resolve => setTimeout(resolve, 2500));
 
 assert.match(await command("kingmartial daxie 200"), /哭笑門心法 Lv\.200／大邪七損刀 Lv\.200/);
 assert.match(await command("kingmartial daxie status"), /哭笑門心法 Lv\.200／大邪七損刀 Lv\.200／大邪金身：OFF/);
+assert.match(await command("perform jinshen"), /大邪金身已啟動/);
+assert.match(await command("perform jinshen"), /結束「大邪金身」狀態/);
+await new Promise(resolve => setTimeout(resolve, 1200));
+assert.match(await command("kingmartial daxie status"), /大邪金身：OFF/);
 assert.match(await command("perform jinshen"), /大邪金身已啟動/);
 console.log("DAXIE_STAGE_PASS:kuxiao-force-and-jinshen");
 
