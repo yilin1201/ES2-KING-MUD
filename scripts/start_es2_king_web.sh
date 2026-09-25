@@ -15,6 +15,12 @@ test -f "$RUNTIME_DIR/neolith.conf" || { echo "START FAIL：缺少 neolith.conf"
 test -f "$WEBTELNET_DIR/server.mjs" || { echo "START FAIL：缺少 WebSocket/Telnet Bridge" >&2; exit 1; }
 
 "$SCRIPT_DIR/prepare_es2_persistence.sh"
+
+# 一次性清除歷史測試帳號，只保留既有 KING；完成後立刻同步 Neon。
+# 清理 marker 會進入 durable snapshot，因此不會影響清理完成後新建立的正常玩家。
+bash "$SCRIPT_DIR/cleanup_nonking_test_accounts.sh"
+bash "$SCRIPT_DIR/sync_es2_persistence.sh"
+
 # Startup Assertion（啟動斷言）：在 Neolith 啟動前再檢查容器最終 mudlib，
 # 防止錯誤映像、複製順序或舊 Overlay 讓公開服務退回不安全版本。
 bash "$SCRIPT_DIR/assert_m30_final_runtime.sh" "$RUNTIME_DIR"
