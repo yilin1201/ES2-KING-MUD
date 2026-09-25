@@ -30,13 +30,21 @@ def connect():
     import psycopg2
     conn=psycopg2.connect(url,connect_timeout=10,application_name="es2-king-persistence")
     # Bootstrap only the persistence table required by this bridge. This mirrors
-    # db/migrations/001_es2_persistence.sql and is intentionally idempotent so a
-    # brand-new Neon database can restore/upload without a separate manual SQL step.
+    # db/migrations/001_es2_persistence.sql and is intentionally idempotent.
+    ddl=(
+        "CREATE TABLE IF NOT EXISTS es2_persistence_snapshots ("
+        "slot text PRIMARY KEY,"
+        "archive bytea NOT NULL,"
+        "checksum text NOT NULL CHECK (checksum ~ '^[0-9a-f]{64}$'),"
+        "size_bytes bigint NOT NULL CHECK (size_bytes >= 0),"
+        "updated_at timestamptz NOT NULL DEFAULT now()"
+        ")"
+    )
     with conn.cursor() as cur:
-        cur.execute("""CREATE TABLE IF NOT EXISTS es2_persistence_snapshots (
-          slot text PRIMARY KEY,
-          archive bytea NOT NULL,
-          checksum text NOT NULL CHECK (checksum ~ '^[0-9a-f]{64}
+        cur.execute(ddl)
+    conn.commit()
+    return conn
+
 def make_archive(source:Path):
     if not source.is_dir(): raise RuntimeError(f"source directory does not exist: {source}")
     buf=io.BytesIO()
