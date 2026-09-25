@@ -12,18 +12,20 @@ Original ES2 與 ES2-KING 新創內容必須分開保存，不以 AI 推測補�
 
 ```text
 ES2-KING-MUD/
-├── AGENTS.md                 # 專案工作規則
-├── README.md                 # 專案入口
+├── README.md / AGENTS.md
+├── Dockerfile / render.yaml
+├── original_es2/              # Original 保存、證據與重建
+├── es2_king_expansion/        # ES2-KING Canon 與 Runtime overlay
+├── king_library/              # KING 世界觀與武學設定資料庫
+├── legacy_sources/            # 歷史參考來源
 ├── docs/
-│   └── SOURCES.md            # 資料來源與證據制度
-├── original_es2/             # Original ES2 保存／考證／重建
-│   └── races/
-│       ├── README.md
-│       └── headless.md
-└── es2_king_expansion/       # ES2-KING 新創與重設內容
-    └── races/
-        ├── README.md
-        └── headless.md
+│   ├── status/                # 唯一 Current 狀態入口
+│   ├── history/               # 歷史驗收紀錄
+│   ├── archive/workflows/     # 已完成里程碑 Workflow 封存
+│   └── migration/             # 分類與遷移清冊
+├── scripts/                   # Runtime、測試、部署腳本（保持穩定路徑）
+├── webtelnet/                 # Web Client 與 WebSocket/Telnet Bridge
+└── .github/workflows/         # 現行 Regression / Release Gates
 ```
 
 ## Original ES2
@@ -64,3 +66,5 @@ ES2-KING-MUD/
 舊 M30 Audit／Playable／Deployment 文件屬歷史驗收紀錄；目前狀態以 `CURRENT_M30_STATUS.md` 為準，避免因讀到舊文件而重複測試已完成項目。
 
 7. `docs/REPOSITORY_MASTER_CLASSIFICATION_ZH_TW.md` — **Owner 主分類總表**；用五層模型快速定位 Current、Original Evidence、Reconstruction、Expansion、Engineering。
+
+8. `docs/status/REPOSITORY_CLEANUP_INVENTORY.md` — 最新逐檔 Cleanup 分類清冊。

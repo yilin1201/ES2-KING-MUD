@@ -25,32 +25,32 @@
 | 5 | `.github/workflows/es2-king-m29-canon.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
 | 6 | `.github/workflows/es2-king-m30-alpha.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
 | 7 | `.github/workflows/original-es2-driver-build.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 8 | `.github/workflows/original-es2-m10-race-baseline.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 9 | `.github/workflows/original-es2-m11-class.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 10 | `.github/workflows/original-es2-m11-school-static.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 11 | `.github/workflows/original-es2-m12-skill.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 12 | `.github/workflows/original-es2-m12-study-runtime.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 13 | `.github/workflows/original-es2-m12-study-static.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 14 | `.github/workflows/original-es2-m13-force-runtime.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 15 | `.github/workflows/original-es2-m13-force-static.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 16 | `.github/workflows/original-es2-m14-apprentice-runtime.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 17 | `.github/workflows/original-es2-m14-apprentice-static.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 18 | `.github/workflows/original-es2-m15-lengmei-runtime-gate.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 19 | `.github/workflows/original-es2-m15-lengmei-static.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 20 | `.github/workflows/original-es2-m16-npc-item-runtime-gate.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 21 | `.github/workflows/original-es2-m16-npc-item-static.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 22 | `.github/workflows/original-es2-m17-world-runtime-gate.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 23 | `.github/workflows/original-es2-m18-quest-runtime-gate.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 24 | `.github/workflows/original-es2-m19-lifecycle.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 25 | `.github/workflows/original-es2-m20-alpha.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 26 | `.github/workflows/original-es2-m21-world-content.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 27 | `.github/workflows/original-es2-m22-npc-item.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 28 | `.github/workflows/original-es2-m23-core-gameplay.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 29 | `.github/workflows/original-es2-m24-data-integrity.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 8 | `docs/archive/workflows/original-es2-m10-race-baseline.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 9 | `docs/archive/workflows/original-es2-m11-class.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 10 | `docs/archive/workflows/original-es2-m11-school-static.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 11 | `docs/archive/workflows/original-es2-m12-skill.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 12 | `docs/archive/workflows/original-es2-m12-study-runtime.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 13 | `docs/archive/workflows/original-es2-m12-study-static.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 14 | `docs/archive/workflows/original-es2-m13-force-runtime.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 15 | `docs/archive/workflows/original-es2-m13-force-static.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 16 | `docs/archive/workflows/original-es2-m14-apprentice-runtime.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 17 | `docs/archive/workflows/original-es2-m14-apprentice-static.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 18 | `docs/archive/workflows/original-es2-m15-lengmei-runtime-gate.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 19 | `docs/archive/workflows/original-es2-m15-lengmei-static.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 20 | `docs/archive/workflows/original-es2-m16-npc-item-runtime-gate.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 21 | `docs/archive/workflows/original-es2-m16-npc-item-static.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 22 | `docs/archive/workflows/original-es2-m17-world-runtime-gate.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 23 | `docs/archive/workflows/original-es2-m18-quest-runtime-gate.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 24 | `docs/archive/workflows/original-es2-m19-lifecycle.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 25 | `docs/archive/workflows/original-es2-m20-alpha.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 26 | `docs/archive/workflows/original-es2-m21-world-content.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 27 | `docs/archive/workflows/original-es2-m22-npc-item.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 28 | `docs/archive/workflows/original-es2-m23-core-gameplay.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 29 | `docs/archive/workflows/original-es2-m24-data-integrity.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
 | 30 | `.github/workflows/original-es2-m25-release-candidate.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 31 | `.github/workflows/original-es2-m4-combat.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 32 | `.github/workflows/original-es2-m5-races.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
-| 33 | `.github/workflows/original-es2-race-phase2.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 31 | `docs/archive/workflows/original-es2-m4-combat.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 32 | `docs/archive/workflows/original-es2-m5-races.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
+| 33 | `docs/archive/workflows/original-es2-race-phase2.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
 | 34 | `.github/workflows/roadmap-m21-m30.yml` | HISTORICAL | KEEP | HIGH | 固定 Workflow 路徑；移出會停用 |
 | 35 | `.gitignore` | CANON | KEEP | HIGH | 部署/Repository 固定位置 |
 | 36 | `AGENTS.md` | CANON | KEEP | MEDIUM | 專案規範/入口 |
@@ -390,3 +390,12 @@ Owner 確認 Original 正確欄位為 `cor=膽識`、`cps=定力`。已校正 `o
 5V：同步歷史 Closure。M23 Quest 邊界更新為已有外部 chain-closed candidate、但未鎖目標版本；M24 更新為 Quest persistence architecture 已有佐證，但目標 Original 跨登入完整驗收仍未完成。Closure 仍是 baseline/historical，不覆蓋 CURRENT M30 狀態。
 
 本批次未修改遊戲 Runtime；僅 Gate 語意與 Evidence/Closure 文件校正。未手動 rerun Actions、未 Merge PR #13、未進 M31。
+
+
+## Repository Cleanup — Active Workflow 收斂
+
+- 基準：`c1fc52dd5a938b2100c91cfabdbd9c59593f2fdc`
+- Active Workflow：8 份，保留 M26～M30、M25 RC、Driver Build、Roadmap。
+- Archived Workflow：25 份，原文移至 `docs/archive/workflows/`。
+- Runtime/Test scripts：全數保留；未因 Actions 額度限制刪除測試能力。
+- Exact duplicate：0；Tracked generated garbage：0；DELETE：0。

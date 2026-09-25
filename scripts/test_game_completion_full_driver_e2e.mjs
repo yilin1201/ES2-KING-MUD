@@ -94,6 +94,9 @@ await runStage("items", async () => {
 
 // Combat／戰鬥：在可戰鬥房間向 Original NPC 發動真實 kill，等待攻防輸出後由巫師 halt 安全停止。
 await runStage("combat", async () => {
+  // Original MAX_COMMAND_PER_SECOND／每秒指令上限：Items 段會連續完成取得、裝備與查看，
+  // 進入戰鬥前跨過限速窗口，確保 kill 驗證的是 Combat Runtime 而不是自動測試輸入速度。
+  await new Promise(resolve => setTimeout(resolve, 2500));
   await command("goto /d/snow/tree", "榕樹上");
   const combatStartOffset = output.length;
   socket.send("kill arbao\r\n");
@@ -107,6 +110,10 @@ await runStage("combat", async () => {
 // Skills／技能：既有 KING fixture 的 Expansion 武學進度必須由真正 Runtime 指令讀取，
 // 並同時確認 Original skills 指令仍能執行，不以靜態欄位代替。
 await runStage("skills", async () => {
+  // Original MAX_COMMAND_PER_SECOND／每秒指令上限：Combat 會由 Driver 自動產生多個回合，
+  // 即使測試端只送出少量指令，也可能占滿同一秒的命令窗口。依真人操作節奏等待後再驗證武學，
+  // 避免把「下指令速度太快」誤判成 Skills Runtime 失敗。
+  await new Promise(resolve => setTimeout(resolve, 2500));
   const martial = await command("kingmartial yijinjing 300");
   assert.match(martial, /易筋經 Lv\.300／黑級無極境/);
   const skills = await command("skills");

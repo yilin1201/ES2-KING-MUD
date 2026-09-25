@@ -148,7 +148,7 @@ Historical/Original 顯示「寒梅心法」已有雙重 Evidence。後續 Runti
 - persistence/start/healthcheck scripts
 
 ### Workflows
-`.github/workflows/` 保留為自動化規格／歷史 CI；目前 GitHub Actions infrastructure 不作 Game Completion blocker。
+`.github/workflows/` 只保留 8 份現行 Regression／Release Gate；已完成里程碑的 25 份 Workflow 原文封存於 `docs/archive/workflows/`。對應測試 scripts 全數保留。GitHub Actions infrastructure 不作 Game Completion blocker。
 
 ## 8. Game Completion 主線
 
@@ -182,7 +182,7 @@ Quest 因 Original Evidence 不足維持 UNKNOWN，不虛構 Canon。Public Comp
 
 ## 10. 後續實體重構原則
 
-現在不大搬 `scripts/`、`.github/workflows/`、Runtime 路徑，因為會產生大量 path regression。
+`scripts/` 與 Runtime 路徑維持原位，避免 path regression；已完成里程碑 Workflow 已移出自動執行目錄並封存。
 
 Game Completion Full Driver 已達 PLAYABLE PASS；只有在 Owner 另行授權實體重構後，才考慮第二階段整理：
 - scripts 分 build/test/deploy；

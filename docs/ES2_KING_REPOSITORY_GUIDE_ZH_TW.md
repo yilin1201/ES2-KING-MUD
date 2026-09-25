@@ -1,13 +1,13 @@
 # ES2-KING GitHub 程式與檔案中文導覽
 
 > 盤點基準：Branch `build/original-es2-races-phase2`  
-> Head：`d16165f8ce358605beec7d7247eef7355e634ec1`  
+> Head：`c1fc52dd5a938b2100c91cfabdbd9c59593f2fdc`（Cleanup 前基準）  
 > PR #13：OPEN / NOT MERGED  
 > 本文件只整理與說明現有 Repository，不搬動 Original ES2 保存資料、不 Merge、不建立 M31。
 
 ## 一、先看懂整個 Repository
 
-目前 Repository 共 219 個檔案。建議用「規則 → Original → Expansion → 執行/測試 → Web/部署」的順序閱讀，而不是照 GitHub 字母排序。
+Cleanup 前 Repository 共 266 個檔案。建議用「規則 → Original → Expansion → 執行/測試 → Web/部署」的順序閱讀，而不是照 GitHub 字母排序。
 
 | 閱讀順序 | 區域 | 用途 | 是否可直接修改 |
 |---|---|---|---|
@@ -44,7 +44,7 @@ ES2-CN 中文規範。技術名詞第一次出現需有繁中名稱與白話用�
 
 ## 三、Original ES2：歷史保存與重建層
 
-`original_es2/` 是專案最重要的「原作證據區」，目前 62 個檔案。
+`original_es2/` 是專案最重要的「原作證據區」，目前 80 個檔案。
 
 ### 1. `original_es2/source_manifest.md`
 來源總表。最高優先上游為 `taedlar/es2_mudlib`，用來鎖定 Original ES2 真實程式來源。
@@ -68,7 +68,7 @@ ES2-CN 中文規範。技術名詞第一次出現需有繁中名稱與白話用�
 
 ## 四、ES2-KING Expansion：真正新增內容
 
-`es2_king_expansion/` 目前 25 個檔案，分成「設定/研究」與「Runtime 程式」。
+`es2_king_expansion/` 目前 31 個檔案，分成「設定/研究」與「Runtime 程式」。
 
 ### 設定與研究
 - `admin_rooms/wuji_realm.md`：天神殿・無極之境。
@@ -111,7 +111,7 @@ ES2-CN 中文規範。技術名詞第一次出現需有繁中名稱與白話用�
 
 ## 七、Scripts：工程執行中心
 
-`scripts/` 目前 66 個檔案，是數量最大的工程區之一。
+`scripts/` 目前 80 個檔案，是數量最大的工程區之一。
 
 ### A. 建立 Runtime
 - `bootstrap_original_es2.sh`：抓乾淨 Original ES2 + Neolith，建立可執行樹。
@@ -173,9 +173,9 @@ Node.js Web Bridge 套件與固定版本。
 
 ## 九、GitHub Actions
 
-`.github/workflows/` 目前 33 個 Workflow，從 M4/M5 到 M30 都有自動測試定義。
+`.github/workflows/` 現保留 8 份現行 Regression／Release Gate：M26～M30、M25 Release Candidate、Driver Build、Roadmap。M4～M24 與舊 Race Phase 2 共 25 份 Workflow 已原文移入 `docs/archive/workflows/`；對應 scripts 未刪除。
 
-它們是「測試規格與歷史自動化」，不是 33 個都要在每次小修正重跑。目前 US$0 限制下，GitHub Actions 維持 `ACTIONS-INFRA-BLOCKED`，不應反覆 rerun。
+GitHub Actions 維持 `ACTIONS-INFRA-BLOCKED`，不應反覆 rerun。
 
 ## 十、Docker / Render 部署層
 
