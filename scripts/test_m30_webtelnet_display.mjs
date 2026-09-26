@@ -22,6 +22,14 @@ assert.equal(rendered.includes("�"), false);
 
 const html = await readFile(new URL("../webtelnet/public/index.html", import.meta.url), "utf8");
 const server = await readFile(new URL("../webtelnet/server.mjs", import.meta.url), "utf8");
+// Browser Module Syntax Gate／瀏覽器模組語法閘門：HTML 可正常載入不代表 <script type="module"> 可執行。
+// 移除 import 宣告後交給 JavaScript parser；ANSI regex 若被雙重跳脫造成語法錯誤，Build 必須直接 FAIL。
+const moduleMatch = html.match(/<script type="module">([\\s\\S]*?)<\\/script>/);
+assert.ok(moduleMatch, "missing browser module");
+const browserModuleWithoutImports = moduleMatch[1].replace(/^\\s*import\\s+.*?;\\s*$/gm, "");
+assert.doesNotThrow(() => new Function(browserModuleWithoutImports), "browser module must parse");
+assert.doesNotMatch(moduleMatch[1], /\\\\\\\\x1b\\\\\\\\\\\\\\[/);
+
 assert.match(server, /new TelnetTextFilter\(\)/);
 assert.match(server, /telnetText\.push\(data\)/);
 assert.match(server, /"content-type": "text\/html; charset=utf-8",\s*"cache-control": "no-store"/);
