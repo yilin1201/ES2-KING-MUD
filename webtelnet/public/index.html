@@ -197,12 +197,12 @@
   function appendAnsiText(raw) {
     raw = ansiCarry + raw;
     ansiCarry = "";
-    const incomplete = raw.match(/\\x1b\\[[0-9;]*$/);
+    const incomplete = raw.match(/\x1b\[[0-9;]*$/);
     if (incomplete) {
       ansiCarry = incomplete[0];
       raw = raw.slice(0, -ansiCarry.length);
     }
-    const re = /\\x1b\\[([0-9;]*)m/g;
+    const re = /\x1b\[([0-9;]*)m/g;
     let last = 0;
     const emit = text => {
       if (!text) return;
