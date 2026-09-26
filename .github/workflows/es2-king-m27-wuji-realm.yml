@@ -2,9 +2,9 @@ name: ES2-KING M27 Wuji Realm
 on:
   push:
     branches: [build/original-es2-races-phase2]
-    paths: ['es2_king_expansion/runtime/mudlib/d/king/**', 'es2_king_expansion/runtime/mudlib/cmds/adm/kingrealm.c', 'es2_king_expansion/research/m27_*', 'es2_king_expansion/runtime/m27_*', 'scripts/test_m27_*', '.github/workflows/es2-king-m27-wuji-realm.yml']
+    paths: ['es2_king_expansion/runtime/mudlib/d/king/**', 'es2_king_expansion/runtime/mudlib/cmds/adm/kinghome.c', 'es2_king_expansion/research/m27_*', 'es2_king_expansion/runtime/m27_*', 'scripts/test_m27_*', '.github/workflows/es2-king-m27-wuji-realm.yml']
   pull_request:
-    paths: ['es2_king_expansion/runtime/mudlib/d/king/**', 'es2_king_expansion/runtime/mudlib/cmds/adm/kingrealm.c', 'es2_king_expansion/research/m27_*', 'es2_king_expansion/runtime/m27_*', 'scripts/test_m27_*', '.github/workflows/es2-king-m27-wuji-realm.yml']
+    paths: ['es2_king_expansion/runtime/mudlib/d/king/**', 'es2_king_expansion/runtime/mudlib/cmds/adm/kinghome.c', 'es2_king_expansion/research/m27_*', 'es2_king_expansion/runtime/m27_*', 'scripts/test_m27_*', '.github/workflows/es2-king-m27-wuji-realm.yml']
   workflow_dispatch:
 jobs:
   m27-wuji-realm:
