@@ -53,7 +53,7 @@ grep -Fq "case '\\r': /* CR */" "$NEOLITH_COMM"
 grep -Fq "from[i] == '\\n' || from[i] == '\\0'" "$NEOLITH_COMM"
 grep -Fq "lone CR is dropped" "$NEOLITH_COMM"
 grep -Fq 'ES2-KING OWNER COMMAND REHASH' "$COMMAND_D"
-for command in kingcreate kingrealm kingmartial kingcanon; do
+for command in kingcreate kinghome kingmartial kingcanon; do
   grep -Fqx "/cmds/adm/$command" "$PRELOAD_FILE"
 done
 test ! -e "$RUNTIME_DIR/mudlib/bin/adm/daemons/logind.b"
