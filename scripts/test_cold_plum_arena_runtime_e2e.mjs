@@ -73,6 +73,12 @@ const baseSkills = ["force", "sword", "parry", "dodge", "unarmed"];
 async function verifyKingProfile() {
   for (const attribute of attributes)
     assert.equal(callInt(await call(`me->query_attr("${attribute}")`), "query_attr"), 99, attribute);
+  // KING 正式角色狀態：精／氣／神／形體／飲水／食物三層值登入即為 999。
+  for (const stat of ["gin", "kee", "sen", "HP", "water", "food"]) {
+    assert.equal(callInt(await call(`me->query_stat_maximum("${stat}")`), "query_stat_maximum"), 999, stat + ":maximum");
+    assert.equal(callInt(await call(`me->query_stat_effective("${stat}")`), "query_stat_effective"), 999, stat + ":effective");
+    assert.equal(callInt(await call(`me->query_stat_current("${stat}")`), "query_stat_current"), 999, stat + ":current");
+  }
   for (const skill of [...coldSkills, ...baseSkills])
     assert.equal(callInt(await call(`me->query_skill("${skill}")`), "query_skill"), 200, skill);
   assert.match(await call('me->skill_mapped("force")'), /= "hainmay force"/);
