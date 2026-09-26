@@ -1,5 +1,5 @@
 /*---
-description: ES2-KING 如來神掌正式 Combat Skill／只實作已定稿招式與黃色演出
+description: ES2-KING 如來神掌正式 Combat Skill／只讓招式名稱使用黃色，Combat 敘述維持原遊戲白色
 ---*/
 #include <ansi.h>
 #pragma save_binary
