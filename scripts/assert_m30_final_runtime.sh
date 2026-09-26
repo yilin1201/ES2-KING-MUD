@@ -6,11 +6,18 @@ LOGIN_D="$RUNTIME_DIR/mudlib/adm/daemons/logind.c"
 COMMAND_D="$RUNTIME_DIR/mudlib/adm/daemons/cmd_d.c"
 PRELOAD_FILE="$RUNTIME_DIR/mudlib/adm/etc/preload"
 NEOLITH_COMM="$RUNTIME_DIR/neolith/src/comm.c"
+DRAGON_FORCE="$RUNTIME_DIR/mudlib/d/snow/skill/dragon_force.c"
 
 test -f "$LOGIN_D" || {
   echo "FINAL RUNTIME ASSERTION FAIL（最終執行環境斷言失敗）：找不到 $LOGIN_D" >&2
   exit 1
 }
+
+# Original Internal Skill runtime／Original 內功執行環境：耗盡時必須接回實際存在的
+# action interrupt() API，否則 busy callback 會永久阻止 save／quit。
+test -f "$DRAGON_FORCE"
+grep -Fq 'me->interrupt(me, "exhausted")' "$DRAGON_FORCE"
+! grep -Fq 'me->interrupt_me(me, "exhausted")' "$DRAGON_FORCE"
 
 # Final Runtime Assertion（最終執行環境斷言）：直接檢查 Neolith 即將載入的 logind，
 # 不以 Overlay 原始腳本存在作為替代證據。

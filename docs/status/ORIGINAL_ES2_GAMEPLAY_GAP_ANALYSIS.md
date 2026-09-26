@@ -1,6 +1,6 @@
 # Original ES2 Gameplay Gap Analysis
 
-> Baseline：Post-Neon HEAD `15e27c606886f1b96c2bbe5bda037989c767becb`  
+> Baseline：Internal Skill 前 HEAD `9f27811ac74e4b727acfcc5b9bd4ae565b6eb8b4`  
 > Evidence precedence：Original Source → Original 文件 → 歷史保存資料 → 玩家記錄。  
 > 本表只描述已保存 Original Runtime 的覆蓋程度；ES2-KING Expansion 不倒灌為 Original Canon。
 
@@ -18,13 +18,13 @@
 | Equipment | IMPLEMENTED | Original 木劍取得、wield 與 inventory 已在 Journey 通過。 |
 | Combat | IMPLEMENTED | Original kill／攻防回合已在真實 Driver 通過。 |
 | Skills | IMPLEMENTED | skill storage、study、enable／map 與既有 Journey 指令鏈可用；未保存門派技能全集不補造。 |
-| Internal Skill | PARTIAL | force mapping、exert 與 dragon force Source 可直接證明；尚缺完整玩家 Journey 與遺失內功內容。 |
+| Internal Skill | IMPLEMENTED | Original `force → dragon force` 的 enable／map、exert、精氣神消耗、戰鬥修正與 save／quit／relogin／restore 已由隔離真實 Driver 通過；未保存的其他內功內容維持 UNKNOWN。 |
 | Special Combat State | EVIDENCE FOUND / NOT IMPLEMENTED | 明鏡止水有歷史玩法與招式池證據；成本、回合、權重與 Original LPC 不足，禁止以 Expansion 推測補成 Original。 |
 | Apprentice | IMPLEMENTED | apprentice command、非同步收徒 flag、relation 保存與轉職已實機通過。 |
 | Quest | UNKNOWN | 候選版本與歷史文字存在，但目標 Original daemon、flags、獎勵與完整鏈未鎖定。 |
 | Economy | IMPLEMENTED | `finance.c`、`buy.c` 為 Original Source；本輪新增真實 Driver 貨幣扣款驗證。 |
 | Shop | IMPLEMENTED | waiter `F_VENDOR`、list、buy、交貨與 inventory 結果由同一 Session 驗證。 |
-| Inventory | PARTIAL | inventory、合併物品與 autoload Source 可用；任意裝備跨登入及跨容器逐物件驗收尚未全面覆蓋。 |
+| Inventory | PARTIAL | inventory、合併物品與 autoload Source 可用；本輪已驗證 37 文合併物品跨 save／quit／relogin 精確還原。非 autoload 任意裝備的保存仍無完整證據。 |
 | Death / Recovery | PARTIAL | 昏迷、corpse、ghost 與寺廟 make_living Source 已確認；城隍 register／輪迴與懲罰仍缺 LPC。 |
 | Save / Restore | IMPLEMENTED | Original save_object／restore_object、relogin 與 Neon 跨容器 restore 已通過。 |
 | Player progression | PARTIAL | level、score、skill、class／apprentice 保存鏈存在；完整長期成長與未保存職業公式尚未閉合。 |
@@ -34,11 +34,11 @@
 
 ## 下一個 Evidence-backed 功能
 
-選擇 **Original Economy / Shop（經濟／商店）**：
+Internal Skill 升級為 IMPLEMENTED 後，選擇 **Original Inventory（物品保存）**：
 
-1. Original Source 完整：`feature/char/finance.c` 明確提供 `can_afford()`／`pay_money()`，`cmds/std/buy.c` 執行扣款與交貨。
-2. Snow 保存 Runtime 具體：`d/snow/npc/waiter.c` 繼承 `F_VENDOR`，商品與 `list`／`buy` 介面均存在。
-3. 原 Full Driver Journey 只驗證 `list`，沒有證明實際付費、扣款、交貨及 inventory 結果。
-4. 此功能直接補足玩家可玩循環，不需要猜測 Quest、價格或任何缺失 Canon。
+1. Evidence 完整度最高：`feature/user/autoload.c` 明確定義保存與還原合約，`std/money.c` 明確保存合併數量。
+2. Runtime 相依性已具備：Original save／quit／relogin 與 Neon backing store 均已通過。
+3. Gameplay 價值直接：玩家攜帶狀態若無法精確還原，長期角色流程不成立。
+4. 不需要猜測 Quest、掉落表或任何遺失 Canon。
 
-本輪完成流程：隔離 KING fixture 建立 100 文測試貨幣 → `buy dumpling from waiter` → 驗證交貨 → inventory 驗證牛肉包子與餘額 90 文。測試資料只存在暫存 Runtime，不接觸正式玩家帳號。
+本輪實際進度：隔離 KING fixture 建立 37 文 → 記錄 `query_amount()` → save → quit → 新 WebSocket relogin → 驗證仍為 37。由於任意非 autoload 裝備沒有完整保存證據，Inventory 暫維持 PARTIAL。

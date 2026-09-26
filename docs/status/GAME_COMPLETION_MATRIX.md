@@ -1,6 +1,6 @@
 # ES2-KING Game Completion Matrix
 
-> Updated：2026-09-25  
+> Updated：2026-09-26  
 > Branch：`build/original-es2-races-phase2`  
 > Runtime Evidence Head（執行證據版本）：`07b865ce4a8ac9689e64580cc605f045e5cea0aa`  
 > PR #13：OPEN（開啟） / NOT MERGED（未合併）  
@@ -17,7 +17,8 @@
 | Economy / Shop | RUNTIME PASS | Original `buy` 實際扣款、Vendor 交貨與 Inventory 餘額通過 |
 | Items / Equipment | RUNTIME PASS | 物品與裝備流程實際通過 |
 | Combat | RUNTIME PASS | 戰鬥流程實際通過 |
-| Skills / Study / Force | RUNTIME PASS | Skills 流程實際通過；既有 M12/M13 行為保持 |
+| Skills / Study / Force | RUNTIME PASS | Original dragon force 的 enable／map、exert、資源消耗、戰鬥修正與重登還原已由隔離真 Driver 通過 |
+| Inventory Persistence | RUNTIME PASS / BOUNDED | Original money autoload 的合併數量 37 已跨 save／quit／relogin 精確還原；非 autoload 任意裝備仍不宣稱完成 |
 | School / Apprentice | RUNTIME PASS | 門派／師徒流程實際通過 |
 | Quest | UNKNOWN | Original Evidence 不足；不自行補造 Quest Canon、流程或數值 |
 | Character lifecycle | RUNTIME PASS | Character、Enter World 與生命週期串接通過 |
@@ -26,7 +27,7 @@
 | 天神殿／無極之境 | RUNTIME PASS | 既有 M27 Runtime 證據保持有效 |
 | Expansion 武學 | RUNTIME PASS | 既有 M28/M29 Runtime 證據保持有效；未定義 Original 數值仍 UNKNOWN |
 | Developer Bootstrap | COMPLETE | 已完成且供 Full Driver Journey 重用 |
-| Full Game Journey | PLAYABLE PASS | `Connect → Login → Character → Enter World → Look → Score → Inventory → Movement → NPC → Economy/Shop → Items/Equipment → Combat → Skills → School/Apprentice → Save → Quit → Relogin` |
+| Full Game Journey | PLAYABLE PASS | 既有 Journey 保持；本輪另由真 Driver 完成 `Login → Force Enable/Map → Exert → Combat → Save → Quit → Relogin → Force Restore → Inventory Autoload Restore` |
 | Primary Public Runtime | DEPLOYED / SYNCED | `ES2-KING-MUD`；Post-Neon baseline 公開 `/health` 與 Branch HEAD `15e27c606886f1b96c2bbe5bda037989c767becb` 一致 |
 | Public Race Runtime | RUNTIME PASS | 真實公開 WSS 完成 Race → Gender → Character → Enter Game；不是 Static PASS |
 | Public Device Acceptance | PASS | Owner 已確認 iPhone Public Runtime |
