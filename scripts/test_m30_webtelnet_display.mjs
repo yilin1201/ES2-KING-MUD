@@ -24,7 +24,11 @@ const html = await readFile(new URL("../webtelnet/public/index.html", import.met
 const server = await readFile(new URL("../webtelnet/server.mjs", import.meta.url), "utf8");
 // Browser Module Syntax Gate／瀏覽器模組語法閘門：HTML 可正常載入不代表 <script type="module"> 可執行。
 // 移除 import 宣告後交給 JavaScript parser；ANSI regex 若被雙重跳脫造成語法錯誤，Build 必須直接 FAIL。
-const moduleMatch = html.match(/<script type="module">([\\s\\S]*?)<\\/script>/);
+const moduleStart = html.indexOf('<script type="module">');
+const moduleEnd = html.indexOf('</script>', moduleStart);
+const moduleMatch = moduleStart >= 0 && moduleEnd > moduleStart
+  ? [html.slice(moduleStart, moduleEnd + 9), html.slice(moduleStart + '<script type="module">'.length, moduleEnd)]
+  : null;
 assert.ok(moduleMatch, "missing browser module");
 const browserModuleWithoutImports = moduleMatch[1].replace(/^\\s*import\\s+.*?;\\s*$/gm, "");
 assert.doesNotThrow(() => new Function(browserModuleWithoutImports), "browser module must parse");
