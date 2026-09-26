@@ -388,7 +388,7 @@ text = text.replace(
     'NOR "%s" NOR "\\n", line,\n            status_color (ob->query_stat("sen"), ob->query_stat_maximum ("sen")),\n            ob->query_stat ("sen"), ob->query_stat_maximum ("sen"),\n            score_grid_bar(HIY, ob->query_stat("sen"), ob->query_stat_effective("sen"), ob->query_stat_maximum("sen"))'
 )
 needle='string tribar_graph (string fill_char, string sep, string empty_char, int val, int eff, int max) {'
-helper=r'''// ES2-KING SCORE GRID BARS／純終端全高實心格；保留 Original current/effective/maximum 三值。
+helper=r'''// ES2-KING SCORE GRID BARS／純終端雙寬連續矩形格；保留 Original current/effective/maximum 三值。
 string score_grid_bar (string color, int val, int eff, int max) {
     int i, n_filled, n_effective;
     string bar = "";
@@ -404,11 +404,11 @@ string score_grid_bar (string color, int val, int eff, int max) {
 
     for (i = 0; i < 30; i++) {
         if (i < n_filled)
-            bar += color + "█ " NOR;
+            bar += color + "██" NOR;
         else if (i < n_effective)
-            bar += color + "▓ " NOR;
+            bar += color + "▓▓" NOR;
         else
-            bar += HIK + "░ " NOR;
+            bar += HIK + "░░" NOR;
     }
     return bar;
 }
