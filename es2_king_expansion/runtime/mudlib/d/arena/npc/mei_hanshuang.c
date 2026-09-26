@@ -14,7 +14,21 @@ string *arena_300_skills = ({
 
 void activate_mirror_state()
 {
-    if (!is_fighting() || query_temp("cold_plum/mirror_state")) return;
+    object opponent;
+
+    if (!is_fighting()) return;
+
+    /*
+     * 明鏡止水啟動後，沿用 Original NPC combat-chat heartbeat 加速冷梅出招：
+     * 不建立新傷害倍率，只額外呼叫一次 Original attack(opponent)，
+     * 命中／防禦／吸收／傷害仍全部交由 COMBAT_D。
+     */
+    if (query_temp("cold_plum/mirror_state")) {
+        opponent = query_opponent();
+        if (objectp(opponent) && environment(opponent) == environment())
+            attack(opponent);
+        return;
+    }
 
     set_temp("cold_plum/mirror_state", 1);
     set_temp("cold_plum/mirror_index", 0);
@@ -78,6 +92,7 @@ void create()
     // Expansion skill 不在 /daemon/skill 預設路徑；先載入並向 Original DAEMON_D 登記。
     // 之後 Combat 仍走 Original attack() -> weapon->attack_with() -> SKILL_D("lunmay")。
     load_object("/d/arena/skill/lunmay");
+    map_skill("force", "hainmay force");
     map_skill("sword", "lunmay");
 
     // 正式武學鏈：寒梅心法 → 明鏡止水 → 冷梅劍法五式 → 傲梅暗劍訣・傲雪藏鋒・逆折寒梅。
