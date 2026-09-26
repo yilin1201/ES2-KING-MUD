@@ -67,12 +67,10 @@ for (const token of [
 ]) {
   if (!kingMartial.includes(token)) throw new Error("missing KING Cold Plum wiring: " + token);
 }
-for (const token of [
-  "KING_D->apply_creator_profile(me)",
-  "KING_MARTIAL_D->set_cold_plum(me, 200)",
-  'me->move("/d/king/wuji_realm")'
-]) {
-  if (!kingHome.includes(token)) throw new Error("missing KING home movement: " + token);
+if (!kingHome.includes('me->move("/d/king/wuji_realm")'))
+  throw new Error("missing KING home movement");
+for (const forbidden of ["apply_creator_profile", "set_cold_plum"]) {
+  if (kingHome.includes(forbidden)) throw new Error("kinghome must only move KING, not provision profile: " + forbidden);
 }
 for (const token of [
   "ES2-KING OWNER LOGIN PROVISIONING",
