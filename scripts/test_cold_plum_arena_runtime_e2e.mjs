@@ -119,6 +119,17 @@ for (const attribute of attributes)
   assert.equal(callInt(await call(`mei->query_attr("${attribute}")`), "query_attr"), 50, attribute);
 console.log("COLD_PLUM_PASS:npc-attributes-skills");
 
+// 如來神掌正式 Gameplay Gate：KING 空手時必須由 Original attack() 進入 rulai shenzhang daemon，
+// 並實際輸出黃色 ANSI 招式；只看 skills/mapping 不算 PASS。
+const rulaiOffset = output.length;
+await send("kill mei");
+await wait(rulaiOffset, /佛光初現/, 30000);
+assert.ok(output.slice(rulaiOffset).includes("\\x1b[1;33m") || output.slice(rulaiOffset).includes("\\x1b[33m"), "Rulai combat missing yellow ANSI");
+console.log("RULAI_PASS:formal-yellow-combat");
+await call('me->remove_all_killer()');
+await call('mei->remove_all_killer()');
+
+
 const levelBefore = callInt(await call("me->query_level()"), "query_level");
 const forceBefore = callInt(await call('me->query_skill("force",1)'), "query_skill");
 const hpMaximum = callInt(await call('me->query_stat_maximum("HP")'), "query_stat_maximum");
