@@ -93,6 +93,9 @@ for (const form of ["佛光初現","金頂佛燈","佛動山河","佛問迦藍",
   if (!rulai.includes(form)) throw new Error("missing Rulai form: " + form);
 }
 if ((rulai.match(/HIY/g) || []).length < 11) throw new Error("Rulai forms must use yellow ANSI presentation");
+for (const token of ['DAEMON_D->register_skill_daemon("rulai shenzhang")', 'valid_enable(string usage) { return usage == "unarmed"; }', "void attack_using(object me, object opponent, string skill)", 'COMBAT_D->fight(me, opponent, "unarmed", action)']) {
+  if (!rulai.includes(token)) throw new Error("Rulai missing Original Combat integration: " + token);
+}
 for (const forbidden of ["busy(", "consume_stat(", "add_temp(", "set_stat_current("]) {
   if (rulai.includes(forbidden)) throw new Error("Rulai combat must not invent UNKNOWN mechanics: " + forbidden);
 }
