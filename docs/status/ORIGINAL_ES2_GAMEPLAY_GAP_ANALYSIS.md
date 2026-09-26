@@ -29,16 +29,20 @@
 | Save / Restore | IMPLEMENTED | Original save_object／restore_object、relogin 與 Neon 跨容器 restore 已通過。 |
 | Player progression | PARTIAL | level、score、skill、class／apprentice 保存鏈存在；完整長期成長與未保存職業公式尚未閉合。 |
 | Commands | IMPLEMENTED | look、score、inventory、movement、combat、skills、apprentice、save、quit 與管理指令已執行。 |
-| Social / communication | PARTIAL | say／tell 等 Original command Source 存在，但尚未納入雙玩家 Runtime Journey。 |
+| Social / communication | PARTIAL / RUNTIME GATE READY | Original `say.c`／`tell.c`／`reply.c` 已確認；已加入隔離雙玩家真實 Driver E2E Gate，待具備既有本機 Neolith Runtime／fixture 的執行環境跑完後，才能升級 IMPLEMENTED。 |
 | Admin / KING | IMPLEMENTED | KING password／character restore、admin state 與 Owner authorization 已通過；明確屬 ES2-KING 管理層。 |
 
-## 下一個 Evidence-backed 功能
+## Social / Communication Runtime Completion
 
-Internal Skill 升級為 IMPLEMENTED 後，選擇 **Original Inventory（物品保存）**：
+Original Source 已直接確認：
+- `mudlib/cmds/std/say.c`：同房訊息廣播與 `relay_say`。
+- `mudlib/cmds/std/tell.c`：線上玩家 lookup、私訊、ignore、節流與 reply target。
+- `mudlib/cmds/std/reply.c`：依暫存 reply target 回覆，包含離線／ignore／netdead 邊界。
 
-1. Evidence 完整度最高：`feature/user/autoload.c` 明確定義保存與還原合約，`std/money.c` 明確保存合併數量。
-2. Runtime 相依性已具備：Original save／quit／relogin 與 Neon backing store 均已通過。
-3. Gameplay 價值直接：玩家攜帶狀態若無法精確還原，長期角色流程不成立。
-4. 不需要猜測 Quest、掉落表或任何遺失 Canon。
+新增隔離雙玩家 Runtime Gate：
+`scripts/test_original_social_communication_runtime_e2e.sh`
+→ `scripts/test_original_social_communication_runtime_e2e.mjs`
 
-本輪實際進度：隔離 KING fixture 建立 37 文 → 記錄 `query_amount()` → save → quit → 新 WebSocket relogin → 驗證仍為 37。由於任意非 autoload 裝備沒有完整保存證據，Inventory 暫維持 PARTIAL。
+驗證範圍：say 同房 UTF-8、tell 私訊 routing、reply routing、不存在玩家 Original error、disconnect／relogin 後 tell。
+
+目前此聊天執行環境沒有 Work 先前建立的本機 Neolith binary 與 real save_object fixture，因此本輪不以 Static Gate 冒充 Runtime PASS；狀態暫保留 PARTIAL，待該 Gate 在具備 Runtime 的執行環境完成。
