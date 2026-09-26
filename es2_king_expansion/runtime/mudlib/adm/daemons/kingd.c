@@ -26,6 +26,24 @@ int authorized(object actor)
 
 string query_owner_id() { return KING_OWNER_ID; }
 
+int apply_creator_profile(object actor)
+{
+    string *attrs = ({ "str", "cor", "int", "spi", "cps", "dex", "con", "wis" });
+    string attr;
+
+    if (!authorized(actor)) return 0;
+
+    // Project Canon：KING 八項基礎屬性固定 99。
+    // 只使用正式 attribute API，不用 temp/apply 偽裝顯示值。
+    foreach (attr in attrs)
+        if (actor->set_attr(attr, 99) != 99)
+            return 0;
+
+    actor->set("es2_king/creator_profile", 1);
+    actor->set("es2_king/creator_attribute", 99);
+    return 1;
+}
+
 mapping query_creation_registry(object actor)
 {
     if (!authorized(actor)) return ([]);
