@@ -340,7 +340,9 @@ for cached_binary in \
   "$TARGET/mudlib/bin/adm/daemons/kingmartiald.b" \
   "$TARGET/mudlib/bin/cmds/std/perform.b" \
   "$TARGET/mudlib/bin/daemon/skill/kuxiao_force.b" \
-  "$TARGET/mudlib/bin/daemon/skill/daxie_qisun_blade.b"
+  "$TARGET/mudlib/bin/daemon/skill/daxie_qisun_blade.b" \
+  "$TARGET/mudlib/bin/d/arena/skill/lunmay.b" \
+  "$TARGET/mudlib/bin/d/arena/npc/mei_hanshuang.b"
 do
   if [[ -e "$cached_binary" ]]; then
     unlink "$cached_binary"
@@ -356,6 +358,8 @@ for expansion_skill in kuxiao_force daxie_qisun_blade; do
   grep -Fqx "/daemon/skill/$expansion_skill" "$PRELOAD_FILE" \
     || printf '%s\n' "/daemon/skill/$expansion_skill" >> "$PRELOAD_FILE"
 done
+grep -Fqx "/d/arena/skill/lunmay" "$PRELOAD_FILE" \
+  || printf '%s\n' "/d/arena/skill/lunmay" >> "$PRELOAD_FILE"
 for owner_command in kingcreate kingrealm kingmartial kingcanon; do
   grep -Fqx "/cmds/adm/$owner_command" "$PRELOAD_FILE" \
     || printf '%s\n' "/cmds/adm/$owner_command" >> "$PRELOAD_FILE"
