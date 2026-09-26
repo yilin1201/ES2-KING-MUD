@@ -68,4 +68,12 @@ fi
 # 確保部署映像實際包含梅寒霜、六式與 UNKNOWN 邊界，而不是只檢查 repository source。
 bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_cold_plum_arena_static.sh" "$RUNTIME_DIR"
 
+
+# Score Grid Bars／形體精氣神方格條只改顯示，保留 Original 三值 Statistic。
+grep -Fq 'ES2-KING SCORE GRID BARS' "$ROOT/mudlib/cmds/usr/score.c"
+grep -Fq 'score_grid_bar(HIG' "$ROOT/mudlib/cmds/usr/score.c"
+grep -Fq 'score_grid_bar(HIR' "$ROOT/mudlib/cmds/usr/score.c"
+grep -Fq 'score_grid_bar(HIB' "$ROOT/mudlib/cmds/usr/score.c"
+grep -Fq 'score_grid_bar(HIY' "$ROOT/mudlib/cmds/usr/score.c"
+
 echo "FINAL RUNTIME OVERLAY ASSERTION PASS（最終執行環境覆蓋層斷言通過）：新版 KING 保留流程、Public Race Text 相容層與 Cold Plum Arena Static Gate 均已通過。"
