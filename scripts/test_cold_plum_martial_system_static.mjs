@@ -88,3 +88,5 @@ for (const forbidden of ["必中", "必殺", "穿透率", "傷害倍率", '"atta
   if (skill.includes(forbidden)) throw new Error("unsupported Cold Plum numeric/effect invention: " + forbidden);
 }
 console.log("KING_99_COLD_PLUM_STATIC_PASS");
+
+for (const token of ['"gin", "kee", "sen", "HP", "water", "food"', "set_stat_maximum(stat, 999)", "set_stat_effective(stat, 999)", "set_stat_current(stat, 999)"]) if (!kingd.includes(token)) throw new Error("missing KING 999 statistic provisioning: " + token);
