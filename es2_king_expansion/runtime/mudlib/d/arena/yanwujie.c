@@ -19,12 +19,12 @@ void create()
 的精、氣、神與 Combat／Statistic 系統。真正的敗北保護由 Runtime 死亡鏈確認後接入，
 在此之前不以未被 Original die() 呼叫的 Room Hook 冒充「不死」機制。
 
-一道太初神光懸於上方，可循光返回【天神殿・無極之境】。
+身後的太初神光凝而不散，形成一道通往現世的界門；若欲離開演武界，可循此門返回【天神殿・無極之境】。
 LONG
     );
 
     set("exits", ([
-        "up" : "/d/king/wuji_realm",
+        "out" : "/d/king/wuji_realm",
     ]));
 
     // Arena Metadata／競技場標記：供後續經 Original Death call chain 驗證的保護層辨識。
