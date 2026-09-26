@@ -1,16 +1,17 @@
 # Scripts 邏輯分類索引
 
 > Cleanup 基準：`c1fc52dd5a938b2100c91cfabdbd9c59593f2fdc`  
-> 80 份 Script 均有 Runtime、Regression、Deployment 或歷史 Gate 用途。為避免 Docker／Workflow／Script path regression，本輪維持原路徑，只做完整分類，不實體搬移。
+> 81 份 Script 均有 Runtime、Regression、Deployment 或歷史 Gate 用途。為避免 Docker／Workflow／Script path regression，本輪維持原路徑，只做完整分類，不實體搬移。
 
 ## 01_BUILD_OVERLAY（2）
 
 - `scripts/apply_es2_king_expansion.sh`
 - `scripts/bootstrap_original_es2.sh`
 
-## 02_RUNTIME_DEPLOY（11）
+## 02_RUNTIME_DEPLOY（12）
 
 - `scripts/assert_m30_final_runtime.sh`
+- `scripts/es2_neon_persistence.py`
 - `scripts/healthcheck_es2_king.mjs`
 - `scripts/prepare_es2_persistence.sh`
 - `scripts/start_es2_king.sh`

@@ -14,6 +14,7 @@
 | World / Map | RUNTIME PASS | Enter World、Look、Movement 已在完整流程通過 |
 | Movement | RUNTIME PASS | 真實 Driver 移動流程通過 |
 | NPC | RUNTIME PASS | NPC interaction 實際通過 |
+| Economy / Shop | RUNTIME PASS | Original `buy` 實際扣款、Vendor 交貨與 Inventory 餘額通過 |
 | Items / Equipment | RUNTIME PASS | 物品與裝備流程實際通過 |
 | Combat | RUNTIME PASS | 戰鬥流程實際通過 |
 | Skills / Study / Force | RUNTIME PASS | Skills 流程實際通過；既有 M12/M13 行為保持 |
@@ -25,11 +26,11 @@
 | 天神殿／無極之境 | RUNTIME PASS | 既有 M27 Runtime 證據保持有效 |
 | Expansion 武學 | RUNTIME PASS | 既有 M28/M29 Runtime 證據保持有效；未定義 Original 數值仍 UNKNOWN |
 | Developer Bootstrap | COMPLETE | 已完成且供 Full Driver Journey 重用 |
-| Full Game Journey | PLAYABLE PASS | `Connect → Login → Character → Enter World → Look → Score → Inventory → Movement → NPC → Items/Equipment → Combat → Skills → School/Apprentice → Save → Quit → Relogin` |
-| Primary Public Runtime | DEPLOYED / SYNCED | `ES2-KING-MUD`；公開 `/health` 的 Commit 與 Branch HEAD `0c260ee1bfb1630016b858ae0e96a68f4eb17900` 一致 |
+| Full Game Journey | PLAYABLE PASS | `Connect → Login → Character → Enter World → Look → Score → Inventory → Movement → NPC → Economy/Shop → Items/Equipment → Combat → Skills → School/Apprentice → Save → Quit → Relogin` |
+| Primary Public Runtime | DEPLOYED / SYNCED | `ES2-KING-MUD`；Post-Neon baseline 公開 `/health` 與 Branch HEAD `15e27c606886f1b96c2bbe5bda037989c767becb` 一致 |
 | Public Race Runtime | RUNTIME PASS | 真實公開 WSS 完成 Race → Gender → Character → Enter Game；不是 Static PASS |
-| Public Device Acceptance | PENDING | 尚需 Owner 使用 iPhone Safari 在 Primary URL 最終確認 Race UI |
-| Public Compatibility | PARTIAL | 公開 Runtime PASS；Owner Device Gate 尚未完成 |
+| Public Device Acceptance | PASS | Owner 已確認 iPhone Public Runtime |
+| Public Compatibility | PASS | 公開 Runtime、Web Client、WSS 與 iPhone Entry 均通過 |
 | Render | RUNTIME PASS | HTTPS、WSS、Bridge、Neolith 與 Login Prompt 已在 Primary Service 實測通過 |
 | Game Completion Track | PLAYABLE PASS | 五個缺口段落與完整 Journey 均取得真實 Neolith Runtime 證據 |
 

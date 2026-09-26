@@ -41,7 +41,7 @@ do
 done
 
 # Full Driver Journey／完整驅動器旅程：介面閘門通過後，必須由同一個真正 Neolith
-# Session 串行驗證 NPC、物品／裝備、戰鬥、技能與門派／拜師；Static Gate 不得冒充 Runtime PASS。
+# Session 串行驗證 NPC、經濟／商店、物品／裝備、戰鬥、技能與門派／拜師；Static Gate 不得冒充 Runtime PASS。
 ES2_DRIVER_BIN="$DRIVER_BIN" \
 bash "$REPO_ROOT/scripts/test_game_completion_full_driver_e2e.sh" "$SOURCE_RUNTIME" "$FIXTURE"
 

@@ -9,11 +9,13 @@
 
 | 分類 | 數量 | 判定 |
 |---|---:|---|
-| KEEP | 241 | Runtime／Source／Evidence／Canon／Deployment／歷史追溯必要 |
+| KEEP | 246 | Runtime／Source／Evidence／Canon／Deployment／歷史追溯必要；含 Post-Neon 新增檔案與本輪 Audit |
 | MOVE | 0 | scripts 實體搬移風險高，維持穩定路徑 |
 | ARCHIVE | 25 | 已完成 Milestone Workflow，原文封存並停止自動觸發 |
 | DELETE | 0 | 未發現同 SHA 重複檔或已追蹤垃圾產物 |
 | UNKNOWN | 0 | 逐檔用途均可由既有治理／引用判定 |
+
+> Post-Neon 重驗總數：271（KEEP 246 + ARCHIVE 25）。DELETE 仍為 0；未因不執行而刪除任何 Evidence／History。
 
 ## 逐檔分類
 
@@ -54,6 +56,7 @@
 - **KEEP** — `.gitignore`
 - **KEEP** — `AGENTS.md`
 - **KEEP** — `Dockerfile`
+- **KEEP** — `db/migrations/001_es2_persistence.sql`
 - **KEEP** — `docs/DOCUMENT_GOVERNANCE_ZH_TW.md`
 - **KEEP** — `docs/ES2_KING_REPOSITORY_GUIDE_ZH_TW.md`
 - **KEEP** — `docs/history/m30/M30_ALPHA_FINAL_AUDIT.md`
@@ -67,6 +70,9 @@
 - **KEEP** — `docs/status/CURRENT_M30_STATUS.md`
 - **KEEP** — `docs/status/GAME_COMPLETION_MATRIX.md`
 - **KEEP** — `docs/status/PLAYABLE_ENTRY.md`
+- **KEEP** — `docs/status/POST_NEON_RUNTIME_AUDIT.md`
+- **KEEP** — `docs/status/ORIGINAL_ES2_GAMEPLAY_GAP_ANALYSIS.md`
+- **KEEP** — `docs/status/REPOSITORY_CLEANUP_INVENTORY.md`
 - **KEEP** — `ES2_CN_STANDARD.md`
 - **KEEP** — `es2_king_expansion/admin_rooms/wuji_realm.md`
 - **KEEP** — `es2_king_expansion/canon/interface/score_interface_spec.md`
@@ -201,6 +207,7 @@
 - **KEEP** — `scripts/audit_game_completion_runtime.sh`
 - **KEEP** — `scripts/bootstrap_game_completion_character.sh`
 - **KEEP** — `scripts/bootstrap_original_es2.sh`
+- **KEEP** — `scripts/es2_neon_persistence.py`
 - **KEEP** — `scripts/healthcheck_es2_king.mjs`
 - **KEEP** — `scripts/prepare_es2_persistence.sh`
 - **KEEP** — `scripts/run_game_completion_track.sh`

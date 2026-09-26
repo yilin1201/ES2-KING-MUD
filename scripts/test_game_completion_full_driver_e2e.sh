@@ -104,10 +104,11 @@ ES2_E2E_KING_PASSWORD="$TEST_PASSWORD" \
 ES2_E2E_START_STAGE="$ES2_E2E_START_STAGE" \
 node "$REPO_ROOT/scripts/test_game_completion_full_driver_e2e.mjs" | tee "$JOURNEY_LOG"
 
-# Completion Proof／完成證據：五個 stage marker 與角色生命週期 marker 必須全部存在，
+# Completion Proof／完成證據：六個 stage marker 與角色生命週期 marker 必須全部存在，
 # 才能把單一 Driver Journey 標記為完整 PASS。
 case "$ES2_E2E_START_STAGE" in
-  npc) required="npc items combat skills school" ;;
+  npc) required="npc economy items combat skills school" ;;
+  economy) required="economy items combat skills school" ;;
   items) required="items combat skills school" ;;
   combat) required="combat skills school" ;;
   skills) required="skills school" ;;
@@ -125,4 +126,4 @@ grep -Fq "E2E_LIFECYCLE_PASS:save-quit-relogin" "$JOURNEY_LOG" || {
   exit 1
 }
 
-echo "FULL DRIVER JOURNEY PASS（測試通過）：NPC、物品／裝備、戰鬥、技能、門派／拜師已由單一 Neolith Session 完成。"
+echo "FULL DRIVER JOURNEY PASS（測試通過）：NPC、經濟／商店、物品／裝備、戰鬥、技能、門派／拜師已由單一 Neolith Session 完成。"

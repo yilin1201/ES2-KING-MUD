@@ -5,7 +5,7 @@ const url = process.env.ES2_E2E_WS_URL;
 const password = process.env.ES2_E2E_KING_PASSWORD;
 const startStage = process.env.ES2_E2E_START_STAGE ?? "npc";
 assert.ok(url && password);
-const stages = ["npc", "items", "combat", "skills", "school"];
+const stages = ["npc", "economy", "items", "combat", "skills", "school"];
 assert.ok(stages.includes(startStage));
 const shouldRun = stage => stages.indexOf(stage) >= stages.indexOf(startStage);
 const pass = stage => console.log(`E2E_STAGE_PASS:${stage}`);
@@ -79,6 +79,24 @@ await runStage("npc", async () => {
   assert.match(npcLook, /店小二|list 看可以點什麼菜/);
   const npcList = await command("list");
   assert.match(npcList, /店小二|價錢|包子|饅頭|雞/);
+});
+
+// Economy / Shop／經濟與商店：用 Original 巫師指令只在隔離測試角色建立測試貨幣，
+// 再由玩家的 buy 指令走過 vendor、can_afford、pay_money 與交貨流程；不修改正式 KING 存檔。
+await runStage("economy", async () => {
+  await command("goto /d/snow/inn_hall", "客棧大堂");
+  const cloned = await command("clone 100 /obj/money/coin");
+  assert.match(cloned, /錢複製成功/);
+  const before = await command("inventory");
+  assert.match(before, /一百文錢/);
+
+  const purchaseOffset = output.length;
+  socket.send("buy dumpling from waiter\r\n");
+  const purchase = await waitForAfter(purchaseOffset, /買下一個牛肉包子|送到.*面前/, 30000);
+  assert.doesNotMatch(purchase, /錢不夠|找不開|不願意跟你交易/);
+  const after = await command("inventory");
+  assert.match(after, /九十文錢/);
+  assert.match(after, /牛肉包子/);
 });
 
 // Items / Equipment／物品與裝備：取得 Original 木劍、裝備後由 inventory 確認。
