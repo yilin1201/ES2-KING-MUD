@@ -1,6 +1,7 @@
 // ES2-KING Expansion：冷梅劍法 Combat daemon。
-// 六式名稱來自既有 gameplay evidence；未知 Original 係數不補造，attack/force/defense 全維持 0。
-// 明鏡止水啟動後，依序輪轉六式，避免把未知權重偽造成機率設定。
+// 冷梅劍法五式名稱來自既有 gameplay evidence；傲梅暗劍訣為 ES2-KING Expansion 正式進階殺招。
+// 未知 Original 係數不補造，attack/force/defense 全維持 0。
+// 明鏡止水啟動後，五式與進階殺招依序輪轉，避免把未知權重偽造成機率設定。
 
 #include <ansi.h>
 inherit SKILL;
