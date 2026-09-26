@@ -369,7 +369,7 @@ path = Path(sys.argv[1])
 text = path.read_text()
 text = text.replace(
     'string tribar_graph (string fill_char, string sep, string empty_char, int val, int eff, int max);',
-    'string tribar_graph (string fill_char, string sep, string empty_char, int val, int eff, int max);\nstring score_grid_bar (string color, int val, int eff, int max); // ES2-KING SCORE GRID BARS'
+    'string tribar_graph (string fill_char, string sep, string empty_char, int val, int eff, int max);\nstring score_grid_bar (string kind, string color, int val, int eff, int max); // ES2-KING SCORE GRID BARS'
 )
 text = text.replace(
     'NOR BGRN "%s" NOR "\\n\\n", line,\n        status_color(ob->query_stat("HP"), ob->query_stat_maximum("HP")),\n        ob->query_stat("HP"), ob->query_stat_maximum("HP"),\n        tribar_graph(" ", BRED, " ", ob->query_stat("HP"), ob->query_stat_effective("HP"), ob->query_stat_maximum("HP"))',
