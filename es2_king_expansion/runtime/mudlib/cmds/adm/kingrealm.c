@@ -8,8 +8,7 @@ int main(object me, string arg)
     SECURED_ADMIN_COMMAND;
     if (!KING_D->authorized(me))
         return notify_fail("只有 ES2-KING Owner 帳號可以進入此境。\n");
-    if (!me->move("/d/king/wuji_realm"))
-        return notify_fail("無法進入天神殿・無極之境。\n");
+    if (!KING_D->apply_creator_profile(me))\n        return notify_fail("KING 創世神屬性配置失敗，未進入天神殿。\\n");\n    if (!me->move("/d/king/wuji_realm"))\n        return notify_fail("無法進入天神殿・無極之境。\n");
     write("你跨越凡塵界限，進入天神殿・無極之境。\n");
     return 1;
 }
