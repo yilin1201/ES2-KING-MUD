@@ -1,15 +1,48 @@
 // /d/arena/npc/mei_hanshuang.c
-// ES2-KING Expansion Arena Test NPC／演武界冷梅系測試人物。
-// 文學形象參考使用者提供的 Gemini 草稿；能力、Skill 實作依 ES2 原生 API。
-// 未有 Original Evidence 的被動、倍率、明鏡止水完整機制不實作。
+// ES2-KING Expansion Arena NPC：天涯折梅「傲雪凌霜」梅寒霜。
+// 冷梅六式與明鏡止水依既有 Evidence 接入 Original Combat；未知倍率／續航公式維持 UNKNOWN。
 
 #include <ansi.h>
 #include <npc.h>
 
-inherit F_VILLAGER;
+inherit F_FIGHTER;
+
+string *arena_300_skills = ({
+    "hainmay force", "advance_lunmay", "lunmay", "mayin", "seven",
+    "force", "sword", "parry", "dodge", "unarmed"
+});
+
+void activate_mirror_state()
+{
+    if (!is_fighting() || query_temp("cold_plum/mirror_state")) return;
+
+    set_temp("cold_plum/mirror_state", 1);
+    set_temp("cold_plum/mirror_index", 0);
+    message_vision(HIC
+        "\n【明鏡止水】\n"
+        "$N眼簾微垂，周身原本流轉的氣機忽然歸於澄寂；手中焦黑枯梅枝輕顫，"
+        "冷梅劍意自此不再拘泥一招一式。\n\n" NOR, this_object());
+}
+
+/*
+ * Original ES2 F_SKILL 將 set_skill/query_skill 的一般上限鎖在 200。
+ * 使用者指定此 Arena 測試化身為 Skills 300；因此只對梅寒霜本人做 Expansion-local
+ * effective level override，不修改全域 F_SKILL，也不改玩家、其他 NPC 或 Original 規則。
+ */
+varargs int query_skill(string skill, int raw)
+{
+    int value;
+
+    value = ::query_skill(skill, raw);
+    if (member_array(skill, arena_300_skills) >= 0 && value >= 200)
+        return 300;
+    return value;
+}
 
 void create()
 {
+    object weapon;
+
     set_name("梅寒霜", ({ "mei hanshuang", "mei", "hanshuang" }));
     set("title", HIW "天涯折梅" NOR);
     set("nickname", HIC "傲雪凌霜" NOR);
@@ -26,44 +59,42 @@ void create()
         "腰間懸著一隻泛黃的古藤酒葫蘆，手中只扣著一截焦黑枯梅枝。\n"
         "此身為演武界冷梅武學測試化身；文學稱號與形象屬 ES2-KING Expansion。\n");
 
-    // 八項能力／Eight Original ES2 attributes：依使用者指定全部 50。
-    set_attr("str", 50);
-    set_attr("cor", 50);
-    set_attr("int", 50);
-    set_attr("spi", 50);
-    set_attr("cps", 50);
-    set_attr("dex", 50);
-    set_attr("con", 50);
-    set_attr("wis", 50);
+    set_attr("str", 50); set_attr("cor", 50);
+    set_attr("int", 50); set_attr("spi", 50);
+    set_attr("cps", 50); set_attr("dex", 50);
+    set_attr("con", 50); set_attr("wis", 50);
 
-    // 已有 Evidence 的冷梅系 Skill 名稱；本 Arena 測試化身統一 Lv.300。
     set_skill("hainmay force", 300);
     set_skill("advance_lunmay", 300);
     set_skill("lunmay", 300);
     set_skill("mayin", 300);
     set_skill("seven", 300);
-
-    // Original ES2 基本 usage，讓 Combat 可實際讀取 300 級能力。
     set_skill("force", 300);
     set_skill("sword", 300);
     set_skill("parry", 300);
     set_skill("dodge", 300);
     set_skill("unarmed", 300);
 
-    // 不建立 Gemini 草稿的 1900 級、35% 閃避、穿透、元素免疫、自動回血等未證實公式。
+    // 真正 Combat mapping：持劍時 Original attack() -> weapon->attack_with() -> SKILL_D("lunmay").
+    map_skill("sword", "lunmay");
+
+    // 明鏡止水為高階寒梅心法進階戰鬥境界；NPC 開戰後自動進入。
+    // 續航提升的具體恢復量/週期仍無 Evidence，本輪不補造數值。
+    set("chat_chance_combat", 100);
+    set("chat_msg_combat", ({ (: activate_mirror_state :) }));
+
     set("arena_test_npc", 1);
     set("es2_king_expansion", 1);
+    set("mirror_mind/sustain_formula", "UNKNOWN");
 
     setup();
 
-    // setup() 會由 Original CHAR_D / race/class 套用角色基礎設定；
-    // Arena 測試規格要求八屬性精確固定 50，因此於 setup 後再次鎖定。
-    set_attr("str", 50);
-    set_attr("cor", 50);
-    set_attr("int", 50);
-    set_attr("spi", 50);
-    set_attr("cps", 50);
-    set_attr("dex", 50);
-    set_attr("con", 50);
-    set_attr("wis", 50);
+    // setup() 可能套用 Race/Class 初始值；Arena 規格要求八屬性精確 50，故再次鎖定。
+    set_attr("str", 50); set_attr("cor", 50);
+    set_attr("int", 50); set_attr("spi", 50);
+    set_attr("cps", 50); set_attr("dex", 50);
+    set_attr("con", 50); set_attr("wis", 50);
+
+    weapon = carry_object("/d/arena/obj/charred_plum_branch");
+    if (objectp(weapon)) weapon->wield("sword");
 }
