@@ -14,7 +14,8 @@ void create()
 LONG
     );
     set("exits", ([
-        "down" : "/d/snow/square",\n        "enter" : "/d/arena/yanwujie",
+        "down" : "/d/snow/square",
+        "enter" : "/d/arena/yanwujie",
     ]));
     set("no_fight", 1);
     set("no_clean_up", 1);
