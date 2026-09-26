@@ -17,8 +17,8 @@ for(const a of ["str","cor","int","spi","cps","dex","con","wis"])assert.equal(n(
 console.log("COLD_PLUM_PASS:npc-attributes-skills");
 for(const s of ["gin","kee","sen","HP"])await call('set_stat_current("'+s+'",100000)');
 const start=output.length;await send("kill mei");await wait(start,/【明鏡止水】/,30000);console.log("COLD_PLUM_PASS:mirror-mind-state");
-const forms=["梅二方劍","梅四方劍","梅八方劍","愛霜恨雪","寒霜三千里","傲梅暗劍訣"];
-await wait(start,new RegExp(forms.join(".*"),"s"),60000);for(const f of forms)assert.ok(output.slice(start).includes(f),f);console.log("COLD_PLUM_PASS:six-forms-runtime");
+const forms=["梅二方劍","梅四方劍","梅八方劍","愛霜恨雪","寒霜三千里","傲梅暗劍訣・傲雪藏鋒・逆折寒梅"];
+await wait(start,new RegExp(forms.join(".*"),"s"),60000);for(const f of forms)assert.ok(output.slice(start).includes(f),f);assert.ok(output.slice(start).includes("明劍欺敵，暗劍藏殺；傲雪藏鋒・逆折寒梅。"));\nconsole.log("COLD_PLUM_PASS:six-forms-runtime");
 await call('mei->set_stat_current("kee",1)');await call('mei->set_stat_current("HP",1)');
 await wait(start,/死了|倒在地上|死亡|屍體|corpse|殺死/,45000);console.log("COLD_PLUM_PASS:king-kill-mei");
 assert.equal(n(await call('environment()->query("arena_zone")'),"query"),1);console.log("COLD_PLUM_PASS:arena-protection-boundary");
