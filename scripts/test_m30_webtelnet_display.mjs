@@ -32,6 +32,10 @@ assert.match(html, /overflow-wrap:\s*normal;/);
 assert.match(html, /word-break:\s*normal;/);
 assert.match(html, /-webkit-text-size-adjust:\s*100%;/);
 assert.doesNotMatch(html, /overflow-wrap:\s*anywhere/);
+assert.match(html, /function appendAnsiText\(raw\)/);
+assert.match(html, /ansi-93/);
+assert.match(html, /appendAnsiText\(decoded\)/);
+assert.doesNotMatch(html, /terminal\.textContent \+= cleanText/);
 
 // Public Login（公開登入）必須在瀏覽器本身遮蔽密碼，且不得儲存或記錄輸入內容。
 assert.match(html, /const passwordPrompt = \/\(/);
