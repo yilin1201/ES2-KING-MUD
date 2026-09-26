@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8">\n  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>ES2-KING WebTelnet</title>
   <style>
@@ -230,7 +230,7 @@
   const append = data => {
     const decoded = decoder.decode(data, { stream: true });
     // Prompt 辨識仍使用純文字；畫面則保留 SGR 色彩。
-    const cleanText = decoded.replace(/\\x1b\\[[0-9;?]*[ -/]*[@-~]/g, "");
+    const cleanText = decoded.replace(/\x1b\[[0-9;?]*[ -/]*[@-~]/g, "");
     appendAnsiText(decoded);
     // 僅保留輸出末端以辨識可能跨 WebSocket 分段的提示文字；絕不把玩家輸入加入此緩衝。
     outputTail = (outputTail + cleanText).slice(-256);
