@@ -373,25 +373,25 @@ text = text.replace(
 )
 text = text.replace(
     'NOR BGRN "%s" NOR "\\n\\n", line,\n        status_color(ob->query_stat("HP"), ob->query_stat_maximum("HP")),\n        ob->query_stat("HP"), ob->query_stat_maximum("HP"),\n        tribar_graph(" ", BRED, " ", ob->query_stat("HP"), ob->query_stat_effective("HP"), ob->query_stat_maximum("HP"))',
-    'NOR "%s" NOR "\\n\\n", line,\n        status_color(ob->query_stat("HP"), ob->query_stat_maximum("HP")),\n        ob->query_stat("HP"), ob->query_stat_maximum("HP"),\n        score_grid_bar(HIG, ob->query_stat("HP"), ob->query_stat_effective("HP"), ob->query_stat_maximum("HP"))'
+    'NOR "%s" NOR "\\n\\n", line,\n        status_color(ob->query_stat("HP"), ob->query_stat_maximum("HP")),\n        ob->query_stat("HP"), ob->query_stat_maximum("HP"),\n        score_grid_bar("HP", HIG, ob->query_stat("HP"), ob->query_stat_effective("HP"), ob->query_stat_maximum("HP"))'
 )
 text = text.replace(
     'NOR HIY "%s" NOR "\\n", line,\n            status_color (ob->query_stat("gin"), ob->query_stat_maximum ("gin")),\n            ob->query_stat ("gin"), ob->query_stat_maximum ("gin"),\n            tribar_graph ("%", YEL, ">",ob->query_stat ("gin"), ob->query_stat_effective ("gin"), ob->query_stat_maximum ("gin"))',
-    'NOR "%s" NOR "\\n", line,\n            status_color (ob->query_stat("gin"), ob->query_stat_maximum ("gin")),\n            ob->query_stat ("gin"), ob->query_stat_maximum ("gin"),\n            score_grid_bar(HIR, ob->query_stat("gin"), ob->query_stat_effective("gin"), ob->query_stat_maximum("gin"))'
+    'NOR "%s" NOR "\\n", line,\n            status_color (ob->query_stat("gin"), ob->query_stat_maximum ("gin")),\n            ob->query_stat ("gin"), ob->query_stat_maximum ("gin"),\n            score_grid_bar("GIN", HIR, ob->query_stat("gin"), ob->query_stat_effective("gin"), ob->query_stat_maximum("gin"))'
 )
 text = text.replace(
     'NOR HIR "%s" NOR "\\n", line,\n            status_color (ob->query_stat("kee"), ob->query_stat_maximum ("kee")),\n            ob->query_stat ("kee"), ob->query_stat_maximum ("kee"),\n            tribar_graph ("%", RED, ">", ob->query_stat ("kee"), ob->query_stat_effective ("kee"), ob->query_stat_maximum ("kee"))',
-    'NOR "%s" NOR "\\n", line,\n            status_color (ob->query_stat("kee"), ob->query_stat_maximum ("kee")),\n            ob->query_stat ("kee"), ob->query_stat_maximum ("kee"),\n            score_grid_bar(HIB, ob->query_stat("kee"), ob->query_stat_effective("kee"), ob->query_stat_maximum("kee"))'
+    'NOR "%s" NOR "\\n", line,\n            status_color (ob->query_stat("kee"), ob->query_stat_maximum ("kee")),\n            ob->query_stat ("kee"), ob->query_stat_maximum ("kee"),\n            score_grid_bar("KEE", HIB, ob->query_stat("kee"), ob->query_stat_effective("kee"), ob->query_stat_maximum("kee"))'
 )
 text = text.replace(
     'NOR HIB "%s" NOR "\\n", line,\n            status_color (ob->query_stat("sen"), ob->query_stat_maximum ("sen")),\n            ob->query_stat ("sen"), ob->query_stat_maximum ("sen"),\n            tribar_graph ("%", BLU, ">", ob->query_stat ("sen"), ob->query_stat_effective ("sen"), ob->query_stat_maximum ("sen"))',
-    'NOR "%s" NOR "\\n", line,\n            status_color (ob->query_stat("sen"), ob->query_stat_maximum ("sen")),\n            ob->query_stat ("sen"), ob->query_stat_maximum ("sen"),\n            score_grid_bar(HIY, ob->query_stat("sen"), ob->query_stat_effective("sen"), ob->query_stat_maximum("sen"))'
+    'NOR "%s" NOR "\\n", line,\n            status_color (ob->query_stat("sen"), ob->query_stat_maximum ("sen")),\n            ob->query_stat ("sen"), ob->query_stat_maximum ("sen"),\n            score_grid_bar("SEN", HIY, ob->query_stat("sen"), ob->query_stat_effective("sen"), ob->query_stat_maximum("sen"))'
 )
 needle='string tribar_graph (string fill_char, string sep, string empty_char, int val, int eff, int max) {'
 helper=r'''// ES2-KING SCORE GRID BARS／純文字單 glyph 獨立方格；保留 Original current/effective/maximum 三值。
-string score_grid_bar (string color, int val, int eff, int max) {
+string score_grid_bar (string kind, string color, int val, int eff, int max) {
     int i, n_filled, n_effective;
-    string bar = "";
+    string bar = "ES2GRID:" + kind + ":";
 
     if (max <= 0) return "";
 
@@ -404,13 +404,13 @@ string score_grid_bar (string color, int val, int eff, int max) {
 
     for (i = 0; i < 28; i++) {
         if (i < n_filled)
-            bar += color + "■ " NOR;
+            bar += "F";
         else if (i < n_effective)
-            bar += color + "▣ " NOR;
+            bar += "E";
         else
-            bar += HIK + "□ " NOR;
+            bar += "M";
     }
-    return bar;
+    return bar + ":END";
 }
 
 '''
