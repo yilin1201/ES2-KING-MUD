@@ -30,9 +30,13 @@ const moduleMatch = moduleStart >= 0 && moduleEnd > moduleStart
   ? [html.slice(moduleStart, moduleEnd + 9), html.slice(moduleStart + '<script type="module">'.length, moduleEnd)]
   : null;
 assert.ok(moduleMatch, "missing browser module");
-const browserModuleWithoutImports = moduleMatch[1].replace(/^\\s*import\\s+.*?;\\s*$/gm, "");
+const browserModuleWithoutImports = moduleMatch[1]
+  .split("\n")
+  .filter(line => !line.trimStart().startsWith("import "))
+  .join("\n");
 assert.doesNotThrow(() => new Function(browserModuleWithoutImports), "browser module must parse");
-assert.doesNotMatch(moduleMatch[1], /\\\\\\\\x1b\\\\\\\\\\\\\\[/);
+// ANSI escape patterns must target the ESC byte, not the two visible characters "\\\\x1b".
+assert.equal(moduleMatch[1].includes(String.raw`/\\\\x1b\\\\[`), false);
 
 assert.match(server, /new TelnetTextFilter\(\)/);
 assert.match(server, /telnetText\.push\(data\)/);
