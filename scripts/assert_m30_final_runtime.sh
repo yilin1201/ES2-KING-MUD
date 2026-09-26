@@ -75,9 +75,9 @@ grep -Fq 'score_grid_bar(HIG' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
 grep -Fq 'score_grid_bar(HIR' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
 grep -Fq 'score_grid_bar(HIB' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
 grep -Fq 'score_grid_bar(HIY' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
-grep -Fq 'bar += color + "██" NOR;' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
-grep -Fq 'bar += color + "▓▓" NOR;' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
-grep -Fq 'bar += HIK + "░░" NOR;' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
+grep -Fq 'bar += color + "██ " NOR;' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
+grep -Fq 'bar += color + "▓▓ " NOR;' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
+grep -Fq 'bar += HIK + "░░ " NOR;' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
 ! grep -Fq 'score-block' "$RUNTIME_DIR/../webtelnet/public/index.html" 2>/dev/null || true
 
 echo "FINAL RUNTIME OVERLAY ASSERTION PASS（最終執行環境覆蓋層斷言通過）：新版 KING 保留流程、Public Race Text 相容層與 Cold Plum Arena Static Gate 均已通過。"
