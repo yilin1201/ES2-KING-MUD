@@ -55,4 +55,15 @@ void create()
     set("es2_king_expansion", 1);
 
     setup();
+
+    // setup() 會由 Original CHAR_D / race/class 套用角色基礎設定；
+    // Arena 測試規格要求八屬性精確固定 50，因此於 setup 後再次鎖定。
+    set_attr("str", 50);
+    set_attr("cor", 50);
+    set_attr("int", 50);
+    set_attr("spi", 50);
+    set_attr("cps", 50);
+    set_attr("dex", 50);
+    set_attr("con", 50);
+    set_attr("wis", 50);
 }
