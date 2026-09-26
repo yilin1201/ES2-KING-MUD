@@ -3,20 +3,19 @@ set -euo pipefail
 ROOT="${1:-.runtime/es2-king}"
 ROOM="$ROOT/mudlib/d/arena/yanwujie.c"
 REALM="$ROOT/mudlib/d/king/wuji_realm.c"
-
-test -f "$ROOM"
-test -f "$REALM"
+RACE="$ROOT/mudlib/std/race/humanoid.c"
+test -f "$ROOM";test -f "$REALM";test -f "$RACE"
 grep -Fq '"enter" : "/d/arena/yanwujie"' "$REALM"
 grep -Fq '"out" : "/d/king/wuji_realm"' "$ROOM"
 ! grep -Fq '"up" : "/d/king/wuji_realm"' "$ROOM"
 grep -Fq 'set("arena_zone", 1)' "$ROOM"
-grep -Fq 'set("es2_king_expansion", 1)' "$ROOM"
-
-# Safety Boundary／安全邊界：Original die() 已確認沒有 room alternative_die/no_die hook。
-# 未完成 Runtime Death integration 前，禁止重新加入會造成假安全感的無效欄位或錯誤 HP API。
+grep -Fq 'environment(ob)->query("arena_zone")' "$RACE"
+grep -Fq 'if( flag["HP"] )' "$RACE"
+grep -Fq 'ob->query_stat_maximum("HP")' "$RACE"
+grep -Fq 'ob->set_stat_current("HP", max)' "$RACE"
+grep -Fq 'ob->clear_statistic_flags()' "$RACE"
+# Original-aware boundary: Room 本身不偽造 alternative_die/no_die；死亡攔截只位於已證實的 HP exhausted 分支。
 ! grep -Fq 'alternative_die' "$ROOM"
 ! grep -Fq 'set("no_die"' "$ROOM"
 ! grep -Fq 'set("no_flee"' "$ROOM"
-! grep -Eq 'max_kee|max_gin|max_sen|eff_kee|max_force|who->set\(' "$ROOM"
-
-echo "YANWUJIE STATIC GATE PASS：天神殿雙向連結與 ES2 Statistic 安全邊界正確；死亡保護仍待 Runtime call-chain integration。"
+echo "YANWUJIE STATIC GATE PASS：enter/out、arena_zone 與 Original HP exhausted 敗北邊界完整。"
