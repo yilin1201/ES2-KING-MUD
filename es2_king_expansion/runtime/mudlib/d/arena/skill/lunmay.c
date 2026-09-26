@@ -7,15 +7,23 @@
 inherit SKILL;
 
 mapping *mirror_actions = ({
-    ([ "name":"梅二方劍", "action":HIC "$N手中$w斜引寒芒，使出「梅二方劍」，兩道梅影一前一後點向$n的$l" NOR,
+    // 戰鬥文字色彩依使用者提供的 Original gameplay 截圖 Evidence 重建：
+    // 一般敘述白色；梅二／四／八方劍招式框紅色；二／四／八道劍氣數量黃色；
+    // 愛霜恨雪青色；寒霜三千里白色。只重建演出，不新增未知倍率或機率。
+    ([ "name":"梅二方劍",
+       "action":HIW "$N施展冷梅劍法中的殺招「" HIR "【梅二方劍】" HIW "」，幻化出" HIY "二道" HIW "劍氣，直取$n的$l！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]),
-    ([ "name":"梅四方劍", "action":HIW "$N腕底一轉，使出「梅四方劍」，$w牽起四方寒意封向$n的$l" NOR,
+    ([ "name":"梅四方劍",
+       "action":HIW "$N全力施展快劍，幻化出" HIY "四道" HIW "劍氣，將$n團團圍住！「" HIR "【梅四方劍】" HIW "」劍勢驟起，直逼$n的$l！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]),
-    ([ "name":"梅八方劍", "action":HIC "$N身形微晃，使出「梅八方劍」，$w化出八方梅影籠向$n的$l" NOR,
+    ([ "name":"梅八方劍",
+       "action":HIW "$N劍勢倏分，使出「" HIR "【梅八方劍】" HIW "」，幻化出" HIY "八道" HIW "劍氣，自八方罩向$n的$l！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]),
-    ([ "name":"愛霜恨雪", "action":HIW "$N劍意忽柔忽寒，使出「愛霜恨雪」，$w循著漫天霜意掠向$n的$l" NOR,
+    ([ "name":"愛霜恨雪",
+       "action":HIC "$N展開冷梅劍意，使出【愛霜恨雪】，劍意忽柔忽寒，$w循著漫天霜意掠向$n的$l！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"割傷" ]),
-    ([ "name":"寒霜三千里", "action":HIC "$N氣機一沉，使出「寒霜三千里」，$w帶起漫野霜風直取$n的$l" NOR,
+    ([ "name":"寒霜三千里",
+       "action":HIW "$N運起寒梅心法使出【寒霜三千里】，劍氣呼嘯，霜意如雪，$w帶起漫野霜風直取$n的$l！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"割傷" ]),
     ([ "name":"傲梅暗劍訣・傲雪藏鋒・逆折寒梅",
        "action":HIW
