@@ -32,3 +32,38 @@ for (const token of requiredNpcText) {
   if (!npc.includes(token)) throw new Error("missing Mei Hanshuang wiring: " + token);
 }
 console.log("COLD_PLUM_MARTIAL_SYSTEM_STATIC_PASS");
+
+
+const kingd = fs.readFileSync("es2_king_expansion/runtime/mudlib/adm/daemons/kingd.c", "utf8");
+const kingMartial = fs.readFileSync("es2_king_expansion/runtime/mudlib/adm/daemons/kingmartiald.c", "utf8");
+const kingRealm = fs.readFileSync("es2_king_expansion/runtime/mudlib/cmds/adm/kingrealm.c", "utf8");
+
+// KING Cold Plum wiring：八屬性 99；武學遵守 Original 玩家技能 200 上限。
+for (const token of [
+  'actor->set_attr(attr, 99)',
+  'actor->set("es2_king/creator_attribute", 99)'
+]) {
+  if (!kingd.includes(token)) throw new Error("missing KING 99 profile: " + token);
+}
+for (const token of [
+  "int set_cold_plum(",
+  'actor->set_skill("hainmay force", level)',
+  'actor->set_skill("advance_lunmay", level)',
+  'actor->set_skill("lunmay", level)',
+  'load_object("/d/arena/skill/lunmay")',
+  'actor->map_skill("force", "hainmay force")',
+  'actor->map_skill("sword", "lunmay")',
+  'actor->set("es2_king/lengmei/mingjing_zhishui", 1)',
+  'actor->set_temp("cold_plum/mirror_state", 1)',
+  'level > 200'
+]) {
+  if (!kingMartial.includes(token)) throw new Error("missing KING Cold Plum wiring: " + token);
+}
+for (const token of [
+  "KING_D->apply_creator_profile(me)",
+  "KING_MARTIAL_D->set_cold_plum(me, 200)",
+  'me->move("/d/king/wuji_realm")'
+]) {
+  if (!kingRealm.includes(token)) throw new Error("missing KING realm provisioning: " + token);
+}
+console.log("KING_99_COLD_PLUM_STATIC_PASS");
