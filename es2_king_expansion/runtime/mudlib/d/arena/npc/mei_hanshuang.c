@@ -18,9 +18,9 @@ void activate_mirror_state()
 
     set_temp("cold_plum/mirror_state", 1);
     set_temp("cold_plum/mirror_index", 0);
-    // Original gameplay Evidence：啟動敘述為白色，只有【明鏡止水】框／名稱使用青色。
+    // Gameplay Evidence 校正：明鏡止水整段（含【】與名稱）維持白色。
     message_vision(HIW
-        "\n$N心摒若水，眼明如鏡，竟漸入「" HIC "【明鏡止水】" HIW "」之境界！\n"
+        "\n$N心摒若水，眼明如鏡，竟漸入「【明鏡止水】」之境界！\n"
         "$N架開對手的攻擊，順勢舞出二道寒冷的劍氣直指對手週身要害！\n\n" NOR, this_object());
 }
 
