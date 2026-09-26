@@ -9,7 +9,7 @@ inherit SKILL;
 mapping *mirror_actions = ({
     // 戰鬥文字色彩依使用者提供的 Original gameplay 截圖 Evidence 重建：
     // 一般敘述白色；冷梅招式【】外框紅色、框內名稱白色；二／四／八道劍氣數量黃色；
-    // 愛霜恨雪名稱青色且不加【】外框；寒霜三千里名稱白色且不加【】外框。只重建演出，不新增未知倍率或機率。
+    // 愛霜恨雪使用青色「愛霜恨雪」；寒霜三千里使用全白【寒霜三千里】。只重建演出，不新增未知倍率或機率。
     ([ "name":"梅二方劍",
        "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIR "【" HIW "梅二方劍" HIR "】" HIW "」！\n"
                 "$N全力施展快劍，幻化出了" HIY "二道" HIW "劍氣將$n團團圍住！" NOR,
@@ -23,11 +23,11 @@ mapping *mirror_actions = ({
                 "$N全力施展快劍，幻化出了" HIY "八道" HIW "劍氣將$n團團圍住！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]),
     ([ "name":"愛霜恨雪",
-       "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIC "愛霜恨雪" HIW "」！\n"
+       "action":HIW "$N施展傲梅暗劍訣中的殺招" HIC "「愛霜恨雪」" HIW "！\n"
                 "一股無形的冷冽氣勁朝著$n直射而出！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"割傷" ]),
     ([ "name":"寒霜三千里",
-       "action":HIW "$N催運寒梅心法使出寒霜三千里劍氣，寒霜劍劍刃嗡嗡做響，$n全身瞬間蒙上一層白霜！" NOR,
+       "action":HIW "$N催運寒梅心法使出【寒霜三千里】劍氣，寒霜劍劍刃嗡嗡做響，$n全身瞬間蒙上一層白霜！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"割傷" ]),
     ([ "name":"傲梅暗劍訣・傲雪藏鋒・逆折寒梅",
        "action":HIW
