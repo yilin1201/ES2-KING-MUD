@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT="${1:-.runtime/es2-king}/mudlib"
 ROOM="$ROOT/d/king/wuji_realm.c"
-COMMAND="$ROOT/cmds/adm/kingrealm.c"
+COMMAND="$ROOT/cmds/adm/kinghome.c"
 SQUARE="$ROOT/d/snow/square.c"
 
 for file in "$ROOM" "$COMMAND" "$SQUARE"; do
