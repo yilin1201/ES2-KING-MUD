@@ -89,6 +89,13 @@ void create()
     set("es2_king_expansion", 1);
     set("mirror_mind/sustain_formula", "UNKNOWN");
 
+    /*
+     * Playability Boundary／可玩性邊界：
+     * 梅寒霜是演武界實戰 NPC，因此允許正常 Original Combat 被擊敗。
+     * 不在 NPC 端加入無敵、回血、免疫或未知數值；敗北保護只由演武界既有
+     * humanoid HP exhausted boundary 處理「玩家」的死亡路徑。
+     */
+
     setup();
 
     // setup() 可能套用 Race/Class 初始值；Arena 規格要求八屬性精確 50，故再次鎖定。
