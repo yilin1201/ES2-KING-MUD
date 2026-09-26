@@ -240,7 +240,7 @@ LPC
 fi
 
 # KING Login Provisioning／正式 KING 登入配置：
-# 舊版只在 kingrealm 指令中套用 8×99 與冷梅武學，造成「測試先執行 kingrealm 才 PASS」、
+# 舊版只在 kinghome 指令中套用 8×99 與冷梅武學，造成「測試先執行 kinghome 才 PASS」、
 # 但正式既有 KING 正常登入仍保留舊存檔能力。現在在 Original enter_world 完成 exec + setup 後，
 # 對唯一已通過 admin 身分的 king 套用同一正式 API，再由 Original SAVE_USER 流程保存。
 KING_LOGIN_MARKER='ES2-KING OWNER LOGIN PROVISIONING'
@@ -263,7 +263,7 @@ replacement = '''    user->setup();
     increment_visitor_count();
 
     // ES2-KING OWNER LOGIN PROVISIONING／只有正式互動 admin KING 會進入此分支。
-    // 使用與 kingrealm 相同的 daemon API；一般玩家完全不受影響。
+    // 使用與 kinghome 相同的 daemon API；一般玩家完全不受影響。
     if (user->query("id") == "king"
     &&  wiz_level(user) >= wiz_level("(admin)")) {
         if (!call_other("/adm/daemons/kingd", "apply_creator_profile", user)
@@ -366,7 +366,7 @@ if ! grep -Fq "$COMMAND_REHASH_MARKER" "$COMMAND_D"; then
       print ""
       print "    // " marker "／不擴張一般玩家搜尋路徑。"
       print "    if (member_array(\"/cmds/adm/\", path) >= 0"
-      print "    && member_array(verb, ({ \"kingcreate\", \"kingrealm\", \"kingmartial\", \"kingcanon\" })) >= 0"
+      print "    && member_array(verb, ({ \"kingcreate\", \"kinghome\", \"kingmartial\", \"kingcanon\" })) >= 0"
       print "    && file_size(\"/cmds/adm/\" + verb + \".c\") >= 0)"
       print "        cache[verb + \".c\"] = ({ \"/cmds/adm/\" });"
       inserted=1
@@ -410,7 +410,7 @@ done
 for arena_preload in /d/arena/skill/lunmay /d/arena/npc/mei_hanshuang; do
   grep -Fqx "$arena_preload" "$PRELOAD_FILE" || printf '%s\n' "$arena_preload" >> "$PRELOAD_FILE"
 done
-for owner_command in kingcreate kingrealm kingmartial kingcanon; do
+for owner_command in kingcreate kinghome kingmartial kingcanon; do
   grep -Fqx "/cmds/adm/$owner_command" "$PRELOAD_FILE" \
     || printf '%s\n' "/cmds/adm/$owner_command" >> "$PRELOAD_FILE"
 done
