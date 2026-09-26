@@ -268,13 +268,14 @@ replacement = '''    user->setup();
     &&  wiz_level(user) >= wiz_level("(admin)")) {
         if (!call_other("/adm/daemons/kingd", "apply_creator_profile", user)
         ||  !call_other("/adm/daemons/kingmartiald", "set_cold_plum", user, 200)
+        ||  !call_other("/adm/daemons/kingmartiald", "set_creator_core_martial", user, 200)
         ||  !call_other("/adm/daemons/kingmartiald", "set_rulai_shenzhang", user, 200)) {
             write("KING 正式能力配置失敗，已中止登入以避免錯誤狀態。\\n");
             destruct(ob);
             destruct(user);
             return;
         }
-        write("KING 創世神配置已同步：八項屬性 99、六項狀態 999、冷梅莊武學 200、如來神掌 200。\\n");
+        write("KING 創世神配置已同步：八項屬性 99、六項狀態 999、冷梅莊武學 200、易筋經 200、霸天煉體訣 200、如來神掌 200。\\n");
     }
 
 #ifdef SAVE_USER
