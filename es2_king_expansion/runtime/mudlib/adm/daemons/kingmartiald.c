@@ -87,6 +87,36 @@ int set_cold_plum(object actor, int level)
 // 如來神掌／KING 正式 Combat 配置。
 // 招式名稱沿用 M29 Project Canon；Original ES2 未發現 Combat Source，故不補造特殊數值效果。
 // 等級遵守 Original 玩家技能 200 上限。
+// KING Creator Profile 正式主內功／拆招配置。
+// 等級維持 Original 玩家技能上限 200；M28 未定義的 Combat 數值不補造。
+int set_creator_core_martial(object actor, int level)
+{
+    if (!authorized(actor) || level < 1 || level > 200) return 0;
+
+    actor->set_skill("yijinjing", level);
+    actor->set_skill("batian lianti jue", level);
+    actor->set_skill("force", level);
+    actor->set_skill("parry", level);
+
+    load_object("/d/arena/skill/yijinjing");
+    load_object("/d/arena/skill/batian_lianti_jue");
+
+    actor->map_skill("force", "yijinjing");
+    actor->map_skill("parry", "batian lianti jue");
+
+    // skills 指令使用 CHINESE_D 字典呈現正式中文武學名。
+    CHINESE_D->add_translate("yijinjing", "易筋經");
+    CHINESE_D->add_translate("batian lianti jue", "霸天煉體訣");
+    CHINESE_D->add_translate("rulai shenzhang", "如來神掌");
+
+    actor->set("es2_king/yijinjing_level", level);
+    actor->set("es2_king/yijinjing_stage", yijinjing_stage(level));
+    actor->set("es2_king/batian_lianti_jue", "ji");
+    actor->set("es2_king/batian_level", level);
+    return 1;
+}
+
+
 int set_rulai_shenzhang(object actor, int level)
 {
     if (!authorized(actor) || level < 1 || level > 200) return 0;
