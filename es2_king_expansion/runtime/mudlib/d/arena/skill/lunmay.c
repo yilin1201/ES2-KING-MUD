@@ -8,18 +8,18 @@ inherit SKILL;
 
 mapping *mirror_actions = ({
     // 戰鬥文字色彩依使用者提供的 Original gameplay 截圖 Evidence 重建：
-    // 一般敘述白色；梅二／四／八方劍招式名稱維持白色；二／四／八道劍氣數量黃色；
+    // 一般敘述白色；冷梅招式【】外框紅色、框內名稱白色；二／四／八道劍氣數量黃色；
     // 愛霜恨雪青色；寒霜三千里白色。只重建演出，不新增未知倍率或機率。
     ([ "name":"梅二方劍",
-       "action":HIW "$N施展傲梅暗劍訣中的殺招「【梅二方劍】」！\n"
+       "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIR "【" HIW "梅二方劍" HIR "】" HIW "」！\n"
                 "$N全力施展快劍，幻化出了" HIY "二道" HIW "劍氣將$n團團圍住！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]),
     ([ "name":"梅四方劍",
-       "action":HIW "$N施展傲梅暗劍訣中的殺招「【梅四方劍】」！\n"
+       "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIR "【" HIW "梅四方劍" HIR "】" HIW "」！\n"
                 "$N全力施展快劍，幻化出了" HIY "四道" HIW "劍氣將$n團團圍住！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]),
     ([ "name":"梅八方劍",
-       "action":HIW "$N施展傲梅暗劍訣中的殺招「【梅八方劍】」！\n"
+       "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIR "【" HIW "梅八方劍" HIR "】" HIW "」！\n"
                 "$N全力施展快劍，幻化出了" HIY "八道" HIW "劍氣將$n團團圍住！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]),
     ([ "name":"愛霜恨雪",
