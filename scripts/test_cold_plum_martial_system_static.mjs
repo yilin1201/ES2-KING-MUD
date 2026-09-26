@@ -36,7 +36,7 @@ console.log("COLD_PLUM_MARTIAL_SYSTEM_STATIC_PASS");
 
 const kingd = fs.readFileSync("es2_king_expansion/runtime/mudlib/adm/daemons/kingd.c", "utf8");
 const kingMartial = fs.readFileSync("es2_king_expansion/runtime/mudlib/adm/daemons/kingmartiald.c", "utf8");
-const kingRealm = fs.readFileSync("es2_king_expansion/runtime/mudlib/cmds/adm/kingrealm.c", "utf8");
+const kingHome = fs.readFileSync("es2_king_expansion/runtime/mudlib/cmds/adm/kinghome.c", "utf8");
 const attribute = fs.readFileSync("es2_king_expansion/runtime/mudlib/feature/attribute.c", "utf8");
 const wujiRealm = fs.readFileSync("es2_king_expansion/runtime/mudlib/d/king/wuji_realm.c", "utf8");
 const yanwujie = fs.readFileSync("es2_king_expansion/runtime/mudlib/d/arena/yanwujie.c", "utf8");
@@ -72,7 +72,7 @@ for (const token of [
   "KING_MARTIAL_D->set_cold_plum(me, 200)",
   'me->move("/d/king/wuji_realm")'
 ]) {
-  if (!kingRealm.includes(token)) throw new Error("missing KING realm provisioning: " + token);
+  if (!kingHome.includes(token)) throw new Error("missing KING home movement: " + token);
 }
 for (const token of [
   "ES2-KING OWNER LOGIN PROVISIONING",
