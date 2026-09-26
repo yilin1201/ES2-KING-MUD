@@ -395,14 +395,14 @@ string score_grid_bar (string color, int val, int eff, int max) {
 
     if (max <= 0) return "";
 
-    n_filled = val * 30 / max;
-    n_effective = eff * 30 / max;
+    n_filled = val * 28 / max;
+    n_effective = eff * 28 / max;
     if (n_filled < 0) n_filled = 0;
-    if (n_filled > 30) n_filled = 30;
+    if (n_filled > 28) n_filled = 28;
     if (n_effective < n_filled) n_effective = n_filled;
-    if (n_effective > 30) n_effective = 30;
+    if (n_effective > 28) n_effective = 28;
 
-    for (i = 0; i < 30; i++) {
+    for (i = 0; i < 28; i++) {
         if (i < n_filled)
             bar += color + "██" NOR;
         else if (i < n_effective)
