@@ -15,7 +15,7 @@
 - 指定冷梅 Skills 與基本 Combat usage 對此 Arena NPC effective = 300。
 - `sword → lunmay`。
 - 使用「焦黑枯梅枝」；武器傷害模板直接沿用 Original ES2 `woodsword.c` 的 `setup_sword(1,14,40,0)`，沒有另造神器倍率。
-- 進入戰鬥後自動啟動【明鏡止水】Combat State。
+- 進入戰鬥後由寒梅心法體系自動啟動【明鏡止水】Combat State；寒梅心法、傲梅暗劍訣、冷梅劍法等既有 Evidence skill ID 均保留於梅寒霜配置。
 
 冷梅劍法：
 1. 梅二方劍
@@ -23,7 +23,10 @@
 3. 梅八方劍
 4. 愛霜恨雪
 5. 寒霜三千里
-6. 傲梅暗劍訣
+6. 傲梅暗劍訣・傲雪藏鋒・逆折寒梅
+
+其中前五式為冷梅劍法正式招式；第六式為傲梅暗劍訣進階殺招【傲雪藏鋒・逆折寒梅】。
+武訣：「明劍欺敵，暗劍藏殺；傲雪藏鋒・逆折寒梅。」右手冷梅劍法為陽面明劍、左手傲梅暗劍為陰面藏殺；咽喉、心口、氣海僅屬 Combat 文字敘事，不建立必中、必殺或額外數值。
 
 因 Original 權重未知，Expansion 第一版不宣稱任何機率；明鏡止水狀態下採 deterministic round-robin，只為確保六式都能進入真實 Combat。六式 action 的 attack/force/defense 額外係數全部為 0，讓 Original Combat Engine 決定基礎結果。
 
