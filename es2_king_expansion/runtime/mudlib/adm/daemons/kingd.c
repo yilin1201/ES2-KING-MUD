@@ -39,8 +39,21 @@ int apply_creator_profile(object actor)
         if (actor->set_attr(attr, 99) != 99)
             return 0;
 
+    // Project Canon：KING 六項正式生存狀態固定 999。
+    // Original ES2 F_STATISTIC 對應：精 gin、氣 kee、神 sen、形體 HP、飲水 water、食物 food。
+    // Maximum／Effective／Current 三層同步，避免只改畫面或登入後立即被 Original regeneration 校正。
+    foreach (string stat in ({ "gin", "kee", "sen", "HP", "water", "food" })) {
+        if (actor->set_stat_maximum(stat, 999) != 999)
+            return 0;
+        if (actor->set_stat_effective(stat, 999) != 999)
+            return 0;
+        if (actor->set_stat_current(stat, 999) != 999)
+            return 0;
+    }
+
     actor->set("es2_king/creator_profile", 1);
     actor->set("es2_king/creator_attribute", 99);
+    actor->set("es2_king/creator_statistic", 999);
     return 1;
 }
 
