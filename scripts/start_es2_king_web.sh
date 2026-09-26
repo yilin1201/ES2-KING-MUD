@@ -80,4 +80,38 @@ persistence_pid=$!
 cd "$WEBTELNET_DIR"
 node server.mjs &
 bridge_pid=$!
+
+# WebSocket Runtime Smoke／WebSocket 執行期煙霧測試：
+# 從容器內走與 iPhone 相同的 /mud Bridge 路徑，必須收到 Original ES2 登入提示。
+# 不送帳號或密碼，只驗證 Browser-facing WebSocket -> WebTelnet -> Neolith:4000。
+node --input-type=module -e '
+  import WebSocket from "ws";
+  const port = Number(process.env.PORT);
+  const deadline = Date.now() + 30000;
+  function probe() {
+    const ws = new WebSocket(`ws://127.0.0.1:${port}/mud`);
+    let output = "";
+    const retry = () => {
+      try { ws.terminate(); } catch {}
+      if (Date.now() >= deadline) {
+        console.error("START FAIL：WebSocket /mud 未收到 ES2 登入提示。");
+        process.exit(1);
+      }
+      setTimeout(probe, 300);
+    };
+    const timer = setTimeout(retry, 2000);
+    ws.on("message", data => {
+      output += Buffer.from(data).toString("utf8");
+      if (/使用者代號|東 方 故 事/.test(output)) {
+        clearTimeout(timer);
+        console.log("WEBSOCKET RUNTIME PASS：/mud -> WebTelnet -> Neolith:4000 已收到 ES2 登入提示。");
+        ws.close();
+        process.exit(0);
+      }
+    });
+    ws.on("error", () => { clearTimeout(timer); retry(); });
+  }
+  probe();
+' || { echo "START FAIL：WebSocket Runtime Smoke 未通過。" >&2; exit 1; }
+
 wait "$bridge_pid"
