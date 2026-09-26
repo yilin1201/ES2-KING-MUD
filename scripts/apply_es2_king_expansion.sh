@@ -356,6 +356,71 @@ path.write_text(text)
 PY
 fi
 
+# KING Score Grid Bars／KING score 方格狀態條：只修改 Expansion Runtime 顯示層。
+# Current／Effective／Maximum 仍沿用 Original tribar_graph 三值語意；不改 Statistic 或 Combat。
+SCORE_CMD="$TARGET/mudlib/cmds/usr/score.c"
+SCORE_GRID_MARKER='ES2-KING SCORE GRID BARS'
+if ! grep -Fq "$SCORE_GRID_MARKER" "$SCORE_CMD"; then
+  python3 - "$SCORE_CMD" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+text = path.read_text()
+text = text.replace(
+    'string tribar_graph (string fill_char, string sep, string empty_char, int val, int eff, int max);',
+    'string tribar_graph (string fill_char, string sep, string empty_char, int val, int eff, int max);\nstring score_grid_bar (string color, int val, int eff, int max); // ES2-KING SCORE GRID BARS'
+)
+text = text.replace(
+    'NOR BGRN "%s" NOR "\\n\\n", line,\n        status_color(ob->query_stat("HP"), ob->query_stat_maximum("HP")),\n        ob->query_stat("HP"), ob->query_stat_maximum("HP"),\n        tribar_graph(" ", BRED, " ", ob->query_stat("HP"), ob->query_stat_effective("HP"), ob->query_stat_maximum("HP"))',
+    'NOR "%s" NOR "\\n\\n", line,\n        status_color(ob->query_stat("HP"), ob->query_stat_maximum("HP")),\n        ob->query_stat("HP"), ob->query_stat_maximum("HP"),\n        score_grid_bar(HIG, ob->query_stat("HP"), ob->query_stat_effective("HP"), ob->query_stat_maximum("HP"))'
+)
+text = text.replace(
+    'NOR HIY "%s" NOR "\\n", line,\n            status_color (ob->query_stat("gin"), ob->query_stat_maximum ("gin")),\n            ob->query_stat ("gin"), ob->query_stat_maximum ("gin"),\n            tribar_graph ("%", YEL, ">",ob->query_stat ("gin"), ob->query_stat_effective ("gin"), ob->query_stat_maximum ("gin"))',
+    'NOR "%s" NOR "\\n", line,\n            status_color (ob->query_stat("gin"), ob->query_stat_maximum ("gin")),\n            ob->query_stat ("gin"), ob->query_stat_maximum ("gin"),\n            score_grid_bar(HIR, ob->query_stat("gin"), ob->query_stat_effective("gin"), ob->query_stat_maximum("gin"))'
+)
+text = text.replace(
+    'NOR HIR "%s" NOR "\\n", line,\n            status_color (ob->query_stat("kee"), ob->query_stat_maximum ("kee")),\n            ob->query_stat ("kee"), ob->query_stat_maximum ("kee"),\n            tribar_graph ("%", RED, ">", ob->query_stat ("kee"), ob->query_stat_effective ("kee"), ob->query_stat_maximum ("kee"))',
+    'NOR "%s" NOR "\\n", line,\n            status_color (ob->query_stat("kee"), ob->query_stat_maximum ("kee")),\n            ob->query_stat ("kee"), ob->query_stat_maximum ("kee"),\n            score_grid_bar(HIB, ob->query_stat("kee"), ob->query_stat_effective("kee"), ob->query_stat_maximum("kee"))'
+)
+text = text.replace(
+    'NOR HIB "%s" NOR "\\n", line,\n            status_color (ob->query_stat("sen"), ob->query_stat_maximum ("sen")),\n            ob->query_stat ("sen"), ob->query_stat_maximum ("sen"),\n            tribar_graph ("%", BLU, ">", ob->query_stat ("sen"), ob->query_stat_effective ("sen"), ob->query_stat_maximum ("sen"))',
+    'NOR "%s" NOR "\\n", line,\n            status_color (ob->query_stat("sen"), ob->query_stat_maximum ("sen")),\n            ob->query_stat ("sen"), ob->query_stat_maximum ("sen"),\n            score_grid_bar(HIY, ob->query_stat("sen"), ob->query_stat_effective("sen"), ob->query_stat_maximum("sen"))'
+)
+needle='string tribar_graph (string fill_char, string sep, string empty_char, int val, int eff, int max) {'
+helper=r'''// ES2-KING SCORE GRID BARS／方格條仍保留 Original current/effective/maximum 三值。
+string score_grid_bar (string color, int val, int eff, int max) {
+    int i, n_filled, n_effective;
+    string bar = "";
+
+    if (max <= 0) return "";
+
+    n_filled = val * 30 / max;
+    n_effective = eff * 30 / max;
+    if (n_filled < 0) n_filled = 0;
+    if (n_filled > 30) n_filled = 30;
+    if (n_effective < n_filled) n_effective = n_filled;
+    if (n_effective > 30) n_effective = 30;
+
+    for (i = 0; i < 30; i++) {
+        if (i < n_filled)
+            bar += color + "■" NOR;
+        else if (i < n_effective)
+            bar += color + "□" NOR;
+        else
+            bar += HIK + "□" NOR;
+    }
+    return bar;
+}
+
+'''
+if needle not in text:
+    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original tribar_graph，無法加入 score 方格條。")
+text=text.replace(needle,helper+needle,1)
+path.write_text(text)
+PY
+fi
+
 # Command Reindex Compatibility／指令重索引相容層：只有實際管理員搜尋路徑包含
 # /cmds/adm/ 且指令檔存在時，才補入四個已定稿 KING 指令的 Runtime 記憶體索引。
 COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.c"
