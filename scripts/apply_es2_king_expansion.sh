@@ -337,6 +337,7 @@ for cached_binary in \
   "$TARGET/mudlib/bin/adm/daemons/logind.b" \
   "$TARGET/mudlib/bin/adm/daemons/cmd_d.b" \
   "$TARGET/mudlib/bin/std/race/humanoid.b" \
+  "$TARGET/mudlib/bin/feature/attribute.b" \
   "$TARGET/mudlib/bin/adm/daemons/kingmartiald.b" \
   "$TARGET/mudlib/bin/cmds/std/perform.b" \
   "$TARGET/mudlib/bin/daemon/skill/kuxiao_force.b" \
