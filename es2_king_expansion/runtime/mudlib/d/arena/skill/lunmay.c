@@ -11,19 +11,23 @@ mapping *mirror_actions = ({
     // 一般敘述白色；梅二／四／八方劍招式框紅色；二／四／八道劍氣數量黃色；
     // 愛霜恨雪青色；寒霜三千里白色。只重建演出，不新增未知倍率或機率。
     ([ "name":"梅二方劍",
-       "action":HIW "$N施展冷梅劍法中的殺招「" HIR "【梅二方劍】" HIW "」，幻化出" HIY "二道" HIW "劍氣，直取$n的$l！" NOR,
+       "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIR "【梅二方劍】" HIW "」！\n"
+                "$N全力施展快劍，幻化出了" HIY "二道" HIW "劍氣將$n團團圍住！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]),
     ([ "name":"梅四方劍",
-       "action":HIW "$N全力施展快劍，幻化出" HIY "四道" HIW "劍氣，將$n團團圍住！「" HIR "【梅四方劍】" HIW "」劍勢驟起，直逼$n的$l！" NOR,
+       "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIR "【梅四方劍】" HIW "」！\n"
+                "$N全力施展快劍，幻化出了" HIY "四道" HIW "劍氣將$n團團圍住！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]),
     ([ "name":"梅八方劍",
-       "action":HIW "$N劍勢倏分，使出「" HIR "【梅八方劍】" HIW "」，幻化出" HIY "八道" HIW "劍氣，自八方罩向$n的$l！" NOR,
+       "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIR "【梅八方劍】" HIW "」！\n"
+                "$N全力施展快劍，幻化出了" HIY "八道" HIW "劍氣將$n團團圍住！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]),
     ([ "name":"愛霜恨雪",
-       "action":HIC "$N展開冷梅劍意，使出【愛霜恨雪】，劍意忽柔忽寒，$w循著漫天霜意掠向$n的$l！" NOR,
+       "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIC "【愛霜恨雪】" HIW "」！\n"
+                "一股無形的冷冽氣勁朝著$n直射而出！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"割傷" ]),
     ([ "name":"寒霜三千里",
-       "action":HIW "$N運起寒梅心法使出【寒霜三千里】，劍氣呼嘯，霜意如雪，$w帶起漫野霜風直取$n的$l！" NOR,
+       "action":HIW "$N催運寒梅心法使出【寒霜三千里】劍氣，寒霜劍劍刃嗡嗡做響，$n全身瞬間蒙上一層白霜！" NOR,
        "attack":0, "force":0, "defense":0, "damage_type":"割傷" ]),
     ([ "name":"傲梅暗劍訣・傲雪藏鋒・逆折寒梅",
        "action":HIW
