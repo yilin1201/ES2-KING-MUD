@@ -1,6 +1,6 @@
 // /d/arena/npc/mei_hanshuang.c
 // ES2-KING Expansion Arena NPC：天涯折梅「傲雪凌霜」梅寒霜。
-// 冷梅六式與明鏡止水依既有 Evidence 接入 Original Combat；未知倍率／續航公式維持 UNKNOWN。
+// 寒梅心法、明鏡止水、冷梅劍法五式與傲梅暗劍訣依既有 Evidence 接入 Original Combat；未知倍率／續航公式維持 UNKNOWN。
 
 #include <ansi.h>
 #include <npc.h>
@@ -80,6 +80,9 @@ void create()
     load_object("/d/arena/skill/lunmay");
     map_skill("sword", "lunmay");
 
+    // 正式武學鏈：寒梅心法 → 明鏡止水 → 冷梅劍法五式 → 傲梅暗劍訣・傲雪藏鋒・逆折寒梅。
+    // 冷梅劍法五式：梅二方劍、梅四方劍、梅八方劍、愛霜恨雪、寒霜三千里。
+    // advance_lunmay 為既有 Evidence skill id；進階殺招的 Combat 演出由 lunmay daemon 串接。
     // 明鏡止水為高階寒梅心法進階戰鬥境界；NPC 開戰後自動進入。
     // 續航提升的具體恢復量/週期仍無 Evidence，本輪不補造數值。
     set("chat_chance_combat", 100);
