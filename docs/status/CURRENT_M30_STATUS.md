@@ -1,8 +1,9 @@
 # M30 CURRENT STATUS — 目前唯一即時狀態入口
 
-> Status Date：2026-09-25  
+> Status Date：2026-09-26  
 > Branch：`build/original-es2-races-phase2`  
 > Post-Neon Audit Baseline：`15e27c606886f1b96c2bbe5bda037989c767becb`  
+> Cold Plum Runtime Evidence Head：`f1b6798ce3562551a10d76521f886b5445d35b1f`  
 > 本文件是 Current Status（目前狀態），不是歷史測試報告。  
 > PR #13：OPEN（開啟） / NOT MERGED（未合併）。M31：未開始。
 
@@ -26,6 +27,22 @@
 
 因此目前正式判定：**GAME COMPLETION = PLAYABLE PASS（遊戲完整可玩性通過）**。
 
+### 1.1 M30 後續維護：冷梅莊／KING 99 Runtime
+
+本項屬既有 M30 ES2-KING Alpha 的維護與驗證，不建立、命名或啟動 M31。
+
+| 驗收項目 | 最新 GitHub／Runtime 狀態 |
+|---|---|
+| KING 八項屬性 | RUNTIME PASS：`str/cor/int/spi/cps/dex/con/wis = 99`；只有精確帳號 `king` 可突破 Original 50 上限 |
+| KING Owner／Admin boundary | RUNTIME PASS：互動登入、精確帳號 ID 與 Original admin 三項授權條件均保留 |
+| KING 冷梅莊技能 | RUNTIME PASS：`hainmay force`、`advance_lunmay`、`lunmay`、`mayin`、`seven` 與五項基本 Combat usage 均為 Original 玩家上限 200 |
+| 梅寒霜 | RUNTIME PASS：八項屬性 50；十項 Arena effective skills 300；不改寫全域玩家上限 |
+| 明鏡止水／冷梅 Combat | RUNTIME PASS：明鏡止水 Combat State、冷梅五式、傲梅暗劍訣進階招式及 Original Combat 串接均通過 |
+| 演武界 | RUNTIME PASS：無極之境 `enter`、演武界 `out`、梅寒霜生成與 Arena defeat protection 均通過 |
+| Character lifecycle | RUNTIME PASS：隔離 KING fixture 完成 save／quit／新連線 relogin，8×99、技能與 mapping restore 通過 |
+
+完整真實 Driver Gate：`scripts/test_cold_plum_arena_runtime_e2e.sh`。成功證據必須包含 `COLD_PLUM_RUNTIME_PASS`，不得以 Static PASS 或 Render LIVE 取代。Evidence Boundary 與 UNKNOWN 數值記錄於 `original_es2/research/cold_plum_mirror_combat_runtime.md`。
+
 ## 2. Evidence 與 Runtime 分層
 
 - Evidence（證據）記錄 Original ES2 的來源可信度與尚未確認內容。
@@ -38,7 +55,7 @@
 | Release Gate（發布關卡） | 狀態 |
 |---|---|
 | Primary Public Runtime（主要公開執行環境） | `ES2-KING-MUD`／https://es2-king-mud.onrender.com |
-| Repository / Render Sync（版本同步） | PASS（測試通過）：Post-Neon baseline 公開 `/health` 的 `build_commit` = `15e27c606886f1b96c2bbe5bda037989c767becb`；後續提交以部署健康檢查為準 |
+| Repository / Render Sync（版本同步） | PASS（測試通過）：Cold Plum Runtime Evidence Head `f1b6798ce3562551a10d76521f886b5445d35b1f` 已完成 Render 新容器部署並標記 LIVE；後續提交仍以部署健康檢查為準 |
 | Public Runtime Chain（公開執行鏈） | PASS（測試通過）：HTTPS → WSS → Bridge → Neolith；`web`、`bridge`、`neolith` 均為 `true` |
 | Public Race Runtime（公開種族執行流程） | PASS（測試通過）：真實公開 WSS 完成 Account → Password → Email → Race → Gender → Character → Enter Game |
 | Public Device Acceptance（公開裝置驗收） | PASS（Owner 已確認 iPhone Public Runtime） |
