@@ -86,6 +86,10 @@ async function verifyKingProfile() {
   assert.equal(callInt(await call('me->query("es2_king/lengmei/mingjing_zhishui")'), "query"), 1);
   assert.equal(callInt(await call('me->query_skill("rulai shenzhang")'), "query_skill"), 200, "rulai shenzhang");
   assert.match(await call('me->skill_mapped("unarmed")'), /= "rulai shenzhang"/);
+  assert.equal(callInt(await call('me->query_skill("yijinjing")'), "query_skill"), 200, "yijinjing");
+  assert.equal(callInt(await call('me->query_skill("batian lianti jue")'), "query_skill"), 200, "batian lianti jue");
+  assert.match(await call('me->skill_mapped("force")'), /= "yijinjing"/);
+  assert.match(await call('me->skill_mapped("parry")'), /= "batian lianti jue"/);
   assert.equal(callInt(await call('me->query("es2_king/rulai_combat")'), "query"), 1);
 }
 
