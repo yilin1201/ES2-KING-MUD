@@ -75,7 +75,9 @@ void create()
     set_skill("dodge", 300);
     set_skill("unarmed", 300);
 
-    // 真正 Combat mapping：持劍時 Original attack() -> weapon->attack_with() -> SKILL_D("lunmay").
+    // Expansion skill 不在 /daemon/skill 預設路徑；先載入並向 Original DAEMON_D 登記。
+    // 之後 Combat 仍走 Original attack() -> weapon->attack_with() -> SKILL_D("lunmay")。
+    load_object("/d/arena/skill/lunmay");
     map_skill("sword", "lunmay");
 
     // 明鏡止水為高階寒梅心法進階戰鬥境界；NPC 開戰後自動進入。
