@@ -29,6 +29,9 @@ LONG
     // Arena Metadata／競技場標記：供後續經 Original Death call chain 驗證的保護層辨識。
     set("arena_zone", 1);
     set("es2_king_expansion", 1);
-    set("objects", ([\n        "/d/arena/npc/mei_hanshuang" : 1,\n    ]));\n    set("no_clean_up", 1);
+    set("objects", ([
+        "/d/arena/npc/mei_hanshuang" : 1,
+    ]));
+    set("no_clean_up", 1);
     setup();
 }
