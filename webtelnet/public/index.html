@@ -211,13 +211,7 @@
       let code = ansiForeground;
       if (ansiBright && code >= 30 && code <= 37) code += 60;
       if (code !== null) node.className = "ansi-" + code;
-      // score_grid_bar 的每格實際 ANSI chunk 是單獨的「■」；尾隨空格在 reset 後另一個 chunk。
-      if (text === "■") {
-        node.classList.add("score-block");
-        node.textContent = "\u00a0";
-      } else {
-        node.textContent = text;
-      }
+      node.textContent = text;
       terminal.append(node);
     };
     for (let match; (match = re.exec(raw)); ) {
