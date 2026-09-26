@@ -5,8 +5,12 @@ NPC="$ROOT/mudlib/d/arena/npc/mei_hanshuang.c"
 ROOM="$ROOT/mudlib/d/arena/yanwujie.c"
 SKILL="$ROOT/mudlib/d/arena/skill/lunmay.c"
 WEAPON="$ROOT/mudlib/d/arena/obj/charred_plum_branch.c"
-test -f "$NPC";test -f "$ROOM";test -f "$SKILL";test -f "$WEAPON"
+WUJI="$ROOT/mudlib/d/king/wuji_realm.c"
+test -f "$NPC";test -f "$ROOM";test -f "$SKILL";test -f "$WEAPON";test -f "$WUJI"
 grep -Fq '"/d/arena/npc/mei_hanshuang" : 1' "$ROOM"
+grep -Fq '"enter" : "/d/arena/yanwujie"' "$WUJI"
+grep -Fq '"out" : "/d/king/wuji_realm"' "$ROOM"
+! grep -Fq '\\n        "enter"' "$WUJI"
 for a in str cor int spi cps dex con wis;do grep -Fq "set_attr(\"$a\", 50)" "$NPC";done
 for sk in "hainmay force" advance_lunmay lunmay mayin seven force sword parry dodge unarmed;do grep -Fq "set_skill(\"$sk\", 300)" "$NPC";done
 grep -Fq 'map_skill("sword", "lunmay")' "$NPC"
