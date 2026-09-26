@@ -11,6 +11,7 @@
 | 系統 | 狀態 | 本次 Runtime 證據／邊界 |
 |---|---|---|
 | Original ES2 Runtime | RUNTIME PASS | 同一 Neolith Full Driver Journey 實際執行 |
+| Class / Apprentice | M31 BOUNDED RUNTIME PASS | 真實 Driver 已通過 `commoner → apprentice → alchemist`、方士稱謂與 save／quit／relogin／restore；其他遺失職業內容維持 UNKNOWN |
 | World / Map | RUNTIME PASS | Enter World、Look、Movement 已在完整流程通過 |
 | Movement | RUNTIME PASS | 真實 Driver 移動流程通過 |
 | NPC | RUNTIME PASS | NPC interaction 實際通過 |

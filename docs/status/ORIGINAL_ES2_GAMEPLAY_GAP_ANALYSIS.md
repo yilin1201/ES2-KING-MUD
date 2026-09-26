@@ -9,7 +9,7 @@
 | 領域 | 狀態 | Evidence／Runtime 邊界 |
 |---|---|---|
 | Race | IMPLEMENTED | 既有 11 種族 compatibility 與公開選角已通過；遺失 initializer、人類族 Original ID 與衝突業力值仍不補造。 |
-| Class | PARTIAL | Original `CLASS_D`、commoner／fighter 與 apprentice 轉職鏈存在；未保存的職業 Daemon／公式仍未知。 |
+| Class | PARTIAL / M31 BOUNDED RUNTIME PASS | Original `CLASS_D`、commoner／fighter 與 `commoner → apprentice → alchemist` 轉職鏈已由真實 Driver 通過；M31 只恢復 Archived Evidence 支持的「方士」稱謂並驗證 save／quit／relogin／restore。其他職業 Daemon／公式仍 UNKNOWN。 |
 | School | IMPLEMENTED | Snow 私塾與龍圖丹派入門已在真實 Driver Journey 通過。 |
 | NPC | IMPLEMENTED | Snow 保存區 NPC、vendor 與互動可執行；未保存歷史 NPC 屬性／掉落仍不補造。 |
 | Map | PARTIAL | Snow 房間與 exits 可玩；歷史世界的完整 Room Tree、path、spawn 尚無足夠來源。 |

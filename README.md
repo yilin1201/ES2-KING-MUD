@@ -56,8 +56,8 @@ ES2-KING-MUD/
 
 ## 專案導覽（Owner 建議閱讀順序）
 
-1. `docs/status/CURRENT_M30_STATUS.md` — **目前唯一即時開發狀態入口**，先看這份。
-2. `ROADMAP_M0_M30.md` — M0～M30 正式鎖定路線。
+1. `docs/status/CURRENT_M30_STATUS.md` — **目前唯一即時開發狀態入口**，先看這份（檔名保留歷史相容，內容已進入 M31）。
+2. `ROADMAP_M0_M30.md` — M0～M30 正式鎖定路線；`ROADMAP_M31.md` — Owner 指定的 M31 Class 職業系統。
 3. `docs/ES2_KING_REPOSITORY_GUIDE_ZH_TW.md` — 目前 Repository 中文分類導覽。
 4. `docs/DOCUMENT_GOVERNANCE_ZH_TW.md` — 文件去重、Current／Canon／Evidence／Historical 分流規則。
 5. `AGENTS.md` — 開發與 Original 保存規則。

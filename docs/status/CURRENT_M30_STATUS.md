@@ -5,7 +5,7 @@
 > Post-Neon Audit Baseline：`15e27c606886f1b96c2bbe5bda037989c767becb`  
 > Cold Plum Runtime Evidence Head：`f1b6798ce3562551a10d76521f886b5445d35b1f`  
 > 本文件是 Current Status（目前狀態），不是歷史測試報告。  
-> PR #13：OPEN（開啟） / NOT MERGED（未合併）。M31：未開始。
+> PR #13：OPEN（開啟） / NOT MERGED（未合併）。M31：Class 職業系統，BOUNDED RUNTIME PASS。
 
 ## 1. Game Completion（遊戲完整可玩性）
 
@@ -42,6 +42,16 @@
 | Character lifecycle | RUNTIME PASS：隔離 KING fixture 完成 save／quit／新連線 relogin，8×99、技能與 mapping restore 通過 |
 
 完整真實 Driver Gate：`scripts/test_cold_plum_arena_runtime_e2e.sh`。成功證據必須包含 `COLD_PLUM_RUNTIME_PASS`，不得以 Static PASS 或 Render LIVE 取代。Evidence Boundary 與 UNKNOWN 數值記錄於 `original_es2/research/cold_plum_mirror_combat_runtime.md`。
+
+### 1.2 M31：Class 職業系統
+
+Owner 於 2026-09-26 正式指定 M31 主題為 Class 職業系統。Evidence 與實作範圍記錄於 `original_es2/research/m31_class_runtime_completion.md`；正式 Gate 已通過：
+
+- Static：`scripts/test_m31_class_static.sh` — PASS
+- True Driver E2E：`scripts/test_m31_class_runtime_e2e.sh` — PASS
+- Success marker：`M31_CLASS_RUNTIME_PASS` — CONFIRMED
+
+本階段完成有直接 Source 的 `commoner → apprentice → alchemist` 轉職鏈、Archived Evidence 支持的「方士」稱謂，以及隔離玩家 save／quit／relogin／restore。其他遺失職業 Daemon、初始化／升級公式、能力、裝備限制與門派條件維持 `SOURCE_REQUIRED / UNKNOWN`；因此 M31 為證據邊界內的 BOUNDED RUNTIME PASS，不宣稱七職業內容全部復原。
 
 ## 2. Evidence 與 Runtime 分層
 
