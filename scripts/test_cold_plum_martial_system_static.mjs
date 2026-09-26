@@ -87,6 +87,19 @@ if (!yanwujie.includes('"out" : "/d/king/wuji_realm"'))
 for (const forbidden of ["必中", "必殺", "穿透率", "傷害倍率", '"attack":1', '"force":1', '"defense":1']) {
   if (skill.includes(forbidden)) throw new Error("unsupported Cold Plum numeric/effect invention: " + forbidden);
 }
+
+const rulai = read("es2_king_expansion/runtime/mudlib/d/arena/skill/rulai_shenzhang.c");
+for (const form of ["佛光初現","金頂佛燈","佛動山河","佛問迦藍","迎佛西天","佛光普照","天佛降世","佛鎮八荒","佛法無邊","九九歸一・萬佛朝宗","天舞梵輪・萬相歸墟"]) {
+  if (!rulai.includes(form)) throw new Error("missing Rulai form: " + form);
+}
+if ((rulai.match(/HIY/g) || []).length < 11) throw new Error("Rulai forms must use yellow ANSI presentation");
+for (const forbidden of ["busy(", "consume_stat(", "add_temp(", "set_stat_current("]) {
+  if (rulai.includes(forbidden)) throw new Error("Rulai combat must not invent UNKNOWN mechanics: " + forbidden);
+}
+for (const token of ['set_skill("rulai shenzhang", level)', 'map_skill("unarmed", "rulai shenzhang")']) {
+  if (!kingMartial.includes(token)) throw new Error("missing KING Rulai provisioning: " + token);
+}
+
 console.log("KING_99_COLD_PLUM_STATIC_PASS");
 
 for (const token of ['"gin", "kee", "sen", "HP", "water", "food"', "set_stat_maximum(stat, 999)", "set_stat_effective(stat, 999)", "set_stat_current(stat, 999)"]) if (!kingd.includes(token)) throw new Error("missing KING 999 statistic provisioning: " + token);
