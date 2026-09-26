@@ -13,7 +13,9 @@ grep -Fq '"out" : "/d/king/wuji_realm"' "$ROOM"
 ! grep -Fq '\\n        "enter"' "$WUJI"
 for a in str cor int spi cps dex con wis;do grep -Fq "set_attr(\"$a\", 50)" "$NPC";done
 for sk in "hainmay force" advance_lunmay lunmay mayin seven force sword parry dodge unarmed;do grep -Fq "set_skill(\"$sk\", 300)" "$NPC";done
+grep -Fq 'map_skill("force", "hainmay force")' "$NPC"
 grep -Fq 'map_skill("sword", "lunmay")' "$NPC"
+grep -Fq 'attack(opponent);' "$NPC"
 grep -Fq 'activate_mirror_state' "$NPC"
 grep -Fq 'cold_plum/mirror_state' "$NPC"
 grep -Fq 'mirror_mind/sustain_formula", "UNKNOWN"' "$NPC"
