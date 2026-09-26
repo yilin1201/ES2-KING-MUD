@@ -42,4 +42,4 @@
 
 ## KING 範例邊界
 
-KING／創世神的 99 級、全八屬性 50、999/999 狀態等資料只屬示範案例；除非另有正式指令，不自動寫入一般玩家 Runtime。
+依 2026-09-26 正式指令，KING／創世神的八項基礎屬性由示範值 50 正式調整為 **99**。此規則只適用唯一 Owner ID `king`；一般玩家仍維持 Original ES2 `ATTRVAL_MAX=50`。KING 進入天神殿時由 `KING_D->apply_creator_profile()` 以正式 `set_attr()` 寫入八項 raw attribute=99，不使用 `temp/apply` 偽裝顯示值。圖示中的 99 級、999/999 狀態及其他既有 KING 介面設定維持原設定；本次不額外推導未知公式。
