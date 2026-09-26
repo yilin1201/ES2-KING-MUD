@@ -11,7 +11,8 @@ function n(s,name){const m=s.match(new RegExp("->"+name+"\\([^)]*\\) = (-?\\d+)"
 await connect();await wait(0,"您的使用者代號");await cmd("king","請輸入密碼");await cmd(password,"目前權限: (admin)");await wait(0,"> ");
 for(const p of ["/d/arena/skill/lunmay","/d/arena/obj/charred_plum_branch","/d/arena/npc/mei_hanshuang","/d/arena/yanwujie"])assert.match(await cmd("update "+p),/更新|載入|重新編譯|成功|Ok/i);
 await cmd("goto /d/arena/yanwujie","競技場：演武界");assert.match(await cmd("look mei"),/梅寒霜/);
-assert.equal(n(await call('mei->query_skill("lunmay")'),"query_skill"),300);
+for(const sk of ["hainmay force","advance_lunmay","lunmay","mayin","seven"])
+  assert.equal(n(await call('mei->query_skill("'+sk+'")'),"query_skill"),300,sk);
 for(const a of ["str","cor","int","spi","cps","dex","con","wis"])assert.equal(n(await call('mei->query_attr("'+a+'")'),"query_attr"),50);
 console.log("COLD_PLUM_PASS:npc-attributes-skills");
 for(const s of ["gin","kee","sen","HP"])await call('set_stat_current("'+s+'",100000)');
