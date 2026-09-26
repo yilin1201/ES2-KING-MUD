@@ -358,8 +358,9 @@ for expansion_skill in kuxiao_force daxie_qisun_blade; do
   grep -Fqx "/daemon/skill/$expansion_skill" "$PRELOAD_FILE" \
     || printf '%s\n' "/daemon/skill/$expansion_skill" >> "$PRELOAD_FILE"
 done
-grep -Fqx "/d/arena/skill/lunmay" "$PRELOAD_FILE" \
-  || printf '%s\n' "/d/arena/skill/lunmay" >> "$PRELOAD_FILE"
+for arena_preload in /d/arena/skill/lunmay /d/arena/npc/mei_hanshuang; do
+  grep -Fqx "$arena_preload" "$PRELOAD_FILE" || printf '%s\n' "$arena_preload" >> "$PRELOAD_FILE"
+done
 for owner_command in kingcreate kingrealm kingmartial kingcanon; do
   grep -Fqx "/cmds/adm/$owner_command" "$PRELOAD_FILE" \
     || printf '%s\n' "/cmds/adm/$owner_command" >> "$PRELOAD_FILE"
