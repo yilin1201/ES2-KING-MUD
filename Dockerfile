@@ -13,6 +13,9 @@ RUN apt-get update \
 WORKDIR /build/repository
 COPY . .
 
+# WebTelnet Browser Static Gate：Render 建置前先解析瀏覽器 module，避免 HTML 可開啟但 JavaScript 未執行而永久停在「連線中」。
+RUN node scripts/test_m30_webtelnet_display.mjs
+
 # Original ES2（原版天朝帝國）固定到已考證 commit；Expansion 只套入獨立 Runtime。
 # 分段建置讓 Render Build Log 能直接指出失敗階段，避免單一長鏈只回報 exit code 1。
 RUN echo "[M30 BUILD 1/5] Clone Original ES2" \
