@@ -37,13 +37,20 @@ console.log("COLD_PLUM_MARTIAL_SYSTEM_STATIC_PASS");
 const kingd = fs.readFileSync("es2_king_expansion/runtime/mudlib/adm/daemons/kingd.c", "utf8");
 const kingMartial = fs.readFileSync("es2_king_expansion/runtime/mudlib/adm/daemons/kingmartiald.c", "utf8");
 const kingRealm = fs.readFileSync("es2_king_expansion/runtime/mudlib/cmds/adm/kingrealm.c", "utf8");
+const attribute = fs.readFileSync("es2_king_expansion/runtime/mudlib/feature/attribute.c", "utf8");
+const wujiRealm = fs.readFileSync("es2_king_expansion/runtime/mudlib/d/king/wuji_realm.c", "utf8");
+const yanwujie = fs.readFileSync("es2_king_expansion/runtime/mudlib/d/arena/yanwujie.c", "utf8");
 
 // KING Cold Plum wiring：八屬性 99；武學遵守 Original 玩家技能 200 上限。
 for (const token of [
+  '"str", "cor", "int", "spi", "cps", "dex", "con", "wis"',
   'actor->set_attr(attr, 99)',
   'actor->set("es2_king/creator_attribute", 99)'
 ]) {
   if (!kingd.includes(token)) throw new Error("missing KING 99 profile: " + token);
+}
+for (const token of ['query("id") == "king") ? 99 : ATTRVAL_MAX', "value > maximum"]) {
+  if (!attribute.includes(token)) throw new Error("missing KING-only attribute boundary: " + token);
 }
 for (const token of [
   "int set_cold_plum(",
@@ -65,5 +72,12 @@ for (const token of [
   'me->move("/d/king/wuji_realm")'
 ]) {
   if (!kingRealm.includes(token)) throw new Error("missing KING realm provisioning: " + token);
+}
+if (!wujiRealm.includes('"enter" : "/d/arena/yanwujie"'))
+  throw new Error("missing Wuji Realm enter -> Yanwujie topology");
+if (!yanwujie.includes('"out" : "/d/king/wuji_realm"'))
+  throw new Error("missing Yanwujie out -> Wuji Realm topology");
+for (const forbidden of ["必中", "必殺", "穿透率", "傷害倍率", '"attack":1', '"force":1', '"defense":1']) {
+  if (skill.includes(forbidden)) throw new Error("unsupported Cold Plum numeric/effect invention: " + forbidden);
 }
 console.log("KING_99_COLD_PLUM_STATIC_PASS");

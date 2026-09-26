@@ -1,25 +1,158 @@
 import assert from "node:assert/strict";
 import WebSocket from "../webtelnet/node_modules/ws/wrapper.mjs";
-const url=process.env.ES2_E2E_WS_URL,password=process.env.ES2_E2E_KING_PASSWORD;assert.ok(url&&password);
-let socket,output="",last=0;
-async function connect(){output="";socket=new WebSocket(url);socket.on("message",d=>output+=Buffer.from(d).toString("utf8"));await new Promise((r,j)=>{socket.once("open",r);socket.once("error",j)})}
-const wait=(o,m,t=20000)=>new Promise((r,j)=>{const s=Date.now(),x=setInterval(()=>{const z=output.slice(o),ok=typeof m==="string"?z.includes(m):m.test(z);if(ok){clearInterval(x);r(z)}else if(Date.now()-s>t){clearInterval(x);j(new Error("timeout "+String(m)+"\n"+z.slice(-3000))) }},25)});
-async function send(s){const d=Math.max(0,400-(Date.now()-last));if(d)await new Promise(r=>setTimeout(r,d));const o=output.length;socket.send(s+"\r\n");last=Date.now();return o}
-async function cmd(s,m="> ",t=20000){const o=await send(s);return wait(o,m,t)}
-async function call(s){return cmd("call "+s)}
-function n(s,name){const m=s.match(new RegExp("->"+name+"\\([^)]*\\) = (-?\\d+)"));assert.ok(m,s.slice(-800));return +m[1]}
-await connect();await wait(0,"您的使用者代號");await cmd("king","請輸入密碼");await cmd(password,"目前權限: (admin)");await wait(0,"> ");
-for(const p of ["/d/arena/skill/lunmay","/d/arena/obj/charred_plum_branch","/d/arena/npc/mei_hanshuang","/d/arena/yanwujie"])assert.match(await cmd("update "+p),/更新|載入|重新編譯|成功|Ok/i);
-await cmd("goto /d/arena/yanwujie","競技場：演武界");assert.match(await cmd("look mei"),/梅寒霜/);
-for(const sk of ["hainmay force","advance_lunmay","lunmay","mayin","seven"])
-  assert.equal(n(await call('mei->query_skill("'+sk+'")'),"query_skill"),300,sk);
-for(const a of ["str","cor","int","spi","cps","dex","con","wis"])assert.equal(n(await call('mei->query_attr("'+a+'")'),"query_attr"),50);
+
+const url = process.env.ES2_E2E_WS_URL;
+const password = process.env.ES2_E2E_KING_PASSWORD;
+assert.ok(url && password);
+
+let socket;
+let output = "";
+let lastSentAt = 0;
+
+async function connect() {
+  output = "";
+  socket = new WebSocket(url);
+  socket.on("message", data => output += Buffer.from(data).toString("utf8"));
+  await new Promise((resolve, reject) => {
+    socket.once("open", resolve);
+    socket.once("error", reject);
+  });
+}
+
+const wait = (offset, match, timeout = 20000) => new Promise((resolve, reject) => {
+  const started = Date.now();
+  const timer = setInterval(() => {
+    const received = output.slice(offset);
+    const matched = typeof match === "string" ? received.includes(match) : match.test(received);
+    if (matched) {
+      clearInterval(timer);
+      resolve(received);
+    } else if (Date.now() - started > timeout) {
+      clearInterval(timer);
+      reject(new Error(`timeout ${String(match)}\n${received.slice(-3000)}`));
+    }
+  }, 25);
+});
+
+async function send(line) {
+  const delay = Math.max(0, 400 - (Date.now() - lastSentAt));
+  if (delay) await new Promise(resolve => setTimeout(resolve, delay));
+  const offset = output.length;
+  socket.send(line + "\r\n");
+  lastSentAt = Date.now();
+  return offset;
+}
+
+async function command(line, match = "> ", timeout = 20000) {
+  const offset = await send(line);
+  return wait(offset, match, timeout);
+}
+
+async function call(expression) {
+  return command("call " + expression);
+}
+
+function callInt(text, method) {
+  const found = text.match(new RegExp(`->${method}\\([^)]*\\) = (-?\\d+)`));
+  assert.ok(found, text.slice(-800));
+  return Number(found[1]);
+}
+
+async function login() {
+  await connect();
+  await wait(0, "您的使用者代號");
+  await command("king", "請輸入密碼");
+  await command(password, "目前權限: (admin)");
+  await wait(0, "> ");
+}
+
+const attributes = ["str", "cor", "int", "spi", "cps", "dex", "con", "wis"];
+const coldSkills = ["hainmay force", "advance_lunmay", "lunmay", "mayin", "seven"];
+const baseSkills = ["force", "sword", "parry", "dodge", "unarmed"];
+
+async function verifyKingProfile() {
+  for (const attribute of attributes)
+    assert.equal(callInt(await call(`me->query_attr("${attribute}")`), "query_attr"), 99, attribute);
+  for (const skill of [...coldSkills, ...baseSkills])
+    assert.equal(callInt(await call(`me->query_skill("${skill}")`), "query_skill"), 200, skill);
+  assert.match(await call('me->skill_mapped("force")'), /= "hainmay force"/);
+  assert.match(await call('me->skill_mapped("sword")'), /= "lunmay"/);
+  assert.equal(callInt(await call('me->query("es2_king/lengmei/mingjing_zhishui")'), "query"), 1);
+}
+
+await login();
+for (const path of [
+  "/adm/daemons/kingd",
+  "/adm/daemons/kingmartiald",
+  "/cmds/adm/kingrealm",
+  "/d/arena/skill/lunmay",
+  "/d/arena/obj/charred_plum_branch",
+  "/d/arena/npc/mei_hanshuang",
+  "/d/arena/yanwujie",
+]) assert.match(await command("update " + path), /更新|載入|重新編譯|成功|Ok/i);
+
+assert.match(await command("kingrealm"), /天神殿・無極之境/);
+await verifyKingProfile();
+console.log("COLD_PLUM_PASS:king-99-skills-admin");
+
+assert.match(await command("enter"), /競技場：演武界/);
+assert.match(await command("look mei"), /梅寒霜/);
+console.log("COLD_PLUM_PASS:wuji-enter-yanwujie");
+
+for (const skill of [...coldSkills, ...baseSkills])
+  assert.equal(callInt(await call(`mei->query_skill("${skill}")`), "query_skill"), 300, skill);
+for (const attribute of attributes)
+  assert.equal(callInt(await call(`mei->query_attr("${attribute}")`), "query_attr"), 50, attribute);
 console.log("COLD_PLUM_PASS:npc-attributes-skills");
-for(const s of ["gin","kee","sen","HP"])await call('set_stat_current("'+s+'",100000)');
-const start=output.length;await send("kill mei");await wait(start,/【明鏡止水】/,30000);console.log("COLD_PLUM_PASS:mirror-mind-state");
-const forms=["梅二方劍","梅四方劍","梅八方劍","愛霜恨雪","寒霜三千里","傲梅暗劍訣・傲雪藏鋒・逆折寒梅"];
-await wait(start,new RegExp(forms.join(".*"),"s"),60000);for(const f of forms)assert.ok(output.slice(start).includes(f),f);assert.ok(output.slice(start).includes("明劍欺敵，暗劍藏殺；傲雪藏鋒・逆折寒梅。"));\nconsole.log("COLD_PLUM_PASS:six-forms-runtime");
-await call('mei->set_stat_current("kee",1)');await call('mei->set_stat_current("HP",1)');
-await wait(start,/死了|倒在地上|死亡|屍體|corpse|殺死/,45000);console.log("COLD_PLUM_PASS:king-kill-mei");
-assert.equal(n(await call('environment()->query("arena_zone")'),"query"),1);console.log("COLD_PLUM_PASS:arena-protection-boundary");
-socket.close();console.log("COLD_PLUM_RUNTIME_PASS");
+
+const levelBefore = callInt(await call("me->query_level()"), "query_level");
+const forceBefore = callInt(await call('me->query_skill("force",1)'), "query_skill");
+const hpMaximum = callInt(await call('me->query_stat_maximum("HP")'), "query_stat_maximum");
+assert.ok(hpMaximum > 0);
+const defeatOffset = await send(`call me->consume_stat("HP",${hpMaximum + 1},me)`);
+await wait(defeatOffset, "演武界法則引動");
+assert.equal(callInt(await call('me->query_stat_current("HP")'), "query_stat_current"), hpMaximum);
+assert.equal(callInt(await call('me->query_stat_effective("HP")'), "query_stat_effective"), hpMaximum);
+assert.equal(callInt(await call("me->query_level()"), "query_level"), levelBefore);
+assert.equal(callInt(await call('me->query_skill("force",1)'), "query_skill"), forceBefore);
+assert.match(await call('me->query("life_form")'), /= "living"/);
+console.log("COLD_PLUM_PASS:arena-defeat-protection");
+
+assert.match(await command("clone /d/arena/obj/charred_plum_branch"), /複製成功|焦黑枯梅枝/);
+assert.doesNotMatch(await command("wield branch"), /你身上沒有|無法|不能/);
+for (const stat of ["gin", "kee", "sen", "HP"])
+  await call(`me->set_stat_current("${stat}",100000)`);
+
+const combatOffset = output.length;
+await send("kill mei");
+await wait(combatOffset, /【明鏡止水】/, 30000);
+console.log("COLD_PLUM_PASS:mirror-mind-state");
+const forms = [
+  "梅二方劍", "梅四方劍", "梅八方劍", "愛霜恨雪", "寒霜三千里",
+  "傲梅暗劍訣・傲雪藏鋒・逆折寒梅",
+];
+await wait(combatOffset, new RegExp(forms.join(".*"), "s"), 60000);
+for (const form of forms) assert.ok(output.slice(combatOffset).includes(form), form);
+assert.ok(output.slice(combatOffset).includes("明劍欺敵，暗劍藏殺；傲雪藏鋒・逆折寒梅。"));
+console.log("COLD_PLUM_PASS:six-forms-runtime");
+
+await call('mei->set_stat_current("kee",1)');
+await call('mei->set_stat_current("HP",1)');
+await wait(combatOffset, /死了|倒在地上|死亡|屍體|corpse|殺死/, 45000);
+console.log("COLD_PLUM_PASS:king-combat-mei");
+
+assert.match(await command("out"), /天神殿・無極之境/);
+console.log("COLD_PLUM_PASS:yanwujie-out-wuji");
+assert.match(await command("save"), /檔案儲存完畢/);
+const quitOffset = await send("quit");
+await wait(quitOffset, "歡迎下次再來");
+socket.close();
+await new Promise(resolve => setTimeout(resolve, 200));
+
+await login();
+assert.match(await command("look"), /天神殿・無極之境|客棧大堂/);
+await verifyKingProfile();
+console.log("COLD_PLUM_PASS:save-quit-relogin-restore");
+
+socket.close();
+console.log("COLD_PLUM_RUNTIME_PASS");

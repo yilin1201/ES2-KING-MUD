@@ -21,5 +21,18 @@ ES2_TEST_PORT=4000 node -e 'const n=require("net"),d=Date.now()+30000;(function 
 ES2_TEST_PORT="$WEB_PORT" node -e 'const h=require("http"),d=Date.now()+10000;(function p(){h.get({host:"127.0.0.1",port:+process.env.ES2_TEST_PORT,path:"/health"},r=>{r.resume();r.statusCode===200?process.exit(0):Date.now()<d?setTimeout(p,100):process.exit(1)}).on("error",()=>Date.now()<d?setTimeout(p,100):process.exit(1))})()'
 LOG="$TEMP_ROOT/cold-plum.log"
 ES2_E2E_WS_URL="ws://127.0.0.1:$WEB_PORT/mud" ES2_E2E_KING_PASSWORD="$TEST_PASSWORD" node "$REPO_ROOT/scripts/test_cold_plum_arena_runtime_e2e.mjs" | tee "$LOG"
-for m in COLD_PLUM_PASS:npc-attributes-skills COLD_PLUM_PASS:mirror-mind-state COLD_PLUM_PASS:six-forms-runtime COLD_PLUM_PASS:king-kill-mei COLD_PLUM_PASS:arena-protection-boundary COLD_PLUM_RUNTIME_PASS; do grep -Fq "$m" "$LOG"; done
-echo "COLD PLUM RUNTIME PASS：真實 Neolith Driver 已驗證梅寒霜、明鏡止水、冷梅六式、KING kill mei 與 Arena protection boundary。"
+for marker in \
+  COLD_PLUM_PASS:king-99-skills-admin \
+  COLD_PLUM_PASS:wuji-enter-yanwujie \
+  COLD_PLUM_PASS:npc-attributes-skills \
+  COLD_PLUM_PASS:arena-defeat-protection \
+  COLD_PLUM_PASS:mirror-mind-state \
+  COLD_PLUM_PASS:six-forms-runtime \
+  COLD_PLUM_PASS:king-combat-mei \
+  COLD_PLUM_PASS:yanwujie-out-wuji \
+  COLD_PLUM_PASS:save-quit-relogin-restore \
+  COLD_PLUM_RUNTIME_PASS
+do
+  grep -Fq "$marker" "$LOG"
+done
+echo "COLD PLUM RUNTIME PASS：真實 Neolith Driver 已驗證 KING 八屬性 99、冷梅莊技能、演武界雙向拓撲、梅寒霜 50/300、明鏡止水、冷梅六式、Combat、Arena 敗北保護及 save／quit／relogin／restore。"
