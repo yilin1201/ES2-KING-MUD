@@ -35,16 +35,16 @@
     /* SCORE Reference Blocks：將 MUD 的單一方格 token 畫成資料圖的大型矩形格。 */
     #terminal .score-block {
       display: inline-block;
-      width: 1.18em;
-      height: .92em;
-      margin-right: .16em;
+      width: 1.55em;
+      height: 1.18em;
+      margin-right: .12em;
       border-radius: 0;
-      vertical-align: -.08em;
+      vertical-align: -.16em;
       background: currentColor;
       overflow: hidden;
       color: inherit;
       font-size: 1em;
-      line-height: .92em;
+      line-height: 1.18em;
     }
     #terminal .score-block::selection { background: transparent; }
     form { display: flex; gap: .5rem; position: sticky; bottom: 0; background: #080b10; padding: .75rem 0 max(.75rem, env(safe-area-inset-bottom)); }
@@ -226,7 +226,8 @@
       let code = ansiForeground;
       if (ansiBright && code >= 30 && code <= 37) code += 60;
       if (code !== null) node.className = "ansi-" + code;
-      if (text === "■ ") {
+      // score_grid_bar 的每格實際 ANSI chunk 是單獨的「■」；尾隨空格在 reset 後另一個 chunk。
+      if (text === "■") {
         node.classList.add("score-block");
         node.textContent = "\u00a0";
       } else {
