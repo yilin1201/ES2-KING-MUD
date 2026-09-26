@@ -40,6 +40,7 @@ const kingRealm = fs.readFileSync("es2_king_expansion/runtime/mudlib/cmds/adm/ki
 const attribute = fs.readFileSync("es2_king_expansion/runtime/mudlib/feature/attribute.c", "utf8");
 const wujiRealm = fs.readFileSync("es2_king_expansion/runtime/mudlib/d/king/wuji_realm.c", "utf8");
 const yanwujie = fs.readFileSync("es2_king_expansion/runtime/mudlib/d/arena/yanwujie.c", "utf8");
+const applyExpansion = fs.readFileSync("scripts/apply_es2_king_expansion.sh", "utf8");
 
 // KING Cold Plum wiring：八屬性 99；武學遵守 Original 玩家技能 200 上限。
 for (const token of [
@@ -72,6 +73,14 @@ for (const token of [
   'me->move("/d/king/wuji_realm")'
 ]) {
   if (!kingRealm.includes(token)) throw new Error("missing KING realm provisioning: " + token);
+}
+for (const token of [
+  "ES2-KING OWNER LOGIN PROVISIONING",
+  'user->query("id") == "king"',
+  'call_other("/adm/daemons/kingd", "apply_creator_profile", user)',
+  'call_other("/adm/daemons/kingmartiald", "set_cold_plum", user, 200)'
+]) {
+  if (!applyExpansion.includes(token)) throw new Error("missing formal KING login provisioning: " + token);
 }
 if (!wujiRealm.includes('"enter" : "/d/arena/yanwujie"'))
   throw new Error("missing Wuji Realm enter -> Yanwujie topology");
