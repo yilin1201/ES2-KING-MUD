@@ -1,11 +1,16 @@
 import http from "node:http";
+import https from "node:https";
 import { WebSocket } from "../webtelnet/node_modules/ws/wrapper.mjs";
 
 const base = new URL(process.argv[2] || `http://127.0.0.1:${process.env.PORT || 8080}`);
+// Transport／傳輸層：本機 smoke 使用 HTTP，正式 Render 使用 HTTPS；兩者必須走同一組驗證。
+const transport = base.protocol === "https:" ? https : http;
+// Render Free cold start 與受控 Proxy tunnel 可能超過本機 5 秒，正式網址保留 30 秒驗證窗口。
+const requestTimeout = base.protocol === "https:" ? 30000 : 5000;
 
 function getHealth() {
   return new Promise((resolve, reject) => {
-    const request = http.get(new URL("/health/?probe=deployment", base), { timeout: 5000 }, response => {
+    const request = transport.get(new URL("/health/?probe=deployment", base), { timeout: requestTimeout }, response => {
       let body = "";
       response.setEncoding("utf8");
       response.on("data", chunk => { body += chunk; });
@@ -32,7 +37,7 @@ function getHealth() {
 
 function checkHome() {
   return new Promise((resolve, reject) => {
-    const request = http.get(new URL("/", base), { timeout: 5000 }, response => {
+    const request = transport.get(new URL("/", base), { timeout: requestTimeout }, response => {
       let body = "";
       response.setEncoding("utf8");
       response.on("data", chunk => { body += chunk; });
@@ -53,7 +58,7 @@ function checkHome() {
 
 function checkClaimBrowserModule() {
   return new Promise((resolve, reject) => {
-    const request = http.get(new URL("/claim-input.mjs", base), { timeout: 5000 }, response => {
+    const request = transport.get(new URL("/claim-input.mjs", base), { timeout: requestTimeout }, response => {
       let body = "";
       response.setEncoding("utf8");
       response.on("data", chunk => { body += chunk; });
@@ -75,7 +80,7 @@ function checkClaimBrowserModule() {
 
 function checkCharacterBrowserModule() {
   return new Promise((resolve, reject) => {
-    const request = http.get(new URL("/character-input.mjs", base), { timeout: 5000 }, response => {
+    const request = transport.get(new URL("/character-input.mjs", base), { timeout: requestTimeout }, response => {
       let body = "";
       response.setEncoding("utf8");
       response.on("data", chunk => { body += chunk; });
@@ -101,7 +106,7 @@ function checkLoginPrompt() {
   return new Promise((resolve, reject) => {
     const protocol = base.protocol === "https:" ? "wss:" : "ws:";
     const socket = new WebSocket(`${protocol}//${base.host}/mud`);
-    const timer = setTimeout(() => { socket.terminate(); reject(new Error("ES2 login prompt timeout")); }, 10000);
+    const timer = setTimeout(() => { socket.terminate(); reject(new Error("ES2 login prompt timeout")); }, requestTimeout);
     let output = "";
     socket.on("message", data => {
       output += Buffer.from(data).toString("utf8");
