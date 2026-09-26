@@ -1,5 +1,5 @@
 /*---
-description: ES2-KING 如來神掌正式 Combat Skill／只讓招式名稱使用黃色，Combat 敘述維持原遊戲白色
+description: ES2-KING 如來神掌正式 Combat Skill／如來招式採紅色【】外框＋黃色名稱，Combat 敘述維持原遊戲白色
 ---*/
 #include <ansi.h>
 #pragma save_binary
@@ -8,17 +8,17 @@ inherit SKILL;
 // Evidence：招式名稱來自 ES2-KING Project Canon M29。
 // Original ES2 未發現如來神掌 Combat Source；因此不補造傷害倍率、命中、Busy、消耗或特殊效果。
 mapping *rulai_actions = ({
-    ([ "name":"佛光初現", "action":HIW "$N使出如來神掌" HIY "【佛光初現】" HIW "，掌勢如晨曦初綻，直取$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
-    ([ "name":"金頂佛燈", "action":HIW "$N使出如來神掌" HIY "【金頂佛燈】" HIW "，掌影如佛燈長明，直取$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
-    ([ "name":"佛動山河", "action":HIW "$N使出如來神掌" HIY "【佛動山河】" HIW "，雙掌平推，掌勢直撼$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
-    ([ "name":"佛問迦藍", "action":HIW "$N使出如來神掌" HIY "【佛問迦藍】" HIW "，掌意沉凝，直叩$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
-    ([ "name":"迎佛西天", "action":HIW "$N使出如來神掌" HIY "【迎佛西天】" HIW "，掌勢迴轉，向$n的$l拍去！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
-    ([ "name":"佛光普照", "action":HIW "$N使出如來神掌" HIY "【佛光普照】" HIW "，掌影展開，直逼$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
-    ([ "name":"天佛降世", "action":HIW "$N使出如來神掌" HIY "【天佛降世】" HIW "，一掌自上而下壓向$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
-    ([ "name":"佛鎮八荒", "action":HIW "$N使出如來神掌" HIY "【佛鎮八荒】" HIW "，掌勢橫掃八方，直取$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
-    ([ "name":"佛法無邊", "action":HIW "$N使出如來神掌" HIY "【佛法無邊】" HIW "，掌勢連綿而出，攻向$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
-    ([ "name":"九九歸一・萬佛朝宗", "action":HIW "$N使出如來神掌" HIY "【九九歸一・萬佛朝宗】" HIW "，前九佛意歸一，一掌直取$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
-    ([ "name":"天舞梵輪・萬相歸墟", "action":HIW "$N使出如來神掌" HIY "【天舞梵輪・萬相歸墟】" HIW "，由佛入空，由空至墟，掌勢直指$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
+    ([ "name":"佛光初現", "action":HIW "$N使出如來神掌" HIR "【" HIY "佛光初現" HIR "】" HIW "，掌勢如晨曦初綻，直取$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
+    ([ "name":"金頂佛燈", "action":HIW "$N使出如來神掌" HIR "【" HIY "金頂佛燈" HIR "】" HIW "，掌影如佛燈長明，直取$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
+    ([ "name":"佛動山河", "action":HIW "$N使出如來神掌" HIR "【" HIY "佛動山河" HIR "】" HIW "，雙掌平推，掌勢直撼$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
+    ([ "name":"佛問迦藍", "action":HIW "$N使出如來神掌" HIR "【" HIY "佛問迦藍" HIR "】" HIW "，掌意沉凝，直叩$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
+    ([ "name":"迎佛西天", "action":HIW "$N使出如來神掌" HIR "【" HIY "迎佛西天" HIR "】" HIW "，掌勢迴轉，向$n的$l拍去！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
+    ([ "name":"佛光普照", "action":HIW "$N使出如來神掌" HIR "【" HIY "佛光普照" HIR "】" HIW "，掌影展開，直逼$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
+    ([ "name":"天佛降世", "action":HIW "$N使出如來神掌" HIR "【" HIY "天佛降世" HIR "】" HIW "，一掌自上而下壓向$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
+    ([ "name":"佛鎮八荒", "action":HIW "$N使出如來神掌" HIR "【" HIY "佛鎮八荒" HIR "】" HIW "，掌勢橫掃八方，直取$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
+    ([ "name":"佛法無邊", "action":HIW "$N使出如來神掌" HIR "【" HIY "佛法無邊" HIR "】" HIW "，掌勢連綿而出，攻向$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
+    ([ "name":"九九歸一・萬佛朝宗", "action":HIW "$N使出如來神掌" HIR "【" HIY "九九歸一・萬佛朝宗" HIR "】" HIW "，前九佛意歸一，一掌直取$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
+    ([ "name":"天舞梵輪・萬相歸墟", "action":HIW "$N使出如來神掌" HIR "【" HIY "天舞梵輪・萬相歸墟" HIR "】" HIW "，由佛入空，由空至墟，掌勢直指$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
 });
 
 private void create()
