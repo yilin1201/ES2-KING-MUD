@@ -239,6 +239,54 @@ LPC
   mv "$temp_login" "$LOGIN_D"
 fi
 
+# KING Login Provisioning／正式 KING 登入配置：
+# 舊版只在 kingrealm 指令中套用 8×99 與冷梅武學，造成「測試先執行 kingrealm 才 PASS」、
+# 但正式既有 KING 正常登入仍保留舊存檔能力。現在在 Original enter_world 完成 exec + setup 後，
+# 對唯一已通過 admin 身分的 king 套用同一正式 API，再由 Original SAVE_USER 流程保存。
+KING_LOGIN_MARKER='ES2-KING OWNER LOGIN PROVISIONING'
+if ! grep -Fq "$KING_LOGIN_MARKER" "$LOGIN_D"; then
+  python3 - "$LOGIN_D" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+text = path.read_text()
+needle = '''    user->setup();
+    increment_visitor_count();
+
+#ifdef SAVE_USER
+    // save newly created user
+    user->save();
+#endif
+'''
+replacement = '''    user->setup();
+    increment_visitor_count();
+
+    // ES2-KING OWNER LOGIN PROVISIONING／只有正式互動 admin KING 會進入此分支。
+    // 使用與 kingrealm 相同的 daemon API；一般玩家完全不受影響。
+    if (user->query("id") == "king"
+    &&  wiz_level(user) >= wiz_level("(admin)")) {
+        if (!call_other("/adm/daemons/kingd", "apply_creator_profile", user)
+        ||  !call_other("/adm/daemons/kingmartiald", "set_cold_plum", user, 200)) {
+            write("KING 正式能力配置失敗，已中止登入以避免錯誤狀態。\\n");
+            destruct(ob);
+            destruct(user);
+            return;
+        }
+        write("KING 創世神配置已同步：八項屬性 99，冷梅莊武學 200。\\n");
+    }
+
+#ifdef SAVE_USER
+    // save newly created user；KING 正式配置也在此寫回 Original save data。
+    user->save();
+#endif
+'''
+if needle not in text:
+    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original enter_world setup/save 區段，無法加入 KING Login Provisioning。")
+path.write_text(text.replace(needle, replacement, 1))
+PY
+fi
+
 # 已生成過的舊 Runtime 可能沿用 mktemp 的 600；只補讀取權限，不授予任何 group／other 寫入權。
 chmod go+r "$LOGIN_D"
 
