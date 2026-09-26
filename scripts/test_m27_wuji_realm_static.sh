@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOM="es2_king_expansion/runtime/mudlib/d/king/wuji_realm.c"
-COMMAND="es2_king_expansion/runtime/mudlib/cmds/adm/kingrealm.c"
+COMMAND="es2_king_expansion/runtime/mudlib/cmds/adm/kinghome.c"
 DOC="es2_king_expansion/research/m27_wuji_realm_runtime.md"
 for file in "$ROOM" "$COMMAND" "$DOC" es2_king_expansion/admin_rooms/wuji_realm.md; do
   test -f "$file" || { echo "M27 STATIC FAIL：缺少 $file"; exit 1; }
