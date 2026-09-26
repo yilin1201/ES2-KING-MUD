@@ -82,3 +82,19 @@ int set_cold_plum(object actor, int level)
     actor->set("es2_king/lengmei_level", level);
     return 1;
 }
+
+
+// 如來神掌／KING 正式 Combat 配置。
+// 招式名稱沿用 M29 Project Canon；Original ES2 未發現 Combat Source，故不補造特殊數值效果。
+// 等級遵守 Original 玩家技能 200 上限。
+int set_rulai_shenzhang(object actor, int level)
+{
+    if (!authorized(actor) || level < 1 || level > 200) return 0;
+    actor->set_skill("rulai shenzhang", level);
+    actor->set_skill("unarmed", level);
+    load_object("/d/arena/skill/rulai_shenzhang");
+    actor->map_skill("unarmed", "rulai shenzhang");
+    actor->set("es2_king/rulai_level", level);
+    actor->set("es2_king/rulai_combat", 1);
+    return 1;
+}
