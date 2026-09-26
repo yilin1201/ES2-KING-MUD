@@ -64,4 +64,8 @@ if grep -Fq 'destruct(ob)' <<<"$reservation_block"; then
   exit 1
 fi
 
-echo "FINAL RUNTIME OVERLAY ASSERTION PASS（最終執行環境覆蓋層斷言通過）：新版 KING 保留流程與 Public Race Text 相容層已存在於 Neolith 實際載入的 logind.c。"
+# Cold Plum Arena Static Gate／冷梅演武界靜態閘門：在 Docker 最終 Runtime overlay 後檢查，
+# 確保部署映像實際包含梅寒霜、六式與 UNKNOWN 邊界，而不是只檢查 repository source。
+bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_cold_plum_arena_static.sh" "$RUNTIME_DIR"
+
+echo "FINAL RUNTIME OVERLAY ASSERTION PASS（最終執行環境覆蓋層斷言通過）：新版 KING 保留流程、Public Race Text 相容層與 Cold Plum Arena Static Gate 均已通過。"
