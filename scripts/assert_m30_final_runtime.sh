@@ -71,10 +71,10 @@ bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_cold_plum_arena_s
 
 # Score Grid Bars／形體精氣神方格條只改顯示，保留 Original 三值 Statistic。
 grep -Fq 'ES2-KING SCORE GRID BARS' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
-grep -Fq 'score_grid_bar(HIG' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
-grep -Fq 'score_grid_bar(HIR' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
-grep -Fq 'score_grid_bar(HIB' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
-grep -Fq 'score_grid_bar(HIY' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
+grep -Fq 'score_grid_bar("HP", HIG' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
+grep -Fq 'score_grid_bar("GIN", HIR' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
+grep -Fq 'score_grid_bar("KEE", HIB' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
+grep -Fq 'score_grid_bar("SEN", HIY' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
 grep -Fq 'string bar = "ES2GRID:" + kind + ":";' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
 grep -Fq 'return bar + ":END";' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
 ! grep -Fq 'score-block' "$RUNTIME_DIR/../webtelnet/public/index.html" 2>/dev/null || true
