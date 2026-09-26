@@ -81,21 +81,21 @@ async function verifyKingProfile() {
 }
 
 await login();
-// 正式驗收：不得先靠 kingrealm 才取得 8×99／冷梅武學；登入完成當下就必須成立。
+// 正式驗收：不得先靠 kinghome 才取得 8×99／冷梅武學；登入完成當下就必須成立。
 await verifyKingProfile();
 console.log("COLD_PLUM_PASS:formal-login-auto-provision");
 
 for (const path of [
   "/adm/daemons/kingd",
   "/adm/daemons/kingmartiald",
-  "/cmds/adm/kingrealm",
+  "/cmds/adm/kinghome",
   "/d/arena/skill/lunmay",
   "/d/arena/obj/charred_plum_branch",
   "/d/arena/npc/mei_hanshuang",
   "/d/arena/yanwujie",
 ]) assert.match(await command("update " + path), /更新|載入|重新編譯|成功|Ok/i);
 
-assert.match(await command("kingrealm"), /天神殿・無極之境/);
+assert.match(await command("kinghome"), /天神殿・無極之境/);
 await verifyKingProfile();
 console.log("COLD_PLUM_PASS:king-99-skills-admin");
 
