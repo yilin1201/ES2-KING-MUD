@@ -406,9 +406,9 @@ string score_grid_bar (string color, int val, int eff, int max) {
         if (i < n_filled)
             bar += color + "█ " NOR;
         else if (i < n_effective)
-            bar += color + "█ " NOR;
+            bar += color + "▓ " NOR;
         else
-            bar += HIK + "█ " NOR;
+            bar += HIK + "░ " NOR;
     }
     return bar;
 }
