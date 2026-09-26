@@ -48,3 +48,37 @@ int set_daxie(object actor, int level)
     actor->set("es2_king/daxie_level", level);
     return 1;
 }
+
+
+// 冷梅莊武學／KING 正式配置。
+// Original F_SKILL 的一般技能上限為 200；KING 不建立平行 300 級技能規則。
+// 梅寒霜的 300 為 Arena NPC local override，KING 則維持 Original 玩家技能邊界。
+int set_cold_plum(object actor, int level)
+{
+    if (!authorized(actor) || level < 1 || level > 200) return 0;
+
+    actor->set_skill("hainmay force", level);
+    actor->set_skill("advance_lunmay", level);
+    actor->set_skill("lunmay", level);
+    actor->set_skill("mayin", level);
+    actor->set_skill("seven", level);
+    actor->set_skill("force", level);
+    actor->set_skill("sword", level);
+    actor->set_skill("parry", level);
+    actor->set_skill("dodge", level);
+    actor->set_skill("unarmed", level);
+
+    // Expansion 冷梅劍法 daemon 先登記，再交回 Original Combat 使用。
+    load_object("/d/arena/skill/lunmay");
+    actor->map_skill("force", "hainmay force");
+    actor->map_skill("sword", "lunmay");
+
+    // 寒梅心法 → 明鏡止水 → 冷梅劍法五式 → 傲梅暗劍訣。
+    actor->set("es2_king/lengmei/force", "寒梅心法");
+    actor->set("es2_king/lengmei/sword", "冷梅劍法");
+    actor->set("es2_king/lengmei/mingjing_zhishui", 1);
+    actor->set_temp("cold_plum/mirror_state", 1);
+    actor->set_temp("cold_plum/mirror_index", 0);
+    actor->set("es2_king/lengmei_level", level);
+    return 1;
+}
