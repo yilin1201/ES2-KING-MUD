@@ -84,6 +84,9 @@ async function verifyKingProfile() {
   assert.match(await call('me->skill_mapped("force")'), /= "hainmay force"/);
   assert.match(await call('me->skill_mapped("sword")'), /= "lunmay"/);
   assert.equal(callInt(await call('me->query("es2_king/lengmei/mingjing_zhishui")'), "query"), 1);
+  assert.equal(callInt(await call('me->query_skill("rulai shenzhang")'), "query_skill"), 200, "rulai shenzhang");
+  assert.match(await call('me->skill_mapped("unarmed")'), /= "rulai shenzhang"/);
+  assert.equal(callInt(await call('me->query("es2_king/rulai_combat")'), "query"), 1);
 }
 
 await login();
@@ -96,6 +99,7 @@ for (const path of [
   "/adm/daemons/kingmartiald",
   "/cmds/adm/kinghome",
   "/d/arena/skill/lunmay",
+  "/d/arena/skill/rulai_shenzhang",
   "/d/arena/obj/charred_plum_branch",
   "/d/arena/npc/mei_hanshuang",
   "/d/arena/yanwujie",
