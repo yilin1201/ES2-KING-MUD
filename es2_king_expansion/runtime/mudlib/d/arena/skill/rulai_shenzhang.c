@@ -21,16 +21,31 @@ mapping *rulai_actions = ({
     ([ "name":"天舞梵輪・萬相歸墟", "action":HIY "$N使出如來神掌【天舞梵輪・萬相歸墟】，由佛入空，由空至墟，掌勢直指$n的$l！" NOR, "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]),
 });
 
-mapping basic_action(object me, object victim)
+private void create()
 {
-    int index;
-    index = me->query_temp("rulai/form_index");
-    if (index < 0 || index >= sizeof(rulai_actions)) index = 0;
-    me->set_temp("rulai/form_index", (index + 1) % sizeof(rulai_actions));
-    return rulai_actions[index];
+    seteuid(getuid());
+    // Original ES2 Combat 會透過 SKILL_D("rulai shenzhang") 尋找已登記的 Skill Daemon。
+    DAEMON_D->register_skill_daemon("rulai shenzhang");
+    setup();
 }
 
-mapping query_action(object me, object victim)
+int valid_enable(string usage) { return usage == "unarmed"; }
+
+// Original ES2 feature/char/attack.c 的正式徒手 Combat 入口。
+// 不自行建立第二套 heartbeat；由 Original attack() 每回合呼叫。
+void attack_using(object me, object opponent, string skill)
 {
-    return basic_action(me, victim);
+    mapping action;
+    int index;
+
+    if (!opponent) return;
+
+    index = me->query_temp("rulai/form_index");
+    if (index < 0 || index >= sizeof(rulai_actions)) index = 0;
+    action = rulai_actions[index];
+    me->set_temp("rulai/form_index", (index + 1) % sizeof(rulai_actions));
+    me->set_temp("rulai/last_form", action["name"]);
+
+    // 不傳 weapon：如來神掌是正式 unarmed Combat。
+    COMBAT_D->fight(me, opponent, "unarmed", action);
 }
