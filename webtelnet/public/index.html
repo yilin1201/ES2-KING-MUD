@@ -26,6 +26,12 @@
       -webkit-overflow-scrolling: touch;
     }
     /* ANSI Terminal Palette：保留 Original ES2 / Expansion 實際送出的終端色彩。 */
+
+    .score-grid { display:inline-flex; gap:3px; vertical-align:middle; margin-left:2px; }
+    .score-cell { display:inline-block; width:13px; height:16px; flex:0 0 13px; }
+    .score-hp .score-cell { background:#4ade80; } .score-gin .score-cell { background:#ff5a5f; }
+    .score-kee .score-cell { background:#60a5fa; } .score-sen .score-cell { background:#fde047; }
+    .score-cell.effective { opacity:.55; } .score-cell.maximum { background:transparent; box-sizing:border-box; border:1px solid #6b7280; opacity:.65; }
     .ansi-30 { color: #111827; } .ansi-31 { color: #dc2626; } .ansi-32 { color: #16a34a; }
     .ansi-33 { color: #ca8a04; } .ansi-34 { color: #2563eb; } .ansi-35 { color: #c026d3; }
     .ansi-36 { color: #0891b2; } .ansi-37 { color: #e5e7eb; }
@@ -211,8 +217,29 @@
       let code = ansiForeground;
       if (ansiBright && code >= 30 && code <= 37) code += 60;
       if (code !== null) node.className = "ansi-" + code;
-      node.textContent = text;
-      terminal.append(node);
+      const gridRe = /ES2GRID:(HP|GIN|KEE|SEN):([FEM]{28}):END/g;
+      let pos = 0;
+      for (let gm; (gm = gridRe.exec(text)); ) {
+        if (gm.index > pos) {
+          const plain = node.cloneNode(false);
+          plain.textContent = text.slice(pos, gm.index);
+          terminal.append(plain);
+        }
+        const grid = document.createElement("span");
+        grid.className = "score-grid score-" + gm[1].toLowerCase();
+        for (const state of gm[2]) {
+          const cell = document.createElement("span");
+          cell.className = "score-cell " + (state === "F" ? "filled" : state === "E" ? "effective" : "maximum");
+          grid.append(cell);
+        }
+        terminal.append(grid);
+        pos = gridRe.lastIndex;
+      }
+      if (pos < text.length) {
+        const plain = node.cloneNode(false);
+        plain.textContent = text.slice(pos);
+        terminal.append(plain);
+      }
     };
     for (let match; (match = re.exec(raw)); ) {
       emit(raw.slice(last, match.index));
