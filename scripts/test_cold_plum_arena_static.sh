@@ -26,9 +26,13 @@ grep -Fq 'HIR "【梅八方劍】" HIW' "$SKILL"
 grep -Fq 'HIY "二道" HIW' "$SKILL"
 grep -Fq 'HIY "四道" HIW' "$SKILL"
 grep -Fq 'HIY "八道" HIW' "$SKILL"
-grep -Fq '"action":HIC "$N展開冷梅劍意，使出【愛霜恨雪】' "$SKILL"
-grep -Fq '"action":HIW "$N運起寒梅心法使出【寒霜三千里】' "$SKILL"
+grep -Fq 'HIC "【愛霜恨雪】" HIW' "$SKILL"
+grep -Fq '"action":HIW "$N催運寒梅心法使出【寒霜三千里】劍氣' "$SKILL"
 grep -Fq 'HIC "【明鏡止水】" HIW' "$NPC"
+grep -Fq '心摒若水，眼明如鏡' "$NPC"
+grep -Fq '幻化出了" HIY "二道" HIW "劍氣' "$SKILL"
+grep -Fq '幻化出了" HIY "四道" HIW "劍氣' "$SKILL"
+grep -Fq '幻化出了" HIY "八道" HIW "劍氣' "$SKILL"
 for phrase in "明劍欺敵，暗劍藏殺；傲雪藏鋒・逆折寒梅。" 咽喉 心口 氣海 "右手" "左袖";do grep -Fq "$phrase" "$SKILL";done
 # 未知倍率／續航公式不得偷偷數值化；六式 action 係數維持 neutral 0。
 test "$(grep -Fc '"attack":0, "force":0, "defense":0' "$SKILL")" -ge 6
