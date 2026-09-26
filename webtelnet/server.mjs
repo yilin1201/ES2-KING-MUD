@@ -70,9 +70,16 @@ sockets.on("connection", (browser) => {
   const telnetText = new TelnetTextFilter();
   let runtimeTail = "";
   let numericRaceActive = false;
-  mud.setTimeout(10000, () => mud.destroy(new Error("MUD connection timeout")));
-  mud.once("connect", () => mud.setTimeout(0));
+  mud.setTimeout(10000, () => {
+    console.error(`[public-session ${sessionId}] mud-timeout host=${mudHost} port=${mudPort}`);
+    mud.destroy(new Error("MUD connection timeout"));
+  });
+  mud.once("connect", () => {
+    mud.setTimeout(0);
+    console.log(`[public-session ${sessionId}] mud-connected host=${mudHost} port=${mudPort}`);
+  });
   mud.on("data", (data) => {
+    console.log(`[public-session ${sessionId}] mud-to-browser bytes=${data.length}`);
     // Neolith 使用 UTF-8，但 Telnet IAC 控制位元組不是文字；先剝離協定再交給瀏覽器解碼。
     const text = telnetText.push(data);
     runtimeTail = (runtimeTail + text).slice(-1024);
@@ -81,8 +88,14 @@ sockets.on("connection", (browser) => {
     if (/您要扮演的哪種性別/.test(text)) numericRaceActive = false;
     if (text.length > 0 && browser.readyState === browser.OPEN) browser.send(text);
   });
-  mud.on("error", (error) => browser.close(1011, `MUD connection failed: ${error.message}`));
-  mud.on("close", () => browser.close(1000, "MUD connection closed"));
+  mud.on("error", (error) => {
+    console.error(`[public-session ${sessionId}] mud-error code=${error.code || "unknown"} message=${error.message}`);
+    browser.close(1011, `MUD connection failed: ${error.message}`);
+  });
+  mud.on("close", hadError => {
+    console.log(`[public-session ${sessionId}] mud-close hadError=${hadError}`);
+    browser.close(1000, "MUD connection closed");
+  });
   browser.on("message", (data) => {
     if (!mud.writable) return;
     // 只記錄位元組數，不記錄內容，讓 Public blocker 可判斷 Browser→Bridge 是否真的有送資料且不洩漏秘密。
