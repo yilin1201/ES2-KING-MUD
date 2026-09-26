@@ -20,9 +20,8 @@ void activate_mirror_state()
     set_temp("cold_plum/mirror_index", 0);
     // Original gameplay Evidence：啟動敘述為白色，只有【明鏡止水】框／名稱使用青色。
     message_vision(HIW
-        "\n$N凝神屏息，靜若止水，進入「" HIC "【明鏡止水】" HIW "」之境界！\n"
-        "$N眼簾微垂，周身原本流轉的氣機忽然歸於澄寂；手中焦黑枯梅枝輕顫，"
-        "冷梅劍意自此不再拘泥一招一式。\n\n" NOR, this_object());
+        "\n$N心摒若水，眼明如鏡，竟漸入「" HIC "【明鏡止水】" HIW "」之境界！\n"
+        "$N架開對手的攻擊，順勢舞出二道寒冷的劍氣直指對手週身要害！\n\n" NOR, this_object());
 }
 
 /*
