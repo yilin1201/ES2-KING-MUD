@@ -81,6 +81,10 @@ async function verifyKingProfile() {
 }
 
 await login();
+// 正式驗收：不得先靠 kingrealm 才取得 8×99／冷梅武學；登入完成當下就必須成立。
+await verifyKingProfile();
+console.log("COLD_PLUM_PASS:formal-login-auto-provision");
+
 for (const path of [
   "/adm/daemons/kingd",
   "/adm/daemons/kingmartiald",
