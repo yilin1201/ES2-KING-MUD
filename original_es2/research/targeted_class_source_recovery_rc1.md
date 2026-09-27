@@ -192,3 +192,84 @@ Status:
 - Clean API fork commit/date: EVIDENCE EXHAUSTED with current public history.
 - `READY_FOR_RUNTIME`: **NO** under the existing strict same-target-version rule.
 - Runtime modified: **NO**.
+
+
+## 2026-09-28 R4 TARGET GATE — Historical Source Reconstruction Audit
+
+### Gate rule
+
+No Runtime LPC was modified. This audit asks whether preserved historical ES2 Fighter/Taoist content can be expressed by the current target engine without inventing game rules.
+
+### Compatibility matrix
+
+| Layer | Fighter | Taoist |
+|---|---|---|
+| Historical class identity | DIRECTLY COMPATIBLE | DIRECTLY COMPATIBLE |
+| Historical entry/recruit source | STRONG: `class_guild.c` + `fighter/guildhall.c` | STRONG: `taolord.c` + F_MASTER recruitment |
+| Target class storage | DIRECTLY COMPATIBLE: `query("class")` underlies `query_class()` | DIRECTLY COMPATIBLE |
+| Target `set_class()` | DIRECTLY COMPATIBLE and safer than historical direct property write | DIRECTLY COMPATIBLE mechanically |
+| Target `CLASS_D` | CONFIRMED | CONFIRMED mechanically |
+| Target Original class daemon | CONFIRMED: `daemon/class/fighter.c` | MISSING: only ES2-KING rank compatibility reconstruction |
+| `initialize()` dependency | Target `fighter.c` has no explicit initialize; engine call is still attributable | Original Taoist initialize/behavior is UNKNOWN |
+| Entry room/path | Historical Waterfog entrance→Fighter guildhall is preserved in mudchina, absent from target snapshot | Historical temple/master placement exists outside target snapshot; target placement UNKNOWN |
+| Apprentice/recruit API | Fighter historical entry uses `join`, so no invented apprentice condition is needed | Historical source uses a different F_MASTER/recruit command generation than target v1.4 apprentice command |
+| Persistence | Target M31 Driver already proves the `class` property survives save→quit→relogin→restore | Same storage mechanism is proven, but semantic daemon behavior remains missing |
+
+### Fighter — minimal Reconstruction Adapter
+
+Historical ES2 Source proves the rule:
+
+`join Fighter guild → class=fighter → Fighter guildhall/startroom`.
+
+The current target engine proves:
+
+- player class is stored in the same `class` property;
+- `set_class("fighter")` is the target-safe wrapper for that property;
+- target Original `daemon/class/fighter.c` exists;
+- rank lookup through `CLASS_D("fighter")` is attributable;
+- M31 has already proven that a class property changed through the target engine persists through real save/quit/relogin/restore.
+
+Therefore a bounded reconstruction can translate the historical direct assignment:
+
+`me->set("class","fighter")`
+
+to the target-safe call:
+
+`me->set_class("fighter")`
+
+without changing the historical gameplay rule (join→fighter). This is an **adapter**, not a claim that the missing target file has been recovered byte-for-byte.
+
+However, the historical Waterfog room/guildhall files themselves are absent from the target snapshot. A reconstruction must preserve their provenance and must not claim them as recovered target LPC.
+
+**Fighter Gate: `RECONSTRUCTION_READY`**, bounded to the historical join→fighter class transition and target persistence. Do not infer additional school masters, recruit conditions, skills, formulas, equipment rules, or advancement.
+
+### Taoist — gate remains closed
+
+Historical `mudchina/es2/daemon/class/taoist/taolord.c` proves a real ES2 Taoist recruitment design, but direct transplant/adaptation is not yet safe:
+
+1. the historical NPC uses `F_MASTER` + `attempt_apprentice()` + `recruit_apprentice()`;
+2. the current target v1.4 `cmds/std/apprentice.c` instead calls NPC `accept_apprentice()` then `init_apprentice()`;
+3. target Original Taoist class daemon is missing;
+4. Taoist initialize/advance behavior and exact target entry placement remain UNKNOWN.
+
+Using the historical Taoist NPC would therefore require inventing or adapting more than a storage call; it would require a recruitment-protocol adapter and a non-Original class daemon boundary.
+
+**Taoist Gate: `SOURCE_REQUIRED`**.
+
+### Persistence boundary
+
+The existing M31 isolated Driver test is direct target Runtime evidence that the `class` value is serialized and restored:
+
+commoner → Original apprentice transition → alchemist → save → quit → relogin → class restored.
+
+This establishes persistence of the class property generically. It does not prove Fighter/Taoist entry semantics by itself, but it closes the storage/persistence layer needed by the Fighter reconstruction gate.
+
+### Final gate result
+
+- Fighter: **RECONSTRUCTION_READY**
+  - allowed scope: historical `join → fighter` transition, adapted to target `set_class("fighter")`, with explicit Reconstruction provenance;
+  - required validation before PASS: Static + real Driver Entry→Class→rank→save→quit→relogin.
+- Taoist: **SOURCE_REQUIRED**
+  - blocker: recruitment protocol mismatch + missing target Original daemon/initialize boundary.
+- Runtime modified by this audit: **NO**.
+- UNKNOWN invented: **NO**.
