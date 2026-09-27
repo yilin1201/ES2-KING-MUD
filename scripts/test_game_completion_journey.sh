@@ -32,12 +32,7 @@ for gate in \
   test_m30_alpha_runtime_gate.sh \
   test_game_completion_quest_evidence.sh
 do
-  if [[ "$gate" == "test_game_completion_quest_evidence.sh" ]]; then
-    # Quest 是 Evidence gap，不得阻塞其餘可驗證 gameplay；狀態保留 BLOCKED/UNKNOWN。
-    bash "$REPO_ROOT/scripts/$gate" "$SOURCE_RUNTIME" || [[ $? -eq 2 ]]
-  else
-    bash "$REPO_ROOT/scripts/$gate" "$SOURCE_RUNTIME"
-  fi
+  bash "$REPO_ROOT/scripts/$gate" "$SOURCE_RUNTIME"
 done
 
 # Full Driver Journey／完整驅動器旅程：介面閘門通過後，必須由同一個真正 Neolith

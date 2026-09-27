@@ -14,7 +14,7 @@ status=0
   echo "Runtime: $RUNTIME"
   if [[ -x "${ES2_DRIVER_BIN:-}" ]]; then echo "Driver: PRESENT"; else echo "Driver: MISSING"; status=2; fi
   if [[ -f "$FIXTURE/login/king.o" && -f "$FIXTURE/user/king.o" ]]; then echo "Real KING fixture: PRESENT"; else echo "Real KING fixture: MISSING"; status=2; fi
-  echo "Quest: UNKNOWN/BLOCKED (insufficient Original runtime evidence)"
+  echo "Quest: PARTIAL (Snow thief progression runtime PASS; other chains remain incomplete)"
   echo "Public Compatibility: SEPARATE RELEASE GATE"
   if [[ $status -eq 0 ]]; then
     echo "Game Completion Runtime evidence: READY FOR JOURNEY"

@@ -16,6 +16,7 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 | `m16_npc_item_evidence_registry.md` | NPC/物品 M16 | Text + Runtime | Registry | M22 為後續 Runtime 擴充，不取代 M16 | KEEP |
 | `m17_world_evidence_registry.md` | 世界 M17 | Text + Runtime | Registry | M21 為後續 Runtime 擴充，不取代 M17 | KEEP |
 | `m18_quest_evidence_registry.md` | 任務 | Text + Runtime | Registry | 與 M18 Closure 配對 | KEEP |
+| `game_content_inventory_phase2.md` | Phase 2 遊戲內容清冊 | Source + Static + Runtime | Inventory / Dependency Map | 43 rooms、23 NPC、Quest／Item／Shop／Class 邊界 | KEEP |
 | `m19_lifecycle_evidence_registry.md` | 生命週期 | Original Runtime | Registry | 與 M24 資料完整性交叉 | KEEP |
 | `m21_world_content_evidence_registry.md` | 世界 Runtime | Original Runtime | Registry | 補強 M17；不是重複刪除候選 | KEEP |
 | `m22_npc_item_evidence_registry.md` | NPC/物品 Runtime | Original Runtime | Registry | 補強 M16；不是重複刪除候選 | KEEP |

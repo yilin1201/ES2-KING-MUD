@@ -69,4 +69,16 @@
 
 這證明 Snow 保存區確有 Story/Area Quest 的殘存 Original Runtime Source，但現存 Repository 沒有保存所有狀態轉移的呼叫端。可見狀態之間存在斷點，且尚無法由入口連續驗證到 completion／reward；`try/fon` 又是 temporary dbase，不能推定完整進度 persistence。
 
-判定仍為 `UNKNOWN / INCOMPLETE TARGET-SOURCE CHAIN`。不以外部候選補入遺失 NPC、地圖、條件、獎勵或數值。
+## 2026-09-27 Phase 2 Content Inventory 更新
+
+擴大掃描 Snow NPC／item 後，另找到一條先前未列入 Quest inventory、但可由目標 pinned Source 完整追蹤的區域進階鏈：
+
+`店小二食物 → 阿寶 accept_object → 紅木梳子 → 瞎眼老太婆 accept_object → thief_qualified → say 祖奶奶 → class=thief → sneak/stealing learning progress`
+
+隔離 `thiefprobe` 已在真實 Neolith Driver 以玩家指令完成上述流程，並通過 `save → quit → relogin → class/learned restore`；正式 marker 為 `ORIGINAL_THIEF_PROGRESSION_RUNTIME_PASS`。這個結論只提升**目標 Snow 盜賊入門鏈**為 `COMPLETE / RUNTIME PASS`，不會補齊 `try/fon`、隨機任務 daemon 或其他歷史 Quest。
+
+另確認髮簪→英雄帖鏈可走至青衣漢子，但交付後 active move 指向缺少的 `/d/snowkeep/entrance`，故分類 `BROKEN / UNREACHABLE`，不從版本未鎖定的外部保存庫搬入。
+
+因此 Quest 全域狀態由 `UNKNOWN` 更新為 `PARTIAL`：至少一條目標版本 Story／Area progression 已閉合；其餘斷鏈與缺檔仍維持 PARTIAL／BROKEN／UNKNOWN。完整清冊見 `game_content_inventory_phase2.md`。
+
+`try/fon` 子鏈的判定仍為 `UNKNOWN / INCOMPLETE TARGET-SOURCE CHAIN`。不以外部候選補入遺失 NPC、地圖、條件、獎勵或數值；此邊界不否定已獨立閉合的 Snow 盜賊入門鏈。

@@ -21,7 +21,7 @@
 | Internal Skill | IMPLEMENTED | Original `force → dragon force` 的 enable／map、exert、精氣神消耗、戰鬥修正與 save／quit／relogin／restore 已由隔離真實 Driver 通過；未保存的其他內功內容維持 UNKNOWN。 |
 | Special Combat State | EVIDENCE FOUND / NOT IMPLEMENTED | 明鏡止水有歷史玩法與招式池證據；成本、回合、權重與 Original LPC 不足，禁止以 Expansion 推測補成 Original。 |
 | Apprentice | IMPLEMENTED | apprentice command、非同步收徒 flag、relation 保存與轉職已實機通過。 |
-| Quest | UNKNOWN | 目標 Snow Source 可見阿寶／瞎眼老太婆 `try/fon` 部分故事鏈，但狀態轉移、入口、completion/reward 不閉合；外部候選不倒灌。 |
+| Quest | PARTIAL | 目標 Snow 食物→阿寶梳子→瞎眼老太婆→thief 已真實 Driver 閉合；`try/fon` 與英雄帖→Snowkeep 仍為斷鏈／缺檔，外部候選不倒灌。 |
 | Economy | IMPLEMENTED | `finance.c`、`buy.c` 為 Original Source；本輪新增真實 Driver 貨幣扣款驗證。 |
 | Shop | IMPLEMENTED | waiter `F_VENDOR`、list、buy、交貨與 inventory 結果由同一 Session 驗證。 |
 | Inventory | PARTIAL | inventory、合併物品與 autoload Source 可用；本輪已驗證 37 文合併物品跨 save／quit／relogin 精確還原。非 autoload 任意裝備的保存仍無完整證據。 |

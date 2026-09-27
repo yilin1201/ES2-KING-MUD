@@ -22,7 +22,7 @@
 | Inventory Persistence | RUNTIME PASS / BOUNDED | Original money autoload 的合併數量 37 已跨 save／quit／relogin 精確還原；非 autoload 任意裝備仍不宣稱完成 |
 | School / Apprentice | RUNTIME PASS | 門派／師徒流程實際通過 |
 | Social / Communication | RUNTIME PASS / BOUNDED | 雙玩家 say／tell／reply、UTF-8、缺席玩家錯誤與斷線重登通過；跨 MUD GTELL 協定 UNKNOWN |
-| Quest | UNKNOWN | Snow 阿寶／瞎眼老太婆有 `try/fon` 部分鏈證據，但缺入口至 completion/reward 閉環；不補造遺失流程或數值 |
+| Quest | PARTIAL | Snow 食物→阿寶梳子→瞎眼老太婆→thief 鏈已真實 Driver 閉合並通過 save/relogin；`try/fon` 與英雄帖→Snowkeep 仍缺檔／斷鏈，不補造 |
 | Character lifecycle | RUNTIME PASS | Character、Enter World 與生命週期串接通過 |
 | Save / Quit / Relogin | RUNTIME PASS | 同一完整 Journey 實際完成存檔、離開與重新登入 |
 | KING Authorization | RUNTIME PASS | 重用既有 KING fixture 與授權流程 |
