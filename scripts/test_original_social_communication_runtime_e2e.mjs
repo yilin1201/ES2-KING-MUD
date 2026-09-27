@@ -57,6 +57,29 @@ async function login(id) {
 
 const a = await login("sociala");
 const b = await login("socialb");
+assert.match(await command(a, "look"), /客棧大堂/);
+assert.match(await command(b, "look"), /客棧大堂/);
+
+// Two-player Item Flow／雙玩家物品流程：走 Original 客棧隱藏路徑取得木刀，
+// 再用玩家指令完成查看、給予、裝備、卸下、丟棄與重新拾取。
+await command(a, "west", /廚房/);
+await command(a, "enter 大灶", /大灶內/);
+assert.match(await command(a, "get wooden blade"), /撿起一把木刀/);
+assert.match(await command(a, "look wooden blade"), /木刀|硬木/);
+await command(a, "out", /廚房/);
+await command(a, "east", /客棧大堂/);
+assert.match(await command(a, "look socialb"), /社交測試socialb/);
+const bGiveOffset = b.output.length;
+assert.match(await command(a, "give wooden blade to socialb"), /交給.*木刀/);
+assert.match(await waitForAfter(b, bGiveOffset, /交給.*木刀/), /木刀/);
+assert.match(await command(b, "inventory"), /木刀/);
+assert.match(await command(b, "wield wooden blade"), /裝備.*木刀作武器/);
+assert.match(await command(b, "unwield wooden blade"), /放下手中的.*木刀/);
+const aDropOffset = a.output.length;
+assert.match(await command(b, "drop wooden blade"), /丟下一把木刀/);
+await waitForAfter(a, aDropOffset, /丟下一把木刀/);
+assert.match(await command(a, "get wooden blade"), /撿起一把木刀/);
+console.log("SOCIAL_PASS:two-player-item-handoff");
 
 const bSayOffset = b.output.length;
 const aSay = await command(a, "say 中文社交測試");

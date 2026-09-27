@@ -47,15 +47,29 @@ test -f "$FIXTURE/login/king.o"
 test -f "$FIXTURE/user/king.o"
 cp -a "$SOURCE_RUNTIME/mudlib" "$TEMP_ROOT/mudlib"
 cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
-mkdir -p "$TEMP_ROOT/mudlib/data/login/k" "$TEMP_ROOT/mudlib/data/user/k" "$TEMP_ROOT/mudlib/log"
-cp "$FIXTURE/login/king.o" "$TEMP_ROOT/mudlib/data/login/k/king.o"
-cp "$FIXTURE/user/king.o" "$TEMP_ROOT/mudlib/data/user/k/king.o"
+mkdir -p "$TEMP_ROOT/mudlib/data/login/f" "$TEMP_ROOT/mudlib/data/user/f" "$TEMP_ROOT/mudlib/log"
+cp "$FIXTURE/login/king.o" "$TEMP_ROOT/mudlib/data/login/f/forceprobe.o"
+cp "$FIXTURE/user/king.o" "$TEMP_ROOT/mudlib/data/user/f/forceprobe.o"
 
 awk -v hash="$PASSWORD_HASH" '
+  /^id / { print "id \"forceprobe\""; next }
   /^password / { print "password \"" hash "\""; next }
   { print }
-' "$TEMP_ROOT/mudlib/data/login/k/king.o" > "$TEMP_ROOT/king.login"
-mv "$TEMP_ROOT/king.login" "$TEMP_ROOT/mudlib/data/login/k/king.o"
+' "$TEMP_ROOT/mudlib/data/login/f/forceprobe.o" > "$TEMP_ROOT/forceprobe.login"
+mv "$TEMP_ROOT/forceprobe.login" "$TEMP_ROOT/mudlib/data/login/f/forceprobe.o"
+
+# Isolated Diagnostic Player／隔離診斷角色：保留真實 save_object 格式，但改成非 KING ID，
+# 避免正式 KING provisioning 覆蓋這個 Original dragon force 還原測試。
+awk '
+  /^dbase / {
+    gsub(/"id":"king"/, "\"id\":\"forceprobe\"")
+    gsub(/"name":"KING"/, "\"name\":\"內功測試\"")
+  }
+  { print }
+' "$TEMP_ROOT/mudlib/data/user/f/forceprobe.o" > "$TEMP_ROOT/forceprobe.user"
+mv "$TEMP_ROOT/forceprobe.user" "$TEMP_ROOT/mudlib/data/user/f/forceprobe.o"
+grep -Fqx 'forceprobe (admin)' "$TEMP_ROOT/mudlib/adm/etc/wizlist" \
+  || printf '%s\n' 'forceprobe (admin)' >> "$TEMP_ROOT/mudlib/adm/etc/wizlist"
 
 (
   cd "$TEMP_ROOT"
@@ -96,6 +110,7 @@ ES2_TEST_PORT="$WEB_PORT" node -e '
 JOURNEY_LOG="$TEMP_ROOT/original-internal-skill.log"
 ES2_E2E_WS_URL="ws://127.0.0.1:$WEB_PORT/mud" \
 ES2_E2E_KING_PASSWORD="$TEST_PASSWORD" \
+ES2_E2E_ACCOUNT="forceprobe" \
 node "$REPO_ROOT/scripts/test_original_internal_skill_runtime_e2e.mjs" | tee "$JOURNEY_LOG"
 
 for marker in \

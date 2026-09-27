@@ -59,3 +59,14 @@
 `NPC 提示/mark → Room gate → 桃林解謎 → completion mark → 回 NPC → recruit/class`。
 
 判定：`CORROBORATED_RUNTIME_CANDIDATE / STORY-QUEST CHAIN CLOSED`。這與 taedlar legacy Quest 文件所描述「事件／故事／提示／動作／職業相關 Quest」的設計原則相符，但外部 content 的精確版本仍未升級為目標正式站 Canon。
+
+## 2026-09-27 目標 Branch Snow Quest Audit
+
+本次直接在目標 Branch 找到：
+
+- `d/snow/npc/child.c`：阿寶依 `try/fon` 進行對話、食物／梳子交換、破布交付與 follow。
+- `d/snow/npc/gammer.c`：瞎眼老太婆依 `try/fon` 進行對話、NPC relay 與部分旗標轉移。
+
+這證明 Snow 保存區確有 Story/Area Quest 的殘存 Original Runtime Source，但現存 Repository 沒有保存所有狀態轉移的呼叫端。可見狀態之間存在斷點，且尚無法由入口連續驗證到 completion／reward；`try/fon` 又是 temporary dbase，不能推定完整進度 persistence。
+
+判定仍為 `UNKNOWN / INCOMPLETE TARGET-SOURCE CHAIN`。不以外部候選補入遺失 NPC、地圖、條件、獎勵或數值。

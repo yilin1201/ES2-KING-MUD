@@ -30,12 +30,26 @@ for id in sociala socialb; do
   awk -v id="$id" -v hash="$PASSWORD_HASH" '
     /^id / { print "id \"" id "\""; next }
     /^password / { print "password \"" hash "\""; next }
+    /^dbase / {
+      gsub(/"id":"king"/, "\"id\":\"" id "\"")
+      gsub(/"name":"KING"/, "\"name\":\"社交測試" id "\"")
+      print
+      next
+    }
     { print }
   ' "$TEMP_ROOT/mudlib/data/login/s/$id.o" > "$TEMP_ROOT/$id.login"
   mv "$TEMP_ROOT/$id.login" "$TEMP_ROOT/mudlib/data/login/s/$id.o"
   awk -v id="$id" '
     /^id / { print "id \"" id "\""; next }
     /^name / { print "name \"社交測試" id "\""; next }
+    # save_object 的角色 id/name 位於單行 dbase mapping；必須同步改寫，
+    # 否則兩個登入帳號會被 Driver 誤判為同一個線上人物。
+    /^dbase / {
+      gsub(/"id":"king"/, "\"id\":\"" id "\"")
+      gsub(/"name":"KING"/, "\"name\":\"社交測試" id "\"")
+      print
+      next
+    }
     { print }
   ' "$TEMP_ROOT/mudlib/data/user/s/$id.o" > "$TEMP_ROOT/$id.user"
   mv "$TEMP_ROOT/$id.user" "$TEMP_ROOT/mudlib/data/user/s/$id.o"
@@ -48,7 +62,7 @@ ES2_TEST_PORT="$WEB_PORT" node -e 'const http=require("http"),d=Date.now()+10000
 
 LOG="$TEMP_ROOT/social.log"
 ES2_E2E_WS_URL="ws://127.0.0.1:$WEB_PORT/mud" ES2_E2E_KING_PASSWORD="$TEST_PASSWORD" node "$REPO_ROOT/scripts/test_original_social_communication_runtime_e2e.mjs" | tee "$LOG"
-for marker in SOCIAL_PASS:say-room-utf8 SOCIAL_PASS:tell-private-routing SOCIAL_PASS:reply-routing SOCIAL_PASS:missing-player-original-error SOCIAL_PASS:disconnect-relogin ORIGINAL_SOCIAL_COMMUNICATION_RUNTIME_PASS; do
+for marker in SOCIAL_PASS:two-player-item-handoff SOCIAL_PASS:say-room-utf8 SOCIAL_PASS:tell-private-routing SOCIAL_PASS:reply-routing SOCIAL_PASS:missing-player-original-error SOCIAL_PASS:disconnect-relogin ORIGINAL_SOCIAL_COMMUNICATION_RUNTIME_PASS; do
   grep -Fq "$marker" "$LOG" || { echo "ORIGINAL SOCIAL RUNTIME FAIL：缺少 $marker" >&2; exit 1; }
 done
 echo "ORIGINAL SOCIAL / COMMUNICATION RUNTIME PASS：say／tell／reply／UTF-8／離線／重登均由雙玩家真實 Driver Session 通過。"

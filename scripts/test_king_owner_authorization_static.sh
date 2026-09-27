@@ -23,7 +23,7 @@ if sed -n "/if (arg == \"king\")/,/^[[:space:]]*}/p" scripts/apply_es2_king_expa
   exit 1
 fi
 # 密碼不得成為 repository 設定；授權程式只能核對帳號 ID 與 Original 驗證後的權限。
-if rg -n 'KING_OWNER_PASSWORD|owner_password|set_password' es2_king_expansion scripts M30_PLAYABLE_ALPHA_ENTRY.md --glob '!test_king_owner_authorization_static.sh'; then
+if rg -n 'KING_OWNER_PASSWORD|owner_password|set_password' es2_king_expansion scripts docs/history/m30/M30_PLAYABLE_ALPHA_ENTRY.md --glob '!test_king_owner_authorization_static.sh'; then
   echo 'KING OWNER STATIC FAIL：repository 出現 Owner 密碼設定介面。' >&2; exit 1
 fi
 echo 'KING OWNER AUTHORIZATION STATIC PASS／帳號 ID、互動登入與 admin 三重邊界完整。'

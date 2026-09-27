@@ -2,7 +2,9 @@
 set -euo pipefail
 
 # Static Regression Test／靜態回歸測試：不啟動 MUD，先確認 Original 技能骨架仍符合已考證基線。
-ROOT=".runtime/original-es2/mudlib"
+# Runtime Root／執行環境根目錄：允許稽核指定隔離 Runtime；未指定時保留舊預設。
+# 這只修正測試入口，不修改任何 Original 技能或 ES2-KING 武功內容。
+ROOT="${1:-.runtime/original-es2}/mudlib"
 
 # Skill Daemon／技能常駐物件：目前保存來源中確認存在徒手與劍術兩個基礎技能。
 test -f "$ROOT/daemon/skill/unarmed.c"

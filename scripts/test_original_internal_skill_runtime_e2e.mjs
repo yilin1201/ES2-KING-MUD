@@ -3,7 +3,8 @@ import WebSocket from "../webtelnet/node_modules/ws/wrapper.mjs";
 
 const url = process.env.ES2_E2E_WS_URL;
 const password = process.env.ES2_E2E_KING_PASSWORD;
-assert.ok(url && password);
+const account = process.env.ES2_E2E_ACCOUNT ?? "forceprobe";
+assert.ok(url && password && account);
 
 let socket;
 let output = "";
@@ -53,7 +54,7 @@ async function sendLine(text) {
 async function login() {
   await connect();
   await waitForAfter(0, "您的使用者代號");
-  await command("king", "請輸入密碼");
+  await command(account, "請輸入密碼");
   await command(password, "目前權限: (admin)");
   await waitForAfter(0, "> ");
 }
@@ -105,10 +106,14 @@ assert.doesNotMatch(combat, /這裡不准戰鬥|這裡沒有這個人/);
 await command("goto /d/snow/inn_hall", "客棧大堂");
 console.log("INTERNAL_SKILL_PASS:combat-integration");
 
-// Resource transition／資源變化：固定成 35 只為得到可重複起點；消耗本身完全由
-// Original dragon_force.c 每輪 consume_stat(..., 10) 執行，測試不改其成本或公式。
-for (const stat of ["gin", "kee", "sen"])
+// Resource transition／資源變化：隔離 KING 登入後的正式上限是 999；若只降低 current，
+// 高額自然回復會抵消測試中的 Original 消耗。這裡只在暫存角色把三層狀態固定成 35，
+// 消耗仍完全由 Original dragon_force.c 每輪 consume_stat(..., 10) 執行，不改成本或公式。
+for (const stat of ["gin", "kee", "sen"]) {
+  await call(`set_stat_maximum("${stat}",35)`);
+  await call(`set_stat_effective("${stat}",35)`);
   await call(`set_stat_current("${stat}",35)`);
+}
 const before = {};
 for (const stat of ["gin", "kee", "sen"])
   before[stat] = callInt(await call(`query_stat("${stat}")`), "query_stat");

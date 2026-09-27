@@ -1,6 +1,6 @@
 # ES2-KING Game Completion Matrix
 
-> Updated：2026-09-26  
+> Updated：2026-09-27  
 > Branch：`build/original-es2-races-phase2`  
 > Runtime Evidence Head（執行證據版本）：`07b865ce4a8ac9689e64580cc605f045e5cea0aa`  
 > PR #13：OPEN（開啟） / NOT MERGED（未合併）  
@@ -12,23 +12,24 @@
 |---|---|---|
 | Original ES2 Runtime | RUNTIME PASS | 同一 Neolith Full Driver Journey 實際執行 |
 | Class / Apprentice | M31 BOUNDED RUNTIME PASS | 真實 Driver 已通過 `commoner → apprentice → alchemist`、方士稱謂與 save／quit／relogin／restore；其他遺失職業內容維持 UNKNOWN |
-| World / Map | RUNTIME PASS | Enter World、Look、Movement 已在完整流程通過 |
-| Movement | RUNTIME PASS | 真實 Driver 移動流程通過 |
-| NPC | RUNTIME PASS | NPC interaction 實際通過 |
+| World / Map | RUNTIME PASS / BOUNDED | Snow 保存區所有玩家路徑及 custom action 已由真 Driver 逐段走通；未保存的完整歷史世界仍 UNKNOWN |
+| Movement | RUNTIME PASS | 方向、enter、out、climb 與門實際通過 |
+| NPC | RUNTIME PASS | look／ask／vendor、死亡／corpse 與 room reset 重生實際通過 |
 | Economy / Shop | RUNTIME PASS | Original `buy` 實際扣款、Vendor 交貨與 Inventory 餘額通過 |
-| Items / Equipment | RUNTIME PASS | 物品與裝備流程實際通過 |
-| Combat | RUNTIME PASS | 戰鬥流程實際通過 |
+| Items / Equipment | RUNTIME PASS | get／look／corpse loot、wield／unwield、wear／remove 實際通過 |
+| Combat | RUNTIME PASS | NPC defeat 與普通玩家 defeat／ghost／寺廟 recovery 實際通過 |
 | Skills / Study / Force | RUNTIME PASS | Original dragon force 的 enable／map、exert、資源消耗、戰鬥修正與重登還原已由隔離真 Driver 通過 |
 | Inventory Persistence | RUNTIME PASS / BOUNDED | Original money autoload 的合併數量 37 已跨 save／quit／relogin 精確還原；非 autoload 任意裝備仍不宣稱完成 |
 | School / Apprentice | RUNTIME PASS | 門派／師徒流程實際通過 |
-| Quest | UNKNOWN | Original Evidence 不足；不自行補造 Quest Canon、流程或數值 |
+| Social / Communication | RUNTIME PASS / BOUNDED | 雙玩家 say／tell／reply、UTF-8、缺席玩家錯誤與斷線重登通過；跨 MUD GTELL 協定 UNKNOWN |
+| Quest | UNKNOWN | Snow 阿寶／瞎眼老太婆有 `try/fon` 部分鏈證據，但缺入口至 completion/reward 閉環；不補造遺失流程或數值 |
 | Character lifecycle | RUNTIME PASS | Character、Enter World 與生命週期串接通過 |
 | Save / Quit / Relogin | RUNTIME PASS | 同一完整 Journey 實際完成存檔、離開與重新登入 |
 | KING Authorization | RUNTIME PASS | 重用既有 KING fixture 與授權流程 |
 | 天神殿／無極之境 | RUNTIME PASS | 既有 M27 Runtime 證據保持有效 |
 | Expansion 武學 | RUNTIME PASS | 既有 M28/M29 Runtime 證據保持有效；未定義 Original 數值仍 UNKNOWN |
 | Developer Bootstrap | COMPLETE | 已完成且供 Full Driver Journey 重用 |
-| Full Game Journey | PLAYABLE PASS | 既有 Journey 保持；本輪另由真 Driver 完成 `Login → Force Enable/Map → Exert → Combat → Save → Quit → Relogin → Force Restore → Inventory Autoload Restore` |
+| Full Game Journey | PLAYABLE PASS | 真 Driver 完成 `Login → World → NPC → Item → Equipment → Combat → Death/Recovery → Save → Quit → Reconnect/Restore`；既有 Skill／Apprentice／Class gates 同時保持 PASS |
 | Primary Public Runtime | DEPLOYED / SYNCED | `ES2-KING-MUD`；Post-Neon baseline 公開 `/health` 與 Branch HEAD `15e27c606886f1b96c2bbe5bda037989c767becb` 一致 |
 | Public Race Runtime | RUNTIME PASS | 真實公開 WSS 完成 Race → Gender → Character → Enter Game；不是 Static PASS |
 | Public Device Acceptance | PASS | Owner 已確認 iPhone Public Runtime |

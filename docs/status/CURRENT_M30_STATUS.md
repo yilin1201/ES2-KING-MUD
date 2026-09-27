@@ -1,6 +1,6 @@
 # M30 CURRENT STATUS — 目前唯一即時狀態入口
 
-> Status Date：2026-09-26  
+> Status Date：2026-09-27  
 > Branch：`build/original-es2-races-phase2`  
 > Post-Neon Audit Baseline：`15e27c606886f1b96c2bbe5bda037989c767becb`  
 > Cold Plum Runtime Evidence Head：`f1b6798ce3562551a10d76521f886b5445d35b1f`  
@@ -20,12 +20,16 @@
 | School / Apprentice（門派／師徒） | RUNTIME PASS（真實執行環境通過） |
 | Save / Quit / Relogin（存檔／離開／重新登入） | RUNTIME PASS（真實執行環境通過） |
 | Quest（任務） | UNKNOWN（Original 證據不足，不補造） |
+| World / NPC / Item / Death Recovery | RUNTIME PASS（Snow 保存區逐路徑、NPC death/respawn、corpse loot、玩家 ghost／寺廟復活通過） |
+| Social / Communication | RUNTIME PASS（隔離雙玩家 say／tell／reply／UTF-8／斷線重登通過；跨 MUD GTELL 維持 UNKNOWN） |
 
 實際完成流程：
 
 `Connect → Login → Character → Enter World → Look → Score → Inventory → Movement → NPC → Economy/Shop → Items/Equipment → Combat → Skills → School/Apprentice → Save → Quit → Relogin`
 
 因此目前正式判定：**GAME COMPLETION = PLAYABLE PASS（遊戲完整可玩性通過）**。
+
+2026-09-27 新增完整可玩性 Gate：`scripts/test_game_playability_completion_e2e.sh`。真實 Driver 成功標記為 `GAME_PLAYABILITY_COMPLETION_RUNTIME_PASS`，詳細 PASS／UNKNOWN 邊界記錄於 `original_es2/research/game_playability_completion_audit.md`。Quest 在目標 Snow Source 發現部分 `try/fon` 故事鏈，但缺少可由入口走至完成／獎勵的閉環，正式狀態仍為 UNKNOWN。
 
 ### 1.1 M30 後續維護：冷梅莊／KING 99 Runtime
 

@@ -26,6 +26,7 @@ const runStage = async (stage, fn) => {
 
 let socket;
 let output = "";
+let lastSentAt = 0;
 
 async function connect() {
   output = "";
@@ -53,9 +54,23 @@ const waitForAfter = (offset, matcher, timeout = 20000) => new Promise((resolve,
 });
 
 async function command(text, matcher = "> ", timeout = 20000) {
+  // Original Command Rate Limit／原作指令節流：完整旅程跨多個段落共用同一玩家，
+  // 每個玩家輸入都依真人節奏送出，避免把原作防洗機制誤判成 Gameplay FAIL。
+  const delay = Math.max(0, 550 - (Date.now() - lastSentAt));
+  if (delay) await new Promise(resolve => setTimeout(resolve, delay));
   const offset = output.length;
   socket.send(`${text}\r\n`);
+  lastSentAt = Date.now();
   return waitForAfter(offset, matcher, timeout);
+}
+
+async function sendLine(text) {
+  const delay = Math.max(0, 550 - (Date.now() - lastSentAt));
+  if (delay) await new Promise(resolve => setTimeout(resolve, delay));
+  const offset = output.length;
+  socket.send(`${text}\r\n`);
+  lastSentAt = Date.now();
+  return offset;
 }
 
 await connect();
@@ -90,8 +105,7 @@ await runStage("economy", async () => {
   const before = await command("inventory");
   assert.match(before, /一百文錢/);
 
-  const purchaseOffset = output.length;
-  socket.send("buy dumpling from waiter\r\n");
+  const purchaseOffset = await sendLine("buy dumpling from waiter");
   const purchase = await waitForAfter(purchaseOffset, /買下一個牛肉包子|送到.*面前/, 30000);
   assert.doesNotMatch(purchase, /錢不夠|找不開|不願意跟你交易/);
   const after = await command("inventory");
@@ -116,8 +130,7 @@ await runStage("combat", async () => {
   // 進入戰鬥前跨過限速窗口，確保 kill 驗證的是 Combat Runtime 而不是自動測試輸入速度。
   await new Promise(resolve => setTimeout(resolve, 2500));
   await command("goto /d/snow/tree", "榕樹上");
-  const combatStartOffset = output.length;
-  socket.send("kill arbao\r\n");
+  const combatStartOffset = await sendLine("kill arbao");
   const combat = await waitForAfter(combatStartOffset, /納命來|不是你死就是我活|忌日|攻擊|招架|閃躲|命中/, 20000);
   assert.doesNotMatch(combat, /這裡不准戰鬥|這裡沒有這個人/);
   // KING 的 halt 名稱會解析到管理員關機指令；測試以離開戰鬥房間安全結束隔離戰鬥，
@@ -146,8 +159,7 @@ await runStage("school", async () => {
   await command("goto /d/snow/school", "私塾");
   const schoolNpc = await command("look chen");
   assert.match(schoolNpc, /陳維俠|牙山居士/);
-  const firstApprenticeOffset = output.length;
-  socket.send("apprentice chen\r\n");
+  const firstApprenticeOffset = await sendLine("apprentice chen");
   await waitForAfter(firstApprenticeOffset, /多你一個也不妨|門徒不下千人/, 30000);
   // Original do_chat 會在最後一句輸出後的下一個排程才執行 set_flag callback；
   // 等待該既有非同步狀態完成，再送第二次 apprentice。
@@ -161,8 +173,7 @@ await runStage("school", async () => {
 // Character Lifecycle／角色生命週期：同一 Full Journey 完成存檔、離線與新連線重登，
 // 第二次登入必須重新通過 Original 密碼驗證並回到遊戲世界。
 assert.match(await command("save"), /檔案儲存完畢/);
-const quitOffset = output.length;
-socket.send("quit\r\n");
+const quitOffset = await sendLine("quit");
 await waitForAfter(quitOffset, "歡迎下次再來");
 socket.close();
 await new Promise(resolve => setTimeout(resolve, 150));
