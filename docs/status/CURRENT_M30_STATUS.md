@@ -69,7 +69,7 @@ Owner 於 2026-09-26 正式指定 M31 主題為 Class 職業系統。Evidence �
 | Release Gate（發布關卡） | 狀態 |
 |---|---|
 | Primary Public Runtime（主要公開執行環境） | `ES2-KING-MUD`／https://es2-king-mud.onrender.com |
-| Repository / Render Sync（版本同步） | PASS（測試通過）：Cold Plum Runtime Evidence Head `f1b6798ce3562551a10d76521f886b5445d35b1f` 已完成 Render 新容器部署並標記 LIVE；後續提交仍以部署健康檢查為準 |
+| Repository / Render Sync（版本同步） | PASS（測試通過）：正式部署以公開 `/health` 的 `build_commit` 精確等於 Branch HEAD 為準；本輪 Playability Commit 已完成新容器部署並核對 |
 | Public Runtime Chain（公開執行鏈） | PASS（測試通過）：HTTPS → WSS → Bridge → Neolith；`web`、`bridge`、`neolith` 均為 `true` |
 | Public Race Runtime（公開種族執行流程） | PASS（測試通過）：真實公開 WSS 完成 Account → Password → Email → Race → Gender → Character → Enter Game |
 | Public Device Acceptance（公開裝置驗收） | PASS（Owner 已確認 iPhone Public Runtime） |

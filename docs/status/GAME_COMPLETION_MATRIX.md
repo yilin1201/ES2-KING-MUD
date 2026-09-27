@@ -2,7 +2,7 @@
 
 > Updated：2026-09-27  
 > Branch：`build/original-es2-races-phase2`  
-> Runtime Evidence Head（執行證據版本）：`07b865ce4a8ac9689e64580cc605f045e5cea0aa`  
+> Playability Audit Baseline（可玩性稽核起點）：`79dfcf1b5b40fa3901c5ba221f7651975d6c844e`  
 > PR #13：OPEN（開啟） / NOT MERGED（未合併）  
 > 原則：preserve → understand → rebuild → expand。
 
@@ -30,7 +30,7 @@
 | Expansion 武學 | RUNTIME PASS | 既有 M28/M29 Runtime 證據保持有效；未定義 Original 數值仍 UNKNOWN |
 | Developer Bootstrap | COMPLETE | 已完成且供 Full Driver Journey 重用 |
 | Full Game Journey | PLAYABLE PASS | 真 Driver 完成 `Login → World → NPC → Item → Equipment → Combat → Death/Recovery → Save → Quit → Reconnect/Restore`；既有 Skill／Apprentice／Class gates 同時保持 PASS |
-| Primary Public Runtime | DEPLOYED / SYNCED | `ES2-KING-MUD`；Post-Neon baseline 公開 `/health` 與 Branch HEAD `15e27c606886f1b96c2bbe5bda037989c767becb` 一致 |
+| Primary Public Runtime | DEPLOYED / SYNCED | `ES2-KING-MUD`；每次正式驗收以公開 `/health` 的 `build_commit` 精確等於 Branch HEAD 為準 |
 | Public Race Runtime | RUNTIME PASS | 真實公開 WSS 完成 Race → Gender → Character → Enter Game；不是 Static PASS |
 | Public Device Acceptance | PASS | Owner 已確認 iPhone Public Runtime |
 | Public Compatibility | PASS | 公開 Runtime、Web Client、WSS 與 iPhone Entry 均通過 |
