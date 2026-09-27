@@ -11,7 +11,7 @@
 | 系統 | 狀態 | 本次 Runtime 證據／邊界 |
 |---|---|---|
 | Original ES2 Runtime | RUNTIME PASS | 同一 Neolith Full Driver Journey 實際執行 |
-| Class / Apprentice | M31 BOUNDED RUNTIME PASS | 真實 Driver 已通過 `commoner → apprentice → alchemist`、方士稱謂與 save／quit／relogin／restore；其他遺失職業內容維持 UNKNOWN |
+| Class / Apprentice | M31 + Phase 3 BOUNDED RUNTIME PASS | 真實 Driver 已通過 `commoner → apprentice → alchemist` 與 Snow 私塾 `commoner → scholar` entry、save／quit／relogin；遺失職業 daemon／門派內容仍 UNKNOWN |
 | World / Map | RUNTIME PASS / BOUNDED | Snow 保存區所有玩家路徑及 custom action 已由真 Driver 逐段走通；未保存的完整歷史世界仍 UNKNOWN |
 | Movement | RUNTIME PASS | 方向、enter、out、climb 與門實際通過 |
 | NPC | RUNTIME PASS | look／ask／vendor、死亡／corpse 與 room reset 重生實際通過 |
@@ -22,7 +22,7 @@
 | Inventory Persistence | RUNTIME PASS / BOUNDED | Original money autoload 的合併數量 37 已跨 save／quit／relogin 精確還原；非 autoload 任意裝備仍不宣稱完成 |
 | School / Apprentice | RUNTIME PASS | 門派／師徒流程實際通過 |
 | Social / Communication | RUNTIME PASS / BOUNDED | 雙玩家 say／tell／reply、UTF-8、缺席玩家錯誤與斷線重登通過；跨 MUD GTELL 協定 UNKNOWN |
-| Quest | PARTIAL | Snow 食物→阿寶梳子→瞎眼老太婆→thief 鏈已真實 Driver 閉合並通過 save/relogin；`try/fon` 與英雄帖→Snowkeep 仍缺檔／斷鏈，不補造 |
+| Quest | PARTIAL / 3 RUNTIME PASS CHAINS | Snow thief、貨棧工錢與私塾 Scholar entry 均由真 Driver 完成並通過 save/relogin；`try/fon` 與英雄帖→Snowkeep 已 Evidence Exhausted，仍缺檔／斷鏈，不補造 |
 | Character lifecycle | RUNTIME PASS | Character、Enter World 與生命週期串接通過 |
 | Save / Quit / Relogin | RUNTIME PASS | 同一完整 Journey 實際完成存檔、離開與重新登入 |
 | KING Authorization | RUNTIME PASS | 重用既有 KING fixture 與授權流程 |

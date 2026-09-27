@@ -112,8 +112,8 @@ node scripts/test_game_content_phase2_static.mjs <pinned-original-mudlib>
 
 `sit → teacher heartbeat 教三字經 → literate progress → 條件式 pick_student → 玩家答覆 → class=scholar`
 
-- 狀態：**PARTIAL**。
-- Source chain 可見，但挑選含 Original random 條件，本階段沒有建立決定性 Runtime PASS；不修改機率。
+- 狀態：**RUNTIME PASS / BOUNDED（Phase 3）**。
+- 隔離 fixture 只預置 Source 明列的 `literate=5` 前置；`sit`、learning progress、offer、玩家回答、`class=scholar` 與 save／relogin 均由真 Driver 通過。測試只以管理診斷排除 random scheduling，不修改正式機率；外部桃林與遺失 Scholar daemon 內容仍 UNKNOWN。
 
 ### Q5 — 陳維俠拜師／方士
 
@@ -126,8 +126,8 @@ node scripts/test_game_content_phase2_static.mjs <pinned-original-mudlib>
 
 `crate(wage=25) → load into wagon → wage_deserved += wage → 向工頭說工錢 → coin`
 
-- 狀態：**PARTIAL**。
-- Source chain 閉合；完整玩家負重條件與 Runtime journey 本階段未驗收，不以 Static 代替 PASS。
+- 狀態：**RUNTIME PASS（Phase 3）**。
+- 隔離真 Driver 已沿 Original exits 完成 `get crate → load → wage_deserved=25 → say 工錢 → 25 coin → save／relogin`。同時修復工頭既有 220 文與 25 文 reward 合併、誤付 245 文的 combined money bug；不改動 Original `wage=25`。
 
 ### 其他互動
 

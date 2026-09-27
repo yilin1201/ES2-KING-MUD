@@ -6,6 +6,30 @@ test -d "$TARGET/mudlib" || { echo "EXPANSION APPLY FAIL：缺少 $TARGET/mudlib
 test -d "$SOURCE"
 cp -a "$SOURCE/." "$TARGET/mudlib/"
 
+# Original Scholar UTF-8 Compatibility／Original 私塾書生回答相容：
+# 舊 Big5 Runtime 以 msg[0..1] 擷取一個中文字；UTF-8 下中文字是三個 bytes，
+# 因此玩家回答 Original 明列的「想／是／好」永遠無法觸發 set_class("scholar")。
+# 只改成等價的字首搜尋，不增加回答、條件、機率或職業內容。
+SCHOLAR_TEACHER="$TARGET/mudlib/d/snow/npc/teacher.c"
+SCHOLAR_UTF8_MARKER='ES2-KING ORIGINAL SCHOLAR UTF-8 COMPATIBILITY'
+if ! grep -Fq "$SCHOLAR_UTF8_MARKER" "$SCHOLAR_TEACHER"; then
+  python3 - "$SCHOLAR_TEACHER" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+text = path.read_text()
+needle = '''    if( member_array(msg[0..1], ({"想", "是", "好"})) != -1 ) {
+'''
+replacement = '''    // ES2-KING ORIGINAL SCHOLAR UTF-8 COMPATIBILITY
+    if( strsrch(msg, "想")==0 || strsrch(msg, "是")==0 || strsrch(msg, "好")==0 ) {
+'''
+if needle not in text:
+    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original Scholar 回答判斷，無法套用 UTF-8 相容修復。")
+path.write_text(text.replace(needle, replacement, 1))
+PY
+fi
+
 # Public KING Reservation／公開 KING 帳號保留：既有 login/k/king.o 仍走 Original 密碼登入；
 # 只有存檔不存在時才拒絕公開建立，避免無持久磁碟重建後被陌生訪客搶註冊。
 # 這是生成 Runtime 的相容層，不回寫或修改 Original ES2 保存來源。

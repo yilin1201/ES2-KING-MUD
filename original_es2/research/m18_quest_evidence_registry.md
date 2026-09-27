@@ -82,3 +82,14 @@
 因此 Quest 全域狀態由 `UNKNOWN` 更新為 `PARTIAL`：至少一條目標版本 Story／Area progression 已閉合；其餘斷鏈與缺檔仍維持 PARTIAL／BROKEN／UNKNOWN。完整清冊見 `game_content_inventory_phase2.md`。
 
 `try/fon` 子鏈的判定仍為 `UNKNOWN / INCOMPLETE TARGET-SOURCE CHAIN`。不以外部候選補入遺失 NPC、地圖、條件、獎勵或數值；此邊界不否定已獨立閉合的 Snow 盜賊入門鏈。
+
+## 2026-09-27 Phase 3 Deep Recovery / Runtime 更新
+
+已完成目標 upstream 全 history／tag、兩個公開 ES2 family mirror、封存 Evidence 與公開精確搜尋。`Snowkeep`、`try/fon` 缺失轉移及 `__ID_CHALLIE__` 物件來源均未找到同版本決定性 Source，正式記錄為 `EVIDENCE EXHAUSTED / UNKNOWN`；`__ID_CHALLIE__` 是 `id()` 字串，不是 missing macro，禁止以 `#define` 偽修復。詳見 `original_content_deep_recovery_phase3.md`。
+
+新增兩條隔離真 Driver 證據：
+
+- **貨棧工錢**：Original exits 到貨棧，完成 `crate → wagon → wage_deserved → say 工錢 → 25 coin → save/quit/relogin`。修復 Original combined money 讓工頭 220 文與 reward 25 文誤合併成 245 文的 Runtime bug；marker `ORIGINAL_WAGE_RUNTIME_PASS`。
+- **Snow 私塾 Scholar entry**：以 `literate=5` 明示前置 fixture 完成 `sit → learning progress → offer → say 想 → class=scholar → save/quit/relogin`。修復 Big5 `msg[0..1]` 在 UTF-8 下無法匹配「想／是／好」的 compatibility bug；marker `ORIGINAL_SCHOLAR_RUNTIME_PASS`。
+
+兩條狀態升級為 `RUNTIME PASS`（Scholar 為 BOUNDED：排除 random scheduling，且不宣稱外部桃林／Scholar daemon 全內容）。Quest 全域仍是 `PARTIAL`，因 Snowkeep 與 `try/fon` 的缺失內容未被補造。

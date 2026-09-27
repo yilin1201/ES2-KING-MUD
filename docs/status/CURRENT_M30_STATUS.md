@@ -19,7 +19,7 @@
 | Skills（技能） | RUNTIME PASS（真實執行環境通過） |
 | School / Apprentice（門派／師徒） | RUNTIME PASS（真實執行環境通過） |
 | Save / Quit / Relogin（存檔／離開／重新登入） | RUNTIME PASS（真實執行環境通過） |
-| Quest（任務） | PARTIAL（Snow 盜賊入門鏈 Runtime PASS；其他斷鏈不補造） |
+| Quest（任務） | PARTIAL（Snow 盜賊入門、貨棧工錢、私塾 Scholar entry Runtime PASS；Snowkeep／try-fon 斷鏈不補造） |
 | World / NPC / Item / Death Recovery | RUNTIME PASS（Snow 保存區逐路徑、NPC death/respawn、corpse loot、玩家 ghost／寺廟復活通過） |
 | Social / Communication | RUNTIME PASS（隔離雙玩家 say／tell／reply／UTF-8／斷線重登通過；跨 MUD GTELL 維持 UNKNOWN） |
 
@@ -32,6 +32,8 @@
 2026-09-27 新增完整可玩性 Gate：`scripts/test_game_playability_completion_e2e.sh`。真實 Driver 成功標記為 `GAME_PLAYABILITY_COMPLETION_RUNTIME_PASS`，詳細 PASS／UNKNOWN 邊界記錄於 `original_es2/research/game_playability_completion_audit.md`。該次 Gate 只找到 Snow `try/fon` 故事殘鏈，當時 Quest 判定為 UNKNOWN；後續 Phase 2 擴大掃描的新結論如下。
 
 2026-09-27 Game Content Completion Phase 2 擴大掃描 43 個 Snow room、23 個 NPC 與 58 個 Snow／shared area object template。新發現並以隔離真實 Driver 閉合「店小二食物→阿寶梳子→瞎眼老太婆→盜賊職業／技能學習進度→save／relogin」目標版本鏈，marker 為 `ORIGINAL_THIEF_PROGRESSION_RUNTIME_PASS`；Quest 全域狀態因此更新為 PARTIAL。`try/fon`、英雄帖→缺少 Snowkeep、警捕 NPC 與紅酒依賴仍保持 PARTIAL／BROKEN／UNKNOWN。完整清冊見 `original_es2/research/game_content_inventory_phase2.md`。
+
+2026-09-27 Game Content Completion Phase 3 已完成 Snowkeep／`try/fon`／`__ID_CHALLIE__` 的同版本 history、archive、reference 與公開 family-source Deep Recovery；缺失 content 均達 `EVIDENCE EXHAUSTED / UNKNOWN`，沒有建立假 room、假 object 或 missing macro。隔離真 Driver 另完成貨棧工錢與 Snow 私塾 Scholar entry，markers 為 `ORIGINAL_WAGE_RUNTIME_PASS`、`ORIGINAL_SCHOLAR_RUNTIME_PASS`。本輪只修復工頭 25 文誤合併為 245 文，以及 Big5 字元切片在 UTF-8 下阻斷 Scholar 回答的兩個決定性 Runtime bug；完整證據見 `original_es2/research/original_content_deep_recovery_phase3.md`。
 
 ### 1.1 M30 後續維護：冷梅莊／KING 99 Runtime
 
