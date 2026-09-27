@@ -22,9 +22,9 @@ grep -Fq 'mirror_mind/sustain_formula", "UNKNOWN"' "$NPC"
 grep -Fq 'carry_object("/d/arena/obj/charred_plum_branch")' "$NPC"
 for form in 梅二方劍 梅四方劍 梅八方劍 愛霜恨雪 寒霜三千里 傲梅暗劍訣 傲雪藏鋒 逆折寒梅;do grep -Fq "$form" "$SKILL";done
 # Gameplay Runtime Evidence／明鏡止水全白；梅二／四／八方劍【】外框紅色、框內名稱白色；愛霜恨雪使用青色「」；寒霜三千里使用全白【】；如來神掌另由其 Skill Gate 管理黃色名稱。
-grep -Fq 'HIR "【" HIW "梅二方劍" HIR "】」！\n"' "$SKILL"
-grep -Fq 'HIR "【" HIW "梅四方劍" HIR "】」！\n"' "$SKILL"
-grep -Fq 'HIR "【" HIW "梅八方劍" HIR "】」！\n"' "$SKILL"
+grep -Fq 'HIR "【" HIW "梅二方劍" HIR "】" HIW "」！\n"' "$SKILL"
+grep -Fq 'HIR "【" HIW "梅四方劍" HIR "】" HIW "」！\n"' "$SKILL"
+grep -Fq 'HIR "【" HIW "梅八方劍" HIR "】" HIW "」！\n"' "$SKILL"
 grep -Fq 'HIY "二道" HIW' "$SKILL"
 grep -Fq 'HIY "四道" HIW' "$SKILL"
 grep -Fq 'HIY "八道" HIW' "$SKILL"
