@@ -59,3 +59,20 @@ Runtime Gate 使用完全隔離的 `classprobe` fixture；不讀寫正式 KING�
 - `M31_CLASS_RUNTIME_PASS`
 
 最終判定：**M31 BOUNDED RUNTIME PASS**。此 PASS 僅涵蓋上列證據閉環；`SOURCE_REQUIRED / UNKNOWN` 邊界不變。
+
+
+## 2026-09-27 Taoist Evidence-Bounded Compatibility
+
+ES2-R1 Recovery 新增歷史職業／Help 證據：天師四派直接保存 `taoist.fire`、`taoist.storm`、`taoist.freeze`、`taoist.thunder`，茅山資料保存 `mao-shan.*`，並與歷史七職業資料共同支持中文職業名稱「道士」。
+
+本輪只在 Expansion compatibility overlay 新增 `daemon/class/taoist.c` 的 `query_rank()`，使既有 `CLASS_D("taoist")` 類型的 score／who 稱謂查詢不因缺少 class daemon 而中斷。此檔明確標示 `[ES2-KING Reconstruction]`。
+
+Evidence Boundary 不變：
+- `taoist` 歷史職業 identity／中文名稱：ARCHIVED SOURCE / HELP CORROBORATED。
+- 目標版本 `taoist` class daemon 原始 LPC：SOURCE_REQUIRED。
+- initialize／advance_level／屬性成長／裝備限制／完整拜師條件：UNKNOWN。
+- 道士技能 Help 與實機文字另見 `taoist_skill_combat_screenshot_evidence.md`；不得因此倒灌技能 Runtime。
+
+Static Gate 已擴充 Unknown Guard，禁止 taoist compatibility layer 出現未經 Evidence 支持的成長、技能、裝備或戰鬥 callback。
+
+狀態：**TAOIST RANK COMPATIBILITY IMPLEMENTED / RUNTIME JOURNEY NOT YET CLAIMED**。
