@@ -93,3 +93,11 @@
 - **Snow 私塾 Scholar entry**：以 `literate=5` 明示前置 fixture 完成 `sit → learning progress → offer → say 想 → class=scholar → save/quit/relogin`。修復 Big5 `msg[0..1]` 在 UTF-8 下無法匹配「想／是／好」的 compatibility bug；marker `ORIGINAL_SCHOLAR_RUNTIME_PASS`。
 
 兩條狀態升級為 `RUNTIME PASS`（Scholar 為 BOUNDED：排除 random scheduling，且不宣稱外部桃林／Scholar daemon 全內容）。Quest 全域仍是 `PARTIAL`，因 Snowkeep 與 `try/fon` 的缺失內容未被補造。
+
+## 2026-09-27 Phase 3 Remaining Runtime Audit
+
+- **Track A — Random Task Quest**：qlist／朱鴻雪仍只在外部 ES2 family Source 閉合，目標 branch 缺 daemon、派發 NPC 與 completion chain；維持 `CORROBORATED_RUNTIME_CANDIDATE / SOURCE_REQUIRED`。
+- **Track B — Story / Area Quest**：目標 Snow thief、貨棧工錢、私塾 scholar 三條既有 Runtime Journey 保持 PASS。本輪 class/source 交叉查證沒有找到第四條同版本完整 `Trigger → State → Progress → Completion → Reward → Persistence` 鏈。
+- Snowkeep、`try/fon`、`__ID_CHALLIE__` 沒有新直接 Source，維持既定 `EVIDENCE EXHAUSTED / UNKNOWN`，未重新搜尋或補造。
+
+本輪沒有新增 Quest Runtime，亦沒有因外部 bonze／taoist／scholar family Source 建立目標 Canon。

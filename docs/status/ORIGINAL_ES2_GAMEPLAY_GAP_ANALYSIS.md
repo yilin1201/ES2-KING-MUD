@@ -9,7 +9,7 @@
 | 領域 | 狀態 | Evidence／Runtime 邊界 |
 |---|---|---|
 | Race | IMPLEMENTED | 既有 11 種族 compatibility 與公開選角已通過；遺失 initializer、人類族 Original ID 與衝突業力值仍不補造。 |
-| Class | PARTIAL / BOUNDED RUNTIME PASS | Original `CLASS_D`、commoner／fighter、`commoner → apprentice → alchemist` 與 Snow 私塾 `commoner → scholar` entry 已由真 Driver 通過 save／quit／relogin。其他職業 Daemon／公式／門派內容仍 UNKNOWN。 |
+| Class | PARTIAL / BOUNDED RUNTIME PASS | Original `CLASS_D`、commoner／fighter Source 與 alchemist／scholar／thief 玩家 transition 已由真 Driver 通過 save／quit／relogin。七職業 Matrix 證明 fighter／taoist／bonze／soldier 尚缺同版本完整玩家鏈，維持 SOURCE_REQUIRED／EVIDENCE_EXHAUSTED。 |
 | School | IMPLEMENTED | Snow 私塾與龍圖丹派入門已在真實 Driver Journey 通過。 |
 | NPC | IMPLEMENTED | Snow 保存區 NPC、vendor、互動、死亡、corpse 與 room reset 重生均由真 Driver 通過；未保存歷史 NPC 屬性／掉落仍不補造。 |
 | Map | PARTIAL / BOUNDED RUNTIME PASS | Snow 保存區一般出口與 custom action 已由真 Driver 逐段走通；歷史世界完整 Room Tree、path、spawn 尚無足夠來源。 |

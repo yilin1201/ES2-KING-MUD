@@ -76,3 +76,9 @@ Evidence Boundary 不變：
 Static Gate 已擴充 Unknown Guard，禁止 taoist compatibility layer 出現未經 Evidence 支持的成長、技能、裝備或戰鬥 callback。
 
 狀態：**TAOIST RANK COMPATIBILITY IMPLEMENTED / RUNTIME JOURNEY NOT YET CLAIMED**。
+
+## 2026-09-27 Phase 3 七職業 Runtime Gap Closure
+
+已完成 `original_seven_class_runtime_matrix_phase3.md`。目標 tree 與全部可達 Git history 只保存 `commoner.c`／`fighter.c`；可由目標玩家流程閉合的 transition 是 alchemist、scholar、thief。taoist 只有 Evidence-bounded rank compatibility；fighter、taoist、bonze、soldier 均缺少完整同版本玩家入門鏈或 class daemon，狀態維持 `SOURCE_REQUIRED`／`EVIDENCE_EXHAUSTED`。
+
+本輪沒有新增 Runtime LPC，也沒有重跑已 PASS 的 M31／Quest Journey。Static Gate：`scripts/test_original_seven_class_matrix_static.mjs`。

@@ -17,7 +17,7 @@
 | 冷梅莊 Runtime | REFERENCE_ONLY | room/NPC/skill LPC 或可信 archive | path、出口、NPC clone 可交叉核對 |
 | 梅影風／劉乙忘玄 | REFERENCE_ONLY | NPC LPC／歷史完整資料 | 身分、path、技能/裝備只登錄直接支持欄位 |
 | Google Sites 國家地圖 → Runtime | ARCHIVED_SOURCE | 對應 room tree／舊 source archive | 地名與 Runtime path 建立可追溯映射 |
-| 七職業遺失 Daemon | PARTIAL | scholar/taoist/thief/alchemist/bonze/soldier 等 Original Source | 每個 Class 的實際 daemon 或可靠版本證據 |
+| 七職業遺失 Daemon | EVIDENCE_EXHAUSTED / SOURCE_REQUIRED | 已完成目標 tree、全 Git history、existing archive、es2.xor.tw、legacy／taedlar／mudchina／MudRen 交叉查證；仍缺 fighter 玩家 entry，以及 scholar/taoist/thief/alchemist/bonze/soldier 的目標 Original daemon | 新增同版本 Entry NPC／class daemon 直接 LPC 後，才重開單一職業 Recovery；不得以外部 family 直接補 Runtime |
 
 ## P2 — 可延後，不阻擋已確認 Engine
 
