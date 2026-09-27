@@ -25,6 +25,7 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 | `original_class_reconstruction_m11.md` | 職業 Runtime | Original Source | Baseline | 與門派截圖證據互補 | KEEP |
 | `original_class_school_evidence.md` | 七職業/門派 | ARCHIVED_SOURCE | Baseline | 與 M11 Runtime 證據互補 | KEEP |
 | `original_seven_class_runtime_matrix_phase3.md` | 七職業 Runtime 完整度 | Target Source + History + Archived / External Cross-check | Runtime Matrix / Exhaustion Boundary | 統整 M11、M31、Phase 3，保留外部 lineage 邊界 | KEEP |
+| `targeted_class_source_recovery_rc1.md` | Fighter／Taoist 定向 Source Recovery 與 R4 Gate | Target Source + Historical ES2 Source + Runtime | Reconstruction Gate / Runtime Provenance | Fighter 已 RECONSTRUCTION_RUNTIME_PASS；Taoist 維持 SOURCE_REQUIRED | KEEP |
 | `original_martial_force_m13.md` | 武學/內功 | Original Source | Baseline | 與 M23 核心玩法交叉 | KEEP |
 | `original_race_google_sites_evidence.md` | 種族設定 | ARCHIVED_SOURCE | Baseline | 與 Race Reconstruction 來源不同 | KEEP |
 | `original_race_reconstruction_phase2.md` | 種族重建 | Source + Archived Gameplay | Reconstruction Baseline | 保留版本/命名衝突，不與網站證據融合 | KEEP |

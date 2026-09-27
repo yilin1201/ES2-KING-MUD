@@ -172,7 +172,7 @@ node scripts/test_game_content_phase2_static.mjs <pinned-original-mudlib>
 
 ## 7. Apprentice / Class / Progression
 
-- `commoner`／`fighter`：有同版本 daemon。
+- `commoner`：有同版本 daemon；`fighter`：有同版本 daemon，Historical guild `join` adapter 已於 Phase 3 通過真 Driver，分類 RECONSTRUCTION_RUNTIME_PASS。
 - `alchemist`：Snow 陳維俠鏈 Runtime PASS。
 - `thief`：Snow 阿寶／老太婆鏈 Runtime PASS；同版本無 thief daemon，故職業內容完整度仍 PARTIAL。
 - `scholar`：王懷芝 Source chain 已於 Phase 3 由隔離真 Driver 完成 save／quit／relogin，為 BOUNDED RUNTIME PASS；同版本 scholar daemon 仍缺。
@@ -190,7 +190,7 @@ Quest 全域狀態因此由「完全 UNKNOWN」更新為 **PARTIAL**：至少一
 - P1（Snow active navigation）：無新增 FAIL。
 - P2（Quest）：Q2 在 Snowkeep 缺檔處 BROKEN；Q3 PARTIAL。兩者不阻斷核心 Snow 玩家循環，但阻斷相應歷史內容。
 - P3（Item）：`wine_pot` 與 `lo iron` prerequisite 有缺口；均非核心流程 blocker。
-- P4（Apprentice／Class）：alchemist、thief、scholar 的目標玩家 transition 可玩；fighter、taoist、bonze、soldier 缺完整同版本玩家鏈，維持 SOURCE_REQUIRED／EVIDENCE_EXHAUSTED。
+- P4（Apprentice／Class）：alchemist、thief、scholar 的目標玩家 transition 可玩；fighter Historical Reconstruction Journey 已 PASS；taoist、bonze、soldier 維持 SOURCE_REQUIRED／EVIDENCE_EXHAUSTED。
 - 武功凍結區：本輪未修改。
 
 不得以合理推測補入 Snowkeep、`__ID_CHALLIE__`、警捕 NPC、紅酒或任何 reward／機率／數值。這些項目必須等待同版本或可證明版本關係的 Original Source。

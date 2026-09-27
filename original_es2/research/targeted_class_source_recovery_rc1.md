@@ -273,3 +273,31 @@ This establishes persistence of the class property generically. It does not prov
   - blocker: recruitment protocol mismatch + missing target Original daemon/initialize boundary.
 - Runtime modified by this audit: **NO**.
 - UNKNOWN invented: **NO**.
+
+## 2026-09-28 Fighter Historical Reconstruction Runtime Result
+
+R4 `RECONSTRUCTION_READY` 後只實作核准的最小 adapter：
+
+`/d/reconstruction/fighter_guildhall`
+→ Historical `join`
+→ Target `set_class("fighter")`
+→ Target Original `CLASS_D("fighter")`
+→ Original `fighter.c::query_rank()` = 「武者」
+→ `save`
+→ `quit`
+→ 新連線 relogin／restore。
+
+Runtime room 明確標示 `[ES2-KING Reconstruction]`，並在檔頭保存 mudchina `std/room/class_guild.c`、`daemon/class/fighter/guildhall.c` 與 Target Original `fighter.c` provenance。Historical `me->set("class", "fighter")` 只轉譯為 Target-safe `me->set_class("fighter")`。
+
+沒有加入 Waterfog 正式世界出口、NPC、Board、師父、技能、裝備限制、initialize、advance_level、屬性／HP／精氣神公式或戰鬥 bonus。隔離 fixture 只透過 test-only admin `goto` 抵達該未接正式地圖的入口，故不宣稱已恢復 Target Original Waterfog topology。
+
+真實 Neolith Driver markers：
+
+- `ORIGINAL_FIGHTER_CLASS_PASS:entry`
+- `ORIGINAL_FIGHTER_CLASS_PASS:join`
+- `ORIGINAL_FIGHTER_CLASS_PASS:class-fighter`
+- `ORIGINAL_FIGHTER_CLASS_PASS:rank`
+- `ORIGINAL_FIGHTER_CLASS_PASS:save-quit-relogin`
+- `ORIGINAL_FIGHTER_CLASS_RUNTIME_PASS`
+
+Final classification：**Fighter = RECONSTRUCTION_RUNTIME_PASS**。這是 Historical Source Reconstruction 的 Runtime PASS，不是 Recovered Target Original LPC。

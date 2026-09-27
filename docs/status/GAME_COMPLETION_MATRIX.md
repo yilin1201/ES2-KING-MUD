@@ -11,7 +11,7 @@
 | 系統 | 狀態 | 本次 Runtime 證據／邊界 |
 |---|---|---|
 | Original ES2 Runtime | RUNTIME PASS | 同一 Neolith Full Driver Journey 實際執行 |
-| Class / Apprentice | M31 + Phase 3 BOUNDED RUNTIME PASS | 真實 Driver 已通過 alchemist、scholar、thief 玩家 transition 與 save／quit／relogin；七職業 Matrix 證明 fighter／taoist／bonze／soldier 仍缺同版本完整玩家鏈，維持 SOURCE_REQUIRED／EVIDENCE_EXHAUSTED |
+| Class / Apprentice | M31 + Phase 3 BOUNDED RUNTIME PASS | 真實 Driver 已通過 alchemist、scholar、thief Target transition；Fighter Historical Reconstruction 亦通過 `join→fighter→武者→save/relogin`。Taoist／Bonze／Soldier 維持 SOURCE_REQUIRED／EVIDENCE_EXHAUSTED |
 | World / Map | RUNTIME PASS / BOUNDED | Snow 保存區所有玩家路徑及 custom action 已由真 Driver 逐段走通；未保存的完整歷史世界仍 UNKNOWN |
 | Movement | RUNTIME PASS | 方向、enter、out、climb 與門實際通過 |
 | NPC | RUNTIME PASS | look／ask／vendor、死亡／corpse 與 room reset 重生實際通過 |

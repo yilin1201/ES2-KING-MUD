@@ -82,3 +82,15 @@ Static Gate 已擴充 Unknown Guard，禁止 taoist compatibility layer 出現�
 已完成 `original_seven_class_runtime_matrix_phase3.md`。目標 tree 與全部可達 Git history 只保存 `commoner.c`／`fighter.c`；可由目標玩家流程閉合的 transition 是 alchemist、scholar、thief。taoist 只有 Evidence-bounded rank compatibility；fighter、taoist、bonze、soldier 均缺少完整同版本玩家入門鏈或 class daemon，狀態維持 `SOURCE_REQUIRED`／`EVIDENCE_EXHAUSTED`。
 
 本輪沒有新增 Runtime LPC，也沒有重跑已 PASS 的 M31／Quest Journey。Static Gate：`scripts/test_original_seven_class_matrix_static.mjs`。
+
+## 2026-09-28 Fighter Historical Reconstruction Runtime
+
+R4 Target Gate 依 mudchina Historical Source 與 Target Original `fighter.c` 將 Fighter 提升為 `RECONSTRUCTION_READY`。本輪只建立明確標示 `[ES2-KING Reconstruction]` 的隔離武者同盟入口，將 Historical `join → me->set("class","fighter")` 適配為 Target `join → me->set_class("fighter")`。
+
+隔離 `fighterprobe` 已由真實 Neolith Driver 完成：
+
+`commoner → reconstruction entry → join → class=fighter → Original rank=武者 → save → quit → relogin → fighter/武者 restore`
+
+Marker：`ORIGINAL_FIGHTER_CLASS_RUNTIME_PASS`。Final classification：`RECONSTRUCTION_RUNTIME_PASS`，不是 Recovered Target Original LPC。
+
+未新增 Fighter initialize／advance_level、能力公式、技能、門派師父、裝備限制、戰鬥 bonus、NPC、Board 或 Waterfog 正式地圖連線。Taoist Gate 仍為 `SOURCE_REQUIRED`。

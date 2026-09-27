@@ -61,7 +61,7 @@ Owner 於 2026-09-26 正式指定 M31 主題為 Class 職業系統。Evidence �
 
 本階段完成有直接 Source 的 `commoner → apprentice → alchemist` 轉職鏈、Archived Evidence 支持的「方士」稱謂，以及隔離玩家 save／quit／relogin／restore。其他遺失職業 Daemon、初始化／升級公式、能力、裝備限制與門派條件維持 `SOURCE_REQUIRED / UNKNOWN`；因此 M31 為證據邊界內的 BOUNDED RUNTIME PASS，不宣稱七職業內容全部復原。
 
-2026-09-27 Phase 3 已完成七職業 Runtime Matrix：目標版本及其全部可達 Git history 只有 commoner／fighter daemon；alchemist、scholar、thief 具有已驗證玩家 transition，taoist 只有 rank compatibility，fighter／taoist／bonze／soldier 尚無完整同版本玩家閉環。外部 ES2 family Source 僅列 CORROBORATED，不倒入 Runtime。詳見 `original_es2/research/original_seven_class_runtime_matrix_phase3.md`。
+2026-09-28 Phase 3 已完成七職業 Runtime Matrix：alchemist、scholar、thief 具有已驗證 Target 玩家 transition；Fighter 另依 R4 Gate 以明確標示的 Historical Source Reconstruction 完成 `join→fighter→武者→save/relogin` 真 Driver Journey，marker `ORIGINAL_FIGHTER_CLASS_RUNTIME_PASS`。Taoist 只有 rank compatibility，bonze／soldier 仍無安全 Target-compatible 玩家閉環。詳見 `original_es2/research/original_seven_class_runtime_matrix_phase3.md` 與 `targeted_class_source_recovery_rc1.md`。
 
 ## 2. Evidence 與 Runtime 分層
 
