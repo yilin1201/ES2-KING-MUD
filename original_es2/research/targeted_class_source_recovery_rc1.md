@@ -111,3 +111,84 @@ UNKNOWN invented: **NO**.
 PR merge requested: **NO**.
 
 Reopen Runtime only when a new same-lineage source supplies at minimum a player Entry/Recruit transition compatible with the target class API, and for Taoist an attributable target-version class daemon.
+
+
+## 2026-09-28 R4 TARGET — Source Lineage Recovery
+
+### Repository/version facts
+
+Public repository metadata establishes an important boundary:
+
+- `taedlar/es2_mudlib` states that its initial GitHub commit is based on ES2 Mudlib v1.3b and that its `v1.4` branch is the legacy MudOS/FluffOS line.
+- `MudRen/ES2-big5` identifies itself as ES2 mudlib v1.3b adapted for FluffOS v2017.
+- `MudRen/ES2-utf8` is a later FluffOS v2019 adaptation.
+- `mudchina/es2` is a preserved ES2 GBK snapshot with only a shallow public Git history; its source tree nevertheless contains historical class-guild content.
+
+Therefore the public Git commit graphs are **not sufficient to identify a single historical commit at which the class API “forked.”** Much of the historical source predates these Git imports.
+
+### Critical API comparison
+
+The apparent `set_class()` versus `set("class", ...)` split is **not a mutually exclusive lineage fork**.
+
+`MudRen/ES2-big5/feature/char/score.c` contains:
+
+- `query_class() { return query("class"); }`
+- `set_class(string new_class)` which internally performs `set("class", new_class)`
+- `CLASS_D(new_class)->initialize(this_object())`
+
+`taedlar/es2_mudlib/mudlib/feature/char/score.c` preserves the same essential wrapper/API and initialization pattern.
+
+At the same time, `mudchina/es2/std/room/class_guild.c` and `MudRen/ES2-utf8/std/room/class_guild.c` directly write:
+
+- `me->set("class", "fighter")`
+
+Thus direct property assignment and the `set_class()` wrapper coexist in the broader ES2 source family. The difference is a **call-site / content-generation difference**, not evidence of a clean engine-level API fork.
+
+### Fighter lineage result
+
+`mudchina/es2` preserves a complete historical Fighter guild content chain:
+
+- `std/room/class_guild.c`: `join` sets player class to `fighter` and start room to `CLASS_D("fighter") + "/guildhall"`.
+- `daemon/class/fighter/guildhall.c`: identifies the Fighter guildhall and explains that joining makes the player a 武者.
+
+This is much stronger than the earlier MudRen-only observation because the same content exists in the mudchina ES2 snapshot.
+
+However, the current target/taedlar v1.4-style tree lacks `std/room/class_guild.c` and the Fighter guildhall content. This is therefore evidence of **historical ES2 content present in another preserved snapshot but absent from the target snapshot**, not proof that the target release used that exact player-entry chain.
+
+Classification: `ARCHIVED/EXTERNAL ES2 SOURCE — STRONG LINEAGE CORROBORATION`; target Runtime remains blocked.
+
+### Taoist lineage result
+
+`mudchina/es2/daemon/class/taoist/taolord.c` preserves an explicit Taoist master:
+
+- 林忌／六指真人
+- 茅山派
+- `F_MASTER`
+- successful `recruit_apprentice()` writes player `class = taoist`
+
+This source is also represented in the later UTF-8 family.
+
+The target/taedlar v1.4-style snapshot does not preserve this Taoist class content. Therefore it is strong historical ES2-family source evidence, but there is still no direct proof that the target snapshot's live content used this exact master/path/recruitment implementation.
+
+Classification: `ARCHIVED/EXTERNAL ES2 SOURCE — STRONG LINEAGE CORROBORATION`; target Taoist daemon/entry remains SOURCE_REQUIRED.
+
+### R4 TARGET conclusion
+
+The requested “fork point” between `set_class()` and `set("class", ...)` cannot be established because the premise of a clean fork is not supported by the recovered code:
+
+1. `set_class()` is a wrapper around the same underlying `class` property.
+2. historical content can directly set the property while the wrapper exists in the same ES2 family.
+3. public repositories are later imports/adaptations with shallow/incomplete pre-Git history, so they cannot date the original content divergence precisely.
+
+The meaningful divergence is **content snapshot completeness**, not a proven incompatible class engine.
+
+This improves historical confidence for Fighter/Taoist identity and recruitment design, but does **not** meet the project's target-version Runtime Gate.
+
+Status:
+
+- Fighter historical ES2 recruitment source: STRONG / preserved in mudchina snapshot.
+- Taoist historical ES2 recruitment source: STRONG / preserved in mudchina snapshot.
+- Exact target-version adoption of those chains: UNKNOWN / SOURCE_REQUIRED.
+- Clean API fork commit/date: EVIDENCE EXHAUSTED with current public history.
+- `READY_FOR_RUNTIME`: **NO** under the existing strict same-target-version rule.
+- Runtime modified: **NO**.
