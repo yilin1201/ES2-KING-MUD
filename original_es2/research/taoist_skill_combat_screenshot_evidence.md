@@ -152,3 +152,46 @@ Help 記錄：消耗神為總傷害一半，自身 delay 1。
 8. 每張圖片保存：文章 URL、日期、角色/目標、技能/招式、畫面原文、Evidence 等級。
 
 狀態：`IN PROGRESS — HELP REGISTRY BUILT / SCREENSHOT REVIEW PENDING`。
+## 9. Round 2 — Gameplay Combat Text / 茅山完整 Help 補強
+
+### 9.1 轉輪大風 — Actual Gameplay Text CONFIRMED
+2014/10 月 archive 保存紫衣派道士「雷道(Gfmul)」實戰文字。角色施展「轉輪大風」後，畫面連續顯示第一重、第二重、第三重轉輪大風，並記錄風刃命中駱易。
+因此 `whirl storm / 轉輪大風` 可由單純 `HELP CONFIRMED` 升級為 `GAMEPLAY TEXT CONFIRMED`；同時證明風符多重催咒在歷史實機輸出中確實出現。
+注意：角色標題為紫衣派，但可施展風系招式，與 `taoist.adv` 所記天師四系雙修機制方向相容；不可僅憑此紀錄推導完整學習條件。
+
+### 9.2 靈雲觀完整 Help 補強
+`mao-shan.cloud`：
+- 幽冥三箭 `taoism of purify`：netherbolt 青冥之箭、drainerbolt 紫幽之箭、feeblebolt 蒼靈之箭。
+- 五雷術 `mao-shan lightning`：`cleanse` 凝聚靈力；`bless` 消耗神/靈力/先天符，全面提升目標屬性、元素傷害與元素抗性；`consume` 消耗神/靈力/先天符恢復目標精神。
+- Help 最後更新：2014/05/01。
+
+### 9.3 隱風觀完整 Help 補強
+`mao-shan.wind` / 茅山幻術 `taoism of nature`：
+- `dog` 喚犬之術：目標 delay 2。
+- `monkey` 喚猿之術：隨機偷取目標一件物品。
+- `hydra` 喚蟒之術：吞掉非玩家目標。
+- `rain` 喚雨之術：恢復施法者周圍玩家精氣神。
+以上為 `HELP CONFIRMED`；尚未逐張取得實機圖片證明。
+
+### 9.4 幻霧觀完整 Help 補強
+`mao-shan.fog` / 茅山奇術 `taoism of darkness`：
+- `hell` 入陰之術：前往地獄。
+- `ghost_fire` 鬼火術：法術傷害。
+- `smoke` 鬼煙術：脫離戰鬥並隱藏。
+- `hell_fire` 幽冥之火：一次大量法術傷害。
+- 上述施法需少陰符。
+
+`mao-shan mysticism` 奇門術：
+- `memory` 記憶之術。
+- `recall` 翔空之術。
+- `collect` 集靈之術。
+- `slave` 通靈之術。
+- `devour` 噬魂之術。
+
+### 9.5 NPC Gameplay Text — 趙曉九
+2014/11 實機文字：隱風觀道士趙曉九會因咒語錯誤被自己招出的火球炸倒，並嘗試呼喚「金烏神使」但失敗；也會以書籍交換神符。分類：`NPC GAMEPLAY TEXT CONFIRMED`，不視為玩家可學 skill。
+
+### 9.6 Screenshot 狀態
+目前搜尋介面能回收文章正文與歷史實機文字，但尚未可靠取得網站內所有原始 Blogger 圖片本體。因此本輪新增的是 `GAMEPLAY TEXT CONFIRMED`，不是 `SCREENSHOT CONFIRMED`。後續仍需針對文章原圖逐張 recovery。
+
+Round 2 狀態：`IN PROGRESS — HELP EXPANDED / WHIRL STORM GAMEPLAY TEXT CONFIRMED / IMAGE REVIEW STILL PENDING`。
