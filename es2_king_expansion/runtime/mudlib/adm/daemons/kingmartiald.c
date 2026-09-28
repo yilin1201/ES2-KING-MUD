@@ -44,18 +44,17 @@ int set_daxie(object actor, int level)
 {
     if (!authorized(actor) || level < 1 || level > 300) return 0;
     actor->set_skill("kuxiao force", level);
-    actor->set_skill("daxie qisun blade", level);
+    actor->set_skill("qisun_blade", level);
     // Historical IDs／玩家驗收顯示沿用已確認的 Original/Historical 技能名稱。
     actor->set_skill("huge force", level);
-    actor->set_skill("seven_blade", level);
+    
     actor->set_skill("blade", level);
     // 大邪七損刀是刀法；不覆蓋 KING 的主內功易筋經與主劍法冷梅劍法。
     // 哭笑門心法只作為大邪金身的已學相依技能；KING 主 force 仍維持易筋經。
-    actor->map_skill("blade", "daxie qisun blade");
+    actor->map_skill("blade", "qisun_blade");
     CHINESE_D->add_translate("kuxiao force", "哭笑心法");
-    CHINESE_D->add_translate("daxie qisun blade", "大邪七損刀訣");
-    CHINESE_D->add_translate("huge force", "哭笑心法");
-    CHINESE_D->add_translate("seven_blade", "大邪七損刀訣");
+    CHINESE_D->add_translate("qisun_blade", "大邪七損刀訣");
+    CHINESE_D->add_translate("huge force", "大邪心法");
     actor->set("es2_king/daxie_level", level);
     return 1;
 }
@@ -143,7 +142,7 @@ int set_creator_core_martial(object actor, int level)
     CHINESE_D->add_translate("advance_lunmay", "傲梅暗劍訣");
     CHINESE_D->add_translate("chin_staff", "青邪杖法");
     CHINESE_D->add_translate("qishang_staff", "大邪七傷杖訣");
-    CHINESE_D->add_translate("seven_blade", "大邪七損刀訣");
+    CHINESE_D->add_translate("qisun_blade", "大邪七損刀訣");
 
     actor->set("es2_king/yijinjing_level", level);
     actor->set("es2_king/yijinjing_stage", yijinjing_stage(level));
