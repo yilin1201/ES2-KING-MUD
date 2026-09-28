@@ -110,7 +110,7 @@ assert.match(output.slice(staffOffset), /霸天煉體訣.*不滅金身/s);
 const staffPlain = output.slice(staffOffset).replace(/\x1b\[[0-9;]*m/g, "");
 assert.match(staffPlain, /神色不起波瀾，只信步前踏半步。/);
 assert.match(staffPlain, /體內「霸天煉體訣」神紋流轉，周身散發著萬法不侵的沉雄氣度。/);
-assert.match(staffPlain, /待得金芒驟聚，「不滅金身」自然流轉，泛起璀璨耀目的暗金琉璃神華。/);
+assert.match(staffPlain, /待得金芒驟聚，「【霸天煉體訣。不滅金身】」自然流轉，泛起璀璨耀目的金光琉璃神華。/);
 // Shared Alias Routing／leiting 同時存在於刀、杖；持九曲十彎時必須由 qishang_staff 接手。
 assert.match(await command("perform leiting on arbao"), /破械反撩・雷霆震不還/);
 // 第七式有大邪金身前置；此處只驗證 parser／alias 已路由到 qishang_staff，不能把前置條件失敗誤判為 routing FAIL。
