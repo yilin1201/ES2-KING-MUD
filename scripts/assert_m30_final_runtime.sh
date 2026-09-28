@@ -93,6 +93,24 @@ grep -Fq 'set_cold_plum", user, 300' "$LOGIN_D"
 grep -Fq 'set_creator_core_martial", user, 300' "$LOGIN_D"
 grep -Fq 'set_rulai_shenzhang", user, 300' "$LOGIN_D"
 
+# Daxie Martial Final Runtime Gate／大邪武學最終執行環境閘門：
+# 部署映像必須保留 Original 青邪杖法，並載入 Expansion 七損刀／七傷杖正式 ID、進階心法名稱與隨機 Combat。
+KING_MARTIAL="$RUNTIME_DIR/mudlib/adm/daemons/kingmartiald.c"
+QISUN_BLADE="$RUNTIME_DIR/mudlib/daemon/skill/qisun_blade.c"
+QISHANG_STAFF="$RUNTIME_DIR/mudlib/daemon/skill/qishang_staff.c"
+for file in "$KING_MARTIAL" "$QISUN_BLADE" "$QISHANG_STAFF"; do test -f "$file"; done
+grep -Fq 'CHINESE_D->add_translate("kuxiao force", "哭笑心法")' "$KING_MARTIAL"
+grep -Fq 'CHINESE_D->add_translate("huge force", "大邪心法")' "$KING_MARTIAL"
+grep -Fq 'CHINESE_D->add_translate("chin_staff", "青邪杖法")' "$KING_MARTIAL"
+grep -Fq 'CHINESE_D->add_translate("qishang_staff", "大邪七傷杖訣")' "$KING_MARTIAL"
+grep -Fq 'CHINESE_D->add_translate("qisun_blade", "大邪七損刀訣")' "$KING_MARTIAL"
+grep -Fq 'actor->map_skill("blade", "qisun_blade")' "$KING_MARTIAL"
+grep -Fq 'actor->map_skill("staff", "qishang_staff")' "$KING_MARTIAL"
+grep -Fq 'actor->map_skill("twohanded staff", "qishang_staff")' "$KING_MARTIAL"
+grep -Fq 'random(sizeof(forms))' "$QISUN_BLADE"
+grep -Fq 'random(sizeof(form_ids))' "$QISHANG_STAFF"
+grep -Fq 'return usage == "staff" || usage == "twohanded staff";' "$QISHANG_STAFF"
+
 # Score Grid Bars／形體精氣神方格條只改顯示，保留 Original 三值 Statistic。
 grep -Fq 'ES2-KING SCORE GRID BARS' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
 grep -Fq 'score_grid_bar("HP", HIG' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
