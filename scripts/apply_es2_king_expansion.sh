@@ -357,13 +357,14 @@ replacement = '''    user->setup();
         ||  !call_other("/adm/daemons/kingd", "provision_creator_weapons", user)
         ||  !call_other("/adm/daemons/kingmartiald", "set_cold_plum", user, 300)
         ||  !call_other("/adm/daemons/kingmartiald", "set_creator_core_martial", user, 300)
-        ||  !call_other("/adm/daemons/kingmartiald", "set_rulai_shenzhang", user, 300)) {
+        ||  !call_other("/adm/daemons/kingmartiald", "set_rulai_shenzhang", user, 300)
+        ||  !call_other("/adm/daemons/kingmartiald", "set_daxie", user, 300)) {
             write("KING 正式能力配置失敗，已中止登入以避免錯誤狀態。\\n");
             destruct(ob);
             destruct(user);
             return;
         }
-        write("KING 創世神配置已同步：八項屬性 99、六項狀態 999、五件武器已置入物品欄且不自動裝備、冷梅莊武學 300、易筋經 300、霸天煉體訣 300、如來神掌 300。\\n");
+        write("KING 創世神配置已同步：八項屬性 99、六項狀態 999、五件武器已置入物品欄且不自動裝備、冷梅莊武學 300、易筋經 300、霸天煉體訣 300、如來神掌 300、大邪七損刀 300；可用 khome 前往天神殿・無極之境。\\n");
     }
 
 #ifdef SAVE_USER
