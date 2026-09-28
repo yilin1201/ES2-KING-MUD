@@ -20,9 +20,9 @@ void create()
         set("es2_king/evidence", "HISTORICAL CONFIRMED / ES2tips 2013-05");
         set("long", "一把血紅的單刀，刀輕質硬，色呈紅色半透明。\n");
         // Historical：大邪七損刀訣 +10、拆招卸力之法 +10。
-        // KING 現行 Runtime 的大邪七損刀 ID 為 daxie qisun blade；parry 為 Original base skill。
+        // KING 現行 Runtime 的大邪七損刀正式 ID 為 qisun_blade；parry 為 Original base skill。
         set("apply_weapon/blade", ([
-            "daxie qisun blade": 10,
+            "qisun_blade": 10,
             "parry": 10,
         ]));
     }
