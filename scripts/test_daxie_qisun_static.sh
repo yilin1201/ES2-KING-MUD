@@ -42,3 +42,8 @@ grep -Fq '"action":HIW "$N使出「" HIG + form_names[form] + HIW' "$QISHANG"
 grep -Fq 'show_immortal_intro' "$ROOT/d/arena/skill/batian_lianti_jue.c"
 grep -Fq 'call_other("/d/arena/skill/batian_lianti_jue", "show_immortal_intro", me)' "$QISUN"
 grep -Fq 'call_other("/d/arena/skill/batian_lianti_jue", "show_immortal_intro", me)' "$QISHANG"
+
+# Perform alias routing regression／七傷杖與七損刀共用短 alias 時，必須依實際武器分流。
+grep -Fq 'private string *qishang_forms' "$ROOT/cmds/std/perform.c"
+grep -Fq 'member_array(act, qishang_forms)' "$ROOT/cmds/std/perform.c"
+grep -Fq 'SKILL_D("qishang_staff")->perform_action(me, act, target)' "$ROOT/cmds/std/perform.c"
