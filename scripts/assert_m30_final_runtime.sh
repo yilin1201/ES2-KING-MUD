@@ -120,6 +120,15 @@ grep -Fq 'HIW' "$QISUN_BLADE"
 grep -Fq 'batian lianti jue' "$QISUN_BLADE"
 grep -Fq 'batian lianti jue' "$QISHANG_STAFF"
 
+# Batian Canon Narration Final Runtime Gate／霸天煉體訣正式戰鬥敘述：
+# 使用 Owner 最新定稿文字直接鎖住 Docker 最終映像，避免 Source 已改但 Overlay/映像仍殘留舊句。
+BATIAN_SKILL="$RUNTIME_DIR/mudlib/d/arena/skill/batian_lianti_jue.c"
+test -f "$BATIAN_SKILL"
+grep -Fq '面對漫天殺機，$N神色不起波瀾，只信步前踏半步。' "$BATIAN_SKILL"
+grep -Fq '體內「" HIY "霸天煉體訣" HIW "」神紋流轉，周身散發著萬法不侵的沉雄氣度。' "$BATIAN_SKILL"
+grep -Fq '待得金芒驟聚，「" HIY "【霸天煉體訣。不滅金身】" HIW "」自然流轉，泛起璀璨耀目的金光琉璃神華。' "$BATIAN_SKILL"
+! grep -Fq '暗金琉璃神華' "$BATIAN_SKILL"
+
 # Score Grid Bars／形體精氣神方格條只改顯示，保留 Original 三值 Statistic。
 grep -Fq 'ES2-KING SCORE GRID BARS' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
 grep -Fq 'score_grid_bar("HP", HIG' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
