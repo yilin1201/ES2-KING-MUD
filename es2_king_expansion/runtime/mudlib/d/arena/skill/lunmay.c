@@ -66,6 +66,9 @@ void attack_using(object me, object opponent, object weapon)
     int index;
 
     if (!opponent) return;
+    // KING 防禦開場由實際攻擊入口觸發，避免依賴 parry daemon 是否收到 attack hook。
+    if (me->skill_mapped("parry") == "batian lianti jue")
+        call_other("/d/arena/skill/batian_lianti_jue", "show_immortal_intro", me);
 
     if (me->query_temp("cold_plum/mirror_state")) {
         index = me->query_temp("cold_plum/mirror_index");
