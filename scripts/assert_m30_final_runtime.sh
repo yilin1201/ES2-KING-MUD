@@ -110,6 +110,12 @@ grep -Fq 'actor->map_skill("twohanded staff", "qishang_staff")' "$KING_MARTIAL"
 grep -Fq 'random(sizeof(forms))' "$QISUN_BLADE"
 grep -Fq 'random(sizeof(form_ids))' "$QISHANG_STAFF"
 grep -Fq 'return usage == "staff" || usage == "twohanded staff";' "$QISHANG_STAFF"
+grep -Fq '哭笑極境奧義・九曲天哭・一杖定乾坤' "$QISHANG_STAFF"
+! grep -Fq '寂靜奧義' "$QISHANG_STAFF"
+grep -Fq 'HIM + form_names[form] + HIW' "$QISHANG_STAFF"
+grep -Fq 'HIG + form_names[form] + HIW' "$QISUN_BLADE"
+grep -Fq 'show_immortal_intro' "$QISUN_BLADE"
+grep -Fq 'show_immortal_intro' "$QISHANG_STAFF"
 
 # Score Grid Bars／形體精氣神方格條只改顯示，保留 Original 三值 Statistic。
 grep -Fq 'ES2-KING SCORE GRID BARS' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
