@@ -123,7 +123,7 @@ int set_creator_core_martial(object actor, int level)
     // KING Basic Skills Lv.300／只建立已確認的基礎技能欄位；四個預留項目暫不綁武學。
     foreach (string basic_skill in ({
         "force", "unarmed", "sword", "secondhand sword", "twohanded sword",
-        "blade", "twohanded blade", "staff", "parry", "dodge", "whip"
+        "blade", "twohanded blade", "staff", "twohanded staff", "parry", "dodge", "whip"
     }))
         actor->set_skill(basic_skill, level);
 
