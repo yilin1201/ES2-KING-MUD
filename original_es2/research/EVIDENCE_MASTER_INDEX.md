@@ -102,3 +102,15 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 ### 結論
 - Original 角色物品 persistence 是明確的 **autoload opt-in policy**，不是任意 Equipment 通用保存。
 - 已通過的 autoload save／quit／relogin 行為維持有效；任意 non-autoload equipment 不應再列為待補 Runtime 功能，也不得為提高完成度新增另一套泛用保存規則。
+
+## Target Taoist Legacy Plan Recovery — 2026-09-28
+
+### PARTIAL CONFIRMED
+- Target lineage：`taedlar/es2_mudlib@cc45c06af4852380e5148dad3c9d53ff06854f2c`。
+- `docs/legacy/wiz/taoist-plan` 保存 Annihilator@Eastern.Stories 於 1995-01-18 撰寫的 Taoist 職業定位與技能規劃；Git History 顯示原檔於 initial commit `936131f5b92d0e93ee43790a8dfef3efa7a8b822` 匯入，後於 `3b5272161bc91e2010c9ebdd5520cda3547ca0eb` 移入 `docs/legacy/`。
+- 文件可直接支持「道士」職業概念及太極心法、五行攝氣訣、天磯劍法、道藏等歷史規劃名稱。
+
+### SOURCE BOUNDARY
+- Target tree／target Git History 仍未保存 Taoist class daemon、entry room／NPC、recruitment command、`initialize()` 或 `advance_level()` Source。
+- Historical mudchina／MudRen `taolord.c` 仍屬外部 ES2-family corroboration；不得以 legacy plan 取代缺失 LPC 或反推技能數值、起始房間及拜師條件。
+- 結論：Taoist 為 `PARTIAL / SOURCE_REQUIRED`，`IMPLEMENTATION READY = NO`。
