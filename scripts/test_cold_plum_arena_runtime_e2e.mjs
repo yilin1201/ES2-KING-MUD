@@ -58,6 +58,10 @@ function callInt(text, method) {
   return Number(found[1]);
 }
 
+function countText(text, needle) {
+  return text.split(needle).length - 1;
+}
+
 async function login() {
   await connect();
   await wait(0, "您的使用者代號");
@@ -69,6 +73,7 @@ async function login() {
 const attributes = ["str", "cor", "int", "spi", "cps", "dex", "con", "wis"];
 const coldSkills = ["hainmay force", "advance_lunmay", "lunmay", "mayin", "seven"];
 const baseSkills = ["force", "unarmed", "sword", "secondhand sword", "twohanded sword", "blade", "twohanded blade", "staff", "parry", "dodge", "whip"];
+const meiSkills = [...coldSkills, "force", "unarmed", "sword", "parry", "dodge"];
 
 async function verifyKingProfile() {
   for (const attribute of attributes)
@@ -116,10 +121,16 @@ assert.match(await command("enter"), /競技場：演武界/);
 assert.match(await command("look mei"), /梅寒霜/);
 console.log("COLD_PLUM_PASS:wuji-enter-yanwujie");
 
-for (const skill of [...coldSkills, ...baseSkills])
+for (const skill of meiSkills)
   assert.equal(callInt(await call(`mei->query_skill("${skill}")`), "query_skill"), 300, skill);
 for (const attribute of attributes)
   assert.equal(callInt(await call(`mei->query_attr("${attribute}")`), "query_attr"), 50, attribute);
+assert.equal(callInt(await call("mei->query_level()"), "query_level"), 99, "梅寒霜 level");
+for (const stat of ["gin", "kee", "sen"]) {
+  assert.equal(callInt(await call(`mei->query_stat_maximum("${stat}")`), "query_stat_maximum"), 999, `梅寒霜 ${stat}:maximum`);
+  assert.equal(callInt(await call(`mei->query_stat_effective("${stat}")`), "query_stat_effective"), 999, `梅寒霜 ${stat}:effective`);
+  assert.equal(callInt(await call(`mei->query_stat_current("${stat}")`), "query_stat_current"), 999, `梅寒霜 ${stat}:current`);
+}
 console.log("COLD_PLUM_PASS:npc-attributes-skills");
 
 // 如來神掌正式 Gameplay Gate：KING 空手時必須由 Original attack() 進入 rulai shenzhang daemon，
@@ -127,7 +138,11 @@ console.log("COLD_PLUM_PASS:npc-attributes-skills");
 const rulaiOffset = output.length;
 await send("kill mei");
 await wait(rulaiOffset, /佛光初現/, 30000);
-assert.ok(output.slice(rulaiOffset).includes("\\x1b[1;33m") || output.slice(rulaiOffset).includes("\\x1b[33m"), "Rulai combat missing yellow ANSI");
+await wait(rulaiOffset, /面對漫天殺機/, 30000);
+await new Promise(resolve => setTimeout(resolve, 1200));
+assert.equal(countText(output.slice(rulaiOffset), "面對漫天殺機"), 1,
+  "同一場 Combat 的霸天開場不得重複洗版");
+assert.ok(output.slice(rulaiOffset).includes("\x1b[1;33m") || output.slice(rulaiOffset).includes("\x1b[33m"), "Rulai combat missing yellow ANSI");
 console.log("RULAI_PASS:formal-yellow-combat");
 await call('me->remove_all_killer()');
 await call('mei->remove_all_killer()');
@@ -153,7 +168,8 @@ for (const stat of ["gin", "kee", "sen", "HP"])
 
 const combatOffset = output.length;
 await send("kill mei");
-await wait(combatOffset, /【明鏡止水】/, 30000);
+await wait(combatOffset, /【\s*明\s*鏡\s*止\s*水\s*】/, 30000);
+await wait(combatOffset, /面對漫天殺機/, 30000);
 console.log("COLD_PLUM_PASS:mirror-mind-state");
 const forms = [
   "梅二方劍", "梅四方劍", "梅八方劍", "愛霜恨雪", "寒霜三千里",

@@ -41,8 +41,9 @@ const attribute = fs.readFileSync("es2_king_expansion/runtime/mudlib/feature/att
 const wujiRealm = fs.readFileSync("es2_king_expansion/runtime/mudlib/d/king/wuji_realm.c", "utf8");
 const yanwujie = fs.readFileSync("es2_king_expansion/runtime/mudlib/d/arena/yanwujie.c", "utf8");
 const applyExpansion = fs.readFileSync("scripts/apply_es2_king_expansion.sh", "utf8");
+const batian = fs.readFileSync("es2_king_expansion/runtime/mudlib/d/arena/skill/batian_lianti_jue.c", "utf8");
 
-// KING Cold Plum wiring：八屬性 99；武學遵守 Original 玩家技能 200 上限。
+// KING Cold Plum wiring：八屬性 99；Project Canon KING-only 技能上限 300。
 for (const token of [
   '"str", "cor", "int", "spi", "cps", "dex", "con", "wis"',
   'actor->set_attr(attr, 99)',
@@ -63,7 +64,7 @@ for (const token of [
   'actor->map_skill("sword", "lunmay")',
   'actor->set("es2_king/lengmei/mingjing_zhishui", 1)',
   'actor->set_temp("cold_plum/mirror_state", 1)',
-  'level > 200'
+  'level > 300'
 ]) {
   if (!kingMartial.includes(token)) throw new Error("missing KING Cold Plum wiring: " + token);
 }
@@ -76,7 +77,7 @@ for (const token of [
   "ES2-KING OWNER LOGIN PROVISIONING",
   'user->query("id") == "king"',
   'call_other("/adm/daemons/kingd", "apply_creator_profile", user)',
-  'call_other("/adm/daemons/kingmartiald", "set_cold_plum", user, 200)'
+  'call_other("/adm/daemons/kingmartiald", "set_cold_plum", user, 300)'
 ]) {
   if (!applyExpansion.includes(token)) throw new Error("missing formal KING login provisioning: " + token);
 }
@@ -88,7 +89,7 @@ for (const forbidden of ["必中", "必殺", "穿透率", "傷害倍率", '"atta
   if (skill.includes(forbidden)) throw new Error("unsupported Cold Plum numeric/effect invention: " + forbidden);
 }
 
-const rulai = read("es2_king_expansion/runtime/mudlib/d/arena/skill/rulai_shenzhang.c");
+const rulai = fs.readFileSync("es2_king_expansion/runtime/mudlib/d/arena/skill/rulai_shenzhang.c", "utf8");
 for (const form of ["佛光初現","金頂佛燈","佛動山河","佛問迦藍","迎佛西天","佛光普照","天佛降世","佛鎮八荒","佛法無邊","九九歸一・萬佛朝宗","天舞梵輪・萬相歸墟"]) {
   if (!rulai.includes(form)) throw new Error("missing Rulai form: " + form);
 }
@@ -102,6 +103,19 @@ for (const forbidden of ["busy(", "consume_stat(", "add_temp(", "set_stat_curren
 for (const token of ['set_skill("rulai shenzhang", level)', 'map_skill("unarmed", "rulai shenzhang")']) {
   if (!kingMartial.includes(token)) throw new Error("missing KING Rulai provisioning: " + token);
 }
+
+const immortalText = "自然流轉，泛起璀璨耀目的璀璨金光琉璃神華。";
+if ((batian.match(new RegExp(immortalText, "g")) || []).length !== 1)
+  throw new Error("Batian immortal intro must keep one shared latest text source");
+for (const token of [
+  "private void display_immortal_intro(object me)",
+  "void show_immortal_intro(object me)",
+  "int parry_using(object me, int ability, int strength, object from)",
+  'call_out("reset_immortal_intro_after_combat", 1, me)',
+  'me->delete_temp("es2_king/batian/immortal_intro")',
+]) if (!batian.includes(token)) throw new Error("missing Batian Combat lifecycle guard: " + token);
+if ((batian.match(/display_immortal_intro\(me\);/g) || []).length !== 2)
+  throw new Error("Batian attack hook and parry hook must share the same intro helper");
 
 console.log("KING_99_COLD_PLUM_STATIC_PASS");
 
