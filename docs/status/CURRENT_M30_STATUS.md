@@ -43,7 +43,7 @@
 |---|---|
 | KING 八項屬性 | RUNTIME PASS：`str/cor/int/spi/cps/dex/con/wis = 99`；只有精確帳號 `king` 可突破 Original 50 上限 |
 | KING Owner／Admin boundary | RUNTIME PASS：互動登入、精確帳號 ID 與 Original admin 三項授權條件均保留 |
-| KING 冷梅莊技能 | RUNTIME PASS：`hainmay force`、`advance_lunmay`、`lunmay`、`mayin`、`seven` 與五項基本 Combat usage 均為 Original 玩家上限 200 |
+| KING 冷梅莊技能 | DEPLOYED / TARGETED RUNTIME PENDING：Project Canon KING-only Lv.300 已套用於最終 Runtime F_SKILL；一般玩家仍維持 Original 200。需以更新後 KING Driver E2E 完成 300／save／relogin 驗證後才升級為 Runtime PASS |
 | 梅寒霜 | RUNTIME PASS：八項屬性 50；十項 Arena effective skills 300；不改寫全域玩家上限 |
 | 明鏡止水／冷梅 Combat | RUNTIME PASS：明鏡止水 Combat State、冷梅五式、傲梅暗劍訣進階招式及 Original Combat 串接均通過 |
 | 演武界 | RUNTIME PASS：無極之境 `enter`、演武界 `out`、梅寒霜生成與 Arena defeat protection 均通過 |
