@@ -115,7 +115,12 @@ assert.match(staffPlain, /待得金芒驟聚，「【霸天煉體訣。不滅金
 assert.match(await command("perform leiting on arbao"), /破械反撩・雷霆震不還/);
 // 第七式有大邪金身前置；此處只驗證 parser／alias 已路由到 qishang_staff，不能把前置條件失敗誤判為 routing FAIL。
 assert.match(await command("perform tianku on arbao"), /(?:哭笑極境奧義・九曲天哭・一杖定乾坤|大邪金身)/);
-console.log("DAXIE_STAGE_PASS:qishang-staff-purple-batian");
+// No-arg Perform Routing／持杖且已 mapping 時，單純 perform 必須直接走七傷杖隨機式，不能掉回 Original 格式提示。
+assert.match(
+  await command("perform"),
+  /破械反撩・雷霆震不還|下盤重槌・搖頭嘲月老|回身盲刺・傲笑傲天魔|陰煞透心・百歡催嚴寒|凌空鎮岳・踏步踏青天|真氣撼地・笑哭不得也|哭笑極境奧義・九曲天哭・一杖定乾坤/
+);
+console.log("DAXIE_STAGE_PASS:qishang-staff-purple-batian-random-perform");
 
 await command("goto /d/snow/inn_hall", "客棧大堂");
 assert.match(await command("save"), /檔案儲存完畢/);
@@ -131,7 +136,11 @@ await command("king", "請輸入密碼");
 await command(password, "目前權限: (admin)");
 await waitForAfter(0, "> ");
 assert.match(await command("kingmartial daxie status"), /哭笑心法 Lv\.300／大邪七損刀訣 Lv\.300／大邪金身：ON/);
-console.log("DAXIE_STAGE_PASS:save-quit-relogin");
+const skillsAfterRelog = await command("skills");
+assert.match(skillsAfterRelog, /大邪七損刀訣.*qisun_blade/s);
+assert.match(skillsAfterRelog, /大邪七傷杖訣.*qishang_staff/s);
+assert.match(skillsAfterRelog, /霸天煉體訣.*batian lianti jue/s);
+console.log("DAXIE_STAGE_PASS:save-quit-relogin-martial-state");
 socket.close();
 
 // Normal Player Negative Authorization／普通玩家反向授權：相同 Driver、不同帳號實際登入。
