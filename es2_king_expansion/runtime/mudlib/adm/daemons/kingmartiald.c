@@ -84,7 +84,7 @@ int set_cold_plum(object actor, int level)
     // Expansion 冷梅劍法 daemon 先登記，再交回 Original Combat 使用。
     load_object("/d/arena/skill/lunmay");
     load_object("/d/arena/skill/advance_lunmay");
-    load_object("/d/arena/skill/qishang_staff");
+    load_object("/daemon/skill/qishang_staff");
     actor->map_skill("force", "hainmay force");
     actor->map_skill("sword", "lunmay");
     // Project Canon／KING 驗收指定裝備：傲梅暗劍訣→左手劍術、梅影身法→縱躍閃躲。
