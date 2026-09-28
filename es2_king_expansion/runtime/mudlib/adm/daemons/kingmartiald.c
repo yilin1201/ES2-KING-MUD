@@ -122,6 +122,8 @@ int set_creator_core_martial(object actor, int level)
 
     actor->set("es2_king/yijinjing_level", level);
     actor->set("es2_king/yijinjing_stage", yijinjing_stage(level));
+    // Creator Profile 同步黑級資格；只標記「以氣化招」能力，不補造具體招式。
+    actor->set("es2_king/yijinjing_qi_manifest", level == 300 ? 1 : 0);
     actor->set("es2_king/batian_lianti_jue", "ji");
     actor->set("es2_king/batian_level", level);
     return 1;
