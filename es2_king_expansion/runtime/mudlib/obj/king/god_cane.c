@@ -20,10 +20,10 @@ void create()
         set("es2_king/evidence", "HISTORICAL CONFIRMED / ES2tips");
         set("long", "青邪宮殘蟻師太所創的獨門兵器，是一根奇形怪狀的彎曲拐杖。\n");
         set("apply_weapon/twohanded staff", ([
-            "spi": 3,
+            "cps": 3,
             "str": 3,
-            "cor": 3,
-            "int": 3,
+            "con": 3,
+            "wis": 3,
         ]));
     }
     setup();
