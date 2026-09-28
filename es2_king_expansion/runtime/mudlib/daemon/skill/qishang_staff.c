@@ -47,7 +47,7 @@ void attack_using(object me, object opponent, object weapon)
     // 自動 Combat：七式等機率隨機出招。
     index = random(sizeof(form_ids));
     form = form_ids[index];
-    action = ([ "name":form_names[form], "action":HIG + form_action(form) + NOR,
+    action = ([ "name":form_names[form], "action":HIW "$N使出「" HIG + form_names[form] + HIW "」！\n" + form_action(form) + NOR,
         "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]);
     COMBAT_D->fight(me, opponent, objectp(me->query_temp("weapon/staff")) ? "staff" : "twohanded staff", action, weapon);
 }
@@ -65,7 +65,7 @@ int perform_action(object me, string form, object target)
     if (!objectp(weapon)) return notify_fail("你必須裝備杖類武器才能施展大邪七傷杖訣。\n");
     if (!target) target = me->select_opponent();
     if (!target) return notify_fail("你目前沒有可攻擊的目標。\n");
-    action = ([ "name":form_names[form], "action":HIG + form_action(form) + NOR,
+    action = ([ "name":form_names[form], "action":HIW "$N使出「" HIG + form_names[form] + HIW "」！\n" + form_action(form) + NOR,
         "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]);
     COMBAT_D->fight(me, target, objectp(me->query_temp("weapon/staff")) ? "staff" : "twohanded staff", action, weapon);
     return 1;
