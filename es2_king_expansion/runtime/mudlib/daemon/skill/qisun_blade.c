@@ -79,7 +79,7 @@ void attack_using(object me, object opponent, object weapon)
     int index = random(sizeof(forms));
     form = forms[index];
     action = ([ "name":form_names[form],
-        "action":HIG "$N使出" + colored_form_name(form) + HIG "，手中$w邪勢暴起，森寒刀煞直取$n的$l！" NOR,
+        "action":HIW "$N使出" + colored_form_name(form) + HIW "，手中$w邪勢暴起，森寒刀煞直取$n的$l！" NOR,
         "attack":0, "force":0, "defense":0, "damage_type":"割傷" ]);
     COMBAT_D->fight(me, opponent, "blade", action, weapon);
 }
@@ -215,8 +215,8 @@ int perform_action(object actor, string form, object target)
     add_qisun_state(actor, target, form, damage);
     stacks = target->query_temp("es2_king/daxie_qisun/stacks");
 
-    message_vision("$N使出" + colored_form_name(form)
-        + "，大邪刀煞侵入$n命脈！\n",
+    message_vision(HIW "$N使出" + colored_form_name(form)
+        + HIW "，大邪刀煞侵入$n命脈！\n" NOR,
         actor, target);
     tell_object(actor, sprintf("效果：%s；傷害=%d；七損累積=%d/6。\n",
         form_effects[form], damage, stacks));
