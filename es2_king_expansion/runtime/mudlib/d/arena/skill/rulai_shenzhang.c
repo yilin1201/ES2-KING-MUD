@@ -80,6 +80,9 @@ void attack_using(object me, object opponent, string skill)
     int index;
 
     if (!opponent) return;
+    // KING 防禦開場由實際攻擊入口觸發，避免依賴 parry daemon 是否收到 attack hook。
+    if (me->skill_mapped("parry") == "batian lianti jue")
+        call_other("/d/arena/skill/batian_lianti_jue", "show_immortal_intro", me);
 
     index = me->query_temp("rulai/form_index");
     if (index < 0 || index >= sizeof(rulai_actions)) index = 0;
