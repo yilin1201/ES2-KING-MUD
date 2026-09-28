@@ -43,6 +43,7 @@ int set_daxie(object actor, int level)
     if (!authorized(actor) || level < 1 || level > 300) return 0;
     actor->set_skill("kuxiao force", level);
     actor->set_skill("daxie qisun blade", level);
+    actor->set_skill("blade", level);
     // 大邪七損刀是刀法；不覆蓋 KING 的主內功易筋經與主劍法冷梅劍法。
     actor->map_skill("blade", "daxie qisun blade");
     actor->set("es2_king/daxie_level", level);
