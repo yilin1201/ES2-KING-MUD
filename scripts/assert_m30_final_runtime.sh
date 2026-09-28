@@ -79,6 +79,20 @@ grep -Fq 'provision_creator_weapons' "$LOGIN_D"
 ! grep -n -A8 'provision_creator_weapons' "$LOGIN_D" | grep -Eq '\.wield|->wield|call_other\([^)]*"wield"'
 
 
+# KING Lv.300 Final Runtime Gate／驗證真正由 Neolith 載入的 F_SKILL 已套用唯一 Owner 例外，
+# 且一般玩家仍保留 Original 200 上限；避免只修改 kingmartiald 卻被底層再次 clamp 回 200。
+SKILL_FEATURE="$RUNTIME_DIR/mudlib/feature/char/skill.c"
+test -f "$SKILL_FEATURE"
+grep -Fq 'ES2-KING OWNER SKILL CAP 300' "$SKILL_FEATURE"
+grep -Fq 'return 300;' "$SKILL_FEATURE"
+grep -Fq 'return 200;' "$SKILL_FEATURE"
+grep -Fq 'if( val > cap ) val = cap;' "$SKILL_FEATURE"
+grep -Fq 's > es2_king_skill_cap()' "$SKILL_FEATURE"
+grep -Fq 'skills[skill] > es2_king_skill_cap()' "$SKILL_FEATURE"
+grep -Fq 'set_cold_plum", user, 300' "$LOGIN_D"
+grep -Fq 'set_creator_core_martial", user, 300' "$LOGIN_D"
+grep -Fq 'set_rulai_shenzhang", user, 300' "$LOGIN_D"
+
 # Score Grid Bars／形體精氣神方格條只改顯示，保留 Original 三值 Statistic。
 grep -Fq 'ES2-KING SCORE GRID BARS' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
 grep -Fq 'score_grid_bar("HP", HIG' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
