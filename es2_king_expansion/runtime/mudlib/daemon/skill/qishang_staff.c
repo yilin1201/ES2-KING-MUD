@@ -44,6 +44,9 @@ void attack_using(object me, object opponent, object weapon)
     int index;
     string form;
     if (!opponent) return;
+    // KING 防禦開場由實際攻擊入口觸發，避免依賴 parry daemon 是否收到 attack hook。
+    if (me->skill_mapped("parry") == "batian lianti jue")
+        call_other("/d/arena/skill/batian_lianti_jue", "show_immortal_intro", me);
     // 自動 Combat：七式等機率隨機出招。
     index = random(sizeof(form_ids));
     form = form_ids[index];
