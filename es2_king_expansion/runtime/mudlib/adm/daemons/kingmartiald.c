@@ -90,7 +90,7 @@ int set_cold_plum(object actor, int level)
     // Project Canon／KING 驗收指定裝備：傲梅暗劍訣→左手劍術、梅影身法→縱躍閃躲。
     actor->map_skill("secondhand sword", "advance_lunmay");
     actor->map_skill("dodge", "mayin");
-    // 青邪杖法使用已確認的 staff 基礎通道；不推導 twohanded staff。
+    // Project Canon：大邪七傷杖訣裝備於 staff 基礎通道；底層 Original skill id 保留 chin_staff。
     actor->map_skill("staff", "chin_staff");
 
     // 寒梅心法 → 明鏡止水 → 冷梅劍法五式 → 傲梅暗劍訣。
@@ -141,7 +141,7 @@ int set_creator_core_martial(object actor, int level)
     CHINESE_D->add_translate("mayin", "梅影身法");
     CHINESE_D->add_translate("seven", "七巧如意手");
     CHINESE_D->add_translate("advance_lunmay", "傲梅暗劍訣");
-    CHINESE_D->add_translate("chin_staff", "青邪杖法");
+    CHINESE_D->add_translate("chin_staff", "大邪七傷杖訣");
     CHINESE_D->add_translate("seven_blade", "大邪七損刀訣");
 
     actor->set("es2_king/yijinjing_level", level);
