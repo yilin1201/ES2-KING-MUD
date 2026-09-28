@@ -49,7 +49,7 @@ void attack_using(object me, object opponent, object weapon)
     form = form_ids[index];
     action = ([ "name":form_names[form], "action":HIG + form_action(form) + NOR,
         "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]);
-    COMBAT_D->fight(me, opponent, "staff", action, weapon);
+    COMBAT_D->fight(me, opponent, objectp(me->query_temp("weapon/staff")) ? "staff" : "twohanded staff", action, weapon);
 }
 
 // 指定招式入口；具體 Busy、破械、真傷、斬殺等數值效果待 Runtime 平衡驗證後逐項實作，避免一次引入不可逆失衡。
