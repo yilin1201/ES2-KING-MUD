@@ -22,6 +22,8 @@ grep -Fq 'random(sizeof(form_ids))' "$QISHANG"
 grep -Fq 'form == "random"' "$QISHANG"
 grep -Fq 'actor->set_skill("kuxiao force", level)' "$ROOT/adm/daemons/kingmartiald.c"
 grep -Fq 'actor->set_skill("huge force", level)' "$ROOT/adm/daemons/kingmartiald.c"
+grep -Fq 'actor->delete_skill("seven_blade")' "$ROOT/adm/daemons/kingmartiald.c"
+grep -Fq 'actor->delete_skill("daxie qisun blade")' "$ROOT/adm/daemons/kingmartiald.c"
 grep -Fq 'actor->set_skill("qisun_blade", level)' "$ROOT/adm/daemons/kingmartiald.c"
 grep -Fq 'actor->set_skill("chin_staff", level)' "$ROOT/adm/daemons/kingmartiald.c"
 grep -Fq 'actor->set_skill("qishang_staff", level)' "$ROOT/adm/daemons/kingmartiald.c"
@@ -33,3 +35,10 @@ grep -Fq 'CHINESE_D->add_translate("qisun_blade", "大邪七損刀訣")' "$ROOT/
 grep -Fq 'CHINESE_D->add_translate("chin_staff", "青邪杖法")' "$ROOT/adm/daemons/kingmartiald.c"
 grep -Fq 'CHINESE_D->add_translate("qishang_staff", "大邪七傷杖訣")' "$ROOT/adm/daemons/kingmartiald.c"
 echo 'DAXIE MARTIAL STATIC PASS／正式 ID、中文名稱、武器 mapping、七式 random 完整。'
+
+# Combat presentation regression／一般敘述白色，只有招式名稱保留指定亮色；霸天／不滅金身由實際攻擊入口觸發。
+grep -Fq '"action":HIW "$N使出" + colored_form_name(form) + HIW' "$QISUN"
+grep -Fq '"action":HIW "$N使出「" HIG + form_names[form] + HIW' "$QISHANG"
+grep -Fq 'show_immortal_intro' "$ROOT/d/arena/skill/batian_lianti_jue.c"
+grep -Fq 'call_other("/d/arena/skill/batian_lianti_jue", "show_immortal_intro", me)' "$QISUN"
+grep -Fq 'call_other("/d/arena/skill/batian_lianti_jue", "show_immortal_intro", me)' "$QISHANG"
