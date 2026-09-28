@@ -190,6 +190,10 @@ int perform_action(object actor, string form, object target)
 {
     int damage, stacks;
 
+    if (form == "random") {
+        string *random_forms = ({ "sunpi", "sunrou", "sunjin", "sungu", "sunmai", "sunqi", "qisun" });
+        form = random_forms[random(sizeof(random_forms))];
+    }
     form = normalize_form(form);
     if (form == "jinshen" || form == "daxie-jinshen")
         return activate_jinshen(actor);
