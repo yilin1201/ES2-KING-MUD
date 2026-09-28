@@ -65,6 +65,10 @@ int set_cold_plum(object actor, int level)
     actor->set_skill("lunmay", level);
     actor->set_skill("mayin", level);
     actor->set_skill("seven", level);
+    // Historical Skill Visibility／驗收顯示：只匯入已由 Original/Historical Evidence 確認的技能 ID 與名稱。
+    // advance_lunmay 已是傲梅暗劍訣；chin_staff／seven_blade 先作技能欄位，不在缺乏直接 Source 時猜測 weapon mapping。
+    actor->set_skill("chin_staff", level);
+    actor->set_skill("seven_blade", level);
     actor->set_skill("force", level);
     actor->set_skill("sword", level);
     actor->set_skill("parry", level);
@@ -119,6 +123,9 @@ int set_creator_core_martial(object actor, int level)
     CHINESE_D->add_translate("yijinjing", "易筋經");
     CHINESE_D->add_translate("batian lianti jue", "霸天煉體訣");
     CHINESE_D->add_translate("rulai shenzhang", "如來神掌");
+    CHINESE_D->add_translate("advance_lunmay", "傲梅暗劍訣");
+    CHINESE_D->add_translate("chin_staff", "青邪杖法");
+    CHINESE_D->add_translate("seven_blade", "大邪七損刀訣");
 
     actor->set("es2_king/yijinjing_level", level);
     actor->set("es2_king/yijinjing_stage", yijinjing_stage(level));
