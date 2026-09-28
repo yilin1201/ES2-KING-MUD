@@ -45,7 +45,7 @@ int main(object me, string arg)
         && (me->skill_mapped("staff") == "qishang_staff" || me->skill_mapped("twohanded staff") == "qishang_staff")) {
             target = daxie_target(me, 0);
             if (!objectp(target)) return notify_fail("你目前沒有可攻擊的目標。\n");
-            return call_other("/d/arena/skill/qishang_staff", "perform_action", me, "random", target);
+            return SKILL_D("qishang_staff")->perform_action(me, "random", target);
         }
         return notify_fail("指令格式﹕perform <技能:絕招> [on <目標>]\n");
     }
