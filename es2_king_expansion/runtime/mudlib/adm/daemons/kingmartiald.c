@@ -75,7 +75,6 @@ int set_cold_plum(object actor, int level)
     // Historical Skill Visibility／驗收顯示：只匯入已由 Original/Historical Evidence 確認的技能 ID 與名稱。
     // advance_lunmay 已是傲梅暗劍訣；chin_staff／seven_blade 先作技能欄位，不在缺乏直接 Source 時猜測 weapon mapping。
     actor->set_skill("chin_staff", level);
-    actor->set_skill("seven_blade", level);
     actor->set_skill("force", level);
     actor->set_skill("sword", level);
     actor->set_skill("parry", level);
@@ -84,6 +83,8 @@ int set_cold_plum(object actor, int level)
 
     // Expansion 冷梅劍法 daemon 先登記，再交回 Original Combat 使用。
     load_object("/d/arena/skill/lunmay");
+    load_object("/d/arena/skill/advance_lunmay");
+    load_object("/d/arena/skill/chin_staff");
     actor->map_skill("force", "hainmay force");
     actor->map_skill("sword", "lunmay");
     // Project Canon／KING 驗收指定裝備：傲梅暗劍訣→左手劍術、梅影身法→縱躍閃躲。
