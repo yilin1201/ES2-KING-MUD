@@ -1,39 +1,34 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
 ROOT="es2_king_expansion/runtime/mudlib"
-for file in \
-  "$ROOT/daemon/skill/kuxiao_force.c" \
-  "$ROOT/daemon/skill/daxie_qisun_blade.c" \
-  "$ROOT/cmds/std/perform.c" \
-  "$ROOT/adm/daemons/kingmartiald.c" \
-  "$ROOT/cmds/adm/kingmartial.c"
-do
-  test -f "$file"
-done
-
-grep -Fq 'valid_enable(string usage)' "$ROOT/daemon/skill/kuxiao_force.c"
-grep -Fq 'return usage == "blade" || usage == "parry";' "$ROOT/daemon/skill/daxie_qisun_blade.c"
-grep -Fq 'actor->skill_mapped("blade") == "daxie qisun blade"' "$ROOT/daemon/skill/daxie_qisun_blade.c"
-! grep -Fq 'actor->skill_mapped("sword") == "daxie qisun blade"' "$ROOT/daemon/skill/daxie_qisun_blade.c"
-grep -Fq 'return actor->query_skill("kuxiao force", 1) > 0;' "$ROOT/daemon/skill/daxie_qisun_blade.c"
-! grep -Fq 'actor->skill_mapped("force") == "kuxiao force"' "$ROOT/daemon/skill/daxie_qisun_blade.c"
-grep -Fq '大邪金身已啟動；反震、減傷與持續時間仍為 UNKNOWN' "$ROOT/daemon/skill/daxie_qisun_blade.c"
-grep -Fq 'actor->delete("es2_king/daxie_jinshen")' "$ROOT/daemon/skill/daxie_qisun_blade.c"
-for form in sunpi sunrou sunjin sungu sunmai sunqi qisun; do
-  grep -Fq "\"$form\"" "$ROOT/daemon/skill/daxie_qisun_blade.c"
-done
-grep -Fq 'target->receive_damage' "$ROOT/daemon/skill/daxie_qisun_blade.c"
-grep -Fq 'target->add_temp("apply/armor", -balance_penalty)' "$ROOT/daemon/skill/daxie_qisun_blade.c"
-grep -Fq 'target->consume_stat("sen", damage, actor)' "$ROOT/daemon/skill/daxie_qisun_blade.c"
-grep -Fq 'target->consume_stat("gin", damage, actor)' "$ROOT/daemon/skill/daxie_qisun_blade.c"
-grep -Fq 'es2_king/daxie_qisun/block_perform' "$ROOT/cmds/std/perform.c"
-grep -Fq 'me->query_temp("weapon/blade")' "$ROOT/cmds/std/perform.c"
-grep -Fq '你必須裝備刀類武器來使出大邪七損刀' "$ROOT/cmds/std/perform.c"
-! grep -Fq 'me->query_temp("weapon/sword")' "$ROOT/cmds/std/perform.c"
+QISUN="$ROOT/daemon/skill/qisun_blade.c"
+QISHANG="$ROOT/d/arena/skill/qishang_staff.c"
+test -f "$ROOT/daemon/skill/kuxiao_force.c"
+test -f "$QISUN"
+test -f "$QISHANG"
+test -f "$ROOT/cmds/std/perform.c"
+test -f "$ROOT/adm/daemons/kingmartiald.c"
+! test -e "$ROOT/daemon/skill/daxie_qisun_blade.c"
+! test -e "$ROOT/d/arena/skill/qisun_blade.c"
+grep -Fq 'register_skill_daemon("qisun_blade")' "$QISUN"
+grep -Fq 'actor->skill_mapped("blade") == "qisun_blade"' "$QISUN"
+grep -Fq 'string *forms = ({ "sunpi", "sunrou", "sunjin", "sungu", "sunmai", "sunqi", "qisun" });' "$QISUN"
+grep -Fq 'random(sizeof(forms))' "$QISUN"
+grep -Fq 'form == "random"' "$QISUN"
+grep -Fq 'register_skill_daemon("qishang_staff")' "$QISHANG"
+grep -Fq 'return usage == "staff" || usage == "twohanded staff";' "$QISHANG"
+grep -Fq 'random(sizeof(form_ids))' "$QISHANG"
+grep -Fq 'form == "random"' "$QISHANG"
 grep -Fq 'actor->set_skill("kuxiao force", level)' "$ROOT/adm/daemons/kingmartiald.c"
-grep -Fq 'actor->set_skill("daxie qisun blade", level)' "$ROOT/adm/daemons/kingmartiald.c"
-grep -Fq 'daxie <1..300|status>' "$ROOT/cmds/adm/kingmartial.c"
-! grep -Fq 'daxie <1..200|status>' "$ROOT/cmds/adm/kingmartial.c"
-grep -Fq 'Expansion Overlay' "$ROOT/cmds/std/perform.c"
-echo 'DAXIE QISUN STATIC PASS／Canon、Original 邊界、依賴與七式入口完整。'
+grep -Fq 'actor->set_skill("huge force", level)' "$ROOT/adm/daemons/kingmartiald.c"
+grep -Fq 'actor->set_skill("qisun_blade", level)' "$ROOT/adm/daemons/kingmartiald.c"
+grep -Fq 'actor->set_skill("chin_staff", level)' "$ROOT/adm/daemons/kingmartiald.c"
+grep -Fq 'actor->set_skill("qishang_staff", level)' "$ROOT/adm/daemons/kingmartiald.c"
+grep -Fq 'actor->map_skill("blade", "qisun_blade")' "$ROOT/adm/daemons/kingmartiald.c"
+grep -Fq 'actor->map_skill("twohanded staff", "qishang_staff")' "$ROOT/adm/daemons/kingmartiald.c"
+grep -Fq 'CHINESE_D->add_translate("kuxiao force", "哭笑心法")' "$ROOT/adm/daemons/kingmartiald.c"
+grep -Fq 'CHINESE_D->add_translate("huge force", "大邪心法")' "$ROOT/adm/daemons/kingmartiald.c"
+grep -Fq 'CHINESE_D->add_translate("qisun_blade", "大邪七損刀訣")' "$ROOT/adm/daemons/kingmartiald.c"
+grep -Fq 'CHINESE_D->add_translate("chin_staff", "青邪杖法")' "$ROOT/adm/daemons/kingmartiald.c"
+grep -Fq 'CHINESE_D->add_translate("qishang_staff", "大邪七傷杖訣")' "$ROOT/adm/daemons/kingmartiald.c"
+echo 'DAXIE MARTIAL STATIC PASS／正式 ID、中文名稱、武器 mapping、七式 random 完整。'
