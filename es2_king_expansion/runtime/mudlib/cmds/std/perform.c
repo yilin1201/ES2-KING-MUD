@@ -5,6 +5,11 @@
 
 inherit F_CLEAN_UP;
 
+private string *qishang_forms = ({
+    "leiting", "yaotou", "aotianmo", "yanhan", "qingtian", "xiaoku",
+    "dingqiankun", "tianku",
+});
+
 private string *daxie_forms = ({
     "sunpi", "leiting", "sunrou", "aotianmo", "sunjin", "tougu",
     "sungu", "xiaoku", "sunmai", "wuchang", "sunqi", "juexi",
@@ -53,6 +58,19 @@ int main(object me, string arg)
     // Canon Short Form／正式短指令：perform sunpi 或 perform sunpi on target。
     // 大邪金身不需要戰鬥目標；其餘七損式仍沿用既有戰鬥與武器狀態。
     if (sscanf(arg, "%s on %s", act, target_id) != 2) act = arg;
+    // 七傷杖與七損刀共用 leiting／aotianmo／xiaoku 等短 alias；
+    // 必須依目前實際裝備與 mapping 分流，否則杖法會被誤送進七損刀 daemon。
+    if (member_array(act, qishang_forms) >= 0
+    &&  (objectp(me->query_temp("weapon/staff")) || objectp(me->query_temp("weapon/twohanded staff")))
+    &&  (me->skill_mapped("staff") == "qishang_staff"
+      || me->skill_mapped("twohanded staff") == "qishang_staff")) {
+        if (environment(me)->query("no_fight")) return notify_fail("這裡不准戰鬥。\n");
+        if (!me->is_fighting()) return notify_fail("你必須在戰鬥中才能使用絕招！\n");
+        target = daxie_target(me, target_id);
+        if (!objectp(target)) return notify_fail("你目前沒有可攻擊的目標。\n");
+        return SKILL_D("qishang_staff")->perform_action(me, act, target);
+    }
+
     if (member_array(act, daxie_forms) >= 0) {
         if (act != "jinshen" && act != "daxie-jinshen") {
             if (environment(me)->query("no_fight")) return notify_fail("這裡不准戰鬥。\n");
