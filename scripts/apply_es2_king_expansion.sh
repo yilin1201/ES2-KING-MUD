@@ -546,7 +546,8 @@ for cached_binary in \
   "$TARGET/mudlib/bin/adm/daemons/kadmind.b" \
   "$TARGET/mudlib/bin/cmds/std/perform.b" \
   "$TARGET/mudlib/bin/daemon/skill/kuxiao_force.b" \
-  "$TARGET/mudlib/bin/daemon/skill/daxie_qisun_blade.b" \
+  "$TARGET/mudlib/bin/daemon/skill/qisun_blade.b" \
+  "$TARGET/mudlib/bin/d/arena/skill/qishang_staff.b" \
   "$TARGET/mudlib/bin/d/arena/skill/lunmay.b" \
   "$TARGET/mudlib/bin/d/arena/npc/mei_hanshuang.b"
 do
@@ -560,7 +561,7 @@ done
 PRELOAD_FILE="$TARGET/mudlib/adm/etc/preload"
 # Expansion Skill Warm Load／擴充技能預先載入：先註冊哭笑門心法與大邪七損刀，
 # 讓第一次 perform 即可載入正確 daemon，不需要 Owner 手動 update／rehash。
-for expansion_skill in kuxiao_force daxie_qisun_blade; do
+for expansion_skill in kuxiao_force qisun_blade; do
   grep -Fqx "/daemon/skill/$expansion_skill" "$PRELOAD_FILE" \
     || printf '%s\n' "/daemon/skill/$expansion_skill" >> "$PRELOAD_FILE"
 done
