@@ -100,17 +100,17 @@ private int daxie_ready(object actor)
 
 private int kuxiao_ready(object actor)
 {
-    // KING 主內功依既定 Canon 維持易筋經；哭笑門心法是大邪金身的學習相依，
+    // KING 主內功依既定 Canon 維持易筋經；哭笑心法是大邪金身的學習相依，
     // 不強迫覆蓋 force mapping，避免 set_daxie() 與 KING 主內功互相衝突。
     return actor->query_skill("kuxiao force", 1) > 0;
 }
 
-// 大邪金身只是一個依附哭笑門心法的狀態技，不是獨立內功。
+// 大邪金身只是一個依附哭笑心法的狀態技，不是獨立內功。
 // 反震率、減傷率與持續時間仍為 UNKNOWN，因此 Runtime 不虛構這些效果。
 private int activate_jinshen(object actor)
 {
     if (!kuxiao_ready(actor))
-        return notify_fail("大邪金身必須先學會並啟用哭笑門心法。\n");
+        return notify_fail("大邪金身必須先學會並啟用哭笑心法。\n");
 
     // Toggle Off／切換關閉：同一個既有 perform 指令即可安全結束狀態，
     // 不需要另建平行狀態管理指令，也不虛構持續時間。
@@ -121,7 +121,7 @@ private int activate_jinshen(object actor)
     }
 
     actor->set("es2_king/daxie_jinshen", 1);
-    message_vision(HIG "$N運起哭笑門心法，大邪魔元凝聚成「大邪金身」狀態。\n" NOR,
+    message_vision(HIG "$N運起哭笑心法，大邪魔元凝聚成「大邪金身」狀態。\n" NOR,
         actor);
     tell_object(actor,
         "大邪金身已啟動；反震、減傷與持續時間仍為 UNKNOWN，未套用推測數值。\n");
@@ -205,11 +205,11 @@ int perform_action(object actor, string form, object target)
         return activate_jinshen(actor);
 
     if (!daxie_ready(actor))
-        return notify_fail("你尚未學會並啟用大邪七損刀。\n");
+        return notify_fail("你尚未學會並啟用大邪七損刀訣。\n");
     if (!objectp(target) || !living(target))
-        return notify_fail("大邪七損刀需要一個仍可戰鬥的目標。\n");
+        return notify_fail("大邪七損刀訣需要一個仍可戰鬥的目標。\n");
     if (undefinedp(form_names[form]))
-        return notify_fail("大邪七損刀沒有這一式。\n");
+        return notify_fail("大邪七損刀訣沒有這一式。\n");
     if (form == "qisun")
         return explode_qisun(actor, target);
 
