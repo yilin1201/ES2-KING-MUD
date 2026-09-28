@@ -24,15 +24,15 @@ int main(object me, string arg)
         return 1;
     }
     if (name == "daxie" && value == "status") {
-        write(sprintf("哭笑門心法 Lv.%d／大邪七損刀 Lv.%d／大邪金身：%s\n",
+        write(sprintf("哭笑心法 Lv.%d／大邪七損刀訣 Lv.%d／大邪金身：%s\n",
             me->query_skill("kuxiao force", 1),
-            me->query_skill("daxie qisun blade", 1),
+            me->query_skill("qisun_blade", 1),
             me->query("es2_king/daxie_jinshen") ? "ON" : "OFF"));
         return 1;
     }
     if (name == "daxie" && sscanf(value, "%d", level) == 1
     && KING_MARTIAL_D->set_daxie(me, level)) {
-        write(sprintf("哭笑門心法 Lv.%d／大邪七損刀 Lv.%d（Expansion Canon）\n",
+        write(sprintf("哭笑心法 Lv.%d／大邪七損刀訣 Lv.%d（Expansion Canon）\n",
             level, level));
         return 1;
     }
