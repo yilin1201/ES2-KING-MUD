@@ -43,8 +43,8 @@ int set_daxie(object actor, int level)
     if (!authorized(actor) || level < 1 || level > 300) return 0;
     actor->set_skill("kuxiao force", level);
     actor->set_skill("daxie qisun blade", level);
-    actor->map_skill("force", "kuxiao force");
-    actor->map_skill("sword", "daxie qisun blade");
+    // 大邪七損刀是刀法；不覆蓋 KING 的主內功易筋經與主劍法冷梅劍法。
+    actor->map_skill("blade", "daxie qisun blade");
     actor->set("es2_king/daxie_level", level);
     return 1;
 }
@@ -75,6 +75,7 @@ int set_cold_plum(object actor, int level)
     // 寒梅心法 → 明鏡止水 → 冷梅劍法五式 → 傲梅暗劍訣。
     actor->set("es2_king/lengmei/force", "寒梅心法");
     actor->set("es2_king/lengmei/sword", "冷梅劍法");
+    actor->set("es2_king/lengmei/secondhand_sword", "傲梅暗劍訣");
     actor->set("es2_king/lengmei/mingjing_zhishui", 1);
     actor->set_temp("cold_plum/mirror_state", 1);
     actor->set_temp("cold_plum/mirror_index", 0);
