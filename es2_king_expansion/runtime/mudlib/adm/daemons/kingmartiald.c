@@ -45,10 +45,17 @@ int set_daxie(object actor, int level)
     if (!authorized(actor) || level < 1 || level > 300) return 0;
     actor->set_skill("kuxiao force", level);
     actor->set_skill("daxie qisun blade", level);
+    // Historical IDs／玩家驗收顯示沿用已確認的 Original/Historical 技能名稱。
+    actor->set_skill("huge force", level);
+    actor->set_skill("seven_blade", level);
     actor->set_skill("blade", level);
     // 大邪七損刀是刀法；不覆蓋 KING 的主內功易筋經與主劍法冷梅劍法。
     // 哭笑門心法只作為大邪金身的已學相依技能；KING 主 force 仍維持易筋經。
     actor->map_skill("blade", "daxie qisun blade");
+    CHINESE_D->add_translate("kuxiao force", "大邪心法");
+    CHINESE_D->add_translate("daxie qisun blade", "大邪七損刀");
+    CHINESE_D->add_translate("huge force", "大邪心法");
+    CHINESE_D->add_translate("seven_blade", "大邪七損刀訣");
     actor->set("es2_king/daxie_level", level);
     return 1;
 }
@@ -79,6 +86,11 @@ int set_cold_plum(object actor, int level)
     load_object("/d/arena/skill/lunmay");
     actor->map_skill("force", "hainmay force");
     actor->map_skill("sword", "lunmay");
+    // Project Canon／KING 驗收指定裝備：傲梅暗劍訣→左手劍術、梅影身法→縱躍閃躲。
+    actor->map_skill("secondhand sword", "advance_lunmay");
+    actor->map_skill("dodge", "mayin");
+    // 青邪杖法使用已確認的 staff 基礎通道；不推導 twohanded staff。
+    actor->map_skill("staff", "chin_staff");
 
     // 寒梅心法 → 明鏡止水 → 冷梅劍法五式 → 傲梅暗劍訣。
     actor->set("es2_king/lengmei/force", "寒梅心法");
