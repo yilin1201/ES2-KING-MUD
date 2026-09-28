@@ -13,7 +13,7 @@ private void create()
 int valid_enable(string usage) { return usage == "parry"; }
 
 // Combat attack hook：KING 一進入實際交戰便顯示一次不滅金身開場，不再等待隨機 parry 事件。
-void attack_using(object me, object opponent, object weapon)
+void show_immortal_intro(object me)
 {
     if (!me->query_temp("es2_king/batian/immortal_intro")) {
         message_vision(
