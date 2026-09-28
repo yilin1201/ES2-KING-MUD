@@ -72,8 +72,8 @@ int set_cold_plum(object actor, int level)
     actor->set_skill("lunmay", level);
     actor->set_skill("mayin", level);
     actor->set_skill("seven", level);
-    // Historical Skill Visibility／驗收顯示：只匯入已由 Original/Historical Evidence 確認的技能 ID 與名稱。
-    // advance_lunmay 已是傲梅暗劍訣；chin_staff／seven_blade 先作技能欄位，不在缺乏直接 Source 時猜測 weapon mapping。
+    // Original 與 Expansion 杖法並存：chin_staff 保留原作青邪杖法；daxie seveninjury staff 為新創大邪七傷杖訣。
+    actor->set_skill("chin_staff", level);
     actor->set_skill("daxie seveninjury staff", level);
     actor->set_skill("force", level);
     actor->set_skill("sword", level);
@@ -90,7 +90,7 @@ int set_cold_plum(object actor, int level)
     // Project Canon／KING 驗收指定裝備：傲梅暗劍訣→左手劍術、梅影身法→縱躍閃躲。
     actor->map_skill("secondhand sword", "advance_lunmay");
     actor->map_skill("dodge", "mayin");
-    // Project Canon：大邪七傷杖訣裝備於 staff 基礎通道；底層 Original skill id 保留 chin_staff。
+    // KING 目前 staff 裝備新創大邪七傷杖訣；Original 青邪杖法 chin_staff 保留為獨立技能，可後續切換而不互相覆蓋。
     actor->map_skill("staff", "daxie seveninjury staff");
 
     // 寒梅心法 → 明鏡止水 → 冷梅劍法五式 → 傲梅暗劍訣。
