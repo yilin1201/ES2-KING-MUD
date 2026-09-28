@@ -478,6 +478,7 @@ for cached_binary in \
   "$TARGET/mudlib/bin/std/race/humanoid.b" \
   "$TARGET/mudlib/bin/feature/attribute.b" \
   "$TARGET/mudlib/bin/adm/daemons/kingmartiald.b" \
+  "$TARGET/mudlib/bin/adm/daemons/kadmind.b" \
   "$TARGET/mudlib/bin/cmds/std/perform.b" \
   "$TARGET/mudlib/bin/daemon/skill/kuxiao_force.b" \
   "$TARGET/mudlib/bin/daemon/skill/daxie_qisun_blade.b" \
@@ -501,7 +502,7 @@ done
 for arena_preload in /d/arena/skill/lunmay /d/arena/npc/mei_hanshuang; do
   grep -Fqx "$arena_preload" "$PRELOAD_FILE" || printf '%s\n' "$arena_preload" >> "$PRELOAD_FILE"
 done
-for owner_command in kingcreate kinghome kingmartial kingcanon; do
+for owner_command in kingcreate kinghome kingmartial kingcanon kadmin kcreate khome kmartial kcanon; do
   grep -Fqx "/cmds/adm/$owner_command" "$PRELOAD_FILE" \
     || printf '%s\n' "/cmds/adm/$owner_command" >> "$PRELOAD_FILE"
 done
