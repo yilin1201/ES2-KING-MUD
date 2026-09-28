@@ -1,6 +1,6 @@
 # M30 CURRENT STATUS — 目前唯一即時狀態入口
 
-> Status Date：2026-09-27  
+> Status Date：2026-09-28  
 > Branch：`build/original-es2-races-phase2`  
 > Post-Neon Audit Baseline：`15e27c606886f1b96c2bbe5bda037989c767becb`  
 > Cold Plum Runtime Evidence Head：`f1b6798ce3562551a10d76521f886b5445d35b1f`  
@@ -62,6 +62,12 @@ Owner 於 2026-09-26 正式指定 M31 主題為 Class 職業系統。Evidence �
 本階段完成有直接 Source 的 `commoner → apprentice → alchemist` 轉職鏈、Archived Evidence 支持的「方士」稱謂，以及隔離玩家 save／quit／relogin／restore。其他遺失職業 Daemon、初始化／升級公式、能力、裝備限制與門派條件維持 `SOURCE_REQUIRED / UNKNOWN`；因此 M31 為證據邊界內的 BOUNDED RUNTIME PASS，不宣稱七職業內容全部復原。
 
 2026-09-28 Phase 3 已完成七職業 Runtime Matrix：alchemist、scholar、thief 具有已驗證 Target 玩家 transition；Fighter 另依 R4 Gate 以明確標示的 Historical Source Reconstruction 完成 `join→fighter→武者→save/relogin` 真 Driver Journey，marker `ORIGINAL_FIGHTER_CLASS_RUNTIME_PASS`。Taoist 只有 rank compatibility，bonze／soldier 仍無安全 Target-compatible 玩家閉環。詳見 `original_es2/research/original_seven_class_runtime_matrix_phase3.md` 與 `targeted_class_source_recovery_rc1.md`。
+
+### 1.3 K Admin / Wizard Runtime Validation
+
+2026-09-28 隔離 `king`／`kprobe` 真 Driver 已通過 K 管理權限完整流程：KING 授予 Wizard、Wizard 唯讀工具、Arch 進階工具、KING-only denial、remove 後 Player denial，以及 save／quit／relogin。`help k` 與 `help wiz` 依角色過濾；所有正式 k* command 均由 Original `help` command 呼叫自身 `help()`。Original `k → kill` alias 實際輸入仍回覆「你想殺誰」，未被管理命令覆蓋。
+
+正式 markers：`K_ADMIN_RUNTIME_PASS`、`K_HELP_RUNTIME_PASS`、`K_PERMISSION_REGRESSION_PASS`。Remaining Original Content 依優先序收斂於 `original_es2/research/original_content_remaining_gap_list.md`；整體可玩性維持 PASS，歷史內容完整度維持 PARTIAL。
 
 ## 2. Evidence 與 Runtime 分層
 

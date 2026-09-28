@@ -18,3 +18,4 @@ int set_role(object actor,string id,string r) {
  else return 0;
  save_object(SAVE_FILE); return 1;
 }
+

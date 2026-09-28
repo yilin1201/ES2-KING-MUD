@@ -1,6 +1,6 @@
 # ES2-KING Game Completion Matrix
 
-> Updated：2026-09-27  
+> Updated：2026-09-28  
 > Branch：`build/original-es2-races-phase2`  
 > Playability Audit Baseline（可玩性稽核起點）：`79dfcf1b5b40fa3901c5ba221f7651975d6c844e`  
 > PR #13：OPEN（開啟） / NOT MERGED（未合併）  
@@ -26,6 +26,7 @@
 | Character lifecycle | RUNTIME PASS | Character、Enter World 與生命週期串接通過 |
 | Save / Quit / Relogin | RUNTIME PASS | 同一完整 Journey 實際完成存檔、離開與重新登入 |
 | KING Authorization | RUNTIME PASS | 重用既有 KING fixture 與授權流程 |
+| K Admin / Wizard Tools | RUNTIME PASS | 隔離 KING／kprobe 真 Driver 已通過 Owner→Wizard→Arch→remove、權限過濾 Help、Player denial、Original `k=kill` 與 save／quit／relogin；markers：`K_ADMIN_RUNTIME_PASS`、`K_HELP_RUNTIME_PASS`、`K_PERMISSION_REGRESSION_PASS` |
 | 天神殿／無極之境 | RUNTIME PASS | 既有 M27 Runtime 證據保持有效 |
 | Expansion 武學 | RUNTIME PASS | 既有 M28/M29 Runtime 證據保持有效；未定義 Original 數值仍 UNKNOWN |
 | Developer Bootstrap | COMPLETE | 已完成且供 Full Driver Journey 重用 |

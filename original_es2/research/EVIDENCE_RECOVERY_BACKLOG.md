@@ -36,6 +36,10 @@
 4. 玩家紀錄只作線索，不單獨升級為 Source。
 5. 找不到即維持 UNKNOWN/SOURCE_PENDING，不用 Reconstruction 填空。
 
+## 2026-09-28 Remaining Completion 收斂
+
+最新逐項優先序、Runtime impact 與下一個可接受 Evidence Target 已集中於 `original_content_remaining_gap_list.md`。Snowkeep、`try/fon`、`__ID_CHALLIE__` 沒有新直接 Source，故不重新搜尋既有來源；Taoist 維持 `SOURCE_REQUIRED`，不得由 Fighter adapter 推導。
+
 ## GitHub Actions 異常註記
 
 2026-09-19 在 4E 文件提交後，PR 事件自動產生多個 GitHub Actions（GitHub 自動測試流程）run，皆在約 5–10 秒內結束並標示 failure；例如 M30 Alpha run `35439403202`、M21-M30 Roadmap run `35439403256`、Driver Build run `35439403040`。本階段只有 docs 變更，且既定零付費環境已知存在 Actions infrastructure block（基礎設施阻擋）；因此不 rerun、不提高 Budget，也不把這批 failure 當成 4E 文件內容失敗。若未來取得可用 job log 顯示實際程式錯誤，再另案修正。

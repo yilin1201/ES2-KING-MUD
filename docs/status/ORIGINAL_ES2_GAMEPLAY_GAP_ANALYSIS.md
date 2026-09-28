@@ -30,7 +30,7 @@
 | Player progression | PARTIAL / BOUNDED RUNTIME PASS | Explore→NPC→工作 reward→money save 與 school→learning→class→save 均新增真 Driver 證據；完整長期成長、Snowkeep story 與未保存職業公式尚未閉合。 |
 | Commands | IMPLEMENTED | look、score、inventory、movement、combat、skills、apprentice、save、quit 與管理指令已執行。 |
 | Social / communication | IMPLEMENTED / BOUNDED | 隔離雙玩家真 Driver 已通過 say／tell／reply、UTF-8、缺席玩家錯誤與 disconnect/relogin；遺失跨 MUD DNS／GTELL 維持 UNKNOWN。 |
-| Admin / KING | IMPLEMENTED | KING password／character restore、admin state 與 Owner authorization 已通過；明確屬 ES2-KING 管理層。 |
+| Admin / KING | IMPLEMENTED | KING password／character restore、admin state 與 Owner authorization已通過；K Admin 真 Driver 另完成 Owner→Wizard→Arch→remove、權限過濾 Help、Player denial、Original `k=kill` 與 save／relogin。明確屬 ES2-KING 管理層，不倒灌為 Original Canon。 |
 
 ## Social / Communication Runtime Completion
 

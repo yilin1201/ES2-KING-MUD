@@ -12,3 +12,4 @@ int main(object me,string arg){
  if(!KADMIN_D->set_role(me,id,r)) return notify_fail("權限變更失敗。\n");
  write("K 權限已更新："+id+" -> "+r+"\n"); return 1;
 }
+int help(object me){if(!KADMIN_D->is_owner(me))return notify_fail("沒有針對這項主題的說明文件。\n");write("指令格式：kadmin list | kadmin <ID> wizard|arch|remove|status\n\n只有 KING Owner 可管理獨立 K-team 權限；不修改 Original wiz_status／promote。\n");return 1;}
