@@ -13,6 +13,9 @@ do
 done
 
 grep -Fq 'valid_enable(string usage)' "$ROOT/daemon/skill/kuxiao_force.c"
+grep -Fq 'return usage == "blade" || usage == "parry";' "$ROOT/daemon/skill/daxie_qisun_blade.c"
+grep -Fq 'actor->skill_mapped("blade") == "daxie qisun blade"' "$ROOT/daemon/skill/daxie_qisun_blade.c"
+! grep -Fq 'actor->skill_mapped("sword") == "daxie qisun blade"' "$ROOT/daemon/skill/daxie_qisun_blade.c"
 grep -Fq 'actor->skill_mapped("force") == "kuxiao force"' "$ROOT/daemon/skill/daxie_qisun_blade.c"
 grep -Fq '大邪金身已啟動；反震、減傷與持續時間仍為 UNKNOWN' "$ROOT/daemon/skill/daxie_qisun_blade.c"
 grep -Fq 'actor->delete("es2_king/daxie_jinshen")' "$ROOT/daemon/skill/daxie_qisun_blade.c"
