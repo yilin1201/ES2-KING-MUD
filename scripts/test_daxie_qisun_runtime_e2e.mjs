@@ -50,15 +50,15 @@ await command("inventory");
 assert.match(await command("skills"), /技能狀態|目前並沒有學會任何技能/);
 console.log("DAXIE_STAGE_PASS:login-look-score-inventory-skills");
 
-// Dependency Gate／相依條件：沒有哭笑門心法時，大邪金身必須拒絕施展。
-assert.match(await command("perform jinshen"), /必須先學會並啟用哭笑門心法/);
+// Dependency Gate／相依條件：沒有哭笑心法時，大邪金身必須拒絕施展。
+assert.match(await command("perform jinshen"), /必須先學會並啟用哭笑心法/);
 console.log("DAXIE_STAGE_PASS:jinshen-negative");
 await new Promise(resolve => setTimeout(resolve, 2500));
 
-assert.match(await command("kingmartial daxie 300"), /哭笑門心法 Lv\.300／大邪七損刀 Lv\.300/);
-// Primary Force Regression／配置大邪後，KING 主內功仍必須是易筋經，不得被哭笑門心法覆蓋。
+assert.match(await command("kingmartial daxie 300"), /哭笑心法 Lv\.300／大邪七損刀 Lv\.300/);
+// Primary Force Regression／配置大邪後，KING 主內功仍必須是易筋經，不得被哭笑心法覆蓋。
 assert.match(await command("skills"), /易筋經|yijinjing/);
-assert.match(await command("kingmartial daxie status"), /哭笑門心法 Lv\.300／大邪七損刀 Lv\.300／大邪金身：OFF/);
+assert.match(await command("kingmartial daxie status"), /哭笑心法 Lv\.300／大邪七損刀 Lv\.300／大邪金身：OFF/);
 assert.match(await command("perform jinshen"), /大邪金身已啟動/);
 assert.match(await command("perform jinshen"), /結束「大邪金身」狀態/);
 await new Promise(resolve => setTimeout(resolve, 1200));
@@ -82,12 +82,12 @@ await waitForAfter(combatOffset, /納命來|不是你死就是我活|忌日|攻�
 await new Promise(resolve => setTimeout(resolve, 2500));
 
 const forms = [
-  ["sunpi", /損皮・雷霆震不還.*七損累積=1\/6/s],
-  ["sunrou", /損肉・傲笑傲天魔.*七損累積=2\/6/s],
-  ["sunjin", /損筋・寒霜透骨.*七損累積=3\/6/s],
-  ["sungu", /損骨・笑哭不得也.*七損累積=4\/6/s],
-  ["sunmai", /損脈・哭笑無常刀.*七損累積=5\/6/s],
-  ["sunqi", /損氣・大邪絕息斬.*七損累積=6\/6/s],
+  ["sunpi", /雷霆震不還・損皮.*七損累積=1\/6/s],
+  ["sunrou", /傲笑傲天魔・損肉.*七損累積=2\/6/s],
+  ["sunjin", /寒霜透骨・損筋.*七損累積=3\/6/s],
+  ["sungu", /笑哭不得也・損骨.*七損累積=4\/6/s],
+  ["sunmai", /哭笑無常刀・損脈.*七損累積=5\/6/s],
+  ["sunqi", /大邪絕息斬・損氣.*七損累積=6\/6/s],
 ];
 for (const [form, evidence] of forms) {
   assert.match(await command(`perform ${form} on arbao`, evidence), evidence);
@@ -109,7 +109,7 @@ await waitForAfter(0, "您的使用者代號");
 await command("king", "請輸入密碼");
 await command(password, "目前權限: (admin)");
 await waitForAfter(0, "> ");
-assert.match(await command("kingmartial daxie status"), /哭笑門心法 Lv\.300／大邪七損刀 Lv\.300／大邪金身：ON/);
+assert.match(await command("kingmartial daxie status"), /哭笑心法 Lv\.300／大邪七損刀 Lv\.300／大邪金身：ON/);
 console.log("DAXIE_STAGE_PASS:save-quit-relogin");
 socket.close();
 
@@ -120,7 +120,7 @@ await command("mortal", "請輸入密碼");
 await command(password, "> ");
 const rejected = await command("kingmartial daxie 300");
 assert.match(rejected, /What\?|只有 ES2-KING Owner 帳號可以使用此指令/);
-assert.doesNotMatch(rejected, /哭笑門心法 Lv\.300／大邪七損刀 Lv\.300/);
+assert.doesNotMatch(rejected, /哭笑心法 Lv\.300／大邪七損刀 Lv\.300/);
 console.log("DAXIE_STAGE_PASS:normal-player-negative-authorization");
 socket.close();
 
