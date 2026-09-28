@@ -26,6 +26,8 @@ int set_yijinjing(object actor, int level)
     if (!authorized(actor) || level < 1 || level > 300) return 0;
     actor->set("es2_king/yijinjing_level", level);
     actor->set("es2_king/yijinjing_stage", yijinjing_stage(level));
+    // 黑級無極・以氣化招：Lv.300 只解鎖能力資格，不自行生成任何未定稿終極殺招。
+    actor->set("es2_king/yijinjing_qi_manifest", level == 300 ? 1 : 0);
     return 1;
 }
 
