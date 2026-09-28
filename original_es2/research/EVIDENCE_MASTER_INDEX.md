@@ -114,3 +114,25 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 - Target tree／target Git History 仍未保存 Taoist class daemon、entry room／NPC、recruitment command、`initialize()` 或 `advance_level()` Source。
 - Historical mudchina／MudRen `taolord.c` 仍屬外部 ES2-family corroboration；不得以 legacy plan 取代缺失 LPC 或反推技能數值、起始房間及拜師條件。
 - 結論：Taoist 為 `PARTIAL / SOURCE_REQUIRED`，`IMPLEMENTATION READY = NO`。
+
+## es2.xor.tw Original Source Recovery — 2026-09-28
+
+### Snow 英雄帖 → Snowkeep
+- Original Source：`/d/snow/npc/girl.c` 以 `bronze hairpin` 觸發請求，玩家回答「英雄帖」後建立並丟出 `/d/snow/npc/obj/invitation`。
+- `/d/snow/npc/guard.c` 接受 `invitation` 後銷毀英雄帖，將玩家移往 `/d/snowkeep/entrance`；`/d/snow/ebridge.c` 的 east exit 亦指向同一路徑。
+- `/include/explore.h` 定義 `ID_SNOWKEEP = 10`，但 MANIFEST 未保存 `/d/snowkeep/`。
+- 狀態：前置 dependency `CONFIRMED_SOURCE`；目的 Area `UNREACHABLE / SOURCE_REQUIRED`；`IMPLEMENTATION READY = NO`。
+
+### Human Race Initializer
+- `/adm/daemons/logind.c` 的 `user_race` 直接包含 `human`；`get_race()` 驗證 ID／karma，`get_gender()` 呼叫 `body->set_race(race)`，`init_new_body()` 設定 commoner／level 1 後呼叫 `CHAR_D->setup_char()`。
+- `/adm/daemons/chard.c::setup_char()` 依序執行 `RACE_D(query_race())->setup()` 與 `CLASS_D(query_class())->setup()`；`/feature/char/score.c::set_race()` 會執行 race／class `initialize()`。
+- `/daemon/race/human.c` 直接確認 Original ID `human`、karma 5、Human 八屬性各 `13 + random(6)`、gin／kee／sen 各 30、女性年齡 13／男性 14，以及 Human setup 行為。
+- `enter_world()` 在新角色初始化後執行 `user->save()`，並以 `startroom` 或 `START_ROOM` 入場。
+- 狀態：Human `CONFIRMED_SOURCE / DEPENDENCY_CLOSED`；現有 Runtime 已具同源 Source，無需重複 Restoration。`human_clan` 仍只屬 Reconstruction ID；其他 Race 不由 Human 推導。
+
+### Taoist／Quest／Bonze／Soldier Boundary
+- Taoist：`/doc/wiz/taoist-plan`、`taoism-spells` 與 Legacy 資料可確認職業／技能設計，但 MANIFEST 無 Target class daemon、entry、recruit LPC；維持 `PARTIAL / SOURCE_REQUIRED`。
+- Quest：`/doc/wiz/quest` 確認 Original 主要模型為區域事件／故事／解謎，可導向物品、技能、門派或職業；未發現 Random Task daemon／assignment／completion／reward Source，Track A 維持 `PARTIAL / SOURCE_REQUIRED`。
+- Bonze：`/doc/wiz/bonze` 與 Legacy 山煙寺／玄智和尚資料只屬設計及 Historical corroboration，未閉合 Target player-class dependency。
+- Soldier：`/feature/npc/soldier.c` 是官兵 NPC 協同／拒戰行為；`/obj/npc/garrison.c` 實際 class 仍為 fighter，不能作為玩家 soldier 職業 daemon。
+- 上述四項 `IMPLEMENTATION READY = NO`；未修改 Gameplay Source。
