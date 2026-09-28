@@ -31,7 +31,7 @@ private void display_immortal_intro(object me)
     message_vision(
         HIW "面對漫天殺機，$N神色不起波瀾，只信步前踏半步。\n"
         HIW "體內「" HIY "霸天煉體訣" HIW "」神紋流轉，周身散發著萬法不侵的沉雄氣度。\n"
-        HIW "待得金芒驟聚，「" HIY "不滅金身" HIW "」自然流轉，泛起璀璨耀目的暗金琉璃神華。\n" NOR,
+        HIW "待得金芒驟聚，「" HIY "【霸天煉體訣。不滅金身】" HIW "」自然流轉，泛起璀璨耀目的金光琉璃神華。\n" NOR,
         me);
     me->set_temp("es2_king/batian/immortal_intro", 1);
     call_out("reset_immortal_intro_after_combat", 1, me);
