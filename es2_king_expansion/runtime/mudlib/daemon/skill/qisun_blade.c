@@ -193,6 +193,9 @@ int perform_action(object actor, string form, object target)
     if (form == "random") {
         string *random_forms = ({ "sunpi", "sunrou", "sunjin", "sungu", "sunmai", "sunqi", "qisun" });
         form = random_forms[random(sizeof(random_forms))];
+        // 第七損保留既有六層前置條件；未滿六層時改由前六損隨機，避免 random perform 變成無效攻擊。
+        if (form == "qisun" && (!objectp(target) || target->query_temp("es2_king/daxie_qisun/stacks") < 6))
+            form = random_forms[random(6)];
     }
     form = normalize_form(form);
     if (form == "jinshen" || form == "daxie-jinshen")
