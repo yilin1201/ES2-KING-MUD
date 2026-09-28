@@ -23,14 +23,29 @@ private mapping aliases = ([
 ]);
 
 private mapping form_names = ([
-    "sunpi" : "損皮・雷霆震不還",
-    "sunrou" : "損肉・傲笑傲天魔",
-    "sunjin" : "損筋・寒霜透骨",
-    "sungu" : "損骨・笑哭不得也",
-    "sunmai" : "損脈・哭笑無常刀",
-    "sunqi" : "損氣・大邪絕息斬",
-    "qisun" : "七損合一・命魂俱滅",
+    "sunpi" : "雷霆震不還", "sunrou" : "傲笑傲天魔", "sunjin" : "寒霜透骨",
+    "sungu" : "笑哭不得也", "sunmai" : "哭笑無常刀", "sunqi" : "大邪絕息斬",
+    "qisun" : "七損合一",
 ]);
+
+private mapping form_damage_names = ([
+    "sunpi" : "損皮", "sunrou" : "損肉", "sunjin" : "損筋",
+    "sungu" : "損骨", "sunmai" : "損脈", "sunqi" : "損氣",
+    "qisun" : "命魂俱滅",
+]);
+
+private mapping form_ordinals = ([
+    "sunpi" : "第一損", "sunrou" : "第二損", "sunjin" : "第三損",
+    "sungu" : "第四損", "sunmai" : "第五損", "sunqi" : "第六損",
+    "qisun" : "第七損",
+]);
+
+// 第一張定稿配色：外框與招式名稱亮綠；「損」部位／終式結果亮紅；右框切回亮綠。
+private string colored_form_name(string form)
+{
+    return form_ordinals[form] + "：" + HIG + "【" + form_names[form] + "・"
+        + HIR + form_damage_names[form] + HIG + "】" + NOR;
+}
 
 private mapping form_effects = ([
     "sunpi" : "破皮碎甲／破防流血",
@@ -146,8 +161,9 @@ private int explode_qisun(object actor, object target)
     cost = actor->query_stat("kee") * 15 / 100;
     if (cost < 1) cost = 1;
     actor->consume_stat("kee", cost, actor);
-    message_vision(HIR
-        "$N將前六損刀煞合一，使出「七損合一・命魂俱滅」直攻$n神魂命元！\n" NOR,
+    message_vision(
+        "$N將前六損刀煞合一，使出" + colored_form_name("qisun")
+        + "，直攻$n神魂命元！\n",
         actor, target);
     tell_object(actor, sprintf("七重狀態已引爆；造成 %d 點 Expansion 傷害，自損 %d 點氣。\n",
         damage, cost));
@@ -176,7 +192,8 @@ int perform_action(object actor, string form, object target)
     add_qisun_state(actor, target, form, damage);
     stacks = target->query_temp("es2_king/daxie_qisun/stacks");
 
-    message_vision(HIM "$N使出「" + form_names[form] + "」，大邪刀煞侵入$n命脈！\n" NOR,
+    message_vision("$N使出" + colored_form_name(form)
+        + "，大邪刀煞侵入$n命脈！\n",
         actor, target);
     tell_object(actor, sprintf("效果：%s；傷害=%d；七損累積=%d/6。\n",
         form_effects[form], damage, stacks));
