@@ -12,6 +12,16 @@ private mapping creation_registry = ([
     "creation_mark" : "/obj/king/creation_mark",
 ]);
 
+// Owner Weapon Registry／KING 專屬武器配置。
+// 登入只確保物品存在於 Inventory；絕不自動 wield，正式登入狀態維持空手。
+private mapping owner_weapon_registry = ([
+    "guxiao"        : "/obj/king/guxiao",
+    "feiyun"        : "/obj/king/feiyun",
+    "guxiao feiyun" : "/obj/king/guxiao_feiyun",
+    "blood blade"   : "/obj/king/blood_blade",
+    "god cane"      : "/obj/king/god_cane",
+]);
+
 private void create() { seteuid(getuid()); }
 
 // Authorization／授權：正常登入、精確帳號 ID 與 Original admin 三項必須同時成立。
@@ -75,4 +85,34 @@ object create_registered(object actor, string id)
     // 新物件先交給 Owner；無法放入物品欄時才放到所在房間。
     if (!created->move(actor) && environment(actor)) created->move(environment(actor));
     return created;
+}
+
+
+// provision_creator_weapons()／KING 登入武器配置。
+// 只補齊缺少的武器，不重複 clone；不呼叫 wield()，確保 KING 登入保持空手。
+int provision_creator_weapons(object actor)
+{
+    object item;
+    string id, file;
+    mapping found = ([]);
+
+    if (!authorized(actor)) return 0;
+
+    foreach (item in all_inventory(actor)) {
+        foreach (id, file in owner_weapon_registry)
+            if (item->id(id)) found[id] = 1;
+    }
+
+    foreach (id, file in owner_weapon_registry) {
+        if (found[id]) continue;
+        if (file_size(file + ".c") < 0) return 0;
+        item = new(file);
+        if (!objectp(item) || !item->move(actor)) {
+            if (objectp(item)) destruct(item);
+            return 0;
+        }
+    }
+
+    actor->set("es2_king/creator_weapons", 1);
+    return 1;
 }
