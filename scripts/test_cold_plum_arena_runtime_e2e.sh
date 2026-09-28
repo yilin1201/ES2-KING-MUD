@@ -35,4 +35,4 @@ for marker in \
 do
   grep -Fq "$marker" "$LOG"
 done
-echo "COLD PLUM RUNTIME PASS：真實 Neolith Driver 已驗證 KING 八屬性 99、冷梅莊技能、演武界雙向拓撲、梅寒霜 50/300、明鏡止水、冷梅六式、Combat、Arena 敗北保護及 save／quit／relogin／restore。"
+echo "COLD PLUM RUNTIME PASS：真實 Neolith Driver 已驗證 KING 八屬性 99、KING 技能 Lv.300、冷梅莊技能、演武界雙向拓撲、梅寒霜 50/300、明鏡止水、冷梅六式、Combat、Arena 敗北保護及 save／quit／relogin／restore。"
