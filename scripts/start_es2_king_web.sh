@@ -114,4 +114,19 @@ node --input-type=module -e '
   probe();
 ' || { echo "START FAIL：WebSocket Runtime Smoke 未通過。" >&2; exit 1; }
 
-wait "$bridge_pid"
+# Process Supervision／程序監督：公開服務存活期間 Driver 與 Bridge 必須同時存在。
+# 過去若 Neolith native crash，Bridge 仍可能留在前景而讓 Render 不重啟；
+# 現在任一核心程序退出都讓容器失敗退出，由平台依正常服務生命週期重建。
+while kill -0 "$driver_pid" 2>/dev/null && kill -0 "$bridge_pid" 2>/dev/null; do
+  sleep 1
+done
+
+if ! kill -0 "$driver_pid" 2>/dev/null; then
+  echo "RUNTIME FAIL：Neolith process exited unexpectedly; terminating service for clean restart." >&2
+  wait "$driver_pid" 2>/dev/null || true
+  exit 1
+fi
+
+echo "RUNTIME FAIL：WebTelnet bridge exited unexpectedly; terminating service for clean restart." >&2
+wait "$bridge_pid" 2>/dev/null || true
+exit 1
