@@ -64,9 +64,13 @@ assert.match(await command("kingmartial daxie status"), /大邪金身：OFF/);
 assert.match(await command("perform jinshen"), /大邪金身已啟動/);
 console.log("DAXIE_STAGE_PASS:kuxiao-force-and-jinshen");
 
+// Weapon Contract／大邪七損刀是 blade；先證明 sword 被拒絕，再用 KING 已配置的靈刀祭血進入正式刀法 Combat。
 await command("goto /d/snow/fireplace", "大灶內");
 await command("get wooden sword", /撿起一把木劍/);
 await command("wield wooden sword", /裝備(?:一把)?木劍作武器/);
+assert.match(await command("perform sunpi"), /必須裝備刀類武器來使出大邪七損刀/);
+await command("unwield wooden sword");
+assert.match(await command("wield 靈刀祭血 as blade"), /裝備|靈刀祭血/);
 await command("goto /d/snow/tree", "榕樹上");
 const combatOffset = output.length;
 socket.send("kill arbao\r\n");
