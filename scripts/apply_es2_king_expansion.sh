@@ -6,6 +6,69 @@ test -d "$TARGET/mudlib" || { echo "EXPANSION APPLY FAIL：缺少 $TARGET/mudlib
 test -d "$SOURCE"
 cp -a "$SOURCE/." "$TARGET/mudlib/"
 
+# KING Skill Cap Exception／KING 創世神 Lv.300 技能上限：
+# Original ES2 的 F_SKILL 對所有角色固定 clamp 200；Project Canon 只允許唯一 admin KING 到 300。
+# 這個 patch 只套用生成 Runtime，不修改 Original 保存來源；一般玩家仍完整保留 Original 200 上限。
+SKILL_FEATURE="$TARGET/mudlib/feature/char/skill.c"
+KING_SKILL_CAP_MARKER='ES2-KING OWNER SKILL CAP 300'
+if ! grep -Fq "$KING_SKILL_CAP_MARKER" "$SKILL_FEATURE"; then
+  python3 - "$SKILL_FEATURE" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+text = path.read_text()
+needle = 'string best_skill = "";\n'
+replacement = '''string best_skill = "";
+
+// ES2-KING OWNER SKILL CAP 300／只允許唯一 admin KING 使用 Project Canon 300。
+// 一般玩家與非 admin 的同名物件仍回到 Original 200。
+private int es2_king_skill_cap()
+{
+    if (this_object()->query("id") == "king"
+    &&  wiz_level(this_object()) >= wiz_level("(admin)"))
+        return 300;
+    return 200;
+}
+'''
+if needle not in text:
+    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original F_SKILL best_skill anchor。")
+text = text.replace(needle, replacement, 1)
+
+needle = '''void set_skill(string skill, int val)
+{
+    if( val > 200 ) val = 200;
+    skills[skill] = val;
+}
+'''
+replacement = '''void set_skill(string skill, int val)
+{
+    int cap = es2_king_skill_cap();
+    if( val > cap ) val = cap;
+    skills[skill] = val;
+}
+'''
+if needle not in text:
+    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original set_skill 200 clamp。")
+text = text.replace(needle, replacement, 1)
+
+needle = '    return (s > 200) ? 200 : s;\n'
+replacement = '    return (s > es2_king_skill_cap()) ? es2_king_skill_cap() : s;\n'
+if needle not in text:
+    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original query_skill 200 clamp。")
+text = text.replace(needle, replacement, 1)
+
+needle = '    if( skills[skill] > 200 ) skills[skill] = 200;\n'
+replacement = '''    if( skills[skill] > es2_king_skill_cap() )
+        skills[skill] = es2_king_skill_cap();
+'''
+if needle not in text:
+    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original advance_skill 200 clamp。")
+text = text.replace(needle, replacement, 1)
+path.write_text(text)
+PY
+fi
+
 # Original Scholar UTF-8 Compatibility／Original 私塾書生回答相容：
 # 舊 Big5 Runtime 以 msg[0..1] 擷取一個中文字；UTF-8 下中文字是三個 bytes，
 # 因此玩家回答 Original 明列的「想／是／好」永遠無法觸發 set_class("scholar")。
@@ -292,15 +355,15 @@ replacement = '''    user->setup();
     &&  wiz_level(user) >= wiz_level("(admin)")) {
         if (!call_other("/adm/daemons/kingd", "apply_creator_profile", user)
         ||  !call_other("/adm/daemons/kingd", "provision_creator_weapons", user)
-        ||  !call_other("/adm/daemons/kingmartiald", "set_cold_plum", user, 200)
-        ||  !call_other("/adm/daemons/kingmartiald", "set_creator_core_martial", user, 200)
-        ||  !call_other("/adm/daemons/kingmartiald", "set_rulai_shenzhang", user, 200)) {
+        ||  !call_other("/adm/daemons/kingmartiald", "set_cold_plum", user, 300)
+        ||  !call_other("/adm/daemons/kingmartiald", "set_creator_core_martial", user, 300)
+        ||  !call_other("/adm/daemons/kingmartiald", "set_rulai_shenzhang", user, 300)) {
             write("KING 正式能力配置失敗，已中止登入以避免錯誤狀態。\\n");
             destruct(ob);
             destruct(user);
             return;
         }
-        write("KING 創世神配置已同步：八項屬性 99、六項狀態 999、五件武器已置入物品欄且不自動裝備、冷梅莊武學 200、易筋經 200、霸天煉體訣 200、如來神掌 200。\\n");
+        write("KING 創世神配置已同步：八項屬性 99、六項狀態 999、五件武器已置入物品欄且不自動裝備、冷梅莊武學 300、易筋經 300、霸天煉體訣 300、如來神掌 300。\\n");
     }
 
 #ifdef SAVE_USER
