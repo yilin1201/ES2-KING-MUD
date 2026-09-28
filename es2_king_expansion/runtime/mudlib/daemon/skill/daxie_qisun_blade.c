@@ -82,8 +82,9 @@ private int daxie_ready(object actor)
 
 private int kuxiao_ready(object actor)
 {
-    return actor->query_skill("kuxiao force", 1) > 0
-        && actor->skill_mapped("force") == "kuxiao force";
+    // KING 主內功依既定 Canon 維持易筋經；哭笑門心法是大邪金身的學習相依，
+    // 不強迫覆蓋 force mapping，避免 set_daxie() 與 KING 主內功互相衝突。
+    return actor->query_skill("kuxiao force", 1) > 0;
 }
 
 // 大邪金身只是一個依附哭笑門心法的狀態技，不是獨立內功。
