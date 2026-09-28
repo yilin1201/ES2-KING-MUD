@@ -90,3 +90,15 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 - 目前公開 Original ES2 Source Recovery 尚未找到 `map_skill("secondhand sword", "advance_lunmay")` 或等價直接 mapping 證據。
 - 目前公開 Original ES2 Source Recovery 尚未找到 `map_skill("twohanded staff", "chin_staff")` 或等價直接 mapping 證據。
 - 因此不得僅依中文名稱或武器類型推導「傲梅暗劍訣 = secondhand sword」或「青邪杖法 = twohanded staff」正式 Combat Mapping；兩項維持 UNKNOWN，等待 Historical Evidence 或更完整 Original Source。
+
+## Original Inventory Persistence Boundary — 2026-09-28
+
+### CONFIRMED
+- Target pinned Original baseline：`taedlar/es2_mudlib@cc45c06af4852380e5148dad3c9d53ff06854f2c`。
+- `mudlib/obj/user.c::save()` 在玩家存檔前呼叫 `save_autoload()`；`setup()` 在玩家載入後呼叫 `restore_autoload()`。
+- `mudlib/feature/user/autoload.c::save_autoload()` 掃描 Inventory，但對 `query_autoload()` 為假的物件直接 `continue`；restore 只依保存的 autoload path／parameter 重新建立物件。
+- `mudlib/cmds/usr/quit.c` 亦把 `query_autoload()` 作為離線物件保留邊界。
+
+### 結論
+- Original 角色物品 persistence 是明確的 **autoload opt-in policy**，不是任意 Equipment 通用保存。
+- 已通過的 autoload save／quit／relogin 行為維持有效；任意 non-autoload equipment 不應再列為待補 Runtime 功能，也不得為提高完成度新增另一套泛用保存規則。
