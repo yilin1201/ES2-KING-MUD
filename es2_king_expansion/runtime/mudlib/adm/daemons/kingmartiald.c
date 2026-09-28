@@ -36,11 +36,11 @@ int set_batian(object actor, string phase)
     return 1;
 }
 
-// KING Test Provisioning／KING 測試配置：只授予已定稿 Expansion 武學，
-// 等級仍服從 Original set_skill 的 200 級上限，不建立平行技能資料庫。
+// KING Creator Exception／KING 創世神技能配置：Project Canon 上限 300。
+// 只作用於 KING_D 授權的唯一 Owner，不改一般玩家技能邊界。
 int set_daxie(object actor, int level)
 {
-    if (!authorized(actor) || level < 1 || level > 200) return 0;
+    if (!authorized(actor) || level < 1 || level > 300) return 0;
     actor->set_skill("kuxiao force", level);
     actor->set_skill("daxie qisun blade", level);
     actor->map_skill("force", "kuxiao force");
@@ -51,11 +51,10 @@ int set_daxie(object actor, int level)
 
 
 // 冷梅莊武學／KING 正式配置。
-// Original F_SKILL 的一般技能上限為 200；KING 不建立平行 300 級技能規則。
-// 梅寒霜的 300 為 Arena NPC local override，KING 則維持 Original 玩家技能邊界。
+// KING Owner 依 Project Canon 使用 Lv.300；一般玩家規則不在此修改。
 int set_cold_plum(object actor, int level)
 {
-    if (!authorized(actor) || level < 1 || level > 200) return 0;
+    if (!authorized(actor) || level < 1 || level > 300) return 0;
 
     actor->set_skill("hainmay force", level);
     actor->set_skill("advance_lunmay", level);
@@ -86,17 +85,24 @@ int set_cold_plum(object actor, int level)
 
 // 如來神掌／KING 正式 Combat 配置。
 // 招式名稱沿用 M29 Project Canon；Original ES2 未發現 Combat Source，故不補造特殊數值效果。
-// 等級遵守 Original 玩家技能 200 上限。
+// KING Owner 依 Project Canon 使用 Lv.300。
 // KING Creator Profile 正式主內功／拆招配置。
-// 等級維持 Original 玩家技能上限 200；M28 未定義的 Combat 數值不補造。
+// KING Owner 依 Project Canon 使用 Lv.300；M28 未定義的 Combat 數值不補造。
 int set_creator_core_martial(object actor, int level)
 {
-    if (!authorized(actor) || level < 1 || level > 200) return 0;
+    if (!authorized(actor) || level < 1 || level > 300) return 0;
 
     actor->set_skill("yijinjing", level);
     actor->set_skill("batian lianti jue", level);
     actor->set_skill("force", level);
     actor->set_skill("parry", level);
+
+    // KING Basic Skills Lv.300／只建立已確認的基礎技能欄位；四個預留項目暫不綁武學。
+    foreach (string basic_skill in ({
+        "force", "unarmed", "sword", "secondhand sword", "twohanded sword",
+        "blade", "twohanded blade", "staff", "parry", "dodge", "whip"
+    }))
+        actor->set_skill(basic_skill, level);
 
     load_object("/d/arena/skill/yijinjing");
     load_object("/d/arena/skill/batian_lianti_jue");
@@ -119,7 +125,7 @@ int set_creator_core_martial(object actor, int level)
 
 int set_rulai_shenzhang(object actor, int level)
 {
-    if (!authorized(actor) || level < 1 || level > 200) return 0;
+    if (!authorized(actor) || level < 1 || level > 300) return 0;
     actor->set_skill("rulai shenzhang", level);
     actor->set_skill("unarmed", level);
     load_object("/d/arena/skill/rulai_shenzhang");
