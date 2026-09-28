@@ -66,7 +66,7 @@ void create()
 
 int valid_enable(string usage)
 {
-    return usage == "sword" || usage == "parry";
+    return usage == "blade" || usage == "parry";
 }
 
 private string normalize_form(string form)
@@ -77,7 +77,7 @@ private string normalize_form(string form)
 private int daxie_ready(object actor)
 {
     return actor->query_skill("daxie qisun blade", 1) > 0
-        && actor->skill_mapped("sword") == "daxie qisun blade";
+        && actor->skill_mapped("blade") == "daxie qisun blade";
 }
 
 private int kuxiao_ready(object actor)
