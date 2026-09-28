@@ -45,6 +45,7 @@ int set_daxie(object actor, int level)
     actor->set_skill("daxie qisun blade", level);
     actor->set_skill("blade", level);
     // 大邪七損刀是刀法；不覆蓋 KING 的主內功易筋經與主劍法冷梅劍法。
+    // 哭笑門心法只作為大邪金身的已學相依技能；KING 主 force 仍維持易筋經。
     actor->map_skill("blade", "daxie qisun blade");
     actor->set("es2_king/daxie_level", level);
     return 1;
