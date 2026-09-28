@@ -74,9 +74,15 @@ void attack_using(object me, object opponent, object weapon)
 {
     mapping action;
     if (!opponent) return;
-    action = ([ "name":"大邪七損刀",
-        "action":HIG "$N手中$w邪勢驟起，大邪七損刀化作一道森寒刀光斬向$n的$l！" NOR,
+    string *forms = ({ "sunpi", "sunrou", "sunjin", "sungu", "sunmai", "sunqi" });
+    string form;
+    int index = me->query_temp("es2_king/daxie/attack_index");
+    if (index < 0 || index >= sizeof(forms)) index = 0;
+    form = forms[index];
+    action = ([ "name":form_names[form],
+        "action":HIG "$N使出" + colored_form_name(form) + HIG "，手中$w邪勢暴起，森寒刀煞直取$n的$l！" NOR,
         "attack":0, "force":0, "defense":0, "damage_type":"割傷" ]);
+    me->set_temp("es2_king/daxie/attack_index", (index + 1) % sizeof(forms));
     COMBAT_D->fight(me, opponent, "blade", action, weapon);
 }
 
