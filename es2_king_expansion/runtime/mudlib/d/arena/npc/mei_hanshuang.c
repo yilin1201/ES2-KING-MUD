@@ -116,11 +116,17 @@ void create()
 
     setup();
 
-    // Arena NPC Vital Stats／Original stat API 使用 set_stat(kind, current, effective, maximum)。
+    // Arena NPC Vital Stats／依 Original F_STATISTIC 正式 API 分別同步 Maximum／Effective／Current。
     // 必須放在 setup() 後，避免 Race/Class setup 覆蓋；梅寒霜精、氣、神固定 999/999。
-    set_stat("gin", 999, 999, 999);
-    set_stat("kee", 999, 999, 999);
-    set_stat("sen", 999, 999, 999);
+    set_stat_maximum("gin", 999);
+    set_stat_effective("gin", 999);
+    set_stat_current("gin", 999);
+    set_stat_maximum("kee", 999);
+    set_stat_effective("kee", 999);
+    set_stat_current("kee", 999);
+    set_stat_maximum("sen", 999);
+    set_stat_effective("sen", 999);
+    set_stat_current("sen", 999);
 
     // setup() 可能套用 Race/Class 初始值；Arena 規格要求八屬性精確 50，故再次鎖定。
     set_attr("str", 50); set_attr("cor", 50);
