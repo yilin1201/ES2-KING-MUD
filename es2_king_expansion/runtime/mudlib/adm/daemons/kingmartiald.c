@@ -72,9 +72,9 @@ int set_cold_plum(object actor, int level)
     actor->set_skill("lunmay", level);
     actor->set_skill("mayin", level);
     actor->set_skill("seven", level);
-    // Original 與 Expansion 杖法並存：chin_staff 保留原作青邪杖法；daxie seveninjury staff 為新創大邪七傷杖訣。
+    // Original 與 Expansion 杖法並存：chin_staff 保留原作青邪杖法；qishang_staff 為新創大邪七傷杖訣。
     actor->set_skill("chin_staff", level);
-    actor->set_skill("daxie seveninjury staff", level);
+    actor->set_skill("qishang_staff", level);
     actor->set_skill("force", level);
     actor->set_skill("sword", level);
     actor->set_skill("parry", level);
@@ -84,14 +84,14 @@ int set_cold_plum(object actor, int level)
     // Expansion 冷梅劍法 daemon 先登記，再交回 Original Combat 使用。
     load_object("/d/arena/skill/lunmay");
     load_object("/d/arena/skill/advance_lunmay");
-    load_object("/d/arena/skill/daxie_seveninjury_staff");
+    load_object("/d/arena/skill/qishang_staff");
     actor->map_skill("force", "hainmay force");
     actor->map_skill("sword", "lunmay");
     // Project Canon／KING 驗收指定裝備：傲梅暗劍訣→左手劍術、梅影身法→縱躍閃躲。
     actor->map_skill("secondhand sword", "advance_lunmay");
     actor->map_skill("dodge", "mayin");
     // KING 目前 staff 裝備新創大邪七傷杖訣；Original 青邪杖法 chin_staff 保留為獨立技能，可後續切換而不互相覆蓋。
-    actor->map_skill("staff", "daxie seveninjury staff");
+    actor->map_skill("staff", "qishang_staff");
 
     // 寒梅心法 → 明鏡止水 → 冷梅劍法五式 → 傲梅暗劍訣。
     actor->set("es2_king/lengmei/force", "寒梅心法");
@@ -142,7 +142,7 @@ int set_creator_core_martial(object actor, int level)
     CHINESE_D->add_translate("seven", "七巧如意手");
     CHINESE_D->add_translate("advance_lunmay", "傲梅暗劍訣");
     CHINESE_D->add_translate("chin_staff", "青邪杖法");
-    CHINESE_D->add_translate("daxie seveninjury staff", "大邪七傷杖訣");
+    CHINESE_D->add_translate("qishang_staff", "大邪七傷杖訣");
     CHINESE_D->add_translate("seven_blade", "大邪七損刀訣");
 
     actor->set("es2_king/yijinjing_level", level);
