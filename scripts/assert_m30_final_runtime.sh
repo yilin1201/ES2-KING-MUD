@@ -68,6 +68,16 @@ fi
 # 確保部署映像實際包含梅寒霜、六式與 UNKNOWN 邊界，而不是只檢查 repository source。
 bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_cold_plum_arena_static.sh" "$RUNTIME_DIR"
 
+# KING Weapon Final Runtime Overlay Gate／直接檢查 Docker 最終 mudlib，而非只檢查 Repo source。
+for weapon in guxiao feiyun guxiao_feiyun blood_blade god_cane; do
+  test -f "$RUNTIME_DIR/mudlib/obj/king/$weapon.c"
+done
+grep -Fq '"guxiao"        : "/obj/king/guxiao"' "$RUNTIME_DIR/mudlib/adm/daemons/kingd.c"
+grep -Fq '"blood blade"   : "/obj/king/blood_blade"' "$RUNTIME_DIR/mudlib/adm/daemons/kingd.c"
+grep -Fq '"god cane"      : "/obj/king/god_cane"' "$RUNTIME_DIR/mudlib/adm/daemons/kingd.c"
+grep -Fq 'provision_creator_weapons' "$LOGIN_D"
+! grep -n -A8 'provision_creator_weapons' "$LOGIN_D" | grep -Eq '\.wield|->wield|call_other\([^)]*"wield"'
+
 
 # Score Grid Bars／形體精氣神方格條只改顯示，保留 Original 三值 Statistic。
 grep -Fq 'ES2-KING SCORE GRID BARS' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
