@@ -34,6 +34,8 @@ int main(object me, string arg)
         return notify_fail("大邪絕息斬封住了你的氣海，暫時無法施展絕招。\n");
     // ES2-KING Random Perform／目前七損刀、七傷杖 perform 先採隨機出招。
     if (!arg) {
+        if (environment(me)->query("no_fight")) return notify_fail("這裡不准戰鬥。\n");
+        if (!me->is_fighting()) return notify_fail("你必須在戰鬥中才能使用絕招！\n");
         if (objectp(me->query_temp("weapon/blade")) && me->skill_mapped("blade") == "qisun_blade") {
             target = daxie_target(me, 0);
             if (!objectp(target)) return notify_fail("你目前沒有可攻擊的目標。\n");
