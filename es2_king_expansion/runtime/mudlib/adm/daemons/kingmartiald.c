@@ -44,6 +44,9 @@ int set_daxie(object actor, int level)
 {
     if (!authorized(actor) || level < 1 || level > 300) return 0;
     actor->set_skill("kuxiao force", level);
+    // 清除早期重建時曾使用的舊七損刀 ID，避免 skills 同時顯示三套名稱。
+    actor->delete_skill("seven_blade");
+    actor->delete_skill("daxie qisun blade");
     actor->set_skill("qisun_blade", level);
     // Historical IDs／玩家驗收顯示沿用已確認的 Original/Historical 技能名稱。
     actor->set_skill("huge force", level);
