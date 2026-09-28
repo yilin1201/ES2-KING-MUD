@@ -55,8 +55,8 @@ assert.match(await command("perform jinshen"), /必須先學會並啟用哭笑�
 console.log("DAXIE_STAGE_PASS:jinshen-negative");
 await new Promise(resolve => setTimeout(resolve, 2500));
 
-assert.match(await command("kingmartial daxie 200"), /哭笑門心法 Lv\.200／大邪七損刀 Lv\.200/);
-assert.match(await command("kingmartial daxie status"), /哭笑門心法 Lv\.200／大邪七損刀 Lv\.200／大邪金身：OFF/);
+assert.match(await command("kingmartial daxie 300"), /哭笑門心法 Lv\.300／大邪七損刀 Lv\.300/);
+assert.match(await command("kingmartial daxie status"), /哭笑門心法 Lv\.300／大邪七損刀 Lv\.300／大邪金身：OFF/);
 assert.match(await command("perform jinshen"), /大邪金身已啟動/);
 assert.match(await command("perform jinshen"), /結束「大邪金身」狀態/);
 await new Promise(resolve => setTimeout(resolve, 1200));
@@ -107,7 +107,7 @@ await waitForAfter(0, "您的使用者代號");
 await command("king", "請輸入密碼");
 await command(password, "目前權限: (admin)");
 await waitForAfter(0, "> ");
-assert.match(await command("kingmartial daxie status"), /哭笑門心法 Lv\.200／大邪七損刀 Lv\.200／大邪金身：ON/);
+assert.match(await command("kingmartial daxie status"), /哭笑門心法 Lv\.300／大邪七損刀 Lv\.300／大邪金身：ON/);
 console.log("DAXIE_STAGE_PASS:save-quit-relogin");
 socket.close();
 
@@ -116,9 +116,9 @@ await connect();
 await waitForAfter(0, "您的使用者代號");
 await command("mortal", "請輸入密碼");
 await command(password, "> ");
-const rejected = await command("kingmartial daxie 200");
+const rejected = await command("kingmartial daxie 300");
 assert.match(rejected, /What\?|只有 ES2-KING Owner 帳號可以使用此指令/);
-assert.doesNotMatch(rejected, /哭笑門心法 Lv\.200／大邪七損刀 Lv\.200/);
+assert.doesNotMatch(rejected, /哭笑門心法 Lv\.300／大邪七損刀 Lv\.300/);
 console.log("DAXIE_STAGE_PASS:normal-player-negative-authorization");
 socket.close();
 
