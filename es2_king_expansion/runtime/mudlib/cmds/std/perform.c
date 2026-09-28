@@ -32,7 +32,21 @@ int main(object me, string arg)
     if (me->is_busy()) return notify_fail("你現在沒有空﹗\n");
     if (me->query_temp("es2_king/daxie_qisun/block_perform"))
         return notify_fail("大邪絕息斬封住了你的氣海，暫時無法施展絕招。\n");
-    if (!arg) return notify_fail("指令格式﹕perform <技能:絕招> [on <目標>]\n");
+    // ES2-KING Random Perform／目前七損刀、七傷杖 perform 先採隨機出招。
+    if (!arg) {
+        if (objectp(me->query_temp("weapon/blade")) && me->skill_mapped("blade") == "qisun_blade") {
+            target = daxie_target(me, 0);
+            if (!objectp(target)) return notify_fail("你目前沒有可攻擊的目標。\n");
+            return SKILL_D("qisun_blade")->perform_action(me, "random", target);
+        }
+        if ((objectp(me->query_temp("weapon/staff")) || objectp(me->query_temp("weapon/twohanded staff")))
+        && (me->skill_mapped("staff") == "qishang_staff" || me->skill_mapped("twohanded staff") == "qishang_staff")) {
+            target = daxie_target(me, 0);
+            if (!objectp(target)) return notify_fail("你目前沒有可攻擊的目標。\n");
+            return call_other("/d/arena/skill/qishang_staff", "perform_action", me, "random", target);
+        }
+        return notify_fail("指令格式﹕perform <技能:絕招> [on <目標>]\n");
+    }
 
     // Canon Short Form／正式短指令：perform sunpi 或 perform sunpi on target。
     // 大邪金身不需要戰鬥目標；其餘七損式仍沿用既有戰鬥與武器狀態。
@@ -45,7 +59,7 @@ int main(object me, string arg)
             if (!objectp(weapon)) return notify_fail("你必須裝備刀類武器來使出大邪七損刀。\n");
             target = daxie_target(me, target_id);
         }
-        return SKILL_D("daxie qisun blade")->perform_action(me, act, target);
+        return SKILL_D("qisun_blade")->perform_action(me, act, target);
     }
 
     // 以下保持 Original ES2 perform command 的既有行為。
