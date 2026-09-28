@@ -29,3 +29,8 @@ if grep -n -A8 'provision_creator_weapons' "$APPLY" | grep -Eq '\.wield|->wield|
 fi
 
 echo "KING WEAPON LOADOUT STATIC PASS"
+
+# Targeted Runtime E2E entrypoint／只要求可手動執行入口存在，不建立高頻 Actions。
+test -f "$ROOT/scripts/test_king_weapon_runtime_e2e.sh"
+test -f "$ROOT/scripts/test_king_weapon_runtime_e2e.mjs"
+grep -Fq 'KING_WEAPON_RUNTIME_E2E_PASS' "$ROOT/scripts/test_king_weapon_runtime_e2e.mjs"
