@@ -44,12 +44,11 @@ void attack_using(object me, object opponent, object weapon)
     int index;
     string form;
     if (!opponent) return;
-    index = me->query_temp("es2_king/qishang_staff/index");
-    if (index < 0 || index >= 6) index = 0;
+    // 自動 Combat：七式等機率隨機出招。
+    index = random(sizeof(form_ids));
     form = form_ids[index];
     action = ([ "name":form_names[form], "action":HIG + form_action(form) + NOR,
         "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]);
-    me->set_temp("es2_king/qishang_staff/index", (index + 1) % 6);
     COMBAT_D->fight(me, opponent, "staff", action, weapon);
 }
 
