@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 F="es2_king_expansion/runtime/mudlib/adm/daemons/kingmartiald.c"
-for skill in force unarmed sword "secondhand sword" "twohanded sword" blade "twohanded blade" staff parry dodge whip; do
+for skill in force unarmed sword "secondhand sword" "twohanded sword" blade "twohanded blade" staff "twohanded staff" parry dodge whip; do
   grep -Fq "\"$skill\"" "$F"
 done
 grep -Fq 'level > 300' "$F"
@@ -11,9 +11,9 @@ grep -Fq 'set_skill("rulai shenzhang", level)' "$F"
 # KING Project Canon mapping regression／使用者驗收指定的正式裝備關係。
 grep -Fq 'map_skill("secondhand sword", "advance_lunmay")' "$F"
 grep -Fq 'map_skill("dodge", "mayin")' "$F"
-grep -Fq 'map_skill("staff", "chin_staff")' "$F"
-grep -Fq 'map_skill("blade", "daxie qisun blade")' "$F"
-for pair in 'advance_lunmay|傲梅暗劍訣' 'mayin|梅影身法' 'chin_staff|青邪杖法' 'kuxiao force|大邪心法' 'daxie qisun blade|大邪七損刀'; do
+grep -Fq 'map_skill("staff", "qishang_staff")' "$F"
+grep -Fq 'map_skill("blade", "qisun_blade")' "$F"
+for pair in 'advance_lunmay|傲梅暗劍訣' 'mayin|梅影身法' 'chin_staff|青邪杖法' 'qishang_staff|大邪七傷杖訣' 'kuxiao force|哭笑心法' 'huge force|大邪心法' 'qisun_blade|大邪七損刀訣'; do
   id="${pair%%|*}"; zh="${pair#*|}"
   grep -Fq "CHINESE_D->add_translate(\"$id\", \"$zh\")" "$F"
 done
