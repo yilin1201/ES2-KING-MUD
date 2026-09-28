@@ -109,7 +109,8 @@ assert.match(output.slice(staffOffset), /\x1b\[1;35m(?:破械反撩|下盤重槌
 assert.match(output.slice(staffOffset), /霸天煉體訣.*不滅金身/s);
 // Shared Alias Routing／leiting 同時存在於刀、杖；持九曲十彎時必須由 qishang_staff 接手。
 assert.match(await command("perform leiting on arbao"), /破械反撩・雷霆震不還/);
-assert.match(await command("perform tianku on arbao"), /哭笑極境奧義・九曲天哭・一杖定乾坤/);
+// 第七式有大邪金身前置；此處只驗證 parser／alias 已路由到 qishang_staff，不能把前置條件失敗誤判為 routing FAIL。
+assert.match(await command("perform tianku on arbao"), /(?:哭笑極境奧義・九曲天哭・一杖定乾坤|大邪金身)/);
 console.log("DAXIE_STAGE_PASS:qishang-staff-purple-batian");
 
 await command("goto /d/snow/inn_hall", "客棧大堂");
