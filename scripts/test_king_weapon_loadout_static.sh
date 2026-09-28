@@ -22,6 +22,13 @@ grep -Fq 'set("wield_as", "twohanded staff")' "$OBJ/god_cane.c"
 grep -Fq 'provision_creator_weapons' "$KINGD"
 grep -Fq 'provision_creator_weapons' "$APPLY"
 
+# Evidence Boundary Gate／避免在沒有直接 Original/Historical 證據前，
+# 把武器 channel 自動推導成門派武學 mapping。
+! grep -Fq 'map_skill("secondhand sword", "advance_lunmay")' "$KINGD"
+! grep -Fq 'map_skill("twohanded staff", "chin_staff")' "$KINGD"
+! grep -Fq 'call_other(actor, "map_skill", "secondhand sword", "advance_lunmay")' "$KINGD"
+! grep -Fq 'call_other(actor, "map_skill", "twohanded staff", "chin_staff")' "$KINGD"
+
 # Login provisioning 不得自動 wield；武器只進 Inventory。
 if grep -n -A8 'provision_creator_weapons' "$APPLY" | grep -Eq '\.wield|->wield|call_other\([^)]*"wield"'; then
   echo "KING WEAPON LOADOUT STATIC FAIL: login contains auto-wield" >&2
