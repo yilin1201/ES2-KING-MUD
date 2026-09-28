@@ -15,7 +15,7 @@ private mapping form_names = ([
 private mapping aliases = ([ "tianku":"dingqiankun" ]);
 
 private void create(){ seteuid(getuid()); DAEMON_D->register_skill_daemon("qishang_staff"); setup(); }
-int valid_enable(string usage){ return usage == "staff"; }
+int valid_enable(string usage){ return usage == "staff" || usage == "twohanded staff"; }
 
 private string resolve_form(string form)
 {
@@ -53,18 +53,20 @@ void attack_using(object me, object opponent, object weapon)
 }
 
 // 指定招式入口；具體 Busy、破械、真傷、斬殺等數值效果待 Runtime 平衡驗證後逐項實作，避免一次引入不可逆失衡。
-int perform(object me, object target, string form)
+int perform_action(object me, string form, object target)
 {
     mapping action;
     object weapon;
-    form = resolve_form(form);
+    if (form == "random") form = form_ids[random(sizeof(form_ids))];
+    else form = resolve_form(form);
     if (!form) return notify_fail("大邪七傷杖訣沒有這一式。\n");
     weapon = me->query_temp("weapon/staff");
+    if (!objectp(weapon)) weapon = me->query_temp("weapon/twohanded staff");
     if (!objectp(weapon)) return notify_fail("你必須裝備杖類武器才能施展大邪七傷杖訣。\n");
     if (!target) target = me->select_opponent();
     if (!target) return notify_fail("你目前沒有可攻擊的目標。\n");
     action = ([ "name":form_names[form], "action":HIG + form_action(form) + NOR,
         "attack":0, "force":0, "defense":0, "damage_type":"瘀傷" ]);
-    COMBAT_D->fight(me, target, "staff", action, weapon);
+    COMBAT_D->fight(me, target, objectp(me->query_temp("weapon/staff")) ? "staff" : "twohanded staff", action, weapon);
     return 1;
 }
