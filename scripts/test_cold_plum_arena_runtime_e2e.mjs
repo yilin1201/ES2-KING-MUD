@@ -68,7 +68,7 @@ async function login() {
 
 const attributes = ["str", "cor", "int", "spi", "cps", "dex", "con", "wis"];
 const coldSkills = ["hainmay force", "advance_lunmay", "lunmay", "mayin", "seven"];
-const baseSkills = ["force", "sword", "parry", "dodge", "unarmed"];
+const baseSkills = ["force", "unarmed", "sword", "secondhand sword", "twohanded sword", "blade", "twohanded blade", "staff", "parry", "dodge", "whip"];
 
 async function verifyKingProfile() {
   for (const attribute of attributes)
