@@ -107,6 +107,18 @@ void create()
     set("es2_king_expansion", 1);
     set("mirror_mind/sustain_formula", "UNKNOWN");
 
+    // Arena NPC Vital Stats／演武界 NPC 精氣神：使用者指定梅寒霜精、氣、神固定為 999。
+    // 同步 current/effective/maximum，避免 score 顯示仍被 setup() 的預設 30/30 覆蓋。
+    set_stat_maximum("gin", 999);
+    set_stat_effective("gin", 999);
+    set_stat("gin", 999);
+    set_stat_maximum("kee", 999);
+    set_stat_effective("kee", 999);
+    set_stat("kee", 999);
+    set_stat_maximum("sen", 999);
+    set_stat_effective("sen", 999);
+    set_stat("sen", 999);
+
     /*
      * Playability Boundary／可玩性邊界：
      * 梅寒霜是演武界實戰 NPC，因此允許正常 Original Combat 被擊敗。
