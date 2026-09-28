@@ -24,6 +24,8 @@ mkdir -p "$RUNTIME_DIR/mudlib/log"
 driver_pid=""
 bridge_pid=""
 persistence_pid=""
+stopping=0
+
 cleanup() {
   if [[ -n "$bridge_pid" ]] && kill -0 "$bridge_pid" 2>/dev/null; then
     kill "$bridge_pid" 2>/dev/null || true
@@ -40,7 +42,16 @@ cleanup() {
   # Final Flush／最後同步：Driver 停止寫入後再保存一次，避免正常 Restart 遺失最後一筆 save。
   bash "$SCRIPT_DIR/sync_es2_persistence.sh" || true
 }
-trap cleanup EXIT INT TERM
+
+graceful_shutdown() {
+  stopping=1
+  echo "RUNTIME STOP：received platform shutdown signal; performing clean persistence flush." >&2
+  cleanup
+  exit 0
+}
+
+trap cleanup EXIT
+trap graceful_shutdown INT TERM
 
 # Neolith（MUD 遊戲執行引擎）只供同一容器的 bridge 使用；部署不得映射 4000。
 (
@@ -120,6 +131,10 @@ node --input-type=module -e '
 while kill -0 "$driver_pid" 2>/dev/null && kill -0 "$bridge_pid" 2>/dev/null; do
   sleep 1
 done
+
+if [[ "$stopping" -eq 1 ]]; then
+  exit 0
+fi
 
 if ! kill -0 "$driver_pid" 2>/dev/null; then
   echo "RUNTIME FAIL：Neolith process exited unexpectedly; terminating service for clean restart." >&2
