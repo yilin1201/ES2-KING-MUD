@@ -41,8 +41,8 @@ int main(object me, string arg)
         if (act != "jinshen" && act != "daxie-jinshen") {
             if (environment(me)->query("no_fight")) return notify_fail("這裡不准戰鬥。\n");
             if (!me->is_fighting()) return notify_fail("你必須在戰鬥中才能使用絕招！\n");
-            weapon = me->query_temp("weapon/sword");
-            if (!objectp(weapon)) return notify_fail("你必須裝備劍／刀類武器來使出大邪七損刀。\n");
+            weapon = me->query_temp("weapon/blade");
+            if (!objectp(weapon)) return notify_fail("你必須裝備刀類武器來使出大邪七損刀。\n");
             target = daxie_target(me, target_id);
         }
         return SKILL_D("daxie qisun blade")->perform_action(me, act, target);
