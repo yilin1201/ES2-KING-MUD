@@ -77,3 +77,16 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 - `vovo2000_es2_character_historical_evidence.md` — Vovo2000 VOA ACT #7 ES2 人物資料鏡像與投稿連結圖；三頁主串及可達 ES2 子頁已逐層確認。包含 NPC/職業/門派/裝備、冷梅莊、封山派、陰間 Lifecycle、種族顯示、主線/歷史/神話。狀態：**DEPTH EXHAUSTED（以 topic 29232 可達 ES2 graph 為邊界）**。
 
 - `EVIDENCE_MASTER_SUMMARY_ZH_TW.md` — **最新中文 Evidence Master Summary**：統整實際遊戲影片、梅影風實機 Skills、PIXNET、Vovo2000、冷梅／封山、World Lore、Lifecycle、Race，以及 Reconstruction/Expansion 隔離與目前真正缺口。後續新增 Evidence 優先由此總覽進入 Gap Comparison。
+
+
+## KING Weapon Combat Mapping Recovery — 2026-09-28
+
+### SOURCE CONFIRMED
+- Original ES2 `data/chinese.o`：`advance_lunmay` = 傲梅暗劍訣；`chin_staff` = 青邪杖法；`secondhand sword` = 左手劍術；`twohanded staff` = 雙握杖法。
+- Original ES2 `feature/weapon/sword.c` 明確提供 `secondhand sword` damage channel；`feature/weapon/staff.c` 明確提供 `twohanded staff` damage channel。
+- Original ES2 legacy equip 文件確認 `wield_as` 可讓同一武器以 `sword`／`secondhand sword` 等武器技能裝備。
+
+### UNKNOWN / EVIDENCE BOUNDARY
+- 目前公開 Original ES2 Source Recovery 尚未找到 `map_skill("secondhand sword", "advance_lunmay")` 或等價直接 mapping 證據。
+- 目前公開 Original ES2 Source Recovery 尚未找到 `map_skill("twohanded staff", "chin_staff")` 或等價直接 mapping 證據。
+- 因此不得僅依中文名稱或武器類型推導「傲梅暗劍訣 = secondhand sword」或「青邪杖法 = twohanded staff」正式 Combat Mapping；兩項維持 UNKNOWN，等待 Historical Evidence 或更完整 Original Source。
