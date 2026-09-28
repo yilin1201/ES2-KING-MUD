@@ -291,6 +291,7 @@ replacement = '''    user->setup();
     if (user->query("id") == "king"
     &&  wiz_level(user) >= wiz_level("(admin)")) {
         if (!call_other("/adm/daemons/kingd", "apply_creator_profile", user)
+        ||  !call_other("/adm/daemons/kingd", "provision_creator_weapons", user)
         ||  !call_other("/adm/daemons/kingmartiald", "set_cold_plum", user, 200)
         ||  !call_other("/adm/daemons/kingmartiald", "set_creator_core_martial", user, 200)
         ||  !call_other("/adm/daemons/kingmartiald", "set_rulai_shenzhang", user, 200)) {
@@ -299,7 +300,7 @@ replacement = '''    user->setup();
             destruct(user);
             return;
         }
-        write("KING 創世神配置已同步：八項屬性 99、六項狀態 999、冷梅莊武學 200、易筋經 200、霸天煉體訣 200、如來神掌 200。\\n");
+        write("KING 創世神配置已同步：八項屬性 99、六項狀態 999、五件武器已置入物品欄且不自動裝備、冷梅莊武學 200、易筋經 200、霸天煉體訣 200、如來神掌 200。\\n");
     }
 
 #ifdef SAVE_USER
