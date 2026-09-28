@@ -135,6 +135,10 @@ int set_creator_core_martial(object actor, int level)
     CHINESE_D->add_translate("yijinjing", "易筋經");
     CHINESE_D->add_translate("batian lianti jue", "霸天煉體訣");
     CHINESE_D->add_translate("rulai shenzhang", "如來神掌");
+    CHINESE_D->add_translate("hainmay force", "寒梅心法");
+    CHINESE_D->add_translate("lunmay", "冷梅劍法");
+    CHINESE_D->add_translate("mayin", "梅影身法");
+    CHINESE_D->add_translate("seven", "七巧如意手");
     CHINESE_D->add_translate("advance_lunmay", "傲梅暗劍訣");
     CHINESE_D->add_translate("chin_staff", "青邪杖法");
     CHINESE_D->add_translate("seven_blade", "大邪七損刀訣");
