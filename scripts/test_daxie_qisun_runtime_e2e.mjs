@@ -56,6 +56,8 @@ console.log("DAXIE_STAGE_PASS:jinshen-negative");
 await new Promise(resolve => setTimeout(resolve, 2500));
 
 assert.match(await command("kingmartial daxie 300"), /哭笑門心法 Lv\.300／大邪七損刀 Lv\.300/);
+// Primary Force Regression／配置大邪後，KING 主內功仍必須是易筋經，不得被哭笑門心法覆蓋。
+assert.match(await command("skills"), /易筋經|yijinjing/);
 assert.match(await command("kingmartial daxie status"), /哭笑門心法 Lv\.300／大邪七損刀 Lv\.300／大邪金身：OFF/);
 assert.match(await command("perform jinshen"), /大邪金身已啟動/);
 assert.match(await command("perform jinshen"), /結束「大邪金身」狀態/);
