@@ -32,5 +32,7 @@ grep -Fq '你必須裝備刀類武器來使出大邪七損刀' "$ROOT/cmds/std/p
 ! grep -Fq 'me->query_temp("weapon/sword")' "$ROOT/cmds/std/perform.c"
 grep -Fq 'actor->set_skill("kuxiao force", level)' "$ROOT/adm/daemons/kingmartiald.c"
 grep -Fq 'actor->set_skill("daxie qisun blade", level)' "$ROOT/adm/daemons/kingmartiald.c"
+grep -Fq 'daxie <1..300|status>' "$ROOT/cmds/adm/kingmartial.c"
+! grep -Fq 'daxie <1..200|status>' "$ROOT/cmds/adm/kingmartial.c"
 grep -Fq 'Expansion Overlay' "$ROOT/cmds/std/perform.c"
 echo 'DAXIE QISUN STATIC PASS／Canon、Original 邊界、依賴與七式入口完整。'
