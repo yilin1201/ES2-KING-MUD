@@ -12,7 +12,7 @@ int main(object me, string arg)
     if (!KING_D->authorized(me))
         return notify_fail("只有 ES2-KING Owner 帳號可以使用此指令。\n");
     if (!arg || sscanf(arg, "%s %s", name, value) != 2)
-        return notify_fail("格式：kingmartial yijinjing <1..300> | batian zhao|ji | daxie <1..200|status>\n");
+        return notify_fail("格式：kingmartial yijinjing <1..300> | batian zhao|ji | daxie <1..300|status>\n");
     if (name == "yijinjing" && sscanf(value, "%d", level) == 1) {
         if (!KING_MARTIAL_D->set_yijinjing(me, level))
             return notify_fail("易筋經等級必須為 1～300。\n");
