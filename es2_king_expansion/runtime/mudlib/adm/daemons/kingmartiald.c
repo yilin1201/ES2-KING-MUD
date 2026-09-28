@@ -49,7 +49,7 @@ int set_daxie(object actor, int level)
     actor->set_skill("huge force", level);
     
     actor->set_skill("blade", level);
-    load_object("/d/arena/skill/qisun_blade");
+    load_object("/daemon/skill/qisun_blade");
     // 大邪七損刀是刀法；不覆蓋 KING 的主內功易筋經與主劍法冷梅劍法。
     // 哭笑門心法只作為大邪金身的已學相依技能；KING 主 force 仍維持易筋經。
     actor->map_skill("blade", "qisun_blade");
@@ -92,6 +92,7 @@ int set_cold_plum(object actor, int level)
     actor->map_skill("dodge", "mayin");
     // KING 目前 staff 裝備新創大邪七傷杖訣；Original 青邪杖法 chin_staff 保留為獨立技能，可後續切換而不互相覆蓋。
     actor->map_skill("staff", "qishang_staff");
+    actor->map_skill("twohanded staff", "qishang_staff");
 
     // 寒梅心法 → 明鏡止水 → 冷梅劍法五式 → 傲梅暗劍訣。
     actor->set("es2_king/lengmei/force", "寒梅心法");
