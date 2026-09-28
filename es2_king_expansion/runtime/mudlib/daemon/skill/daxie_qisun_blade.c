@@ -69,6 +69,17 @@ int valid_enable(string usage)
     return usage == "blade" || usage == "parry";
 }
 
+// 一般 Combat 也必須能看見已裝備的大邪七損刀，而非只有 perform 才有招式演出。
+void attack_using(object me, object opponent, object weapon)
+{
+    mapping action;
+    if (!opponent) return;
+    action = ([ "name":"大邪七損刀",
+        "action":HIG "$N手中$w邪勢驟起，大邪七損刀化作一道森寒刀光斬向$n的$l！" NOR,
+        "attack":0, "force":0, "defense":0, "damage_type":"割傷" ]);
+    COMBAT_D->fight(me, opponent, "blade", action, weapon);
+}
+
 private string normalize_form(string form)
 {
     return stringp(aliases[form]) ? aliases[form] : form;
