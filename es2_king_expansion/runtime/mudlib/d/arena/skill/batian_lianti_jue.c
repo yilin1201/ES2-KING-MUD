@@ -12,6 +12,19 @@ private void create()
 
 int valid_enable(string usage) { return usage == "parry"; }
 
+// Combat attack hook：KING 一進入實際交戰便顯示一次不滅金身開場，不再等待隨機 parry 事件。
+void attack_using(object me, object opponent, object weapon)
+{
+    if (!me->query_temp("es2_king/batian/immortal_intro")) {
+        message_vision(
+            HIW "面對漫天殺機，$N神色不起波瀾，只信步前踏半步。\n"
+            HIW "體內「" HIY "霸天煉體訣" HIW "」神紋流轉，周身散發著萬法不侵的沉雄氣度。\n"
+            HIW "待得金芒驟聚，「" HIY "不滅金身" HIW "」自然流轉，泛起璀璨耀目的暗金琉璃神華。\n" NOR,
+            me);
+        me->set_temp("es2_king/batian/immortal_intro", 1);
+    }
+}
+
 // Original Combat 的 parry_using 正式入口；現階段不虛構額外拆招卸力數值。
 int parry_using(object me, int ability, int strength, object from)
 {
