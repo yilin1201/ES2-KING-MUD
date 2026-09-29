@@ -19,6 +19,7 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 | `game_content_inventory_phase2.md` | Phase 2 遊戲內容清冊 | Source + Static + Runtime | Inventory / Dependency Map | 43 rooms、23 NPC、Quest／Item／Shop／Class 邊界 | KEEP |
 | `original_content_deep_recovery_phase3.md` | Phase 3 Snowkeep／fon／challie Deep Recovery + Quest Runtime | Source + History + External Negative Search + Runtime | Recovery Exhaustion / Runtime Evidence | 不覆寫 Phase 2 清冊；補足缺檔證據耗盡與兩條 Quest Journey | KEEP |
 | `original_content_remaining_gap_list.md` | K Admin 驗收後 Original 剩餘內容缺口 | Existing Evidence + Runtime Matrix | Remaining Gap / Next Evidence Target | 集中記錄 SOURCE_REQUIRED、BROKEN、UNKNOWN、EVIDENCE_EXHAUSTED；不創作 Runtime | KEEP |
+| `original_content_implementation_packages.md` | Human／Snowkeep／Class／Quest 實作交接包 | Confirmed Target Source + Missing Dependency Boundary | Implementation Gate / Runtime Handoff | 只整理可執行依賴與缺失 LPC；不把外部 family Source 升級成 Target Canon | KEEP |
 | `m19_lifecycle_evidence_registry.md` | 生命週期 | Original Runtime | Registry | 與 M24 資料完整性交叉 | KEEP |
 | `m21_world_content_evidence_registry.md` | 世界 Runtime | Original Runtime | Registry | 補強 M17；不是重複刪除候選 | KEEP |
 | `m22_npc_item_evidence_registry.md` | NPC/物品 Runtime | Original Runtime | Registry | 補強 M16；不是重複刪除候選 | KEEP |

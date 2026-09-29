@@ -1,6 +1,6 @@
 # Original ES2 Remaining Content Gap List
 
-> Updated：2026-09-28  
+> Updated：2026-09-29  
 > Scope：K Admin Runtime Validation 後的 Original Content Remaining Completion  
 > Rule：Evidence First；已達 Evidence Exhausted 的項目不重搜同一批來源，UNKNOWN 不補造。
 
@@ -10,13 +10,10 @@
 |---|---|---|---|---|---|---|
 | P0 | Quest Track A — Random Task Quest | PARTIAL / SOURCE_REQUIRED | 目標版本 quest daemon、派發 NPC、completion/reward 與正式欄位鏈 | `doc/wiz/quest` 只確認 Story／Area Quest 設計模型；無法宣告 Random Task Quest 可玩 | 新的同版本 Original LPC／可證明 lineage archive | 取得直接 Source 前不移植外部 qlist 數值；不得把 Story Quest 文件當 Random Task daemon |
 | P1 | Snow 英雄帖 → Snowkeep | PARTIAL / CONFIRMED_SOURCE / UNREACHABLE | `/d/snowkeep/entrance` 及後續 Room／NPC／Quest chain | `girl.c` 產出英雄帖，`guard.c` 收帖並移動玩家，`ebridge.c` 亦直連缺失入口；目的區域仍不可達 | `es2.xor.tw` Original Source 已閉合 invitation 前置鏈；仍需同版本 Snowkeep LPC | 保留已確認觸發鏈；禁止建立推測 Room |
-| P1 | Snow `try/fon` 殘鏈 | UNKNOWN / INCOMPLETE / EVIDENCE_EXHAUSTED | 遺失的狀態轉移呼叫端、completion、reward、save boundary | 阿寶／老太婆部分歷史對話無法完整閉環 | 新的目標版本 NPC／Room／command Source | 無新 Source 不重啟 Recovery |
-| P1 | `__ID_CHALLIE__` object identity | UNKNOWN / EVIDENCE_EXHAUSTED | 原始物件 Source 與生成／使用鏈 | 無法確認歷史物件內容；不是 missing macro | 新的同版本 object LPC | 禁止新增 `#define` 或推測物件 |
 | P1 | Taoist 玩家職業鏈 | PARTIAL / SOURCE_REQUIRED | Target Original daemon、initialize／advance boundary、entry placement、Target recruitment protocol | `es2.xor.tw/doc/wiz/taoist-plan` 與 `taoism-spells` 確認職業／技能規劃；MANIFEST 無 class daemon／entry LPC | Target-compatible Taoist daemon＋entry/recruit LPC | 維持 rank compatibility；Original 文件不足以建立 Runtime，不得套用 Fighter 模式 |
 | P1 | Bonze 玩家職業鏈 | PARTIAL / SOURCE_REQUIRED | Target entry、daemon、trigger、rank／progress rules | `doc/wiz/bonze` 與 Legacy 山煙寺資料確認設計／師父技能，但無 Target player-class LPC | 新的同版本 Entry＋daemon LPC | Legacy／聊天紀錄只作 corroboration，不建立玩家入口 |
 | P1 | Soldier 玩家職業鏈 | PARTIAL / SOURCE_REQUIRED | Player entry NPC、daemon、合法 set_class trigger | Original `feature/npc/soldier.c` 與官兵 NPC 已確認，但屬 NPC 行為；玩家職業不可閉環 | 新的同版本 Player Entry＋class daemon LPC | 保留 NPC Evidence，不把 `F_SOLDIER` 冒充 player class |
 | P1 | Race initializer／Human-clan Original ID | CONFIRMED_SOURCE / DEPENDENCY_CLOSED（Human） | 其他種族各自 daemon／initialize／advance_level 仍須逐種族 Source | `logind.c` race selection → `set_race("human")` → `chard.c` → `RACE_D("human")->setup()`／`initialize()` → 首次 save 已閉合 | `es2.xor.tw`：`adm/daemons/logind.c`、`chard.c`、`daemon/race/human.c`、`feature/char/score.c` | Human ID 與初始值已確認；`human_clan` 仍是 Reconstruction ID，不推造其他 Race |
-| P2 | Inventory 非 autoload 任意裝備保存 | CONFIRMED | Target pinned Original `feature/user/autoload.c` 只記錄 `query_autoload()` 為真的物件；`obj/user.c::save()`／`setup()` 分別呼叫 `save_autoload()`／`restore_autoload()` | Original persistence 明確是 autoload opt-in，不包含任意 non-autoload equipment | `taedlar/es2_mudlib@cc45c06`: `mudlib/feature/user/autoload.c`、`mudlib/obj/user.c`、`mudlib/cmds/usr/quit.c` | 保留 Original autoload boundary；不新增泛用裝備保存規則 |
 | P2 | 城隍 `register`／輪迴／轉生 | CONFIRMED_TEXT / SOURCE_REQUIRED | 城隍 NPC、command、Room path、旗標、費用、公式 | 死亡→鬼魂→寺廟 recovery 可玩；完整輪迴缺失 | 同版本 lifecycle LPC | 保持 UNKNOWN，不依文字反推公式 |
 | P2 | `wine_pot` → `red_wine` | UNREACHABLE / BROKEN DEPENDENCY | 缺少 `/d/choyin/npc/obj/red_wine` 且 `wine_pot` 無 spawn reference | 非核心物件鏈不可達 | 新的同版本 object／spawn Source | 不建立紅酒替代物 |
 | P2 | Original 冷梅莊 Room／NPC topology | SOURCE_REQUIRED / REFERENCE_ONLY | 可驗證 Room path、出口、NPC clone 與 Original NPC LPC | ES2-KING Arena 可玩；不得倒灌為 Original 世界 | Original／同 lineage 冷梅莊 Source | 武功凍結；只收直接 Evidence |
@@ -29,3 +26,13 @@
 - Original Historical Content Completion：維持 `PARTIAL`。
 - Remaining safe implementation：目前沒有新的 `CONFIRMED_SOURCE / RECONSTRUCTION_READY` gap 可直接進 Runtime。
 - 下一步只有在取得上表新的直接 Source 後，才重開單一 Evidence-bounded Restoration。
+
+## Closed / Exhausted Items（非活動待辦）
+
+| Item | Final boundary | Reason removed from active gap |
+|---|---|---|
+| Snow `try/fon` 殘鏈 | UNKNOWN / EVIDENCE_EXHAUSTED | Repository、History、Archive 與公開精準搜尋均未取得狀態轉移／completion Source；無新直接 Source 不重搜 |
+| `__ID_CHALLIE__` | UNKNOWN / EVIDENCE_EXHAUSTED | 已證明不是可硬補的 missing macro；缺原物件 LPC 與生成／使用鏈 |
+| Inventory 非 autoload 裝備保存 | CONFIRMED / N/A | Original 已確認採 autoload opt-in；「任意裝備通用保存」不是待實作功能 |
+
+實作交接與精確缺檔清單集中於 `original_content_implementation_packages.md`；本節保留歷史結論，但不再把已耗盡或 N/A 項目當成可執行 Pending。
