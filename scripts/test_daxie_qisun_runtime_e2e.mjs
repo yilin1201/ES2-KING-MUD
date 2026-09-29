@@ -94,7 +94,12 @@ for (const [form, evidence] of forms) {
   await new Promise(resolve => setTimeout(resolve, 650));
 }
 assert.match(await command("perform qisun on arbao"), /七損合一・命魂俱滅.*七重狀態已引爆/s);
-console.log("DAXIE_STAGE_PASS:seven-forms-and-combat");
+// No-arg Qisun Perform／七損引爆已清空 stacks；此時單純 perform 必須自動選前六損之一，不得落回格式提示。
+assert.match(
+  await command("perform"),
+  /雷霆震不還・損皮|傲笑傲天魔・損肉|寒霜透骨・損筋|笑哭不得也・損骨|哭笑無常刀・損脈|大邪絕息斬・損氣/
+);
+console.log("DAXIE_STAGE_PASS:seven-forms-combat-random-perform");
 
 // 正式技能清理與七傷杖 Runtime／避免舊七損刀 ID 重複出現在 skills，並驗證九曲十彎能驅動亮紫七傷杖。
 const skillsNow = await command("skills");
