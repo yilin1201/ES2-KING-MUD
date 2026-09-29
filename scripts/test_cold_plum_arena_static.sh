@@ -28,6 +28,16 @@ grep -Fq '寒霜碎裂，冷梅將折。' "$NPC"
 grep -Fq '三十招了……能逼我棄冷梅、出傲劍，你足以自傲。' "$NPC"
 grep -Fq '冷梅既凋——唯傲劍獨立！' "$NPC"
 grep -Fq 'delete_temp("aojian")' "$NPC"
+AOJIAN="$ROOT/mudlib/daemon/skill/au-chan_sword.c"
+test -f "$AOJIAN"
+# 實機 UI：人物/動作敘述維持白色，招式名稱才使用各式 ANSI 色。
+grep -Fq 'HIW "$N劍光一閃' "$AOJIAN"
+grep -Fq 'HIW "$N虛轉反側' "$AOJIAN"
+# 劍領風騷必須進入 Phase 2 自動 attack pool，不可只存在 perform_action 手動極招。
+grep -Fq 'index=random(sizeof(aojian_actions) + 1)' "$AOJIAN"
+grep -Fq 'jianling_random_attack(me, opponent, weapon)' "$AOJIAN"
+grep -Fq 'me->set_temp("aojian/last_form","劍領風騷")' "$AOJIAN"
+for stage in 忠 武 義 德 狂 情; do grep -Fq "\"name\":\"$stage\"" "$AOJIAN"; done
 grep -Fq 'carry_object("/d/arena/obj/charred_plum_branch")' "$NPC"
 for form in 梅二方劍 梅四方劍 梅八方劍 愛霜恨雪 寒霜三千里 傲梅暗劍訣 傲雪藏鋒 逆折寒梅;do grep -Fq "$form" "$SKILL";done
 # Gameplay Runtime Evidence／明鏡止水全白；梅二／四／八方劍【】外框紅色、框內名稱白色；愛霜恨雪使用青色「」；寒霜三千里使用全白【】；如來神掌另由其 Skill Gate 管理黃色名稱。
