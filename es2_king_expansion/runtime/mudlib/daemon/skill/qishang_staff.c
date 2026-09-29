@@ -66,6 +66,10 @@ int perform_action(object me, string form, object target)
     if (form == "random") form = form_ids[random(sizeof(form_ids))];
     else form = resolve_form(form);
     if (!form) return notify_fail("大邪七傷杖訣沒有這一式。\n");
+    // Project Canon／既定設定：第七式「九曲天哭・一杖定乾坤」必須先進入大邪金身。
+    // 只檢查既有狀態旗標，不新增推測倍率或持續時間。
+    if (form == "dingqiankun" && !me->query("es2_king/daxie_jinshen"))
+        return notify_fail("施展哭笑極境奧義前，必須先啟動大邪金身。\n");
     weapon = me->query_temp("weapon/staff");
     if (!objectp(weapon)) weapon = me->query_temp("weapon/twohanded staff");
     if (!objectp(weapon)) return notify_fail("你必須裝備杖類武器才能施展大邪七傷杖訣。\n");
