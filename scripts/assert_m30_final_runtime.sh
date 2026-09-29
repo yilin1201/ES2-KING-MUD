@@ -116,6 +116,8 @@ grep -Fq 'random(sizeof(forms))' "$QISUN_BLADE"
 grep -Fq 'random(sizeof(form_ids))' "$QISHANG_STAFF"
 grep -Fq 'return usage == "staff" || usage == "twohanded staff";' "$QISHANG_STAFF"
 grep -Fq '哭笑極境奧義・九曲天哭・一杖定乾坤' "$QISHANG_STAFF"
+grep -Fq 'form == "dingqiankun" && !me->query("es2_king/daxie_jinshen")' "$QISHANG_STAFF"
+grep -Fq '必須先啟動大邪金身' "$QISHANG_STAFF"
 ! grep -Fq '寂靜奧義' "$QISHANG_STAFF"
 # 顏色與霸天演出由 source/runtime E2E 精確驗證；此處只驗證最終映像保留必要 ANSI 常數與 Batian hook，避免排版造成假 FAIL。
 grep -Fq 'HIM' "$QISHANG_STAFF"
