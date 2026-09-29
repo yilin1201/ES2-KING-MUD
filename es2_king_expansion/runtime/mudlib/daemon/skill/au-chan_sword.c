@@ -44,7 +44,7 @@ void jianling_combat_attack(object me, object opponent, object weapon)
         action = ([
           "name":"劍領風騷・"+stage["name"],
           // Historical Evidence 顯示每一段均以完整單行呈現：四色「劍領風騷」＋段名＋同色劍氣＋目標。
-          "action":HIR "劍" HIY "領" HIG "風" HIC "騷" HIW "『"+stage["color"]+stage["name"]+HIW+"』，一道"+stage["color"]+stage["color_name"]+HIW+"的劍氣射向$n！" NOR,
+          "action":HIW "$N施展傲劍訣中的極招『" HIR "劍" HIY "領" HIG "風" HIC "騷" HIW "』『"+stage["color"]+stage["name"]+HIW+"』，一道"+stage["color"]+stage["color_name"]+HIW+"的劍氣射向$n！" NOR,
           "attack":0,"force":0,"defense":0,"damage_type":"刺傷"
         ]);
         COMBAT_D->fight(me, opponent, "sword", action, weapon);

@@ -43,8 +43,10 @@ grep -Fq '([ "name":"德","color":HIC' "$AOJIAN"
 grep -Fq '([ "name":"狂","color":HIY' "$AOJIAN"
 grep -Fq '([ "name":"情","color":HIB' "$AOJIAN"
 # 原版劍舞版面：六段每段都是完整單行「劍領風騷『段名』，一道X色的劍氣射向目標」，不可拆成只有段名/特效的零碎行。
-grep -Fq '"action":HIR "劍" HIY "領" HIG "風" HIC "騷" HIW "『"+stage["color"]+stage["name"]+HIW+"』，一道"+stage["color"]+stage["color_name"]+HIW+"的劍氣射向$n！" NOR' "$AOJIAN"
-! grep -Fq '$N施展傲劍訣中的極招「" HIR "劍"' "$AOJIAN"
+grep -Fq '"action":HIW "$N施展傲劍訣中的極招『" HIR "劍" HIY "領" HIG "風" HIC "騷" HIW "』『"+stage["color"]+stage["name"]+HIW+"』，一道"+stage["color"]+stage["color_name"]+HIW+"的劍氣射向$n！" NOR' "$AOJIAN"
+# 原版人物敘述不可為了排版而縮寫：主詞＋施展傲劍訣＋極招＋劍領風騷＋段名＋劍氣＋目標必須全部存在。
+grep -Fq '$N施展傲劍訣中的極招' "$AOJIAN"
+grep -Fq '的劍氣射向$n！' "$AOJIAN"
 grep -Fq 'index=random(sizeof(aojian_actions) + 1)' "$AOJIAN"
 grep -Fq 'jianling_combat_attack(me, opponent, weapon)' "$AOJIAN"
 grep -Fq 'me->set_temp("aojian/last_form","劍領風騷")' "$AOJIAN"
