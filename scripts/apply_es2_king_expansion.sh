@@ -405,7 +405,7 @@ old = '''    mapping opts = ([
 private void get_race (string race, mixed opts, object ob) {
     string choice = cursor_translate (race, opts);
     switch (choice ? choice : race) {'''
-new = '''    write ("選擇你的角色所屬的種族：\\n  1. Human（人類）\\n  2. Avatar（人類族）\\n請輸入編號 1 或 2: ");
+new = '''    write ("選擇你的角色所屬的種族：\\n  1. Human（人類）\\n  2. Avatar（克隆人）\\n請輸入編號 1 或 2: ");
     input_to ("get_race", 0, ob);
 }
 
@@ -440,7 +440,7 @@ if old_retry not in tail:
 tail = tail.replace(old_retry, new_retry, 1)
 text = text[:start] + tail
 text = text.replace('write ("\\r" CLR HIY "選擇 " + choice + " 這個種族會累積 " + kar + " 點業力。\\n" NOR);',
-                    'write ("\\r" CLR HIY "選擇 " + (race == "human" ? "Human（人類）" : "Avatar（人類族）") + " 這個種族會累積 " + kar + " 點業力。\\n" NOR);', 1)
+                    'write ("\\r" CLR HIY "選擇 " + (race == "human" ? "Human（人類）" : "Avatar（克隆人）") + " 這個種族會累積 " + kar + " 點業力。\\n" NOR);', 1)
 path.write_text(text)
 PY
 fi
