@@ -201,6 +201,20 @@ assert.ok(output.slice(phase2Offset).includes("\x1b[1;31m") || output.slice(phas
   "Ao Jian phase missing red/yellow ANSI");
 console.log("COLD_PLUM_PASS:aojian-combat-runtime");
 
+// 劍領風騷必須是 Phase 2 自動 Combat 的隨機持續招，不以 perform/call 直接施放。
+// 1/8 機率下等待足夠 attack callbacks；一旦出現，六段「忠武義德狂情」必須同一輪完整展開。
+const jianlingOffset = output.length;
+const jianlingText = await wait(jianlingOffset, /劍領風騷/, 90000);
+await wait(jianlingOffset, /劍領風騷・忠/, 10000);
+await wait(jianlingOffset, /劍領風騷・武/, 10000);
+await wait(jianlingOffset, /劍領風騷・義/, 10000);
+await wait(jianlingOffset, /劍領風騷・德/, 10000);
+await wait(jianlingOffset, /劍領風騷・狂/, 10000);
+await wait(jianlingOffset, /劍領風騷・情/, 10000);
+assert.ok(jianlingText.includes("\x1b[1;37m") || output.slice(jianlingOffset).includes("\x1b[1;37m"),
+  "Jianling Fengsao actor narration must return to bright white");
+console.log("COLD_PLUM_PASS:jianling-fengsao-random-combat");
+
 // Combat Reset／戰鬥停止後，下一場必須重新從冷梅開始並清空 30 招計數。
 await call('me->remove_all_killer()');
 await call('mei->remove_all_killer()');
