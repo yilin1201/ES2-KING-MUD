@@ -20,6 +20,7 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 | `original_content_deep_recovery_phase3.md` | Phase 3 Snowkeep／fon／challie Deep Recovery + Quest Runtime | Source + History + External Negative Search + Runtime | Recovery Exhaustion / Runtime Evidence | 不覆寫 Phase 2 清冊；補足缺檔證據耗盡與兩條 Quest Journey | KEEP |
 | `original_content_remaining_gap_list.md` | K Admin 驗收後 Original 剩餘內容缺口 | Existing Evidence + Runtime Matrix | Remaining Gap / Next Evidence Target | 集中記錄 SOURCE_REQUIRED、BROKEN、UNKNOWN、EVIDENCE_EXHAUSTED；不創作 Runtime | KEEP |
 | `original_content_implementation_packages.md` | Human／Snowkeep／Class／Quest 實作交接包 | Confirmed Target Source + Missing Dependency Boundary | Implementation Gate / Runtime Handoff | 只整理可執行依賴與缺失 LPC；不把外部 family Source 升級成 Target Canon | KEEP |
+| `target_lost_source_lifecycle_recovery_2026_09_29.md` | Target 缺失 Class／Quest／Snowkeep／Race／輪迴 Source 收斂 | Target Source + Git History + Exact Public Code Search + Family Lineage Diff | Lost Source Boundary / Dependency Gate | 新確認 Historical race 行為片段與 Target reincarnation core；外部 death-world lifecycle 標記 CONFLICT | KEEP |
 | `m19_lifecycle_evidence_registry.md` | 生命週期 | Original Runtime | Registry | 與 M24 資料完整性交叉 | KEEP |
 | `m21_world_content_evidence_registry.md` | 世界 Runtime | Original Runtime | Registry | 補強 M17；不是重複刪除候選 | KEEP |
 | `m22_npc_item_evidence_registry.md` | NPC/物品 Runtime | Original Runtime | Registry | 補強 M16；不是重複刪除候選 | KEEP |
@@ -148,3 +149,12 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 - Bonze：`/doc/wiz/bonze` 與 Legacy 山煙寺／玄智和尚資料只屬設計及 Historical corroboration，未閉合 Target player-class dependency。
 - Soldier：`/feature/npc/soldier.c` 是官兵 NPC 協同／拒戰行為；`/obj/npc/garrison.c` 實際 class 仍為 fighter，不能作為玩家 soldier 職業 daemon。
 - 上述四項 `IMPLEMENTATION READY = NO`；未修改 Gameplay Source。
+
+## Target Lost Source / Lifecycle Recovery — 2026-09-29
+
+- Taoist／Bonze：MudRen／mudchina 保存的是外部 family master／skill tree，沒有 Target root class daemon、entry、player `set_class`、`initialize`／`advance_level` 閉環；維持 `PARTIAL / SOURCE_REQUIRED`。
+- Soldier：公開精確搜尋的 player-class ID 只回到 Target 黑白無常 NPC；再次確認 NPC `set_class("soldier")` 不構成玩家職業入口。
+- Snowkeep／`red_wine`：公開精確 Code Search 只重現 Target caller／reference，沒有取得缺失 callee LPC。
+- Historical race：Target `who.c` 直接確認九個歷史 race ID；`steal.c`、`combatd.c`、`teacher.c` 與 traveller NPC 保存 jiaojao／rainnar／ashura 等局部行為，但不含 initializer 公式，狀態 `PARTIAL / SOURCE_REQUIRED`。
+- Reincarnation：Target `chard.c → LOGIN_D->reincarnate()` 直接證明 body recreation／race reselection core；外部 family 則是解除 ghost＋回復 stats 的另一 lifecycle，兩者標記 `CONFLICT`，不得拼接。
+- 本輪沒有新 `RECONSTRUCTION_READY`，未修改 Gameplay Source。

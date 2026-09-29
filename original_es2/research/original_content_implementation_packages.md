@@ -54,3 +54,17 @@
 - **Runtime handoff**：隔離角色完成 assignment→progress→completion→reward→save→relogin；每段需明確 marker。
 
 **Status：PARTIAL / SOURCE_REQUIRED。** 攻略或 `doc/wiz/quest` 不足以補造數值。
+
+## Historical Race Fragment Package
+
+- **Confirmed IDs**：Target `cmds/usr/who.c` 保存 `blackteeth`、`woochan`、`jiaojao`、`yenhold`、`rainnar`、`ashura`、`headless`、`yaksa`、`malik` filters。
+- **Confirmed behavior fragments**：`steal.c` 保存 jiaojao／rainnar 分支；`combatd.c` 保存 ashura aggression hook；`teacher.c` 保存 woochan／jiaojao／rainnar scholar eligibility。
+- **Missing exact Source**：每一 race 的 daemon、`initialize()`、birth formula、stats、armor、age／lifespan、weight、special effect、`advance_level()`。
+- **Status**：`PARTIAL / SOURCE_REQUIRED`；fragment 不能升級為 initializer，`IMPLEMENTATION READY = NO`。
+
+## Reincarnation / 城隍 Package
+
+- **Confirmed Target core**：`chard.c::make_mist()` → `LOGIN_D->reincarnate()` → save link → remove old body save → destruct body → race selection／body recreation。
+- **Missing exact Source**：城隍 Room／NPC、`register` command、entry trigger、karma cost、flags／formula、完成後位置與 save boundary。
+- **Compatibility conflict**：MudRen／mudchina family 的 `feature/damage.c::reincarnate()` 只解除 ghost／回復 effective stats，`d/death` 再移動至 revive room；語意與 Target login-daemon lifecycle 不同。
+- **Status**：Target core `CONFIRMED_SOURCE`；world lifecycle `SOURCE_REQUIRED`；family adapter `CONFLICT`；`IMPLEMENTATION READY = NO`。
