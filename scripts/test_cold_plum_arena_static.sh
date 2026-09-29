@@ -34,6 +34,14 @@ test -f "$AOJIAN"
 grep -Fq 'HIW "$N劍光一閃' "$AOJIAN"
 grep -Fq 'HIW "$N虛轉反側' "$AOJIAN"
 # 劍領風騷必須進入 Phase 2 自動 attack pool，不可只存在 perform_action 手動極招。
+# 實機 Historical Evidence 配色：劍紅、領黃、風綠、騷青；六段忠綠／武紅／義紫／德青／狂金／情藍。
+test "$(grep -Fc 'HIR "劍" HIY "領" HIG "風" HIC "騷" HIW' "$AOJIAN")" -ge 2
+grep -Fq '([ "name":"忠","color":HIG' "$AOJIAN"
+grep -Fq '([ "name":"武","color":HIR' "$AOJIAN"
+grep -Fq '([ "name":"義","color":HIM' "$AOJIAN"
+grep -Fq '([ "name":"德","color":HIC' "$AOJIAN"
+grep -Fq '([ "name":"狂","color":HIY' "$AOJIAN"
+grep -Fq '([ "name":"情","color":HIB' "$AOJIAN"
 grep -Fq 'index=random(sizeof(aojian_actions) + 1)' "$AOJIAN"
 grep -Fq 'jianling_combat_attack(me, opponent, weapon)' "$AOJIAN"
 grep -Fq 'me->set_temp("aojian/last_form","劍領風騷")' "$AOJIAN"
