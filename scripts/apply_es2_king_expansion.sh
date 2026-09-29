@@ -445,6 +445,20 @@ path.write_text(text)
 PY
 fi
 
+# Race Label Migration／種族標籤遷移：已套用舊版 compatibility marker 的 Runtime
+# 不會再進入上方區塊；只更新玩家顯示名，不改 Original avatar ID 或初始化規則。
+python3 - "$LOGIN_D" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+text = path.read_text()
+old = '  2. Avatar\\n請輸入編號 1 或 2: '
+new = '  2. Avatar（克隆人）\\n請輸入編號 1 或 2: '
+if old in text:
+    path.write_text(text.replace(old, new, 1))
+PY
+
 # KING Score Grid Bars／KING score 方格狀態條：只修改 Expansion Runtime 顯示層。
 # Current／Effective／Maximum 仍沿用 Original tribar_graph 三值語意；不改 Statistic 或 Combat。
 SCORE_CMD="$TARGET/mudlib/cmds/usr/score.c"
