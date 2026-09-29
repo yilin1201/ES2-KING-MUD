@@ -25,8 +25,13 @@ driver_pid=""
 bridge_pid=""
 persistence_pid=""
 stopping=0
+cleanup_done=0
 
 cleanup() {
+  if [[ "$cleanup_done" -eq 1 ]]; then
+    return
+  fi
+  cleanup_done=1
   if [[ -n "$bridge_pid" ]] && kill -0 "$bridge_pid" 2>/dev/null; then
     kill "$bridge_pid" 2>/dev/null || true
     wait "$bridge_pid" 2>/dev/null || true
@@ -46,7 +51,7 @@ cleanup() {
 graceful_shutdown() {
   stopping=1
   echo "RUNTIME STOP：received platform shutdown signal; performing clean persistence flush." >&2
-  cleanup
+  # EXIT trap 統一執行一次 cleanup，避免 SIGTERM 路徑重複 Final Flush。
   exit 0
 }
 
