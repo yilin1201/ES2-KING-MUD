@@ -9,9 +9,16 @@ mapping *aojian_actions = ({
 ([ "name":"佳人在殘醉臥君", "action":HIG "$N虛轉反側，一招「" HIR "佳人在殘醉臥君" HIG "」，手中$w上刺，隨後迴鋒下引攻$n的$l……" NOR, "attack":0,"force":0,"defense":0,"damage_type":"刺傷" ]),
 ([ "name":"了絕紅塵遁山林", "action":HIG "$N獰笑一聲，一招「" HIC "了絕紅塵遁山林" HIG "」使將開來，手中$w真氣貫注，劍芒四射，一道長虹貫過$n的$l……" NOR, "attack":0,"force":0,"defense":0,"damage_type":"刺傷" ]),
 ([ "name":"清風送爽墨雲飛", "action":HIG "$N一招「" HIB "清風送爽墨雲飛" HIG "」，手中$w劍氣大盛，$w挾著勁風迎面攻$n的$l……" NOR, "attack":0,"force":0,"defense":0,"damage_type":"割傷" ]),
+([ "name":"渺盡人世絕惡意", "action":HIG "$N手中$w劍芒大盛，一招「" HIG "渺盡人世絕惡意" HIG "」，劍勢封鎖中路，直逼$n的$l！" NOR, "attack":0,"force":0,"defense":0,"damage_type":"刺傷" ]),
+([ "name":"天始一乾景初開", "action":HIG "$N將手中$w一展，一式「" HIY "天始一乾景初開" HIG "」，展劍引勁後順勢攻向$n的$l！" NOR, "attack":0,"force":0,"defense":0,"damage_type":"刺傷" ]),
+([ "name":"不識江山多嬌媚", "action":HIG "$N身體有如陀螺急轉，一招「" HIM "不識江山多嬌媚" HIG "」，旋身劍勢席捲$n的$l！" NOR, "attack":0,"force":0,"defense":0,"damage_type":"割傷" ]),
 });
 
 mapping *aojian_parries = ({
+([ "name":"千嬌百媚柔似水", "action":HIG "$N劍光一閃，一招「" HIM "千嬌百媚柔似水" HIG "」，輕靈曼妙地引開$n的攻勢。" NOR ]),
+([ "name":"佳人在殘醉臥君", "action":HIG "$N虛轉反側，一招「" HIR "佳人在殘醉臥君" HIG "」，虛實變向間卸開$n的攻勢。" NOR ]),
+([ "name":"了絕紅塵遁山林", "action":HIG "$N真氣貫注$w，一招「" HIC "了絕紅塵遁山林" HIG "」，劍芒四射震開$n的攻勢。" NOR ]),
+([ "name":"清風送爽墨雲飛", "action":HIG "$N手中$w劍氣大盛，一招「" HIB "清風送爽墨雲飛" HIG "」，挾著勁風盪開$n的攻勢。" NOR ]),
 ([ "name":"渺盡人世絕惡意", "action":HIG "$N手中$w劍芒大盛，一招「" HIG "渺盡人世絕惡意" HIG "」將$n的攻勢完全封住。" NOR ]),
 ([ "name":"天始一乾景初開", "action":HIG "$N將手中$w一展，一式「" HIY "天始一乾景初開" HIG "」將$n的攻勢化開。" NOR ]),
 ([ "name":"不識江山多嬌媚", "action":HIG "$N身體有如陀螺急轉，一招「" HIM "不識江山多嬌媚" HIG "」將$n的所有攻勢帶開。" NOR ]),
@@ -30,10 +37,9 @@ void attack_using(object me, object opponent, object weapon)
 {
     mapping action; int index;
     if (!opponent) return;
-    index=me->query_temp("aojian/form_index");
-    if(index<0 || index>=sizeof(aojian_actions)) index=0;
+    // 七式一般戰鬥招式全部可隨機出招。
+    index=random(sizeof(aojian_actions));
     action=aojian_actions[index];
-    me->set_temp("aojian/form_index",(index+1)%sizeof(aojian_actions));
     me->set_temp("aojian/last_form",action["name"]);
     COMBAT_D->fight(me,opponent,"sword",action,weapon);
 }
@@ -41,10 +47,9 @@ void attack_using(object me, object opponent, object weapon)
 int parry_using(object me, int ability, int strength, object from)
 {
     mapping action; int index;
-    index=me->query_temp("aojian/parry_index");
-    if(index<0 || index>=sizeof(aojian_parries)) index=0;
+    // 同一套七式亦全部可於 Parry 時隨機觸發。
+    index=random(sizeof(aojian_parries));
     action=aojian_parries[index];
-    me->set_temp("aojian/parry_index",(index+1)%sizeof(aojian_parries));
     message_vision(action["action"]+"\n",me,from);
     return 0;
 }
