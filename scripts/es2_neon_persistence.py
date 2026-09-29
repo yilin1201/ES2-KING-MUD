@@ -76,7 +76,12 @@ def upload(source:Path):
     try:
         if CACHE.read_text(encoding="ascii").strip()==checksum:
             write_status(reachable=True,last_upload="unchanged",last_error=None,checksum=checksum,size_bytes=len(payload))
-            print(f"NEON PERSISTENCE UPLOAD SKIP: unchanged sha256={checksum}"); return
+            # Unchanged snapshots are the normal steady state. Keep the 2-second durability
+            # check, but do not flood Render logs and hide real Runtime/Neolith failures.
+            # Set ES2_PERSISTENCE_LOG_UNCHANGED=1 only when persistence diagnostics need it.
+            if os.environ.get("ES2_PERSISTENCE_LOG_UNCHANGED") == "1":
+                print(f"NEON PERSISTENCE UPLOAD SKIP: unchanged sha256={checksum}")
+            return
     except FileNotFoundError:
         pass
     with connect() as conn:
