@@ -8,15 +8,55 @@
 inherit F_FIGHTER;
 
 string *arena_300_skills = ({
-    "hainmay force", "advance_lunmay", "lunmay", "mayin", "seven",
+    "hainmay force", "advance_lunmay", "lunmay", "au-chan sword", "mayin", "seven",
     "force", "sword", "parry", "dodge", "unarmed"
 });
+
+void switch_to_aojian()
+{
+    if (query_temp("aojian/awakened")) return;
+
+    set_temp("aojian/awakened", 1);
+    delete_temp("cold_plum/mirror_state");
+    map_skill("sword", "au-chan sword");
+    map_skill("parry", "au-chan sword");
+
+    message_vision(HIW
+        "\n寒霜碎裂，冷梅將折。\n"
+        "連番激鬥之下，$N的劍勢已被徹底壓制，空門大露。\n\n"
+        "然就在對手殺招臨身的一瞬，$N的氣質驟然變了。\n"
+        "不再是冰封天地的清冷隱忍，而是凌駕眾生的極致張狂！\n\n"
+        "$N周身原本清冷的寒梅氣息轟然崩碎，沉寂多年的傲岸煞氣如地火破冰般自百骸狂湧而出，衣袍無風自鼓，獵獵作響。\n\n"
+        "$N冷笑一聲，撤步引劍。手中長劍陡然爆出一記宛若龍吟般的清越錚鳴，劍勢由柔轉極剛，原本森白的霜華瞬間被熾烈狂放的燦爛劍罡吞噬殆盡！\n\n"
+        "$N身形微側，不退反進，劍尖斜指蒼穹，一股睥睨天下、獨領風騷的凌厲氣魄轟然充塞全場！\n\n"
+        "氣浪倒捲，天地變色。\n"
+        HIR "冷梅既凋，唯傲劍獨立！\n\n" NOR,
+        this_object());
+}
 
 void activate_mirror_state()
 {
     object opponent;
 
-    if (!is_fighting()) return;
+    if (!is_fighting()) {
+        // 每場戰鬥結束後回復冷梅起手，下一場重新計算 30 次實際攻擊。
+        if (query_temp("aojian/awakened")) {
+            map_skill("sword", "lunmay");
+            map_skill("parry", "lunmay");
+        }
+        delete_temp("aojian");
+        delete_temp("cold_plum/mirror_state");
+        delete_temp("cold_plum/mirror_index");
+        return;
+    }
+
+    // 久戰第二階段：梅寒霜累積完成 30 次實際攻擊後，切換為傲劍訣。
+    if (query_temp("aojian/awakened")) return;
+    add_temp("aojian/attack_rounds", 1);
+    if (query_temp("aojian/attack_rounds") >= 30) {
+        switch_to_aojian();
+        return;
+    }
 
     /*
      * 明鏡止水啟動後，沿用 Original NPC combat-chat heartbeat 加速冷梅出招：
@@ -81,6 +121,7 @@ void create()
     set_skill("hainmay force", 300);
     set_skill("advance_lunmay", 300);
     set_skill("lunmay", 300);
+    set_skill("au-chan sword", 300);
     set_skill("mayin", 300);
     set_skill("seven", 300);
     set_skill("force", 300);
@@ -92,8 +133,10 @@ void create()
     // Expansion skill 不在 /daemon/skill 預設路徑；先載入並向 Original DAEMON_D 登記。
     // 之後 Combat 仍走 Original attack() -> weapon->attack_with() -> SKILL_D("lunmay")。
     load_object("/d/arena/skill/lunmay");
+    load_object("/daemon/skill/au-chan_sword");
     map_skill("force", "hainmay force");
     map_skill("sword", "lunmay");
+    map_skill("parry", "lunmay");
 
     // 正式武學鏈：寒梅心法 → 明鏡止水 → 冷梅劍法五式 → 傲梅暗劍訣・傲雪藏鋒・逆折寒梅。
     // 冷梅劍法五式：梅二方劍、梅四方劍、梅八方劍、愛霜恨雪、寒霜三千里。
