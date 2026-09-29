@@ -113,8 +113,11 @@ assert.match(staffPlain, /體內「霸天煉體訣」神紋流轉，周身散發
 assert.match(staffPlain, /待得金芒驟聚，「【霸天煉體訣。不滅金身】」自然流轉，泛起璀璨耀目的金光琉璃神華。/);
 // Shared Alias Routing／leiting 同時存在於刀、杖；持九曲十彎時必須由 qishang_staff 接手。
 assert.match(await command("perform leiting on arbao"), /破械反撩・雷霆震不還/);
-// 第七式有大邪金身前置；此處只驗證 parser／alias 已路由到 qishang_staff，不能把前置條件失敗誤判為 routing FAIL。
-assert.match(await command("perform tianku on arbao"), /(?:哭笑極境奧義・九曲天哭・一杖定乾坤|大邪金身)/);
+// 第七式有大邪金身前置：先關閉狀態驗證拒絕，再重新啟動後驗證正式奧義。
+assert.match(await command("perform jinshen"), /結束「大邪金身」狀態/);
+assert.match(await command("perform tianku on arbao"), /必須先啟動大邪金身/);
+assert.match(await command("perform jinshen"), /大邪金身已啟動/);
+assert.match(await command("perform tianku on arbao"), /哭笑極境奧義・九曲天哭・一杖定乾坤/);
 // No-arg Perform Routing／持杖且已 mapping 時，單純 perform 必須直接走七傷杖隨機式，不能掉回 Original 格式提示。
 assert.match(
   await command("perform"),
