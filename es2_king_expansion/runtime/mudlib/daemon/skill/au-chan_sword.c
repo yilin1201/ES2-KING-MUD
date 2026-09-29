@@ -33,7 +33,7 @@ mapping *jianling_forms = ({
 private void create(){ seteuid(getuid()); DAEMON_D->register_skill_daemon("au-chan sword"); setup(); }
 int valid_enable(string usage){ return usage=="sword" || usage=="twohanded sword" || usage=="parry"; }
 
-private void jianling_random_attack(object me, object opponent, object weapon)
+void jianling_combat_attack(object me, object opponent, object weapon)
 {
     mapping action, stage;
     int i;
@@ -60,7 +60,7 @@ void attack_using(object me, object opponent, object weapon)
     index=random(sizeof(aojian_actions) + 1);
     if (index == sizeof(aojian_actions)) {
         me->set_temp("aojian/last_form","劍領風騷");
-        jianling_random_attack(me, opponent, weapon);
+        jianling_combat_attack(me, opponent, weapon);
         return;
     }
 
@@ -89,6 +89,6 @@ int perform_action(object me, string form, object target)
     weapon=me->query_temp("weapon/sword");
     if(!objectp(weapon)) weapon=me->query_temp("weapon/twohanded sword");
     if(!objectp(weapon)) return notify_fail("你必須裝備劍類兵刃才能施展劍領風騷。\n");
-    jianling_random_attack(me, target, weapon);
+    jianling_combat_attack(me, target, weapon);
     return 1;
 }

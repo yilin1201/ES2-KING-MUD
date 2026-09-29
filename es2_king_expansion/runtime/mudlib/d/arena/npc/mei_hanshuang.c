@@ -17,6 +17,8 @@ void switch_to_aojian()
     if (query_temp("aojian/awakened")) return;
 
     set_temp("aojian/awakened", 1);
+    set_temp("aojian/jianling_rounds", 0);
+    set_temp("aojian/jianling_target", 4 + random(4));
     delete_temp("cold_plum/mirror_state");
     map_skill("sword", "au-chan sword");
     map_skill("parry", "au-chan sword");
@@ -54,8 +56,34 @@ void activate_mirror_state()
         return;
     }
 
-    // 久戰第二階段：梅寒霜累積完成 30 次實際攻擊後，切換為傲劍訣。
-    if (query_temp("aojian/awakened")) return;
+    // 久戰第二階段：傲劍覺醒後維持主動攻擊節奏。
+    // 劍領風騷不可再依賴純 1/8 運氣：每輪 Phase 2 heartbeat 累計，
+    // 於 4～7 輪間隨機選定一次自動劍舞，出招後重新抽下一個間隔。
+    if (query_temp("aojian/awakened")) {
+        object weapon;
+
+        opponent = query_opponent();
+        if (!objectp(opponent) || environment(opponent) != environment()) return;
+
+        add_temp("aojian/jianling_rounds", 1);
+        if (!query_temp("aojian/jianling_target"))
+            set_temp("aojian/jianling_target", 4 + random(4));
+
+        if (query_temp("aojian/jianling_rounds") >= query_temp("aojian/jianling_target")) {
+            weapon = query_temp("weapon/sword");
+            if (!objectp(weapon)) weapon = query_temp("weapon/twohanded sword");
+            if (objectp(weapon))
+                "/daemon/skill/au-chan_sword"->jianling_combat_attack(this_object(), opponent, weapon);
+            set_temp("aojian/jianling_rounds", 0);
+            set_temp("aojian/jianling_target", 4 + random(4));
+            return;
+        }
+
+        // 非劍舞輪仍由 Original attack() → mapped au-chan sword → COMBAT_D 正常出七式。
+        attack(opponent);
+        return;
+    }
+
     add_temp("aojian/attack_rounds", 1);
     if (query_temp("aojian/attack_rounds") >= 30) {
         switch_to_aojian();
