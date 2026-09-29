@@ -6,8 +6,8 @@ export const CONFIRM_PROMPT = /(?:使用 .+ 這個代號將會創造一個新的
 
 const menus = {
   race: [
-    { value: "1", label: "1. Human（人類族）" },
-    { value: "2", label: "2. Avatar" }
+    { value: "1", label: "1. Human（人類）" },
+    { value: "2", label: "2. Avatar（人類族）" }
   ],
   gender: [
     { value: "female", label: "女性" },
@@ -34,8 +34,8 @@ export function prepareCharacterChoice(outputTail, rawValue) {
 
   if (menu.type === "race") {
     // Race Line Input／種族整行輸入：Public iPhone 不再依賴 get_char 的 CR 或方向鍵。
-    if (["1", "human", "人類", "人類族"].includes(value)) return { bytes: "ES2RACE:1", followup: null };
-    if (["2", "avatar"].includes(value)) return { bytes: "ES2RACE:2", followup: null };
+    if (["1", "human", "人類"].includes(value)) return { bytes: "ES2RACE:1", followup: null };
+    if (["2", "avatar", "人類族"].includes(value)) return { bytes: "ES2RACE:2", followup: null };
   }
   if (menu.type === "gender") {
     if (["female", "f", "女性", "女"].includes(value)) return { bytes: "F", followup: null };
