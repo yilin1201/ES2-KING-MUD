@@ -7,8 +7,9 @@ ROOT="${1:-.runtime/original-es2}"
 LOGIN="$ROOT/mudlib/adm/daemons/logind.c"
 CHAR_D="$ROOT/mudlib/adm/daemons/chard.c"
 HUMAN="$ROOT/mudlib/daemon/race/human.c"
+AVATAR="$ROOT/mudlib/daemon/race/avatar.c"
 
-for file in "$LOGIN" "$CHAR_D" "$HUMAN"; do
+for file in "$LOGIN" "$CHAR_D" "$HUMAN" "$AVATAR"; do
   test -f "$file" || {
     echo "FAIL／失敗：缺少 Human dependency：$file" >&2
     exit 1
@@ -36,6 +37,23 @@ for stat in gin kee sen; do
   grep -Eq '"'"$stat"'"[[:space:]]*:[[:space:]]*30' "$HUMAN"
 done
 grep -q 'add_temp ("apply/armor", 3);' "$HUMAN"
+
+# Original Avatar／化身神：同一個 pinned Target Source 已閉合，直接對 Docker
+# 最終 Original mudlib 驗證，不從 Historical Evidence 或 Reconstruction 推導。
+grep -q 'case "avatar":' "$LOGIN"
+grep -q 'set ("karma", 100);' "$AVATAR"
+grep -q 'DAEMON_D->register_race_daemon ("avatar");' "$AVATAR"
+for attr in str cor int spi cps dex con wis; do
+  grep -Eq '"'"$attr"'"[[:space:]]*:[[:space:]]*16 \+ random\(3\)' "$AVATAR"
+done
+for stat in gin kee sen; do
+  grep -Eq '"'"$stat"'"[[:space:]]*:[[:space:]]*30' "$AVATAR"
+done
+grep -q 'add_temp ("apply/armor", 5);' "$AVATAR"
+grep -q 'set ("age", 14 + random(4));' "$AVATAR"
+
+echo 'ORIGINAL_AVATAR_SOURCE_PASS'
+echo 'ORIGINAL_AVATAR_STATIC_PASS'
 
 echo 'ORIGINAL_HUMAN_SOURCE_PASS'
 echo 'ORIGINAL_HUMAN_STATIC_PASS'
