@@ -30,8 +30,11 @@ grep -Fq 'learned[skill] += amount;' "$SKILL"
 grep -Fq 'advance_skill(string skill, int amount)' "$SKILL"
 grep -Fq 'SKILL_D(skill)->skill_improved' "$SKILL"
 grep -Fq 'SKILL_D(skill)->skill_advanced' "$SKILL"
-grep -Fq 'if( val > 200 ) val = 200;' "$SKILL"
-grep -Fq 'if( skills[skill] > 200 ) skills[skill] = 200;' "$SKILL"
+# Final Runtime 已套用既有 KING-only 300 exception；一般玩家仍由 cap helper 回傳 Original 200。
+grep -Fq 'ES2-KING OWNER SKILL CAP 300' "$SKILL"
+grep -Fq 'return 200;' "$SKILL"
+grep -Fq 'if( val > cap ) val = cap;' "$SKILL"
+grep -Fq 'if( skills[skill] > es2_king_skill_cap() )' "$SKILL"
 
 # 重要 Evidence boundary：這個 pinned Target 沒有 usr learn/practice/exercise command。
 # 若日後出現，必須重新 audit，而不是默默把 family/historical 語法當 Original。
