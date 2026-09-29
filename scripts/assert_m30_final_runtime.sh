@@ -69,6 +69,11 @@ fi
 # 不把 Static PASS 誤標成 Runtime PASS。
 bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_original_human_runtime_fixture_static.sh" "$RUNTIME_DIR"
 
+# Normal Player Training Source Gate／普通玩家練功來源閘門：
+# 直接鎖定 pinned Original 真正存在的 skills/enable/study/perform 與 skill progression engine，
+# 並防止把缺失的 learn/practice/exercise 誤標為已恢復。
+bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_player_training_source_gate.sh" "$RUNTIME_DIR"
+
 # Cold Plum Arena Static Gate／冷梅演武界靜態閘門：在 Docker 最終 Runtime overlay 後檢查，
 # 確保部署映像實際包含梅寒霜、六式與 UNKNOWN 邊界，而不是只檢查 repository source。
 bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_cold_plum_arena_static.sh" "$RUNTIME_DIR"
