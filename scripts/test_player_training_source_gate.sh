@@ -8,7 +8,9 @@ SKILLS="$ROOT/mudlib/cmds/usr/skills.c"
 STUDY="$ROOT/mudlib/cmds/std/study.c"
 PERFORM="$ROOT/mudlib/cmds/std/perform.c"
 SKILL="$ROOT/mudlib/feature/char/skill.c"
-for file in "$ENABLE" "$SKILLS" "$STUDY" "$PERFORM" "$SKILL"; do
+SNEAK="$ROOT/mudlib/cmds/std/sneak.c"
+STEAL="$ROOT/mudlib/cmds/std/steal.c"
+for file in "$ENABLE" "$SKILLS" "$STUDY" "$PERFORM" "$SKILL" "$SNEAK" "$STEAL"; do
   test -f "$file" || { echo "PLAYER_TRAINING_SOURCE_GATE_FAIL:missing:$file" >&2; exit 1; }
 done
 
@@ -36,6 +38,13 @@ grep -Fq 'return 200;' "$SKILL"
 grep -Fq 'if( val > cap ) val = cap;' "$SKILL"
 grep -Fq 'if( skills[skill] > es2_king_skill_cap() )' "$SKILL"
 
+# Ordinary-player active progression／普通玩家主動成長：
+# Original sneak/steal command 是真正可由玩家操作觸發的 improve_skill call site。
+grep -Fq 'me->improve_skill("sneak", 1);' "$SNEAK"
+grep -Fq 'me->improve_skill("sneak", me->query_attr("int") );' "$SNEAK"
+grep -Fq 'me->improve_skill("stealing", me->query_attr("int"));' "$STEAL"
+grep -Fq 'me->improve_skill("stealing", random(me->query_attr("int")));' "$STEAL"
+
 # 重要 Evidence boundary：這個 pinned Target 沒有 usr learn/practice/exercise command。
 # 若日後出現，必須重新 audit，而不是默默把 family/historical 語法當 Original。
 for command in learn practice exercise; do
@@ -46,5 +55,6 @@ for command in learn practice exercise; do
 done
 
 echo 'PLAYER_TRAINING_SOURCE_GATE_PASS'
-echo 'PLAYER_TRAINING_CONFIRMED:skills,enable,study,perform,improve_skill,advance_skill'
+echo 'PLAYER_TRAINING_CONFIRMED:skills,enable,study,perform,sneak,steal,improve_skill,advance_skill'
+echo 'PLAYER_ACTIVE_TRAINING_SOURCE_CONFIRMED:sneak,steal'
 echo 'PLAYER_TRAINING_SOURCE_REQUIRED:learn,practice,exercise'

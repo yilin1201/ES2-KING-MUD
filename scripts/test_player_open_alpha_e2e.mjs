@@ -204,10 +204,24 @@ async function joinThief(p) {
   console.log(`PLAYER_CLASS_PASS:${p.id}:thief`);
 }
 
+async function exerciseThiefTraining(p) {
+  // Original sneak 指令本身會在 busy callback 呼叫 improve_skill("sneak", ...)；
+  // 這裡只用普通玩家實際操作觸發，不以 call/admin 直接修改技能。
+  const offset = p.output.length;
+  p.socket.send("sneak west\r\n");
+  p.lastSentAt = Date.now();
+  await waitForAfter(p, offset, /小心翼翼|看起來，似乎還沒有人發覺|廣場的西邊/, 30000);
+  await delay(5000);
+  assert.match(await command(p, "look"), /廣場的西邊/);
+  assert.match(await command(p, "skills -a"), /sneak|潛行/);
+  console.log(`PLAYER_ACTIVE_TRAINING_PASS:${p.id}:sneak-improve_skill`);
+}
+
 // Thief First／盜賊優先：gammer 依 Original Source 會 random_move；
 // 先在世界剛載入時完成普通玩家食物→梳子→盜賊鏈，不用 admin 固定 NPC。
 const thief = await createCharacter({ id: thiefId, raceChoice: "1", raceLabel: "human", genderChoice: "F", name: "盜賊測試員" });
 await joinThief(thief);
+await exerciseThiefTraining(thief);
 await saveQuitRelogin(thief, /盜賊/);
 assert.match(await command(thief, "skills -a"), /sneak|stealing|潛行|偷竊/);
 console.log("PLAYER_THIEF_PERSISTENCE_PASS");
