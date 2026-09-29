@@ -47,6 +47,10 @@ grep -Fq 'race = "avatar";' "$LOGIN_D"
 grep -Fq 'case "human":' "$LOGIN_D"
 grep -Fq 'case "avatar":' "$LOGIN_D"
 grep -Fq '請輸入編號 1 或 2' "$LOGIN_D"
+grep -Fq '1. Human（人類）' "$LOGIN_D"
+grep -Fq '2. Avatar（克隆人）' "$LOGIN_D"
+grep -Fq 'race == "人類"' "$LOGIN_D"
+grep -Fq 'race == "克隆人"' "$LOGIN_D"
 # Pinned Driver Contract／固定 Driver 契約：Race 的 input_to 是整行模式；Neolith copy_chars() 明確只在 CRLF/CR-NUL 建立 newline，lone CR 會被丟棄。
 test -f "$NEOLITH_COMM"
 grep -Fq "case '\\r': /* CR */" "$NEOLITH_COMM"
@@ -63,6 +67,10 @@ if grep -Fq 'destruct(ob)' <<<"$reservation_block"; then
   echo "FINAL RUNTIME ASSERTION FAIL（最終執行環境斷言失敗）：KING 保留路徑仍包含舊版 destruct(ob)。" >&2
   exit 1
 fi
+
+# Original Race Roster Source Gate／Original 可選種族來源閘門：
+# Target roster 固定 human/avatar；中文名稱只屬 Runtime 顯示層，不改 Original race ID。
+bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_original_race_roster_source_gate.sh" "$RUNTIME_DIR"
 
 # Original Human Runtime Fixture Gate／人類種族精準 Source Fixture：
 # 直接對 Docker 最終 mudlib 驗證 human→commoner→Lv.1 dependency 與固定初始化邊界，
