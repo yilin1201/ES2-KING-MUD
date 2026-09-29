@@ -414,8 +414,8 @@ private void get_race (string race, object ob) {
     // Numeric Race／數字種族：Public WebTelnet 固定提交 1 或 2；Runtime 再映射回 Original human/avatar。
     // Neolith input_to 第二參數是 flags；要把 ob 傳給 callback 必須使用第三參數。先前 input_to("get_race", ob) 把 object 誤當 flags，造成 Public Race callback 無法取得正確 ob。
     // input_to 回呼取得的是已完成的一行文字；只接受 Public 定義的數字或 Original ID，不把 Telnet 行尾當成角色資料。
-    if (race == "1") race = "human";
-    else if (race == "2") race = "avatar";
+    if (race == "1" || race == "人類") race = "human";
+    else if (race == "2" || race == "克隆人") race = "avatar";
     switch (race) {'''
 if old not in text:
     raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_email → get_race Race 區段。")
@@ -456,7 +456,14 @@ text = path.read_text()
 old = '  2. Avatar\\n請輸入編號 1 或 2: '
 new = '  2. Avatar（克隆人）\\n請輸入編號 1 或 2: '
 if old in text:
-    path.write_text(text.replace(old, new, 1))
+    text = text.replace(old, new, 1)
+old_mapping = '''    if (race == "1") race = "human";
+    else if (race == "2") race = "avatar";'''
+new_mapping = '''    if (race == "1" || race == "人類") race = "human";
+    else if (race == "2" || race == "克隆人") race = "avatar";'''
+if old_mapping in text:
+    text = text.replace(old_mapping, new_mapping, 1)
+path.write_text(text)
 PY
 
 # KING Score Grid Bars／KING score 方格狀態條：只修改 Expansion Runtime 顯示層。
