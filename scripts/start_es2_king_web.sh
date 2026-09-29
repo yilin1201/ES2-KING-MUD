@@ -148,7 +148,15 @@ if ! kill -0 "$driver_pid" 2>/dev/null; then
   else
     driver_status=$?
   fi
-  echo "RUNTIME FAIL：Neolith process exited unexpectedly (exit=$driver_status); terminating service for clean restart." >&2
+  # Native Crash Classification／原生程序崩潰分類：
+  # POSIX shell 對 signal 終止通常回報 128+signal；例如 SIGABRT=134。
+  # 這只增加診斷證據，不把 exit code 本身誤當 root cause。
+  if (( driver_status >= 128 && driver_status <= 255 )); then
+    driver_signal=$((driver_status - 128))
+    echo "RUNTIME FAIL：Neolith process exited unexpectedly (exit=$driver_status, signal=$driver_signal, class=NATIVE_SIGNAL_EXIT); terminating service for clean restart." >&2
+  else
+    echo "RUNTIME FAIL：Neolith process exited unexpectedly (exit=$driver_status, class=PROCESS_EXIT); terminating service for clean restart." >&2
+  fi
   exit 1
 fi
 
