@@ -64,6 +64,11 @@ if grep -Fq 'destruct(ob)' <<<"$reservation_block"; then
   exit 1
 fi
 
+# Original Human Runtime Fixture Gate／人類種族精準 Source Fixture：
+# 直接對 Docker 最終 mudlib 驗證 human→commoner→Lv.1 dependency 與固定初始化邊界，
+# 不把 Static PASS 誤標成 Runtime PASS。
+bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_original_human_runtime_fixture_static.sh" "$RUNTIME_DIR"
+
 # Cold Plum Arena Static Gate／冷梅演武界靜態閘門：在 Docker 最終 Runtime overlay 後檢查，
 # 確保部署映像實際包含梅寒霜、六式與 UNKNOWN 邊界，而不是只檢查 repository source。
 bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_cold_plum_arena_static.sh" "$RUNTIME_DIR"
