@@ -35,7 +35,7 @@ grep -Fq 'HIW "$N劍光一閃' "$AOJIAN"
 grep -Fq 'HIW "$N虛轉反側' "$AOJIAN"
 # 劍領風騷必須進入 Phase 2 自動 attack pool，不可只存在 perform_action 手動極招。
 grep -Fq 'index=random(sizeof(aojian_actions) + 1)' "$AOJIAN"
-grep -Fq 'jianling_random_attack(me, opponent, weapon)' "$AOJIAN"
+grep -Fq 'jianling_combat_attack(me, opponent, weapon)' "$AOJIAN"
 grep -Fq 'me->set_temp("aojian/last_form","劍領風騷")' "$AOJIAN"
 grep -Fq 'void jianling_combat_attack(object me, object opponent, object weapon)' "$AOJIAN"
 # 梅寒霜 Phase 2 劍舞節奏：4～7 輪內保證一次，自動循環，不依賴玩家手動 perform。
