@@ -58,6 +58,7 @@ for marker in \
   PLAYER_CLASS_PASS:kinglook:alchemist \
   PLAYER_CLASS_PASS:thiefopen:thief \
   PLAYER_TRAINING_PASS:thiefopen:npc-improve_skill \
+  PLAYER_ACTIVE_TRAINING_PASS:thiefopen:sneak-improve_skill \
   PLAYER_THIEF_PERSISTENCE_PASS \
   PLAYER_FULL_JOURNEY_E2E_PASS
 do
@@ -78,7 +79,10 @@ grep -Fq '"race":"avatar"' "$TEMP_ROOT/mudlib/data/user/a/avataropen.o"
 grep -Fq '"class":"commoner"' "$TEMP_ROOT/mudlib/data/user/a/avataropen.o"
 grep -Fq '"class":"thief"' "$TEMP_ROOT/mudlib/data/user/t/thiefopen.o"
 grep -Eq '^skills .*"sneak":0' "$TEMP_ROOT/mudlib/data/user/t/thiefopen.o"
-grep -Eq '^learned .*"sneak":([2-9][0-9]|[1-9][0-9]{2,})' "$TEMP_ROOT/mudlib/data/user/t/thiefopen.o"
+# Gammer 入門只給 sneak learning=20；主動 sneak west 至少再觸發三次 improve_skill("sneak",1)。
+# 因此存檔必須 >=23，才能證明玩家操作造成的 learning progress 真的跨 save/relogin 保存。
+grep -Eq '^learned .*"sneak":(2[3-9]|[3-9][0-9]|[1-9][0-9]{2,})' "$TEMP_ROOT/mudlib/data/user/t/thiefopen.o"
+echo 'PLAYER_ACTIVE_TRAINING_PERSISTENCE_PASS:sneak-learning>20'
 
 if rg -n '編譯時段錯誤|Runtime error|Cannot #include|Undefined variable' "$TEMP_ROOT/driver.stdout"; then
   echo 'PLAYER OPEN ALPHA FAIL：Driver Log 存在編譯／執行錯誤。' >&2
