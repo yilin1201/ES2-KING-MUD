@@ -142,11 +142,21 @@ if [[ "$stopping" -eq 1 ]]; then
 fi
 
 if ! kill -0 "$driver_pid" 2>/dev/null; then
-  echo "RUNTIME FAIL：Neolith process exited unexpectedly; terminating service for clean restart." >&2
-  wait "$driver_pid" 2>/dev/null || true
+  driver_status=0
+  if wait "$driver_pid" 2>/dev/null; then
+    driver_status=0
+  else
+    driver_status=$?
+  fi
+  echo "RUNTIME FAIL：Neolith process exited unexpectedly (exit=$driver_status); terminating service for clean restart." >&2
   exit 1
 fi
 
-echo "RUNTIME FAIL：WebTelnet bridge exited unexpectedly; terminating service for clean restart." >&2
-wait "$bridge_pid" 2>/dev/null || true
+bridge_status=0
+if wait "$bridge_pid" 2>/dev/null; then
+  bridge_status=0
+else
+  bridge_status=$?
+fi
+echo "RUNTIME FAIL：WebTelnet bridge exited unexpectedly (exit=$bridge_status); terminating service for clean restart." >&2
 exit 1
