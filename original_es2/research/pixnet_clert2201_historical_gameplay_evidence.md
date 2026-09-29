@@ -2,7 +2,7 @@
 
 > Evidence class: **Historical Gameplay Evidence**  
 > Source root: https://clert2201.pixnet.net/blog  
-> Recovery status: **IN PROGRESS — 尚未宣告 DEPTH EXHAUSTED**  
+> Recovery status: **DEPTH EXHAUSTED — Pending = 0（2026-09-29）**  
 > 原則：本檔保存歷史實機／攻略證據；不得因本文存在而直接覆寫 Original ES2 source code。與 ES2-KING Expansion 分層管理。
 
 ## 1. 證據分級
@@ -20,8 +20,9 @@
 - 已識別資料群：武者、共同武功、解謎之路、天朝 Board。
 - 「武者」分類索引已到 END。
 - 「天朝 Board」分類索引已到 END。
-- 「解謎之路／共同武功」仍有單篇全文待逐篇取證，因此全站狀態仍為 IN PROGRESS。
-- 後續回收規則：單篇全文 → 文章內 NPC／技能／物品／地點／指令／數值 → 反查新名詞 → 追站內連結 → 無新增節點才可標 DEPTH EXHAUSTED。
+- 2026-09-29 已逐篇讀取主索引 4 頁的全部 39 篇文章；「解謎之路／共同武功／武者／天朝 Board」全文均已納入 Visited。
+- 39 篇內文的站內 post link 全部回指這個既知集合，未產生新文章節點；`Pending = 0`，因此以此 Blog 可達 post graph 為邊界標記 `DEPTH EXHAUSTED`。
+- 這個結論只代表 PIXNET Historical Gameplay graph 已收斂，不代表 Original LPC Source 已恢復。
 
 ## 3. 冷梅莊／梅影風
 
@@ -312,17 +313,18 @@ Board 資料應作為「時間化 Evidence」保存：它能證明某機制在�
 6. Board 的特定日期更新不能無條件代表其他歷史版本。
 7. 玩家測試／統計資料與遊戲固定公式分開。
 
-## 19. 待回收 Queue
+## 19. Depth Recovery Ledger
 
-優先順序：
-1. 共同武功：每篇全文。
-2. 解謎之路：每篇全文。
-3. 武者：剩餘單篇全文與所有任務鏈。
-4. 天朝 Board：逐篇時間線與修改內容。
-5. 每篇新出現的 NPC／Skill／Item／Map 名稱反向搜尋。
-6. 與 `original_es2` 保存 source code 做 path／ID／formula 交叉比對。
-7. 建立技能、NPC、Item、Quest、Map、Command 五類結構化 registry。
-8. Pending Queue = 0 且沒有新站內節點後，才標記 `DEPTH EXHAUSTED`。
+- **Visited**：39／39 主索引文章；page 1 = 12、page 2 = 12、page 3 = 12、page 4 = 3。
+- **Pending**：0。
+- **Evidence**：39 篇全文皆為 Historical Gameplay Evidence；已識別的 NPC／Skill／Item／Map／Command 保留於本檔各 Registry，不升格為 Original LPC。
+- **Broken**：0 個站內 post link；頁內 `#comments`／`#top` anchor 不計文章節點。
+- **External**：PIXNET 推薦內容與站外連結不屬此 ES2 graph，不擴張搜尋範圍。
+- **Duplicate**：文章內推薦連結僅回指既有 post（例如 Rank、天賦、Books、追月流星劍、攬天彈劍術、風月指法），已去重。
+
+已訪問文章 ID（按主索引順序）：
+
+`7046270562`, `7065380487`, `7065380389`, `7065380277`, `7050761245`, `7050761179`, `7050760111`, `7050760045`, `7050759825`, `7050617371`, `7050613931`, `7050613871`, `7050613795`, `7050613491`, `7049514373`, `7049507979`, `7049264358`, `7047073499`, `7047070943`, `7047062099`, `7047051193`, `7047051053`, `7046273956`, `7046269856`, `7046269180`, `7046268952`, `7046268924`, `7046268842`, `7046268758`, `7046268712`, `7046268560`, `7046268492`, `7046268452`, `7046268370`, `7046268270`, `7046268130`, `7046268082`, `7046267414`, `7046267192`。
 
 ## 20. Runtime 導入 Gate
 

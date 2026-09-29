@@ -10,6 +10,20 @@
 - **Static fixture**：`scripts/test_original_human_runtime_fixture_static.sh`。
 - **Runtime handoff**：隔離新角色創建後讀取 race／class／level／八屬性／精氣神／armor，再 save→quit→relogin 驗證；Work 不重跑完整 Journey。
 
+## Avatar Original Source Package
+
+- **Confirmed**：Target pinned `logind.c::user_race` 直接列出 `avatar`；`chard.c::hint_user_race()` 有對應提示；`daemon/race/avatar.c` 註冊同名 race daemon。
+- **Original values**：karma 100；八屬性各 `16 + random(3)`；gin／kee／sen 各 30；natural armor 5；初始年齡 `14 + random(4)`。
+- **Additional Original path**：`human.c::initialize()` 保存玩家 Human 以 1/10000 條件切換為 Avatar 的路徑。
+- **Status**：`CONFIRMED_SOURCE / DEPENDENCY_CLOSED`。本輪不需要 Restoration；若主線要宣告 Runtime PASS，仍須用隔離 fixture 驗證選擇／初始化／save→relogin，不可用 Static 取代。
+
+## `wine_pot` → `red_wine` Source Package
+
+- **Confirmed caller**：Target Original `d/snow/npc/obj/wine_pot.c` 在 clone 時建立 `/d/choyin/npc/obj/red_wine`、設定 volume 150000，reset 時以 ID `red wine` 回填 volume。
+- **Missing exact Source**：`d/choyin/npc/obj/red_wine.c`。
+- **Negative cross-check**：Target tree/history、MudRen/ES2-utf8 與 mudchina/es2 均未保存該 path；兩個 mirrors 的 `d/choyin/npc/obj/` 清單亦無同物件。
+- **Status**：caller `CONFIRMED_SOURCE`；callee `SOURCE_REQUIRED`。Dependency 未閉合，`IMPLEMENTATION READY = NO`。
+
 ## Snowkeep Implementation Package
 
 | 類別 | 已確認 | 缺失／邊界 |

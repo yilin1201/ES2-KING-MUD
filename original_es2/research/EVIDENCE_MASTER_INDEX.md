@@ -60,7 +60,7 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 
 ## PIXNET Historical Gameplay Evidence
 
-- `pixnet_clert2201_historical_gameplay_evidence.md` — 「紅塵偶遇／緒方殘炎」東方故事2歷史實機、攻略、武學、NPC、任務、物品、地圖、Rank、Books、天賦與 Board 更新證據。狀態：IN PROGRESS；未達 DEPTH EXHAUSTED。
+- `pixnet_clert2201_historical_gameplay_evidence.md` — 「紅塵偶遇／緒方殘炎」東方故事2歷史實機、攻略、武學、NPC、任務、物品、地圖、Rank、Books、天賦與 Board 更新證據。2026-09-29 已逐頁讀取主索引 4 頁、39 篇文章，文章內站內 post link 無新增節點；狀態：**DEPTH EXHAUSTED（Pending = 0）**。
 
 - `mei_yingfeng_skills_runtime_evidence.md` — 梅影風實際 Skills 畫面：寒梅心法、傲梅暗劍訣、冷梅劍法、梅影身法、七巧如意手五項 Runtime CONFIRMED。
 
@@ -130,6 +130,17 @@ Original Source（原始程式／官方保存來源） > Archived Source（歷�
 - `/daemon/race/human.c` 直接確認 Original ID `human`、karma 5、Human 八屬性各 `13 + random(6)`、gin／kee／sen 各 30、女性年齡 13／男性 14，以及 Human setup 行為。
 - `enter_world()` 在新角色初始化後執行 `user->save()`，並以 `startroom` 或 `START_ROOM` 入場。
 - 狀態：Human `CONFIRMED_SOURCE / DEPENDENCY_CLOSED`；現有 Runtime 已具同源 Source，無需重複 Restoration。`human_clan` 仍只屬 Reconstruction ID；其他 Race 不由 Human 推導。
+
+### Avatar Race Initializer
+- Target pinned Original `daemon/race/avatar.c` 為直接 LPC；`logind.c::user_race` 同時列出 `human` 與 `avatar`，`chard.c::hint_user_race()` 亦保存化身神說明。
+- `avatar.c` 直接確認 Original ID `avatar`、karma 100、八屬性各 `16 + random(3)`、gin／kee／sen 各 30、natural armor 5、年齡 `14 + random(4)`、weight／setup 與 race daemon registration。
+- `human.c::initialize()` 另保存玩家 Human 以 `random(10000) == 9999` 轉為 `avatar` 的 Original 路徑；不據此推導其他歷史種族。
+- 狀態：Avatar `CONFIRMED_SOURCE / DEPENDENCY_CLOSED`；這是 Target Original Source，不是 Historical family reconstruction。
+
+### `wine_pot` → `red_wine` 精確邊界
+- Target Original `d/snow/npc/obj/wine_pot.c::create()` 直接 `new("/d/choyin/npc/obj/red_wine")`，並設 volume 150000；`reset()` 尋找 `red wine` 後補回 volume。
+- Target tree／history 與 MudRen／mudchina mirrors 均未保存 `d/choyin/npc/obj/red_wine.c`；因此缺口是被直接引用的 object LPC，而不是缺少 spawn reference。
+- 狀態：`wine_pot` 為 `CONFIRMED_SOURCE`，`red_wine` 為 `SOURCE_REQUIRED / BROKEN DEPENDENCY`；不得以其他酒物件替代。
 
 ### Taoist／Quest／Bonze／Soldier Boundary
 - Taoist：`/doc/wiz/taoist-plan`、`taoism-spells` 與 Legacy 資料可確認職業／技能設計，但 MANIFEST 無 Target class daemon、entry、recruit LPC；維持 `PARTIAL / SOURCE_REQUIRED`。
