@@ -120,7 +120,14 @@ assert.match(
   await command("perform"),
   /破械反撩・雷霆震不還|下盤重槌・搖頭嘲月老|回身盲刺・傲笑傲天魔|陰煞透心・百歡催嚴寒|凌空鎮岳・踏步踏青天|真氣撼地・笑哭不得也|哭笑極境奧義・九曲天哭・一杖定乾坤/
 );
-console.log("DAXIE_STAGE_PASS:qishang-staff-purple-batian-random-perform");
+// Batian Once-Per-Combat／同一場戰鬥即使連續 Combat + perform，也只能演出一次正式開場。
+const batianIntro = "待得金芒驟聚，「【霸天煉體訣。不滅金身】」自然流轉，泛起璀璨耀目的金光琉璃神華。";
+assert.equal(
+  staffPlain.split(batianIntro).length - 1,
+  1,
+  "同一場戰鬥的霸天煉體訣／不滅金身開場不得重複演出"
+);
+console.log("DAXIE_STAGE_PASS:qishang-staff-purple-batian-random-perform-once");
 
 await command("goto /d/snow/inn_hall", "客棧大堂");
 assert.match(await command("save"), /檔案儲存完畢/);
