@@ -3,6 +3,9 @@ import WebSocket from "../webtelnet/node_modules/ws/wrapper.mjs";
 
 const url = process.env.ES2_E2E_WS_URL;
 const password = process.env.ES2_E2E_PASSWORD;
+const humanId = process.env.ES2_E2E_HUMAN_ID || "kinglook";
+const avatarId = process.env.ES2_E2E_AVATAR_ID || "avataropen";
+const thiefId = process.env.ES2_E2E_THIEF_ID || "thiefopen";
 assert.ok(url && password, "缺少隔離 Runtime WebSocket 或測試密碼");
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -201,8 +204,17 @@ async function joinThief(p) {
   console.log(`PLAYER_CLASS_PASS:${p.id}:thief`);
 }
 
+// Thief First／盜賊優先：gammer 依 Original Source 會 random_move；
+// 先在世界剛載入時完成普通玩家食物→梳子→盜賊鏈，不用 admin 固定 NPC。
+const thief = await createCharacter({ id: thiefId, raceChoice: "1", raceLabel: "human", genderChoice: "F", name: "盜賊測試員" });
+await joinThief(thief);
+await saveQuitRelogin(thief, /盜賊/);
+assert.match(await command(thief, "skills -a"), /sneak|stealing|潛行|偷竊/);
+console.log("PLAYER_THIEF_PERSISTENCE_PASS");
+thief.socket.close();
+
 // Human／人類：帳號與顯示名稱都刻意接近 KING，仍必須是普通玩家。
-const human = await createCharacter({ id: "kinglook", raceChoice: "1", raceLabel: "human", genderChoice: "M", name: "KING" });
+const human = await createCharacter({ id: humanId, raceChoice: "1", raceLabel: "human", genderChoice: "M", name: "KING" });
 for (const denied of ["khome", "kgoto /d/snow/square", "call me->query_class()", "clone /obj/money/coin", "kadmin list"]) {
   const result = await command(human, denied);
   assert.match(result, /沒有這個指令|權限|不能|不允許|無法|只有 KING|What\?/);
@@ -216,17 +228,9 @@ console.log("ORIGINAL_PLAYER_CREATION_HUMAN_E2E_PASS");
 human.socket.close();
 
 // Avatar／克隆人：同樣從不存在的帳號走完整 Original 創角，不複製 save fixture。
-const avatar = await createCharacter({ id: "avataropen", raceChoice: "2", raceLabel: "avatar", genderChoice: "F", name: "克隆測試員" });
+const avatar = await createCharacter({ id: avatarId, raceChoice: "2", raceLabel: "avatar", genderChoice: "F", name: "克隆測試員" });
 await saveQuitRelogin(avatar, /平民/);
 console.log("ORIGINAL_PLAYER_CREATION_AVATAR_E2E_PASS");
 avatar.socket.close();
-
-// 第二條普通玩家職業鏈：全新 Human 走 Source-backed food→comb→thief progression。
-const thief = await createCharacter({ id: "thiefopen", raceChoice: "1", raceLabel: "human", genderChoice: "F", name: "盜賊測試員" });
-await joinThief(thief);
-await saveQuitRelogin(thief, /盜賊/);
-assert.match(await command(thief, "skills -a"), /sneak|stealing|潛行|偷竊/);
-console.log("PLAYER_THIEF_PERSISTENCE_PASS");
-thief.socket.close();
 
 console.log("PLAYER_FULL_JOURNEY_E2E_PASS");

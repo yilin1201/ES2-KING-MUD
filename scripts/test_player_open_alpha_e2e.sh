@@ -85,4 +85,4 @@ if rg -n '編譯時段錯誤|Runtime error|Cannot #include|Undefined variable' "
   exit 1
 fi
 
-echo 'PLAYER_OPEN_ALPHA_LOCAL_RUNTIME_PASS：全新 Human／Avatar 創角、普通玩家世界／經濟／裝備／戰鬥、Alchemist／Thief、save／quit／relogin 均通過。'
+echo 'PLAYER_OPEN_ALPHA_LOCAL_RUNTIME_PASS：全新 Human／Avatar 創角、普通玩家世界／NPC／物品／裝備／戰鬥、Alchemist／Thief、save／quit／relogin 均通過。'
