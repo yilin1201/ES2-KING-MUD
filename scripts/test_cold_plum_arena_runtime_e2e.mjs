@@ -171,15 +171,49 @@ await send("kill mei");
 await wait(combatOffset, /【\s*明\s*鏡\s*止\s*水\s*】/, 30000);
 await wait(combatOffset, /面對漫天殺機/, 30000);
 console.log("COLD_PLUM_PASS:mirror-mind-state");
-const forms = [
-  "梅二方劍", "梅四方劍", "梅八方劍", "愛霜恨雪", "寒霜三千里",
-  "傲梅暗劍訣・傲雪藏鋒・逆折寒梅",
-];
-await wait(combatOffset, new RegExp(forms.join(".*"), "s"), 60000);
-for (const form of forms) assert.ok(output.slice(combatOffset).includes(form), form);
-assert.ok(output.slice(combatOffset).includes("明劍欺敵，暗劍藏殺；傲雪藏鋒・逆折寒梅。"));
-console.log("COLD_PLUM_PASS:six-forms-runtime");
+// Phase 1／冷梅：先確認正式 Combat 確實由 lunmay 接管；不再要求 30 招前隨機抽完所有冷梅招式，
+ // 因為新 Canon 是第 30 次攻擊後必須立即進入 Phase 2。
+assert.match(await call('mei->skill_mapped("sword")'), /= "lunmay"/);
+assert.match(await call('mei->skill_mapped("parry")'), /= "lunmay"/);
+await wait(combatOffset, /梅二方劍|梅四方劍|梅八方劍|愛霜恨雪|寒霜三千里|傲梅暗劍訣・傲雪藏鋒・逆折寒梅/, 30000);
+console.log("COLD_PLUM_PASS:phase1-cold-plum-combat");
 
+// Phase Transition／把計數推到 29，只縮短測試時間；第 30 次仍由 NPC 正常 combat callback 觸發 switch_to_aojian()。
+await call('mei->set_temp("aojian/attack_rounds",29)');
+const phase2Offset = output.length;
+await wait(phase2Offset, /寒霜碎裂，冷梅將折。/, 30000);
+await wait(phase2Offset, /三十招了……能逼我棄冷梅、出傲劍，你足以自傲。/, 30000);
+await wait(phase2Offset, /冷梅既凋——唯傲劍獨立！/, 30000);
+assert.match(await call('mei->skill_mapped("sword")'), /= "au-chan sword"/);
+assert.match(await call('mei->skill_mapped("parry")'), /= "au-chan sword"/);
+assert.equal(callInt(await call('mei->query_temp("aojian/awakened")'), "query_temp"), 1);
+console.log("COLD_PLUM_PASS:aojian-phase-transition-30");
+
+// Phase 2／傲劍：七式皆由同一 Combat daemon 隨機出招；Runtime 至少必須實際出現一式，
+// 七式完整 roster／Attack+Parry wiring 另由 Static Gate 鎖定，避免以管理指令假造七式 Runtime。
+const aojianForms = [
+  "千嬌百媚柔似水", "佳人在殘醉臥君", "了絕紅塵遁山林", "清風送爽墨雲飛",
+  "渺盡人世絕惡意", "天始一乾景初開", "不識江山多嬌媚",
+];
+await wait(phase2Offset, new RegExp(aojianForms.join("|")), 30000);
+assert.ok(output.slice(phase2Offset).includes("\x1b[1;31m") || output.slice(phase2Offset).includes("\x1b[31m")
+  || output.slice(phase2Offset).includes("\x1b[1;33m") || output.slice(phase2Offset).includes("\x1b[33m"),
+  "Ao Jian phase missing red/yellow ANSI");
+console.log("COLD_PLUM_PASS:aojian-combat-runtime");
+
+// Combat Reset／戰鬥停止後，下一場必須重新從冷梅開始並清空 30 招計數。
+await call('me->remove_all_killer()');
+await call('mei->remove_all_killer()');
+await call('mei->activate_mirror_state()');
+assert.match(await call('mei->skill_mapped("sword")'), /= "lunmay"/);
+assert.match(await call('mei->skill_mapped("parry")'), /= "lunmay"/);
+assert.equal(callInt(await call('mei->query_temp("aojian/awakened")'), "query_temp"), 0);
+assert.equal(callInt(await call('mei->query_temp("aojian/attack_rounds")'), "query_temp"), 0);
+console.log("COLD_PLUM_PASS:aojian-reset-to-cold-plum");
+
+// 重新開戰完成既有可擊敗驗證。
+await send("kill mei");
+await new Promise(resolve => setTimeout(resolve, 800));
 await call('mei->set_stat_current("kee",1)');
 await call('mei->set_stat_current("HP",1)');
 await wait(combatOffset, /死了|倒在地上|死亡|屍體|corpse|殺死/, 45000);

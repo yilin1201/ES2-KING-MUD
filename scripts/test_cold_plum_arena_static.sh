@@ -19,6 +19,15 @@ grep -Fq 'attack(opponent);' "$NPC"
 grep -Fq 'activate_mirror_state' "$NPC"
 grep -Fq 'cold_plum/mirror_state' "$NPC"
 grep -Fq 'mirror_mind/sustain_formula", "UNKNOWN"' "$NPC"
+# 梅寒霜正式 Phase Transition Canon：30 次 Combat callback 後冷梅→傲劍，戰後 reset。
+grep -Fq 'add_temp("aojian/attack_rounds", 1)' "$NPC"
+grep -Fq 'query_temp("aojian/attack_rounds") >= 30' "$NPC"
+grep -Fq 'map_skill("sword", "au-chan sword")' "$NPC"
+grep -Fq 'map_skill("parry", "au-chan sword")' "$NPC"
+grep -Fq '寒霜碎裂，冷梅將折。' "$NPC"
+grep -Fq '三十招了……能逼我棄冷梅、出傲劍，你足以自傲。' "$NPC"
+grep -Fq '冷梅既凋——唯傲劍獨立！' "$NPC"
+grep -Fq 'delete_temp("aojian")' "$NPC"
 grep -Fq 'carry_object("/d/arena/obj/charred_plum_branch")' "$NPC"
 for form in 梅二方劍 梅四方劍 梅八方劍 愛霜恨雪 寒霜三千里 傲梅暗劍訣 傲雪藏鋒 逆折寒梅;do grep -Fq "$form" "$SKILL";done
 # Gameplay Runtime Evidence／明鏡止水全白；梅二／四／八方劍【】外框紅色、框內名稱白色；愛霜恨雪使用青色「」；寒霜三千里使用全白【】；如來神掌另由其 Skill Gate 管理黃色名稱。

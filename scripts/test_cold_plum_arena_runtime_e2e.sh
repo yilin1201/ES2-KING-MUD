@@ -27,7 +27,10 @@ for marker in \
   COLD_PLUM_PASS:npc-attributes-skills \
   COLD_PLUM_PASS:arena-defeat-protection \
   COLD_PLUM_PASS:mirror-mind-state \
-  COLD_PLUM_PASS:six-forms-runtime \
+  COLD_PLUM_PASS:phase1-cold-plum-combat \
+  COLD_PLUM_PASS:aojian-phase-transition-30 \
+  COLD_PLUM_PASS:aojian-combat-runtime \
+  COLD_PLUM_PASS:aojian-reset-to-cold-plum \
   COLD_PLUM_PASS:king-combat-mei \
   COLD_PLUM_PASS:yanwujie-out-wuji \
   COLD_PLUM_PASS:save-quit-relogin-restore \
@@ -35,4 +38,4 @@ for marker in \
 do
   grep -Fq "$marker" "$LOG"
 done
-echo "COLD PLUM RUNTIME PASS：真實 Neolith Driver 已驗證 KING 八屬性 99、KING 技能 Lv.300、冷梅莊技能、演武界雙向拓撲、梅寒霜 50/300、明鏡止水、冷梅六式、Combat、Arena 敗北保護及 save／quit／relogin／restore。"
+echo "COLD PLUM RUNTIME PASS：真實 Neolith Driver 已驗證 KING 八屬性 99、KING 技能 Lv.300、冷梅莊技能、演武界雙向拓撲、梅寒霜 50/300、明鏡止水、冷梅 Phase 1、30 招傲劍切換、傲劍 Phase 2、戰後冷梅 reset、Combat、Arena 敗北保護及 save／quit／relogin／restore。"
