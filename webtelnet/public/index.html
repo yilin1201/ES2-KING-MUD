@@ -74,6 +74,7 @@
   const protocol = location.protocol === "https:" ? "wss:" : "ws:";
   const mobileLayout = matchMedia("(max-width: 600px)");
   const terminalColumns = 80;
+  const mobileNoWrapMinFontPx = 8; // 完整原文＋不斷行優先；低於此值改用水平捲動，避免不可讀。
   let socket;
   let retryDelay = 1000;
   let outputTail = "";
@@ -138,14 +139,19 @@
     renderCharacterChoices();
   }
 
-  // Original ES2 welcome 最長內容為 79 欄，採傳統 80 欄終端作為手機顯示基準。
-  // 實際量測目前字型的 80 個等寬字元，再依 Viewport 寬度計算輸出字級；不縮放控制區。
+  // Mobile No-Wrap Priority／手機首要原則：完整原文、不斷行。
+  // 不再固定只按 80 欄縮放；以目前畫面最長「實際單行」與 Original 80 欄基準取較大者，
+  // 動態縮放終端輸出，使人物出招敘述盡量整行可見。若所需字級低於可讀下限，保留原文並水平捲動，絕不斷行／刪字。
   function fitMobileTerminal() {
     terminal.style.removeProperty("--mobile-terminal-font-size");
     if (!mobileLayout.matches) return;
 
+    const plain = terminal.innerText || "";
+    const longestLineColumns = plain.split(/\r?\n/).reduce((max, line) => Math.max(max, Array.from(line).length), 0);
+    const targetColumns = Math.max(terminalColumns, longestLineColumns);
+
     const probe = document.createElement("span");
-    probe.textContent = "0".repeat(terminalColumns);
+    probe.textContent = "0".repeat(targetColumns);
     probe.setAttribute("aria-hidden", "true");
     Object.assign(probe.style, {
       position: "absolute",
@@ -161,7 +167,8 @@
     probe.remove();
 
     if (measuredWidth > 0 && terminal.clientWidth > 0) {
-      const fittedSize = Math.floor((100 * terminal.clientWidth / measuredWidth) * 1000) / 1000;
+      const rawSize = Math.floor((100 * terminal.clientWidth / measuredWidth) * 1000) / 1000;
+      const fittedSize = Math.max(mobileNoWrapMinFontPx, rawSize);
       terminal.style.setProperty("--mobile-terminal-font-size", `${fittedSize}px`);
     }
   }
@@ -263,6 +270,7 @@
     // 僅保留輸出末端以辨識可能跨 WebSocket 分段的提示文字；絕不把玩家輸入加入此緩衝。
     outputTail = (outputTail + cleanText).slice(-256);
     protectSecretEntry();
+    scheduleMobileFit();
     // Original cursor 選單收到方向鍵後會重新繪製；等新提示抵達再送單一空白確認鍵。
     if (pendingCharacterFollowup && characterMenuFor(outputTail)) {
       const followup = pendingCharacterFollowup;
