@@ -41,7 +41,7 @@ grep -Fq 'void jianling_combat_attack(object me, object opponent, object weapon)
 # 梅寒霜 Phase 2 劍舞節奏：4～7 輪內保證一次，自動循環，不依賴玩家手動 perform。
 grep -Fq 'set_temp("aojian/jianling_target", 4 + random(4))' "$NPC"
 grep -Fq 'query_temp("aojian/jianling_rounds") >= query_temp("aojian/jianling_target")' "$NPC"
-grep -Fq '->jianling_combat_attack(this_object(), opponent, weapon)' "$NPC"
+grep -Fq -- '->jianling_combat_attack(this_object(), opponent, weapon)' "$NPC"
 for stage in 忠 武 義 德 狂 情; do grep -Fq "\"name\":\"$stage\"" "$AOJIAN"; done
 grep -Fq 'carry_object("/d/arena/obj/charred_plum_branch")' "$NPC"
 for form in 梅二方劍 梅四方劍 梅八方劍 愛霜恨雪 寒霜三千里 傲梅暗劍訣 傲雪藏鋒 逆折寒梅;do grep -Fq "$form" "$SKILL";done
