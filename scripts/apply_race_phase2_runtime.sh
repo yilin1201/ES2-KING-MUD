@@ -61,6 +61,19 @@ if [[ -f "$REPO_ROOT/es2m_snapshot/mudlib/include/class_level.h" ]]; then
   cp "$REPO_ROOT/es2m_snapshot/mudlib/include/class_level.h" "$ROOT/mudlib/include/class_level.h"
 fi
 
+# ES2M Skill Recovery／只補 pinned Original 不存在的 ES2M skill daemon；Original 同名技能永不覆蓋。
+ES2M_SKILL_DIR="$REPO_ROOT/es2m_snapshot/mudlib/daemon/skill"
+if [[ -d "$ES2M_SKILL_DIR" ]]; then
+  mkdir -p "$ROOT/mudlib/daemon/skill"
+  for src in "$ES2M_SKILL_DIR"/*.c; do
+    [[ -e "$src" ]] || continue
+    name="$(basename "$src")"
+    if [[ ! -e "$ROOT/mudlib/daemon/skill/$name" ]]; then
+      cp "$src" "$ROOT/mudlib/daemon/skill/$name"
+    fi
+  done
+fi
+
 # Race Command Collision／種族指令同名衝突：Original EMOTED 也註冊 dance 表情。
 # 只在刑天本人輸入 dance 時優先走 ES2M /cmds/usr/dance；其他玩家仍保留 Original 通用 dance。
 COMMAND_D="$ROOT/mudlib/adm/daemons/cmd_d.c"
