@@ -56,6 +56,7 @@ for marker in \
   ORIGINAL_PLAYER_CREATION_AVATAR_E2E_PASS \
   PLAYER_AVATAR_WORLD_PASS:movement-npc-inventory \
   PLAYER_SECURITY_BOUNDARY_PASS \
+  PLAYER_COMBAT_RECOVERY_PASS:kinglook:command-and-movement-after-sparring \
   PLAYER_CLASS_PASS:kinglook:alchemist \
   PLAYER_CLASS_PASS:thiefopen:thief \
   PLAYER_TRAINING_PASS:thiefopen:npc-improve_skill \

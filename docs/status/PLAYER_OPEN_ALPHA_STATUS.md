@@ -4,7 +4,7 @@
 
 - `PLAYER_FULL_JOURNEY_E2E_PASS` — isolated real Neolith Driver, empty `data/`, ordinary-player authority only.
 - Human（人類）and Avatar（克隆人）both complete account creation, `save`, `quit`, and `relogin` from zero state. Avatar acceptance also requires an ordinary-player world journey through movement, NPC inspection, and inventory access before persistence is accepted.
-- Human ordinary-player journey completes world movement, NPC inspection, Source-backed item/equipment, non-lethal combat, and the Original Chen Weixia alchemist path.
+- Human ordinary-player journey completes world movement, NPC inspection, Source-backed item/equipment, non-lethal combat, post-combat command/movement recovery, and the Original Chen Weixia alchemist path.
 - A second Human ordinary-player journey completes the Original food → comb → thief path and persists `improve_skill()` progress.
 - A display name of `KING` does not grant owner, creator, admin, or wizard commands.
 - Render deploy `e9183b23deaddf17d57418272dfc52662c53b6c5` reached `LIVE` and its startup logs recorded `PLAYER_SESSION_SMOKE_PASS`: localhost WebSocket → Original login prompt → unused ordinary-player ID → new-character confirmation → answer N. It creates no account and grants no owner/admin/wizard authority. This remains a deployment-local gate, not external `PUBLIC_PLAYER_SMOKE_PASS`.

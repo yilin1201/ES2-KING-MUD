@@ -152,7 +152,12 @@ async function getEquipmentAndFight(p) {
   assert.doesNotMatch(combat, /這裡禁止戰鬥|你想攻擊誰/);
   await waitForAfter(p, fightOffset, /哇.*哭|打我/, 90000);
   await delay(2500);
-  await command(p, "look");
+  const recovered = await command(p, "look");
+  assert.match(recovered, /小廣場|廣場北邊/);
+  // Combat Recovery／戰鬥結束後不能只看到畫面：普通玩家必須恢復可操作狀態並能繼續世界移動。
+  assert.match(await command(p, "south"), /廣場中央/);
+  assert.match(await command(p, "north"), /小廣場|廣場北邊/);
+  console.log(`PLAYER_COMBAT_RECOVERY_PASS:${p.id}:command-and-movement-after-sparring`);
   console.log(`PLAYER_COMBAT_PASS:${p.id}:source-backed-sparring`);
 }
 
