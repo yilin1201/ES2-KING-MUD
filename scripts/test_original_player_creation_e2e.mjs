@@ -40,7 +40,7 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
     dingling:["hoof",/你要踢誰|正忙著/],
     jiaojao:["hide",/必須在戰鬥中|正忙著/],
     rainner:["feed",/你要餵養哪一條蛇|正忙著/],
-    headless:["dance",/戰舞格式|正忙著/],
+    headless:["dance for glory",/戰舞格式|手中沒有斧頭|正忙著/],
     yaksa:["devour",/你要吞食誰|正忙著/],
   }[raceId];
   if (raceCommandProbe) {
