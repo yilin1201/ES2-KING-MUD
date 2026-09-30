@@ -61,6 +61,21 @@ if [[ -f "$REPO_ROOT/es2m_snapshot/mudlib/include/class_level.h" ]]; then
   cp "$REPO_ROOT/es2m_snapshot/mudlib/include/class_level.h" "$ROOT/mudlib/include/class_level.h"
 fi
 
+# Race Command Collision／種族指令同名衝突：Original EMOTED 也註冊 dance 表情。
+# 只在刑天本人輸入 dance 時優先走 ES2M /cmds/usr/dance；其他玩家仍保留 Original 通用 dance。
+COMMAND_D="$ROOT/mudlib/adm/daemons/cmd_d.c"
+python3 - "$COMMAND_D" <<'PY'
+from pathlib import Path
+import sys
+p=Path(sys.argv[1]); s=p.read_text()
+marker='''    if( !pointerp(path) ) return 0;\n\n'''
+patch='''    if( !pointerp(path) ) return 0;\n\n    // ES2M HEADLESS DANCE COMMAND ROUTING／刑天 dance 優先使用種族戰舞；其他種族保留 Original 表情。\n    if( verb == "dance" && objectp(this_player())\n    &&  this_player()->query_race() == "headless"\n    &&  file_size("/cmds/usr/dance.c") > 0 )\n        return "/cmds/usr/dance";\n\n'''
+if 'ES2M HEADLESS DANCE COMMAND ROUTING' not in s:
+    if marker not in s: raise SystemExit('Could not locate COMMAND_D find_command path guard')
+    s=s.replace(marker,patch,1)
+p.write_text(s)
+PY
+
 # Login registry／登入種族清單：加入歷史種族，同時保留既有 Original Human 與 Avatar。
 python3 - "$LOGIN" <<'PY'
 from pathlib import Path
