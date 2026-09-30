@@ -35,6 +35,20 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   await s.wait("目前權限: (player)"); await s.wait("客棧大堂"); await s.wait("> "); s.close();
   console.log(`ORIGINAL_PLAYER_CREATION_${raceId.toUpperCase()}_E2E_PASS`);
 }
-await runPlayer({id:"humanprobe",raceChoice:"human",raceLabel:"Human（人類）",name:"人類測試",raceId:"human"});
-await runPlayer({id:"avatarprobe",raceChoice:"人類族",raceLabel:"Avatar（人類族）",name:"人類族測試",raceId:"avatar"});
-console.log("ORIGINAL_PLAYER_CREATION_E2E_PASS");
+const races = [
+  ["humanprobe","human","Human（人類）","人類測試","human"],
+  ["avatarprobe","人類族","Avatar（人類族）","人類族測試","avatar"],
+  ["blackprobe","blackteeth","黑齒","黑齒測試","blackteeth"],
+  ["yenprobe","yenhold","厭火","厭火測試","yenhold"],
+  ["wooprobe","woochan","無腸","無腸測試","woochan"],
+  ["dingprobe","dingling","釘靈","釘靈測試","dingling"],
+  ["jiaoprobe","jiaojao","焦僥","焦僥測試","jiaojao"],
+  ["rainprobe","rainner","雨師妾","雨師妾測試","rainner"],
+  ["ashprobe","ashura","阿修羅","阿修羅測試","ashura"],
+  ["headprobe","headless","刑天","刑天測試","headless"],
+  ["yaksaprobe","yaksa","夜叉","夜叉測試","yaksa"],
+  ["malikprobe","malik","巫首","巫首測試","malik"]
+];
+for (const [id,raceChoice,raceLabel,name,raceId] of races)
+  await runPlayer({id,raceChoice,raceLabel,name,raceId});
+console.log("ES2M_PLAYER_CREATION_12_RACES_E2E_PASS");
