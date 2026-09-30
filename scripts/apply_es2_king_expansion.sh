@@ -29,7 +29,7 @@ from pathlib import Path
 import sys
 p=Path(sys.argv[1]); s=p.read_text()
 marker='''    /* 嘗試指令 */\n    if( stringp(file = find_command(verb)) \n'''
-patch='''    /* ES2M HEADLESS DANCE COMMAND HOOK／刑天種族戰舞優先於 Original 通用 dance 表情。 */\n    if( verb == "dance" && query("race") == "headless"\n    &&  file_size("/cmds/usr/dance.c") > 0\n    &&  call_other("/cmds/usr/dance", "main", this_object(), arg));\n\n    /* 嘗試指令 */\n    else if( stringp(file = find_command(verb)) \n'''
+patch='''    /* ES2M HEADLESS DANCE COMMAND HOOK／刑天種族戰舞優先於 Original 通用 dance 表情。 */\n    if( verb == "dance"\n    &&  file_size("/cmds/usr/dance.c") > 0\n    &&  call_other("/cmds/usr/dance", "main", this_object(), arg));\n\n    /* 嘗試指令 */\n    else if( stringp(file = find_command(verb)) \n'''
 if 'ES2M HEADLESS DANCE COMMAND HOOK' not in s:
     if marker not in s: raise SystemExit('EXPANSION APPLY FAIL：找不到 Original command_hook 指令入口。')
     s=s.replace(marker,patch,1)
