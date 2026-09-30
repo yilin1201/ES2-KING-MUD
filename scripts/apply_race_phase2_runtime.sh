@@ -33,6 +33,19 @@ if [[ -d "$ES2M_CUSTOM_DIR" ]]; then
   cp -a "$ES2M_CUSTOM_DIR/." "$ROOT/mudlib/custom/race/"
 fi
 
+# ES2M Class progression／ES2M 職業成長程式
+ES2M_CLASS_DIR="$REPO_ROOT/es2m_snapshot/mudlib/daemon/class"
+if [[ -d "$ES2M_CLASS_DIR" ]]; then
+  mkdir -p "$ROOT/mudlib/daemon/class"
+  for cls in commoner fighter taoist alchemist soldier scholar monk thief; do
+    [[ -f "$ES2M_CLASS_DIR/$cls.c" ]] || { echo "Missing ES2M class daemon: $cls" >&2; exit 1; }
+    cp "$ES2M_CLASS_DIR/$cls.c" "$ROOT/mudlib/daemon/class/$cls.c"
+  done
+fi
+if [[ -f "$REPO_ROOT/es2m_snapshot/mudlib/include/class_level.h" ]]; then
+  cp "$REPO_ROOT/es2m_snapshot/mudlib/include/class_level.h" "$ROOT/mudlib/include/class_level.h"
+fi
+
 # Login registry／登入種族清單：加入歷史種族，同時保留既有 Original Human 與 Avatar。
 python3 - "$LOGIN" <<'PY'
 from pathlib import Path
