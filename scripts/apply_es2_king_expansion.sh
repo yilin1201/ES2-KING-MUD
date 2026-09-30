@@ -6,6 +6,21 @@ test -d "$TARGET/mudlib" || { echo "EXPANSION APPLY FAIL：缺少 $TARGET/mudlib
 test -d "$SOURCE"
 cp -a "$SOURCE/." "$TARGET/mudlib/"
 
+# ES2M Headless Dance Routing／Expansion 會覆蓋 cmd_d，因此同名指令路由必須在 Expansion 套用後保留。
+# 刑天 dance 走 ES2M 戰舞；其他玩家仍使用 Original EMOTED 通用表情。
+COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.c"
+python3 - "$COMMAND_D" <<'PY'
+from pathlib import Path
+import sys
+p=Path(sys.argv[1]); s=p.read_text()
+marker='''    if( !pointerp(path) ) return 0;\n\n'''
+patch='''    if( !pointerp(path) ) return 0;\n\n    // ES2M HEADLESS DANCE COMMAND ROUTING／刑天 dance 優先使用種族戰舞；其他種族保留 Original 表情。\n    if( verb == "dance" && objectp(this_player())\n    &&  this_player()->query_race() == "headless"\n    &&  file_size("/cmds/usr/dance.c") > 0 )\n        return "/cmds/usr/dance";\n\n'''
+if 'ES2M HEADLESS DANCE COMMAND ROUTING' not in s:
+    if marker not in s: raise SystemExit('EXPANSION APPLY FAIL：找不到 COMMAND_D find_command path guard。')
+    s=s.replace(marker,patch,1)
+p.write_text(s)
+PY
+
 # Message Vision No Hard Wrap／人物敘述不得被固定 70 欄硬切：
 # Pinned Original message_vision() 對 first/second/third-person 全部使用 cjk_wrap(..., 70, -1)。
 # ES2-KING 保留原字串作者明確寫入的 \n，只移除這個顯示寬度造成的額外換行。
