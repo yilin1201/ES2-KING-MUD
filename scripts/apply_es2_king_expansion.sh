@@ -21,6 +21,21 @@ if 'ES2M HEADLESS DANCE COMMAND ROUTING' not in s:
 p.write_text(s)
 PY
 
+# ES2M Headless Command Hook／Original EMOTED 在 command fallback 可直接攔截 dance。
+# 在角色 command_hook 的「嘗試指令」之前，僅對刑天明確 dispatch ES2M 戰舞，避免被通用表情吞掉。
+CHAR_COMMAND="$TARGET/mudlib/feature/char/command.c"
+python3 - "$CHAR_COMMAND" <<'PY'
+from pathlib import Path
+import sys
+p=Path(sys.argv[1]); s=p.read_text()
+marker='''    /* 嘗試指令 */\n    if( stringp(file = find_command(verb)) \n'''
+patch='''    /* ES2M HEADLESS DANCE COMMAND HOOK／刑天種族戰舞優先於 Original 通用 dance 表情。 */\n    if( verb == "dance" && query_race() == "headless"\n    &&  file_size("/cmds/usr/dance.c") > 0\n    &&  call_other("/cmds/usr/dance", "main", this_object(), arg));\n\n    /* 嘗試指令 */\n    else if( stringp(file = find_command(verb)) \n'''
+if 'ES2M HEADLESS DANCE COMMAND HOOK' not in s:
+    if marker not in s: raise SystemExit('EXPANSION APPLY FAIL：找不到 Original command_hook 指令入口。')
+    s=s.replace(marker,patch,1)
+p.write_text(s)
+PY
+
 # Message Vision No Hard Wrap／人物敘述不得被固定 70 欄硬切：
 # Pinned Original message_vision() 對 first/second/third-person 全部使用 cjk_wrap(..., 70, -1)。
 # ES2-KING 保留原字串作者明確寫入的 \n，只移除這個顯示寬度造成的額外換行。
