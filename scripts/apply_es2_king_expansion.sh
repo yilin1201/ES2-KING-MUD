@@ -434,7 +434,7 @@ old = '''    mapping opts = ([
 private void get_race (string race, mixed opts, object ob) {
     string choice = cursor_translate (race, opts);
     switch (choice ? choice : race) {'''
-new = '''    write ("選擇你的角色所屬的種族：\\n  1. Human（人類）\\n  2. Avatar（克隆人）\\n請輸入編號 1 或 2: ");
+new = '''    write ("選擇你的角色所屬的種族：\\n  1. Human（人類）\\n  2. Avatar（人類族）\\n  3. 黑齒\\n  4. 厭火\\n  5. 焦僥\\n  6. 無腸\\n  7. 釘靈\\n  8. 刑天\\n  9. 雨師妾\\n  10. 巫首\\n  11. 夜叉\\n  12. 阿修羅\\n請輸入編號 1-12 或種族 ID: ");
     input_to ("get_race", 0, ob);
 }
 
@@ -444,7 +444,7 @@ private void get_race (string race, object ob) {
     // Neolith input_to 第二參數是 flags；要把 ob 傳給 callback 必須使用第三參數。先前 input_to("get_race", ob) 把 object 誤當 flags，造成 Public Race callback 無法取得正確 ob。
     // input_to 回呼取得的是已完成的一行文字；只接受 Public 定義的數字或 Original ID，不把 Telnet 行尾當成角色資料。
     if (race == "1" || race == "人類") race = "human";
-    else if (race == "2" || race == "克隆人") race = "avatar";
+    else if (race == "2" || race == "人類族") race = "avatar";
     switch (race) {'''
 if old not in text:
     raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_email → get_race Race 區段。")
@@ -456,7 +456,7 @@ old_retry = '''        default:
 
     int kar'''
 new_retry = '''        default:
-            write ("請輸入編號 1 或 2: ");
+            write ("請輸入編號 1-12 或種族 ID: ");
             input_to ("get_race", 0, ob);
             return;
     }
@@ -469,7 +469,7 @@ if old_retry not in tail:
 tail = tail.replace(old_retry, new_retry, 1)
 text = text[:start] + tail
 text = text.replace('write ("\\r" CLR HIY "選擇 " + choice + " 這個種族會累積 " + kar + " 點業力。\\n" NOR);',
-                    'write ("\\r" CLR HIY "選擇 " + (race == "human" ? "Human（人類）" : "Avatar（克隆人）") + " 這個種族會累積 " + kar + " 點業力。\\n" NOR);', 1)
+                    'write ("\\r" CLR HIY "選擇 " + (race == "human" ? "Human（人類）" : "Avatar（人類族）") + " 這個種族會累積 " + kar + " 點業力。\\n" NOR);', 1)
 path.write_text(text)
 PY
 fi
@@ -482,14 +482,14 @@ import sys
 
 path = Path(sys.argv[1])
 text = path.read_text()
-old = '  2. Avatar\\n請輸入編號 1 或 2: '
-new = '  2. Avatar（克隆人）\\n請輸入編號 1 或 2: '
+old = '  2. Avatar\\n請輸入編號 1-12 或種族 ID: '
+new = '  2. Avatar（人類族）\\n請輸入編號 1-12 或種族 ID: '
 if old in text:
     text = text.replace(old, new, 1)
 old_mapping = '''    if (race == "1") race = "human";
     else if (race == "2") race = "avatar";'''
 new_mapping = '''    if (race == "1" || race == "人類") race = "human";
-    else if (race == "2" || race == "克隆人") race = "avatar";'''
+    else if (race == "2" || race == "人類族") race = "avatar";'''
 if old_mapping in text:
     text = text.replace(old_mapping, new_mapping, 1)
 path.write_text(text)
