@@ -645,6 +645,8 @@ fi
 for cached_binary in \
   "$TARGET/mudlib/bin/adm/daemons/logind.b" \
   "$TARGET/mudlib/bin/adm/daemons/cmd_d.b" \
+  "$TARGET/mudlib/bin/adm/daemons/emoted.b" \
+  "$TARGET/mudlib/bin/feature/char/command.b" \
   "$TARGET/mudlib/bin/std/race/humanoid.b" \
   "$TARGET/mudlib/bin/feature/attribute.b" \
   "$TARGET/mudlib/bin/adm/daemons/kingmartiald.b" \
