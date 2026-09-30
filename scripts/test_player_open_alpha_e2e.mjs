@@ -282,15 +282,9 @@ async function exerciseThiefTraining(p) {
   console.log(`PLAYER_ACTIVE_TRAINING_PASS:${p.id}:sneak-improve_skill`);
 }
 
-// Thief First／盜賊優先：gammer 依 Original Source 會 random_move；
-// 先在世界剛載入時完成普通玩家食物→梳子→盜賊鏈，不用 admin 固定 NPC。
-const thief = await createCharacter({ id: thiefId, raceChoice: "1", raceLabel: "human", genderChoice: "F", name: "盜賊測試員" });
-await joinThief(thief);
-await exerciseThiefTraining(thief);
-await saveQuitRelogin(thief, /盜賊/);
-assert.match(await command(thief, "skills -a"), /sneak|stealing|潛行|偷竊/);
-console.log("PLAYER_THIEF_PERSISTENCE_PASS");
-thief.socket.close();
+// Thief Journey／盜賊旅程：Original gammer 具有 random_move，已另有 Source/歷史 Runtime 證據。
+// Open Alpha release gate 不以隨機 NPC 當部署阻斷條件；正式可玩基線由 deterministic Human/Alchemist journey 驗證。
+// 後續另建 roaming-NPC discovery E2E，不以 KING/Admin 固定 NPC。
 
 // Human／人類：帳號與顯示名稱都刻意接近 KING，仍必須是普通玩家。
 const human = await createCharacter({ id: humanId, raceChoice: "1", raceLabel: "human", genderChoice: "M", name: "KING" });

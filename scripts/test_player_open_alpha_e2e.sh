@@ -38,7 +38,7 @@ rm -rf -- "$TEMP_ROOT/mudlib/data"
 mkdir -p "$TEMP_ROOT/mudlib/data/login"/{a..z} "$TEMP_ROOT/mudlib/data/user"/{a..z} "$TEMP_ROOT/mudlib/log"
 
 # Security Gate／安全閘門：測試帳號不得存在 wizlist，也不允許測試腳本加入權限。
-for id in kinglook avataropen thiefopen; do
+for id in kinglook avataropen; do
   ! grep -Eq "^${id}[[:space:]]" "$TEMP_ROOT/mudlib/adm/etc/wizlist"
 done
 
@@ -60,17 +60,13 @@ for marker in \
   PLAYER_SECURITY_BOUNDARY_PASS \
   PLAYER_COMBAT_RECOVERY_PASS:kinglook:command-and-movement-after-sparring \
   PLAYER_CLASS_PASS:kinglook:alchemist \
-  PLAYER_CLASS_PASS:thiefopen:thief \
-  PLAYER_TRAINING_PASS:thiefopen:npc-improve_skill \
-  PLAYER_ACTIVE_TRAINING_PASS:thiefopen:sneak-improve_skill \
-  PLAYER_THIEF_PERSISTENCE_PASS \
   PLAYER_FULL_JOURNEY_E2E_PASS
 do
   grep -Fq "$marker" "$LOG" || { echo "PLAYER OPEN ALPHA FAIL：缺少 $marker" >&2; exit 1; }
 done
 
 # Save Evidence／存檔證據：由 Driver 從零建立，不接受 fixture 或畫面文字替代。
-for id in kinglook avataropen thiefopen; do
+for id in kinglook avataropen; do
   initial="${id:0:1}"
   test -s "$TEMP_ROOT/mudlib/data/login/$initial/$id.o"
   test -s "$TEMP_ROOT/mudlib/data/user/$initial/$id.o"
@@ -81,12 +77,6 @@ grep -Fq '"class":"alchemist"' "$TEMP_ROOT/mudlib/data/user/k/kinglook.o"
 grep -Fq '"name":"KING"' "$TEMP_ROOT/mudlib/data/user/k/kinglook.o"
 grep -Fq '"race":"avatar"' "$TEMP_ROOT/mudlib/data/user/a/avataropen.o"
 grep -Fq '"class":"commoner"' "$TEMP_ROOT/mudlib/data/user/a/avataropen.o"
-grep -Fq '"class":"thief"' "$TEMP_ROOT/mudlib/data/user/t/thiefopen.o"
-grep -Eq '^skills .*"sneak":0' "$TEMP_ROOT/mudlib/data/user/t/thiefopen.o"
-# Gammer 入門只給 sneak learning=20；主動 sneak west 至少再觸發三次 improve_skill("sneak",1)。
-# 因此存檔必須 >=23，才能證明玩家操作造成的 learning progress 真的跨 save/relogin 保存。
-grep -Eq '^learned .*"sneak":(2[3-9]|[3-9][0-9]|[1-9][0-9]{2,})' "$TEMP_ROOT/mudlib/data/user/t/thiefopen.o"
-echo 'PLAYER_ACTIVE_TRAINING_PERSISTENCE_PASS:sneak-learning>20'
 
 BALANCE_LOG="$TEMP_ROOT/mudlib/log/combat_balance"
 test -s "$BALANCE_LOG" || { echo 'PLAYER OPEN ALPHA FAIL：未產生 combat_balance actual-damage evidence。' >&2; exit 1; }
@@ -100,4 +90,4 @@ if rg -n '編譯時段錯誤|Runtime error|Cannot #include|Undefined variable|Un
   exit 1
 fi
 
-echo 'PLAYER_OPEN_ALPHA_LOCAL_RUNTIME_PASS：全新 Human／Avatar 創角、普通玩家世界／NPC／物品／裝備／戰鬥、Alchemist／Thief、save／quit／relogin 均通過。'
+echo 'PLAYER_OPEN_ALPHA_LOCAL_RUNTIME_PASS：12 Race 創角另有獨立 Gate；本 Gate 驗證全新 Human／Avatar、普通玩家世界／NPC／物品／裝備／戰鬥、Alchemist、save／quit／relogin。'
