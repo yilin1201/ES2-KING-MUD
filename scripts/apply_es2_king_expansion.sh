@@ -445,6 +445,16 @@ private void get_race (string race, object ob) {
     // input_to 回呼取得的是已完成的一行文字；只接受 Public 定義的數字或 Original ID，不把 Telnet 行尾當成角色資料。
     if (race == "1" || race == "人類") race = "human";
     else if (race == "2" || race == "人類族") race = "avatar";
+    else if (race == "3" || race == "黑齒") race = "blackteeth";
+    else if (race == "4" || race == "厭火") race = "yenhold";
+    else if (race == "5" || race == "焦僥") race = "jiaojao";
+    else if (race == "6" || race == "無腸") race = "woochan";
+    else if (race == "7" || race == "釘靈") race = "dingling";
+    else if (race == "8" || race == "刑天") race = "headless";
+    else if (race == "9" || race == "雨師妾") race = "rainner";
+    else if (race == "10" || race == "巫首") race = "malik";
+    else if (race == "11" || race == "夜叉") race = "yaksa";
+    else if (race == "12" || race == "阿修羅") race = "ashura";
     switch (race) {'''
 if old not in text:
     raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_email → get_race Race 區段。")
