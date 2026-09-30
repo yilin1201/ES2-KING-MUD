@@ -72,9 +72,12 @@ async function createCharacter({ id, raceChoice, raceLabel, genderChoice, name }
   await sendChoice(p, "Y", "請設定您的密碼");
   await sendLine(p, password, "請再輸入一次您的密碼");
   await sendLine(p, password, "您的電子郵件地址");
-  const raceMenu = await sendLine(p, "none", "請輸入編號 1 或 2");
+  const raceMenu = await sendLine(p, "none", "請輸入編號 1-12 或種族 ID");
   assert.match(raceMenu, /1\. Human（人類）/);
   assert.match(raceMenu, /2\. Avatar（人類族）/);
+  assert.match(raceMenu, /3\. 黑齒/);
+  assert.match(raceMenu, /8\. 刑天/);
+  assert.match(raceMenu, /12\. 阿修羅/);
   await sendChoice(p, `ES2RACE:${raceChoice}`, "您要扮演的哪種性別");
   await sendChoice(p, genderChoice, "您的顯示名稱");
   await sendLine(p, name, "您確定要創造這個角色嗎");
