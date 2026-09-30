@@ -25,7 +25,8 @@ RUN echo "[M30 BUILD 2/5] Checkout verified Original commit" \
     && git -C /opt/es2-king/runtime checkout "$ORIGINAL_ES2_COMMIT"
 RUN echo "[M30 BUILD 3/5] Update Original submodules" \
     && git -C /opt/es2-king/runtime submodule update --init --recursive
-RUN echo "[M30 BUILD 4/5] Apply ES2-KING Expansion overlay" \
+RUN echo "[M30 BUILD 4/5] Apply ES2M Race + ES2-KING Expansion overlays" \
+    && scripts/apply_race_phase2_runtime.sh /opt/es2-king/runtime \
     && scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime
 RUN echo "[M30 BUILD 5/5] Assert final playable Runtime" \
     && bash scripts/assert_m30_final_runtime.sh /opt/es2-king/runtime
