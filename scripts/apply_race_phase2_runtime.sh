@@ -26,6 +26,21 @@ for race in "${es2m_races[@]}"; do
   fi
 done
 
+# ES2M Race Commands／種族專屬玩家指令：
+# Original 玩家 PLR_PATH 只搜尋 /cmds/std 與 /cmds/usr；daemon/race/<race>/ 下的能力檔不會自動成為玩家指令。
+# 以原 ES2M command 檔本身作為唯一行為來源，只做可達性接線，不改寫能力公式。
+declare -A race_commands=(
+  [blackteeth]=gnaw [yenhold]=breathe [woochan]=replete [dingling]=hoof
+  [jiaojao]=hide [rainner]=feed [headless]=dance [yaksa]=devour
+)
+mkdir -p "$ROOT/mudlib/cmds/usr"
+for race in "${!race_commands[@]}"; do
+  cmd="${race_commands[$race]}"
+  src="$ES2M_RACE_DIR/$race/$cmd.c"
+  [[ -f "$src" ]] || { echo "Missing ES2M race command: $race/$cmd" >&2; exit 1; }
+  cp "$src" "$ROOT/mudlib/cmds/usr/$cmd.c"
+done
+
 # Optional ES2M custom race support (conditions/objects) is copied only when vendored.
 ES2M_CUSTOM_DIR="$REPO_ROOT/es2m_snapshot/mudlib/custom/race"
 if [[ -d "$ES2M_CUSTOM_DIR" ]]; then

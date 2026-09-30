@@ -32,7 +32,24 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   s.send("quit\r\n"); await s.wait("歡迎下次再來"); s.close(); await new Promise(r=>setTimeout(r,250));
   const saved=await readFile(user,"utf8"); assert.match(saved,new RegExp(`"race":"${raceId}"`)); assert.match(saved,/"class":"commoner"/); assert.match(saved,/"level":1/);
   s=session(); await s.wait("您的使用者代號"); s.send(id+"\r\n"); await s.wait("請輸入密碼"); s.send(password+"\r\n");
-  await s.wait("目前權限: (player)"); await s.wait("客棧大堂"); await s.wait("> "); s.close();
+  await s.wait("目前權限: (player)"); await s.wait("客棧大堂"); await s.wait("> ");
+  const raceCommandProbe = {
+    blackteeth:["gnaw",/你要咬誰/],
+    yenhold:["breathe",/沒有敵人|神不足/],
+    woochan:["replete",/腹中空鳴|神不足/],
+    dingling:["hoof",/你要踢誰|正忙著/],
+    jiaojao:["hide",/必須在戰鬥中|正忙著/],
+    rainner:["feed",/你要餵養哪一條蛇|正忙著/],
+    headless:["dance",/戰舞格式|正忙著/],
+    yaksa:["devour",/你要吞食誰|正忙著/],
+  }[raceId];
+  if (raceCommandProbe) {
+    const [cmd, expected] = raceCommandProbe;
+    const o=s.output().length; s.send(cmd+"\r\n"); const ability=await s.wait("> ",o);
+    assert.match(ability, expected, `${raceId} 專屬指令未進入普通玩家 command path`);
+    console.log(`ES2M_RACE_ABILITY_COMMAND_PASS:${raceId}:${cmd}`);
+  }
+  s.close();
   console.log(`ORIGINAL_PLAYER_CREATION_${raceId.toUpperCase()}_E2E_PASS`);
 }
 const races = [
@@ -51,4 +68,4 @@ const races = [
 ];
 for (const [id,raceChoice,raceLabel,name,raceId] of races)
   await runPlayer({id,raceChoice,raceLabel,name,raceId});
-console.log("ES2M_PLAYER_CREATION_12_RACES_E2E_PASS");
+console.log("ES2M_RACE_ABILITY_COMMANDS_E2E_PASS");\nconsole.log("ES2M_PLAYER_CREATION_12_RACES_E2E_PASS");
