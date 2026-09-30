@@ -84,7 +84,7 @@ sockets.on("connection", (browser) => {
     const text = telnetText.push(data);
     runtimeTail = (runtimeTail + text).slice(-1024);
     // Race State／種族狀態：一旦 Runtime 顯示數字 Race 提示，就保持到真正進入 Gender，避免提示後的「>」雜訊讓 Public iPhone 失去 Race 封套路徑。
-    if (/請輸入編號 1 或 2/.test(text)) numericRaceActive = true;
+    if (/請輸入編號 1-12 或種族 ID|請輸入編號 1 或 2/.test(text)) numericRaceActive = true;
     if (/您要扮演的哪種性別/.test(text)) numericRaceActive = false;
     if (text.length > 0 && browser.readyState === browser.OPEN) browser.send(text);
   });
@@ -103,20 +103,21 @@ sockets.on("connection", (browser) => {
     // Character Transport／角色輸入傳輸：Race 使用明確的 WebSocket 訊息封套，
     // Bridge 在伺服器端依 Runtime 模式轉換；line-input 使用 Telnet 標準 CRLF 完成整行提交，避免 Neolith 只收到 LF 而持續等待。
     const incoming = Buffer.from(data).toString("utf8");
-    if (["ES2RACE:1", "ES2RACE:2", "ES2RACE:human", "ES2RACE:avatar"].includes(incoming)) {
+    if (/^ES2RACE:(?:[1-9]|1[0-2]|human|avatar|blackteeth|yenhold|jiaojao|woochan|dingling|headless|rainner|malik|yaksa|ashura)$/.test(incoming)) {
       const choice = incoming.slice("ES2RACE:".length);
-      const race = choice === "1" ? "human" : choice === "2" ? "avatar" : choice;
+      const raceIds = ["", "human", "avatar", "blackteeth", "yenhold", "jiaojao", "woochan", "dingling", "headless", "rainner", "malik", "yaksa", "ashura"];
+      const race = /^\d+$/.test(choice) ? raceIds[Number(choice)] : choice;
       // Runtime Adaptive Race／Runtime 自適應種族輸入：
       // 新 Runtime 使用 input_to 文字行；尚未更新的 Original Runtime 仍使用 get_char 游標選單。
       // 依實際 Prompt 選擇傳輸，讓 Public 部署新舊不同步時仍可完成 Race。
       const lineRace = numericRaceActive
-        || /請輸入編號 1 或 2/.test(runtimeTail)
+        || /請輸入編號 1-12 或種族 ID|請輸入編號 1 或 2/.test(runtimeTail)
         || /選擇你的角色所屬的種族\s*\(human\/avatar\)/.test(runtimeTail)
         || /請輸入 human 或 avatar/.test(runtimeTail);
       if (lineRace) {
         // Telnet Line Submit／Telnet 整行送出：依固定 Neolith Driver 的 copy_chars() 原始碼，
         // 非 SINGLE_CHAR 模式的 lone CR 會被丟棄；只有 CRLF/CR-NUL 才建立 newline。Race 使用 input_to，因此必須送 CRLF。
-        mud.write(Buffer.from((choice === "1" || choice === "2" ? choice : race) + "\r\n", "utf8"));
+        mud.write(Buffer.from((/^\d+$/.test(choice) ? choice : race) + "\r\n", "utf8"));
         // 保持 numericRaceActive，直到 Runtime 實際輸出 Gender；若 Race callback 拒絕輸入，下一次 1/2 仍走同一安全路徑。
       } else if (race === "human") {
         // Original cursor 預設停在 human；CR 確認目前選項。

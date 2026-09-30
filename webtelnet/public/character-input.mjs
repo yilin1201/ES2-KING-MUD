@@ -1,13 +1,23 @@
 // Character Creation Compatibility／角色建立相容：Race 使用整行文字；Gender／Confirm 保留 Original get_char 單鍵。
 // 不變更 Original 種族資料與後續創角邏輯；只避開 Public iPhone 對 Race 單鍵輸入的不穩定。
-export const RACE_PROMPT = /(?:選擇你的角色所屬的種族[\s\S]*請輸入編號 1 或 2|請輸入編號 1 或 2)[：:]?\s*(?:>\s*)*$/;
+export const RACE_PROMPT = /(?:選擇你的角色所屬的種族[\s\S]*請輸入編號 1-12 或種族 ID|請輸入編號 1-12 或種族 ID)[：:]?\s*(?:>\s*)*$/;
 export const GENDER_PROMPT = /您要扮演的哪種性別\(外觀\)的角色[?？]?\s*$/;
 export const CONFIRM_PROMPT = /(?:使用 .+ 這個代號將會創造一個新的人物﹐您確定嗎|您確定要創造這個角色嗎|您要重新創造這個角色嗎|您要將另一個連線中的相同人物趕出去﹐取而代之嗎)[?？]?\s*$/;
 
 const menus = {
   race: [
     { value: "1", label: "1. Human（人類）" },
-    { value: "2", label: "2. Avatar（克隆人）" }
+    { value: "2", label: "2. Avatar（人類族）" },
+    { value: "3", label: "3. 黑齒" },
+    { value: "4", label: "4. 厭火" },
+    { value: "5", label: "5. 焦僥" },
+    { value: "6", label: "6. 無腸" },
+    { value: "7", label: "7. 釘靈" },
+    { value: "8", label: "8. 刑天" },
+    { value: "9", label: "9. 雨師妾" },
+    { value: "10", label: "10. 巫首" },
+    { value: "11", label: "11. 夜叉" },
+    { value: "12", label: "12. 阿修羅" }
   ],
   gender: [
     { value: "female", label: "女性" },
@@ -35,7 +45,9 @@ export function prepareCharacterChoice(outputTail, rawValue) {
   if (menu.type === "race") {
     // Race Line Input／種族整行輸入：Public iPhone 不再依賴 get_char 的 CR 或方向鍵。
     if (["1", "human", "人類"].includes(value)) return { bytes: "ES2RACE:1", followup: null };
-    if (["2", "avatar", "克隆人"].includes(value)) return { bytes: "ES2RACE:2", followup: null };
+    if (["2", "avatar", "人類族"].includes(value)) return { bytes: "ES2RACE:2", followup: null };
+    const extra = { "3":"3", "blackteeth":"3", "黑齒":"3", "4":"4", "yenhold":"4", "厭火":"4", "5":"5", "jiaojao":"5", "焦僥":"5", "6":"6", "woochan":"6", "無腸":"6", "7":"7", "dingling":"7", "釘靈":"7", "8":"8", "headless":"8", "刑天":"8", "9":"9", "rainner":"9", "雨師妾":"9", "10":"10", "malik":"10", "巫首":"10", "11":"11", "yaksa":"11", "夜叉":"11", "12":"12", "ashura":"12", "阿修羅":"12" };
+    if (extra[value]) return { bytes: `ES2RACE:${extra[value]}`, followup: null };
   }
   if (menu.type === "gender") {
     if (["female", "f", "女性", "女"].includes(value)) return { bytes: "F", followup: null };
