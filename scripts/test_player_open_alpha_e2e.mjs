@@ -243,6 +243,10 @@ human.socket.close();
 
 // Avatar／克隆人：同樣從不存在的帳號走完整 Original 創角，不複製 save fixture。
 const avatar = await createCharacter({ id: avatarId, raceChoice: "2", raceLabel: "avatar", genderChoice: "F", name: "克隆測試員" });
+// Avatar Basic World Journey／克隆人不能只停在創角畫面：必須以普通玩家身份真正進入世界、移動、看 NPC、操作背包。
+await enterInnAsPlayer(avatar);
+assert.match(await command(avatar, "inventory"), /你身上|攜帶|沒有|物品|Inventory/i);
+console.log("PLAYER_AVATAR_WORLD_PASS:movement-npc-inventory");
 await saveQuitRelogin(avatar, /平民/);
 console.log("ORIGINAL_PLAYER_CREATION_AVATAR_E2E_PASS");
 avatar.socket.close();
