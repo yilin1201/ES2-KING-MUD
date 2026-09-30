@@ -20,15 +20,17 @@ grep -Fq 'set ("karma", 100);' "$AVATAR"
 grep -Fq 'random(10000) == 9999' "$HUMAN"
 grep -Fq 'ob->set_race ("avatar");' "$HUMAN"
 
-# pinned Target race daemon 只能是 human/avatar；新增 daemon 必須重新 Source Audit。
+# Final Runtime 同時保留 pinned Original human/avatar 與已登錄的 ES2M supplemental races。
+# 此處只允許已完成 provenance 登錄的 10 個 ES2M daemon，禁止未審核 race 靜默進入部署映像。
 mapfile -t race_files < <(find "$ROOT/mudlib/daemon/race" -maxdepth 1 -type f -name '*.c' -printf '%f\n' | sort)
-expected=("avatar.c" "human.c")
+expected=("ashura.c" "avatar.c" "blackteeth.c" "dingling.c" "headless.c" "human.c" "jiaojao.c" "malik.c" "rainner.c" "woochan.c" "yaksa.c" "yenhold.c")
 test "${race_files[*]}" = "${expected[*]}" || {
-  printf 'ORIGINAL_RACE_ROSTER_SOURCE_GATE_REAUDIT:%s\n' "${race_files[*]}" >&2
+  printf 'ES2M_RACE_ROSTER_SOURCE_GATE_REAUDIT:%s\n' "${race_files[*]}" >&2
   exit 1
 }
 
 echo 'ORIGINAL_RACE_ROSTER_SOURCE_GATE_PASS'
 echo 'ORIGINAL_RACE_ROSTER_CONFIRMED:human,avatar'
+echo 'ES2M_RACE_ROSTER_SOURCE_GATE_PASS:blackteeth,yenhold,woochan,dingling,jiaojao,rainner,ashura,headless,yaksa,malik'
 echo 'ORIGINAL_AVATAR_DIRECT_CREATION_CONFIRMED:karma=100'
 echo 'ORIGINAL_HUMAN_AVATAR_RARE_PATH_CONFIRMED:1/10000'
