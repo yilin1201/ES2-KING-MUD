@@ -221,12 +221,9 @@ async function exerciseSnowPostOffice(p) {
 }
 
 async function joinAlchemist(p) {
-  // 小廣場 → 廣場中央 → 西邊 → 西南邊 → 西街 → 私塾，全程 Original exits。
-  assert.match(await command(p, "south"), /廣場中央/);
-  assert.match(await command(p, "west"), /廣場的西邊/);
-  assert.match(await command(p, "south"), /西南邊/);
-  assert.match(await command(p, "west"), /西街|街道/);
-  assert.match(await command(p, "south"), /私塾/);
+  // 前一步 literate Source Gate 已停在同一間私塾；直接銜接陳維俠方士鏈，
+  // 避免把「已在私塾」誤當成仍在小廣場而造成假路徑 FAIL。
+  assert.match(await command(p, "look"), /私塾|王懷芝|陳維俠/);
   assert.match(await command(p, "look chen"), /陳維俠|牙山居士/);
   const first = p.output.length;
   p.socket.send("apprentice chen\r\n");
