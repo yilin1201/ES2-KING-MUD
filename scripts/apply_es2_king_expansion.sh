@@ -36,6 +36,21 @@ if 'ES2M HEADLESS DANCE COMMAND HOOK' not in s:
 p.write_text(s)
 PY
 
+# ES2M Headless Emote Collision／Original EMOTED 的 dance 與刑天戰舞同名。
+# command path 未命中 dance 時，於實際 emote fallback 入口把刑天 dance 交還 ES2M；非刑天完全維持 Original emote。
+EMOTE_D_FILE="$TARGET/mudlib/adm/daemons/emoted.c"
+python3 - "$EMOTE_D_FILE" <<'PY'
+from pathlib import Path
+import sys
+p=Path(sys.argv[1]); s=p.read_text()
+marker='''    if( !environment(me) ) return 0;\n\n'''
+patch='''    if( !environment(me) ) return 0;\n\n    // ES2M HEADLESS DANCE EMOTE COLLISION／刑天 dance 優先使用種族戰舞。\n    if( !channel_emote && verb == "dance" && me->query_race() == "headless"\n    &&  file_size("/cmds/usr/dance.c") > 0\n    &&  call_other("/cmds/usr/dance", "main", me, arg) )\n        return 1;\n\n'''
+if 'ES2M HEADLESS DANCE EMOTE COLLISION' not in s:
+    if marker not in s: raise SystemExit('EXPANSION APPLY FAIL：找不到 EMOTED do_emote 入口。')
+    s=s.replace(marker,patch,1)
+p.write_text(s)
+PY
+
 # Message Vision No Hard Wrap／人物敘述不得被固定 70 欄硬切：
 # Pinned Original message_vision() 對 first/second/third-person 全部使用 cjk_wrap(..., 70, -1)。
 # ES2-KING 保留原字串作者明確寫入的 \n，只移除這個顯示寬度造成的額外換行。
