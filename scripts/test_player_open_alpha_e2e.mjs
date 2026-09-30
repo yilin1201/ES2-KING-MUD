@@ -161,6 +161,44 @@ async function getEquipmentAndFight(p) {
   console.log(`PLAYER_COMBAT_PASS:${p.id}:source-backed-sparring`);
 }
 
+async function exerciseSnowTownServices(p) {
+  // Catalog-assisted discovery, Pinned Original authority:
+  // /d/snow/smithy.c + /d/snow/bazar.c + /d/snow/npc/yu.c。
+  // 只驗證普通新角能自然抵達並操作既有服務；不 clone、不給錢、不改屬性。
+  assert.match(await command(p, "south"), /廣場中央/);
+  assert.match(await command(p, "south"), /廣場/);
+  assert.match(await command(p, "east"), /打鐵鋪子/);
+  assert.match(await command(p, "look"), /火爐|鐵砧|打鐵鋪子/);
+  assert.match(await command(p, "west"), /廣場/);
+  assert.match(await command(p, "south"), /街道/);
+  assert.match(await command(p, "east"), /魚記小鋪/);
+  assert.match(await command(p, "look yu"), /魚天|魚家|錢莊/);
+  const vendor = await command(p, "list");
+  assert.match(vendor, /藍|帽|瓶|jacket|bottle|商品|價/i);
+  const bank = await command(p, "look 匾額");
+  assert.match(bank, /deposit|withdraw|convert|open account/);
+  assert.match(await command(p, "west"), /街道/);
+  assert.match(await command(p, "north"), /廣場/);
+  assert.match(await command(p, "north"), /廣場中央/);
+  assert.match(await command(p, "north"), /小廣場|廣場北邊/);
+  console.log(`PLAYER_SNOW_SERVICES_PASS:${p.id}:smithy-vendor-bank-surface`);
+}
+
+async function exerciseOriginalLiterateSource(p) {
+  // 王懷芝 Original acquire_skill 明示 literate 以 sit 聽三字經學習。
+  // Scholar 轉職另有 random/int/literate 條件，本 gate 不偽造觸發結果。
+  assert.match(await command(p, "south"), /廣場中央/);
+  assert.match(await command(p, "west"), /廣場/);
+  assert.match(await command(p, "south"), /廣場/);
+  assert.match(await command(p, "west"), /街道/);
+  assert.match(await command(p, "south"), /私塾/);
+  assert.match(await command(p, "look wang"), /王懷芝|王老師|私塾|讀書/);
+  const sit = await command(p, "sit");
+  assert.match(sit, /坐|聽講|念書|唸書/);
+  console.log(`PLAYER_LITERATE_SOURCE_PASS:${p.id}:wang-whaiz-sit-learning-entry`);
+  // 保持在私塾，直接銜接既有陳維俠方士路線。
+}
+
 async function exerciseSnowPostOffice(p) {
   // 朋友 catalog 指向 Pinned Original /d/snow/post_office.c；此 Journey 仍以 Original LPC 行為為驗收依據。
   // 小廣場 → 廣場中央 → 北廣場 → 北街 → 雪亭驛，普通玩家 request 信札後再離開。
@@ -260,6 +298,8 @@ console.log("PLAYER_SECURITY_BOUNDARY_PASS");
 await enterInnAsPlayer(human);
 await getEquipmentAndFight(human);
 await exerciseSnowPostOffice(human);
+await exerciseSnowTownServices(human);
+await exerciseOriginalLiterateSource(human);
 await joinAlchemist(human);
 await saveQuitRelogin(human, /方士|龍圖丹派弟子/);
 console.log("ORIGINAL_PLAYER_CREATION_HUMAN_E2E_PASS");
