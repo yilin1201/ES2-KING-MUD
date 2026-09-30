@@ -35,4 +35,7 @@ assert.doesNotMatch(output, /目前權限:\s*\((?:owner|creator|admin|wizard)\)/
 socket.send("N");
 await new Promise(resolve => setTimeout(resolve, 250));
 socket.close();
-console.log("PUBLIC_PLAYER_SESSION_PASS:public-wss-new-player-confirmation:no-account-created");
+const isPublic = base.protocol === "https:" && !["127.0.0.1", "localhost"].includes(base.hostname);
+console.log(isPublic
+  ? "PUBLIC_PLAYER_SESSION_PASS:external-wss-new-player-confirmation:no-account-created"
+  : "PLAYER_SESSION_SMOKE_PASS:localhost-websocket-new-player-confirmation:no-account-created");

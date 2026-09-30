@@ -135,7 +135,6 @@ node --input-type=module -e '
 # 這是 localhost deployment gate，不能冒充外部 PUBLIC_PLAYER_SMOKE_PASS。
 node "$SCRIPT_DIR/test_public_player_session_smoke.mjs" "http://127.0.0.1:$PORT" \
   || { echo "START FAIL：Ordinary Player Session Smoke 未通過。" >&2; exit 1; }
-echo "PLAYER_SESSION_SMOKE_PASS:localhost-websocket-new-player-confirmation:no-account-created"
 
 # Process Supervision／程序監督：公開服務存活期間 Driver 與 Bridge 必須同時存在。
 # 過去若 Neolith native crash，Bridge 仍可能留在前景而讓 Render 不重啟；
