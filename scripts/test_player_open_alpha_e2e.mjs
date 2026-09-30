@@ -161,6 +161,24 @@ async function getEquipmentAndFight(p) {
   console.log(`PLAYER_COMBAT_PASS:${p.id}:source-backed-sparring`);
 }
 
+async function exerciseSnowPostOffice(p) {
+  // 朋友 catalog 指向 Pinned Original /d/snow/post_office.c；此 Journey 仍以 Original LPC 行為為驗收依據。
+  // 小廣場 → 廣場中央 → 北廣場 → 北街 → 雪亭驛，普通玩家 request 信札後再離開。
+  assert.match(await command(p, "south"), /廣場中央/);
+  assert.match(await command(p, "north"), /廣場/);
+  assert.match(await command(p, "north"), /街道/);
+  assert.match(await command(p, "north"), /街道/);
+  assert.match(await command(p, "west"), /雪亭驛/);
+  const request = await command(p, "request");
+  assert.match(request, /寫著你名字的信札|已經領有一個信札/);
+  assert.match(await command(p, "east"), /街道/);
+  assert.match(await command(p, "south"), /街道/);
+  assert.match(await command(p, "south"), /廣場/);
+  assert.match(await command(p, "south"), /廣場中央/);
+  assert.match(await command(p, "north"), /小廣場|廣場北邊/);
+  console.log(`PLAYER_SNOW_POST_OFFICE_PASS:${p.id}:source-backed-request-mailbox-retire`);
+}
+
 async function joinAlchemist(p) {
   // 小廣場 → 廣場中央 → 西邊 → 西南邊 → 西街 → 私塾，全程 Original exits。
   assert.match(await command(p, "south"), /廣場中央/);
@@ -241,6 +259,7 @@ for (const denied of ["khome", "kgoto /d/snow/square", "call me->query_class()",
 console.log("PLAYER_SECURITY_BOUNDARY_PASS");
 await enterInnAsPlayer(human);
 await getEquipmentAndFight(human);
+await exerciseSnowPostOffice(human);
 await joinAlchemist(human);
 await saveQuitRelogin(human, /方士|龍圖丹派弟子/);
 console.log("ORIGINAL_PLAYER_CREATION_HUMAN_E2E_PASS");
