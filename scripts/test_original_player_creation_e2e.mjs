@@ -68,4 +68,5 @@ const races = [
 ];
 for (const [id,raceChoice,raceLabel,name,raceId] of races)
   await runPlayer({id,raceChoice,raceLabel,name,raceId});
-console.log("ES2M_RACE_ABILITY_COMMANDS_E2E_PASS");\nconsole.log("ES2M_PLAYER_CREATION_12_RACES_E2E_PASS");
+console.log("ES2M_RACE_ABILITY_COMMANDS_E2E_PASS");
+console.log("ES2M_PLAYER_CREATION_12_RACES_E2E_PASS");
