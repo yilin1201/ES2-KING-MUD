@@ -74,7 +74,7 @@ async function createCharacter({ id, raceChoice, raceLabel, genderChoice, name }
   await sendLine(p, password, "您的電子郵件地址");
   const raceMenu = await sendLine(p, "none", "請輸入編號 1 或 2");
   assert.match(raceMenu, /1\. Human（人類）/);
-  assert.match(raceMenu, /2\. Avatar（克隆人）/);
+  assert.match(raceMenu, /2\. Avatar（人類族）/);
   await sendChoice(p, `ES2RACE:${raceChoice}`, "您要扮演的哪種性別");
   await sendChoice(p, genderChoice, "您的顯示名稱");
   await sendLine(p, name, "您確定要創造這個角色嗎");
@@ -305,9 +305,9 @@ await saveQuitRelogin(human, /方士|龍圖丹派弟子/);
 console.log("ORIGINAL_PLAYER_CREATION_HUMAN_E2E_PASS");
 human.socket.close();
 
-// Avatar／克隆人：同樣從不存在的帳號走完整 Original 創角，不複製 save fixture。
-const avatar = await createCharacter({ id: avatarId, raceChoice: "2", raceLabel: "avatar", genderChoice: "F", name: "克隆測試員" });
-// Avatar Basic World Journey／克隆人不能只停在創角畫面：必須以普通玩家身份真正進入世界、移動、看 NPC、操作背包。
+// Avatar／人類族：同樣從不存在的帳號走完整 Original 創角，不複製 save fixture。
+const avatar = await createCharacter({ id: avatarId, raceChoice: "2", raceLabel: "avatar", genderChoice: "F", name: "人類族測試員" });
+// Avatar Basic World Journey／人類族不能只停在創角畫面：必須以普通玩家身份真正進入世界、移動、看 NPC、操作背包。
 await enterInnAsPlayer(avatar);
 assert.match(await command(avatar, "inventory"), /你身上|攜帶|沒有|物品|Inventory/i);
 console.log("PLAYER_AVATAR_WORLD_PASS:movement-npc-inventory");

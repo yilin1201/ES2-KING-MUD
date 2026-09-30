@@ -10,7 +10,7 @@
     ],
     [
       "avatar",
-      "ES2M labels 人類族; ES2-KING display remains 克隆人"
+      "人類族"
     ],
     [
       "blackteeth",
@@ -64,9 +64,11 @@
     "thief"
   ],
   "runtime_policy": {
-    "preserve_es2_king_avatar_display": true,
+    "preserve_es2_king_avatar_display": false,
     "do_not_claim_pinned_original": true,
-    "verify_original_when_available": true
+    "verify_original_when_available": true,
+    "avatar_display": "人類族",
+    "avatar_display_authority": "USER_DIRECTIVE_PLUS_ES2M"
   },
   "next_recovery": [
     "race creation menu integration matrix",

@@ -36,5 +36,5 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   console.log(`ORIGINAL_PLAYER_CREATION_${raceId.toUpperCase()}_E2E_PASS`);
 }
 await runPlayer({id:"humanprobe",raceChoice:"human",raceLabel:"Human（人類）",name:"人類測試",raceId:"human"});
-await runPlayer({id:"avatarprobe",raceChoice:"克隆人",raceLabel:"Avatar（克隆人）",name:"克隆人測試",raceId:"avatar"});
+await runPlayer({id:"avatarprobe",raceChoice:"人類族",raceLabel:"Avatar（人類族）",name:"人類族測試",raceId:"avatar"});
 console.log("ORIGINAL_PLAYER_CREATION_E2E_PASS");
