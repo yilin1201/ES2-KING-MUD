@@ -89,7 +89,7 @@ else
   echo 'PLAYER_COMBAT_DAMAGE_BASELINE_PENDING:no-observer-sample:no-fabricated-damage'
 fi
 
-if rg -n '編譯時段錯誤|Runtime error|Cannot #include|Undefined variable|Undefined function' "$TEMP_ROOT/driver.stdout"; then
+if grep -En '編譯時段錯誤|Runtime error|Cannot #include|Undefined variable|Undefined function' "$TEMP_ROOT/driver.stdout"; then
   echo 'PLAYER OPEN ALPHA FAIL：Driver Log 存在編譯／執行錯誤。' >&2
   exit 1
 fi
