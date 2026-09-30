@@ -282,9 +282,24 @@ async function exerciseThiefTraining(p) {
   console.log(`PLAYER_ACTIVE_TRAINING_PASS:${p.id}:sneak-improve_skill`);
 }
 
-// Thief Journey／盜賊旅程：Original gammer 具有 random_move，已另有 Source/歷史 Runtime 證據。
-// Open Alpha release gate 不以隨機 NPC 當部署阻斷條件；正式可玩基線由 deterministic Human/Alchemist journey 驗證。
-// 後續另建 roaming-NPC discovery E2E，不以 KING/Admin 固定 NPC。
+async function findRoamingGammer(p) {
+  // Roaming NPC discovery／不以 KING/Admin/goto 固定瞎眼老太婆；普通玩家沿她可達的雪亭區域自行尋找。
+  const probes = [
+    ["look gammer", /瞎眼老太婆/],
+    ["west", /廣場/], ["look gammer", /瞎眼老太婆/],
+    ["east", /廣場中央/], ["east", /廣場/], ["look gammer", /瞎眼老太婆/],
+    ["west", /廣場中央/], ["north", /廣場/], ["look gammer", /瞎眼老太婆/],
+    ["south", /廣場中央/]
+  ];
+  for (const [cmd, matcher] of probes) {
+    const out = await command(p, cmd);
+    if (matcher.test(out) && /瞎眼老太婆/.test(out)) return true;
+  }
+  return false;
+}
+
+// Thief Journey／盜賊旅程：保留 Original random_move，不以管理權限搬動 NPC。
+// 此 helper 供獨立 roaming-NPC gate 使用；找不到 NPC 時應標示 PENDING，而不是偽造 PASS。
 
 // Human／人類：帳號與顯示名稱都刻意接近 KING，仍必須是普通玩家。
 const human = await createCharacter({ id: humanId, raceChoice: "1", raceLabel: "human", genderChoice: "M", name: "KING" });
