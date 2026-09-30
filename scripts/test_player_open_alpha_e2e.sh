@@ -30,6 +30,7 @@ test -x "$DRIVER_BIN"
 cp -a "$SOURCE_RUNTIME/mudlib" "$TEMP_ROOT/mudlib"
 cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
 "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
+"$REPO_ROOT/scripts/apply_combat_balance_instrumentation.sh" "$TEMP_ROOT"
 
 # Fresh Data／全新資料：此 E2E 不複製任何 login/user fixture。
 rm -rf -- "$TEMP_ROOT/mudlib/data"
@@ -86,7 +87,13 @@ grep -Eq '^skills .*"sneak":0' "$TEMP_ROOT/mudlib/data/user/t/thiefopen.o"
 grep -Eq '^learned .*"sneak":(2[3-9]|[3-9][0-9]|[1-9][0-9]{2,})' "$TEMP_ROOT/mudlib/data/user/t/thiefopen.o"
 echo 'PLAYER_ACTIVE_TRAINING_PERSISTENCE_PASS:sneak-learning>20'
 
-if rg -n '編譯時段錯誤|Runtime error|Cannot #include|Undefined variable' "$TEMP_ROOT/driver.stdout"; then
+BALANCE_LOG="$TEMP_ROOT/mudlib/log/combat_balance"
+test -s "$BALANCE_LOG" || { echo 'PLAYER OPEN ALPHA FAIL：未產生 combat_balance actual-damage evidence。' >&2; exit 1; }
+node "$REPO_ROOT/scripts/parse_combat_balance_log.mjs" "$BALANCE_LOG" > "$TEMP_ROOT/combat-balance-baseline.json"
+grep -Eq '"samples": [1-9][0-9]*' "$TEMP_ROOT/combat-balance-baseline.json"
+echo "PLAYER_COMBAT_DAMAGE_BASELINE_PASS:source-backed-wooden-sword:$(tr -d '\n' < "$TEMP_ROOT/combat-balance-baseline.json")"
+
+if rg -n '編譯時段錯誤|Runtime error|Cannot #include|Undefined variable|Undefined function' "$TEMP_ROOT/driver.stdout"; then
   echo 'PLAYER OPEN ALPHA FAIL：Driver Log 存在編譯／執行錯誤。' >&2
   exit 1
 fi
