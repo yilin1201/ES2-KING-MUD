@@ -130,6 +130,13 @@ node --input-type=module -e '
   probe();
 ' || { echo "START FAIL：WebSocket Runtime Smoke 未通過。" >&2; exit 1; }
 
+# Ordinary Player Session Smoke／普通玩家公開入口等價路徑：
+# 只走到「新人物建立確認」後回答 N；不建立帳號、不設定密碼、不寫入正式玩家存檔。
+# 這是 localhost deployment gate，不能冒充外部 PUBLIC_PLAYER_SMOKE_PASS。
+node "$SCRIPT_DIR/test_public_player_session_smoke.mjs" "http://127.0.0.1:$PORT" \
+  || { echo "START FAIL：Ordinary Player Session Smoke 未通過。" >&2; exit 1; }
+echo "PLAYER_SESSION_SMOKE_PASS:localhost-websocket-new-player-confirmation:no-account-created"
+
 # Process Supervision／程序監督：公開服務存活期間 Driver 與 Bridge 必須同時存在。
 # 過去若 Neolith native crash，Bridge 仍可能留在前景而讓 Render 不重啟；
 # 現在任一核心程序退出都讓容器失敗退出，由平台依正常服務生命週期重建。

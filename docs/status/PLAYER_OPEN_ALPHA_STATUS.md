@@ -7,7 +7,7 @@
 - Human ordinary-player journey completes world movement, NPC inspection, Source-backed item/equipment, non-lethal combat, and the Original Chen Weixia alchemist path.
 - A second Human ordinary-player journey completes the Original food → comb → thief path and persists `improve_skill()` progress.
 - A display name of `KING` does not grant owner, creator, admin, or wizard commands.
-- Render deploy `bae21d94c530dd90f8eadbd9727b47bc63897f1a` reached `LIVE`; the public WebTelnet accepted ordinary account input and displayed the character confirmation controls.
+- Render deploys include a non-destructive ordinary-player session gate: localhost WebSocket → Original login prompt → unused ordinary-player ID → new-character confirmation → answer N. It creates no account and grants no owner/admin/wizard authority. This is recorded as `PLAYER_SESSION_SMOKE_PASS`, not as external `PUBLIC_PLAYER_SMOKE_PASS`.
 
 ## Release gate still open
 
