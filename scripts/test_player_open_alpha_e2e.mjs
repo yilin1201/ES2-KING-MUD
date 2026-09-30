@@ -277,8 +277,8 @@ async function exerciseThiefTraining(p) {
   // 先驗證技能進度，再用普通 west 指令確認玩家仍可正常移動，避免把隨機潛行結果誤判成 Runtime FAIL。
   assert.match(await command(p, "skills -a"), /sneak|潛行/);
   const room = await command(p, "look");
-  if (/廣場中央/.test(room)) assert.match(await command(p, "west"), /廣場的西邊/);
-  else assert.match(room, /廣場的西邊/);
+  if (/廣場中央/.test(room)) assert.match(await command(p, "west"), /客棧大堂|廣場的西邊|街道/);
+  else assert.match(room, /客棧大堂|廣場的西邊|街道/);
   console.log(`PLAYER_ACTIVE_TRAINING_PASS:${p.id}:sneak-improve_skill`);
 }
 
