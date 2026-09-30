@@ -20,7 +20,18 @@ es2m_races=(blackteeth yenhold woochan dingling jiaojao rainner ashura headless 
 for race in "${es2m_races[@]}"; do
   [[ -f "$ES2M_RACE_DIR/$race.c" ]] || { echo "Missing ES2M race daemon: $race" >&2; exit 1; }
   cp "$ES2M_RACE_DIR/$race.c" "$RACE_DIR/$race.c"
+  if [[ -d "$ES2M_RACE_DIR/$race" ]]; then
+    mkdir -p "$RACE_DIR/$race"
+    cp -a "$ES2M_RACE_DIR/$race/." "$RACE_DIR/$race/"
+  fi
 done
+
+# Optional ES2M custom race support (conditions/objects) is copied only when vendored.
+ES2M_CUSTOM_DIR="$REPO_ROOT/es2m_snapshot/mudlib/custom/race"
+if [[ -d "$ES2M_CUSTOM_DIR" ]]; then
+  mkdir -p "$ROOT/mudlib/custom/race"
+  cp -a "$ES2M_CUSTOM_DIR/." "$ROOT/mudlib/custom/race/"
+fi
 
 # Login registry／登入種族清單：加入歷史種族，同時保留既有 Original Human 與 Avatar。
 python3 - "$LOGIN" <<'PY'
