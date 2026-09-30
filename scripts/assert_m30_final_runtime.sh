@@ -86,6 +86,9 @@ bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_player_training_s
 # 確保部署映像實際包含梅寒霜、六式與 UNKNOWN 邊界，而不是只檢查 repository source。
 bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_cold_plum_arena_static.sh" "$RUNTIME_DIR"
 
+# Message Vision Width Gate／禁止 Original 70欄規則再次硬切人物／戰鬥敘述。
+bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_message_vision_nowrap.sh" "$RUNTIME_DIR"
+
 # Original Combat Narration Preservation Gate／原版人物出招敘述最高優先保護：
 # 已有 Original／Historical Evidence 的人物出招敘述不得因手機排版、單行顯示或 UI 美化而刪字、縮寫、摘要或改寫。
 # Evidence 原文完整性 > 排版美化；允許 ANSI 配色、換行與顯示相容性調整，但不得減少人物／武功／極招／段名／劍氣／目標等既有敘述。

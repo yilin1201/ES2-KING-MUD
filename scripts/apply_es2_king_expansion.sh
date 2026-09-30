@@ -6,6 +6,35 @@ test -d "$TARGET/mudlib" || { echo "EXPANSION APPLY FAIL：缺少 $TARGET/mudlib
 test -d "$SOURCE"
 cp -a "$SOURCE/." "$TARGET/mudlib/"
 
+# Message Vision No Hard Wrap／人物敘述不得被固定 70 欄硬切：
+# Pinned Original message_vision() 對 first/second/third-person 全部使用 cjk_wrap(..., 70, -1)。
+# ES2-KING 保留原字串作者明確寫入的 \n，只移除這個顯示寬度造成的額外換行。
+# 不修改 Pinned Original repository；只 patch 生成 Runtime。
+MESSAGE_EFUN="$TARGET/mudlib/adm/simul_efun/message.c"
+MESSAGE_NOWRAP_MARKER='ES2-KING MESSAGE VISION NO HARD WRAP'
+if ! grep -Fq "$MESSAGE_NOWRAP_MARKER" "$MESSAGE_EFUN"; then
+  python3 - "$MESSAGE_EFUN" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+text = path.read_text()
+replacements = {
+    'message("vision", cjk_wrap (str2, 70, -1), you); // second-person':
+    'message("vision", str2, you); // second-person — ES2-KING MESSAGE VISION NO HARD WRAP',
+    'message ("vision", cjk_wrap (str1, 70, -1), me); // first-person':
+    'message ("vision", str1, me); // first-person — ES2-KING MESSAGE VISION NO HARD WRAP',
+    'message ("vision", cjk_wrap (str3, 70, -1),  environment(me), ({ me, you }) ); // third-person':
+    'message ("vision", str3, environment(me), ({ me, you }) ); // third-person — ES2-KING MESSAGE VISION NO HARD WRAP',
+}
+for old, new in replacements.items():
+    if old not in text:
+        raise SystemExit("EXPANSION APPLY FAIL：找不到 Original message_vision 70欄 cjk_wrap anchor。")
+    text = text.replace(old, new, 1)
+path.write_text(text)
+PY
+fi
+
 # KING Skill Cap Exception／KING 創世神 Lv.300 技能上限：
 # Original ES2 的 F_SKILL 對所有角色固定 clamp 200；Project Canon 只允許唯一 admin KING 到 300。
 # 這個 patch 只套用生成 Runtime，不修改 Original 保存來源；一般玩家仍完整保留 Original 200 上限。
