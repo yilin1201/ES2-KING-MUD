@@ -13,9 +13,9 @@ trap cleanup EXIT INT TERM
 test -x "$DRIVER_BIN"
 cp -a "$SOURCE_RUNTIME/mudlib" "$TEMP_ROOT/mudlib"
 cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
-"$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
-mkdir -p "$TEMP_ROOT/mudlib/data/login/h" "$TEMP_ROOT/mudlib/data/user/h" "$TEMP_ROOT/mudlib/data/login/a" "$TEMP_ROOT/mudlib/data/user/a" "$TEMP_ROOT/mudlib/log"
-rm -f "$TEMP_ROOT/mudlib/data/login/h/humanprobe.o" "$TEMP_ROOT/mudlib/data/user/h/humanprobe.o" "$TEMP_ROOT/mudlib/data/login/a/avatarprobe.o" "$TEMP_ROOT/mudlib/data/user/a/avatarprobe.o"
+"$REPO_ROOT/scripts/apply_race_phase2_runtime.sh" "$TEMP_ROOT"\n"$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
+mkdir -p "$TEMP_ROOT/mudlib/data/login"/{a..z} "$TEMP_ROOT/mudlib/data/user"/{a..z} "$TEMP_ROOT/mudlib/log"
+for id in humanprobe avatarprobe blackprobe yenprobe wooprobe dingprobe jiaoprobe rainprobe ashprobe headprobe yaksaprobe malikprobe; do\n  initial="${id:0:1}"\n  rm -f "$TEMP_ROOT/mudlib/data/login/$initial/$id.o" "$TEMP_ROOT/mudlib/data/user/$initial/$id.o"\ndone
 
 (cd "$TEMP_ROOT"; exec "$DRIVER_BIN" -f neolith.conf) >"$TEMP_ROOT/driver.stdout" 2>&1 & driver_pid=$!
 ES2_TEST_PORT=4000 node -e 'const n=require("net"),d=Date.now()+30000;(function p(){const s=n.createConnection({host:"127.0.0.1",port:+process.env.ES2_TEST_PORT});s.once("connect",()=>{s.destroy();process.exit(0)});s.once("error",()=>{s.destroy();Date.now()<d?setTimeout(p,100):process.exit(1)})})()'
