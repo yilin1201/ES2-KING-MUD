@@ -29,7 +29,8 @@ RUN echo "[M30 BUILD 4/5] Apply ES2M Race + ES2-KING Expansion overlays" \
     && scripts/apply_race_phase2_runtime.sh /opt/es2-king/runtime \
     && scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime
 RUN echo "[M30 BUILD 5/5] Assert final playable Runtime" \
-    && bash scripts/assert_m30_final_runtime.sh /opt/es2-king/runtime
+    && bash scripts/assert_m30_final_runtime.sh /opt/es2-king/runtime \
+    && bash scripts/test_king_omega_static.sh /opt/es2-king/runtime
 
 # 與既有 Bootstrap 相同：只在生成的 ES2-KING Runtime 關閉歷史 anti-spam，
 # 不回寫或污染 Original ES2 保存來源。
