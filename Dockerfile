@@ -35,8 +35,8 @@ RUN echo "[M30 BUILD 4/5] Apply ES2M Race + ES2-KING Expansion overlays" \
 RUN cd scripts && python3 -m unittest -v test_check_es2m_snow_runtime_baseline
 RUN python3 scripts/check_es2m_snow_runtime_baseline.py /opt/es2-king/runtime
 # 檔案層完整性：缺失原始檔阻止發布；同名覆蓋另產生清冊，待 Owner 決策。
-RUN python3 scripts/audit_es2m_full_runtime_overlay.py \\
-    /build/es2m-original-mudlib /opt/es2-king/runtime/mudlib \\
+RUN python3 scripts/audit_es2m_full_runtime_overlay.py \
+    /build/es2m-original-mudlib /opt/es2-king/runtime/mudlib \
     /build/es2m-full-runtime-inventory.json
 
 RUN echo "[M30 BUILD 5/5] Assert final playable Runtime" \
