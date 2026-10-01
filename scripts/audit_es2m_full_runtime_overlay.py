@@ -21,6 +21,7 @@ def main():
     parser.add_argument("original", type=Path, help="未套用 KING overlay 的固定版 ES2M mudlib")
     parser.add_argument("runtime", type=Path, help="已套用 KING overlay 的 mudlib")
     parser.add_argument("output", type=Path, help="輸出 JSON 清冊")
+    parser.add_argument("--snapshot", type=Path, help="Repository 內補充 ES2M snapshot mudlib")
     args = parser.parse_args()
     before, after = inventory(args.original), inventory(args.runtime)
     report = {
@@ -32,6 +33,31 @@ def main():
         "missing": sorted(before.keys() - after.keys()),
         "added": sorted(after.keys() - before.keys()),
     }
+    if args.snapshot is not None:
+        supplement = inventory(args.snapshot)
+        report["snapshot_count"] = len(supplement)
+        report["snapshot_only"] = sorted(supplement.keys() - before.keys())
+        report["snapshot_matches_base"] = sorted(
+            k for k in supplement.keys() & before.keys() if supplement[k] == before[k]
+        )
+        report["snapshot_conflicts_base"] = sorted(
+            k for k in supplement.keys() & before.keys() if supplement[k] != before[k]
+        )
+        report["snapshot_missing_in_runtime"] = sorted(supplement.keys() - after.keys())
+        report["snapshot_matches_runtime"] = sorted(
+            k for k in supplement.keys() & after.keys() if supplement[k] == after[k]
+        )
+        report["snapshot_conflicts_runtime"] = sorted(
+            k for k in supplement.keys() & after.keys() if supplement[k] != after[k]
+        )
+        # 同名但內容不同屬待審議衝突，不在未經 Owner 決策時覆蓋。
+        print("ES2M_SNAPSHOT_CONFLICT_REVIEW", json.dumps({
+            "snapshot": len(supplement),
+            "base_conflicts": len(report["snapshot_conflicts_base"]),
+            "runtime_conflicts": len(report["snapshot_conflicts_runtime"]),
+            "snapshot_missing_in_runtime": len(report["snapshot_missing_in_runtime"]),
+            "base_conflict_paths": report["snapshot_conflicts_base"][:20],
+        }, ensure_ascii=False))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("ES2M_FULL_RUNTIME_INVENTORY", json.dumps({
