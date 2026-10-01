@@ -309,7 +309,8 @@ async function exerciseLeeVillageJourney(p) {
   assert.match(await command(p, "east"), /廣場中央/);
   assert.match(await command(p, "east"), /廣場(?:的)?東邊/);
   // 由雪亭東側道路前往東門；每一步仍由實際房間輸出驗證，不直接搬動角色。
-  const route = ["east", "east", "east"];
+  // Pinned Original：square -> square_e -> epath -> lane1 -> ruin1 -> egate。
+  const route = ["east", "east", "east", "east"];
   for (const step of route) await command(p, step);
   const egate = await command(p, "look");
   assert.match(egate, /東門|城門|雪亭/);
