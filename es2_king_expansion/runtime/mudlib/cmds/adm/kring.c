@@ -124,6 +124,6 @@ int main(object me, string arg)
 
 int help(object me)
 {
-    write("指令格式：kring\n正式解封指令：release omega\n封印指令：seal omega\n\nKING 持有神之戒時，解封並自動穿戴超級Ω神聖衣七件套；seal omega 可將七件卸下並收回神之戒。\n");
+    write("指令格式：kring\n正式解封指令：release omega\n收回指令：recall omega（或 seal omega）\n\nKING 持有神之戒時，解封並自動穿戴超級Ω神聖衣七件套；seal omega 可將七件卸下並收回神之戒。\n");
     return 1;
 }
