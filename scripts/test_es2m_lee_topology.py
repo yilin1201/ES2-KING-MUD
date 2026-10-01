@@ -27,7 +27,7 @@ npc_sources = {p.stem for p in npc_dir.glob("*.c")}
 referenced_npcs = set()
 for room_file in area.glob("*.c"):
     source = room_file.read_text(encoding="utf-8")
-    for npc in re.findall(r'["\']/?d/lee/npc/([a-zA-Z0-9_]+)["\']', source):
+    for npc in re.findall(r"""(?:["']/?d/lee/npc/|__DIR__\s*["']npc/)([a-zA-Z0-9_]+)["']""", source):
         referenced_npcs.add(npc)
         if npc not in npc_sources:
             errors.append(f"房間 {room_file.stem} 引用不存在 NPC：{npc}.c")
