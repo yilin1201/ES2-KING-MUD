@@ -120,6 +120,31 @@ PY
   echo 'ES2M LEE VILLAGE RUNTIME IMPORT PASS／李家村復原區已接入雪亭東門 northeast。'
 fi
 
+# ES2M 振武軍營正式地圖接線：Owner 已授權開放軍營與原始徵兵規則。
+# 僅修補重建 Runtime 的雪亭南門，不更動保存的 Original ES2 檔案。
+# ES2M gate.c 的 east 原本已指向 /d/snow/sgate；此處恢復對向 west 出口。
+SNOW_SGATE="$ROOT/mudlib/d/snow/sgate.c"
+ZHENWU_GATE="$ROOT/mudlib/custom/zhenwu/room/gate.c"
+ZHENWU_RECRUIT="$ROOT/mudlib/custom/zhenwu/obj/recruit_stone.c"
+[[ -f "$SNOW_SGATE" && -f "$ZHENWU_GATE" && -f "$ZHENWU_RECRUIT" ]] || {
+  echo "ES2M ZHENWU FAIL: missing Snow south gate or original camp/recruit sources" >&2; exit 1;
+}
+python3 "$REPO_ROOT/scripts/test_es2m_zhenwu_topology.py" "$ROOT/mudlib"
+python3 "$REPO_ROOT/scripts/test_es2m_zhenwu_recruitment.py" "$ROOT/mudlib"
+python3 - "$SNOW_SGATE" <<'PY'
+from pathlib import Path
+import sys
+p=Path(sys.argv[1]); s=p.read_text()
+old='//\t"west" : "/d/newcamp/gate",'
+new='\t"west" : "/custom/zhenwu/room/gate", // ES2M 振武軍營；只修改重建 Runtime。'
+if new not in s:
+    if old not in s:
+        raise SystemExit("ES2M ZHENWU FAIL: original Snow south gate west marker changed")
+    s=s.replace(old,new,1)
+p.write_text(s)
+PY
+echo 'ES2M ZHENWU CONNECTED: Snow sgate west <-> Zhenwu gate east; original enlist retained.'
+
 # Race Command Collision／種族指令同名衝突：Original EMOTED 也註冊 dance 表情。
 # 只在刑天本人輸入 dance 時優先走 ES2M /cmds/usr/dance；其他玩家仍保留 Original 通用 dance。
 COMMAND_D="$ROOT/mudlib/adm/daemons/cmd_d.c"
