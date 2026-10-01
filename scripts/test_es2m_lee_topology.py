@@ -37,6 +37,30 @@ for room_name, record in rooms.items():
                    + re.escape(target) + quote + ')')
         if not re.search(pattern, content):
             print(f"ES2M_LEE_EXIT_REVIEW: {room_name}.{direction} -> {target}")
+# 已由實際房間程式確認的關鍵雙向路線，必須阻擋意外斷線。
+# 此處只鎖定本專案已核實的路線，不推定其他 UNKNOWN 出口。
+critical_links = {
+    "wroad3": {"east": "wroad4"},
+    "wroad4": {"west": "wroad3", "east": "square_w"},
+    "square_w": {"west": "wroad4"},
+    "shrine": {"in": "nie_backroom"},
+    "nie_backroom": {"out": "shrine"},
+}
+for room_name, links in critical_links.items():
+    source_path = area / (room_name + ".c")
+    if not source_path.is_file():
+        errors.append(f"關鍵路線缺少房間：{room_name}.c")
+        continue
+    source = source_path.read_text(encoding="utf-8")
+    for direction, destination in links.items():
+        if rooms.get(room_name, {}).get("exits", {}).get(direction) != destination:
+            errors.append(f"關鍵拓撲斷線：{room_name}.{direction} -> {destination}")
+        # 已確認的六條路線均使用 __DIR__ 靜態出口。
+        expected = (r"""["']""" + re.escape(direction)
+                    + r"""["']\s*:\s*__DIR__\s*["']"""
+                    + re.escape(destination) + r"""["']""")
+        if not re.search(expected, source):
+            errors.append(f"關鍵房間出口斷線：{room_name}.{direction} -> {destination}")
 # NPC Evidence／掃描房間實際引用的 NPC；缺檔直接阻擋匯入，未使用 NPC 只列待考證。
 npc_dir = area / "npc"
 npc_sources = {p.stem for p in npc_dir.glob("*.c")}
