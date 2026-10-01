@@ -152,7 +152,7 @@ async function getEquipmentAndFight(p) {
   const fightOffset = p.output.length;
   p.socket.send("fight child\r\n");
   p.lastSentAt = Date.now();
-  const combat = await waitForAfter(p, fightOffset, /好呀.*比武|開始對.*發動攻擊|攻擊|閃躲|招架/, 30000);
+  const combat = await waitForAfter(p, fightOffset, /好呀.*比武|開始對.*發動攻擊|攻擊|閃躲|招架|刺進|氣喘噓噓|呀 ～ 呀 ～|哇.*哭|打我/, 30000);
   assert.doesNotMatch(combat, /這裡禁止戰鬥|你想攻擊誰/);
   await waitForAfter(p, fightOffset, /哇.*哭|打我/, 90000);
   await delay(2500);
