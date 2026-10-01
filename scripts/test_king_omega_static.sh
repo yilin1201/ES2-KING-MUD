@@ -3,19 +3,48 @@ set -euo pipefail
 ROOT="${1:-/opt/es2-king/runtime}"
 M="$ROOT/mudlib"
 files=(
-  "$M/obj/king/god_ring.c"
-  "$M/obj/king/omega_crown.c"
-  "$M/obj/king/omega_plate.c"
-  "$M/obj/king/omega_wings.c"
-  "$M/obj/king/omega_girth.c"
-  "$M/obj/king/omega_gloves.c"
-  "$M/obj/king/omega_leggings.c"
-  "$M/obj/king/omega_boots.c"
-  "$M/cmds/adm/kring.c"
+  "$M/obj/king/god_ring.c" "$M/obj/king/omega_crown.c"
+  "$M/obj/king/omega_plate.c" "$M/obj/king/omega_wings.c"
+  "$M/obj/king/omega_girth.c" "$M/obj/king/omega_gloves.c"
+  "$M/obj/king/omega_leggings.c" "$M/obj/king/omega_boots.c"
+  "$M/cmds/adm/kring.c" "$M/cmds/adm/release.c"
 )
 for f in "${files[@]}"; do test -r "$f" || { echo "KING OMEGA STATIC FAIL: missing $f"; exit 1; }; done
+
+# Authorization／普通同名玩家不可繞過唯一 KING 帳號與 Original admin 授權。
 grep -Fq 'KING_D->authorized(me)' "$M/cmds/adm/kring.c"
 grep -Fq 'present("god ring", me)' "$M/cmds/adm/kring.c"
-grep -Fq '"armor":100' "$M/obj/king/omega_plate.c"
+grep -Fq 'ring->query("es2_king/owner_relic") != 1' "$M/cmds/adm/kring.c"
 grep -Fq 'provision_creator_relics' "$M/adm/daemons/kingd.c"
-echo 'KING_OMEGA_STATIC_PASS:ring-kring-seven-piece-original-wear-armor300'
+
+# Commands／release omega 是正式指令，kring 是共用同一著裝流程的快捷指令。
+grep -Fq 'arg != "omega"' "$M/cmds/adm/release.c"
+grep -Fq '"/cmds/adm/kring", "main", me, 0' "$M/cmds/adm/release.c"
+grep -Fq '正式解封指令：release omega' "$M/cmds/adm/kring.c"
+
+# Slots／七件使用互不衝突且 Original 人形種族允許的裝備槽。
+grep -Fq 'set("wear_as","head_eq")' "$M/obj/king/omega_crown.c"
+grep -Fq 'set("wear_as","armor")' "$M/obj/king/omega_plate.c"
+grep -Fq 'set("wear_as","neck_eq")' "$M/obj/king/omega_wings.c"
+grep -Fq 'set("wear_as","waist_eq")' "$M/obj/king/omega_girth.c"
+grep -Fq 'set("wear_as","hand_eq")' "$M/obj/king/omega_gloves.c"
+grep -Fq 'set("wear_as","leg_eq")' "$M/obj/king/omega_leggings.c"
+grep -Fq 'set("wear_as","feet_eq")' "$M/obj/king/omega_boots.c"
+
+# Actual Defense／七件 armor 合計 300；三狀態綁定裝備，卸下時由 Original unapply 同步解除。
+python3 - "$M/obj/king" <<'PY'
+import pathlib,re,sys
+root=pathlib.Path(sys.argv[1]); total=0
+for name in ["omega_crown","omega_plate","omega_wings","omega_girth","omega_gloves","omega_leggings","omega_boots"]:
+    total += int(re.search(r'"armor":(\d+)', (root/f"{name}.c").read_text()).group(1))
+assert total == 300, total
+PY
+grep -Fq '"omega_god_protection":1' "$M/obj/king/omega_plate.c"
+grep -Fq '"omega_absolute_body":1' "$M/obj/king/omega_girth.c"
+grep -Fq '"omega_lightspeed_realm":1' "$M/obj/king/omega_wings.c"
+! grep -Fq 'set_temp("es2_king/omega/' "$M/cmds/adm/kring.c"
+
+# Duplicate Protection／再次解封重用同 ID 物件，不重複生成。
+grep -Fq 'item = present(omega_ids[i], me);' "$M/cmds/adm/kring.c"
+grep -Fq 'if (!objectp(item)) {' "$M/cmds/adm/kring.c"
+echo 'KING_OMEGA_STATIC_PASS:ring-release-kring-seven-piece-original-wear-armor300'
