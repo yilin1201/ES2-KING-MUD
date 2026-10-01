@@ -50,6 +50,31 @@ def main():
         report["snapshot_conflicts_runtime"] = sorted(
             k for k in supplement.keys() & after.keys() if supplement[k] != after[k]
         )
+        # 分類衝突供 Owner 逐類決策；清冊只讀，不修改任何來源。
+        def classify(path):
+            if path.startswith("d/"):
+                if "/npc/" in path:
+                    return "npc"
+                if "/obj/" in path or "/object/" in path:
+                    return "equipment_or_items"
+                return "world_maps"
+            if path.startswith("daemon/skill/"):
+                return "martial_skills"
+            if path.startswith("daemon/class/"):
+                return "classes"
+            if path.startswith("daemon/race/"):
+                return "races"
+            if path.startswith("custom/"):
+                return "custom_content"
+            if path.startswith(("adm/", "feature/", "include/", "cmds/")):
+                return "shared_engine"
+            return "other"
+
+        report["owner_review_queue"] = {}
+        for path in report["snapshot_conflicts_runtime"]:
+            category = classify(path)
+            report["owner_review_queue"].setdefault(category, []).append(path)
+        report["owner_review_required"] = bool(report["snapshot_conflicts_runtime"])
         # 同名但內容不同屬待審議衝突，不在未經 Owner 決策時覆蓋。
         print("ES2M_SNAPSHOT_CONFLICT_REVIEW", json.dumps({
             "snapshot": len(supplement),
