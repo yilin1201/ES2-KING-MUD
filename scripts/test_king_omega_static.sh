@@ -109,4 +109,9 @@ for item in armor/armor/battle_armor.c armor/armor/ring_mail.c armor/cloth/cyan_
   test -f "$M/custom/$item"
 done
 
+# ES2M 第三批：五件武器原始碼必須進入 Runtime，不新增未證實取得途徑。
+for item in blade/butterfly_kris.c blade/golden_blade.c staff/flower_cane.c sword/ironsword.c sword/rapid_sword.c; do
+  test -f "$M/custom/weapon/$item"
+done
+
 echo 'KING_OMEGA_STATIC_PASS:ring-release-kring-seven-piece-original-wear-armor300'
