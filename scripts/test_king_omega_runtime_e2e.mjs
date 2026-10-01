@@ -39,7 +39,9 @@ for(const n of ["超級Ω神聖衣。頭盔","超級Ω神聖衣。盔甲","超�
 assert.equal(/神之庇護|絕對霸體|光速境界/.test(inv),false,"seal 後不得殘留 Ω 裝備狀態文字");
 console.log("KING_OMEGA_STAGE_PASS:seal-back-to-god-ring");
 const rerelease=plain(await command("release omega",/成功裝備了「超級Ω神聖衣」全套防具/));
-// 裝備狀態由 kring.c 的 omega_equipped() 實際驗證，不再依賴已移除的舊版文字。\nassert.match(rerelease,/神聖Ω神盔破空扣合/);\nassert.match(rerelease,/神聖Ω戰靴神焰踏落/);
+// 裝備狀態由 kring.c 的 omega_equipped() 實際驗證，不再依賴已移除的舊版文字。
+assert.match(rerelease,/神聖Ω神盔破空扣合/);
+assert.match(rerelease,/神聖Ω戰靴神焰踏落/);
 console.log("KING_OMEGA_STAGE_PASS:release-after-seal-states-restored");
 
 // Persistence Gate／神聖衣不是一次性文字演出：存檔離線後七件仍須存在且不得增殖。
