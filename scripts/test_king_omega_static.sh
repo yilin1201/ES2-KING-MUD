@@ -7,7 +7,7 @@ files=(
   "$M/obj/king/omega_plate.c" "$M/obj/king/omega_wings.c"
   "$M/obj/king/omega_girth.c" "$M/obj/king/omega_gloves.c"
   "$M/obj/king/omega_leggings.c" "$M/obj/king/omega_boots.c"
-  "$M/cmds/adm/kring.c" "$M/cmds/adm/release.c" "$M/cmds/adm/seal.c"
+  "$M/cmds/adm/kring.c" "$M/cmds/adm/release.c" "$M/cmds/adm/seal.c" "$M/cmds/adm/recall.c"
 )
 for f in "${files[@]}"; do test -r "$f" || { echo "KING OMEGA STATIC FAIL: missing $f"; exit 1; }; done
 
@@ -25,6 +25,14 @@ grep -Fq 'seal omega' "$M/obj/king/god_ring.c"
 grep -Fq 'arg != "omega"' "$M/cmds/adm/release.c"
 grep -Fq '"/cmds/adm/kring", "main", me, 0' "$M/cmds/adm/release.c"
 grep -Fq '正式解封指令：release omega' "$M/cmds/adm/kring.c"
+
+# V2／神戒預設 V2，舊版戒指未標記版本亦採 V2；保留原版演出回退。
+grep -Fq 'set("es2_king/omega_narrative_version",2)' "$M/obj/king/god_ring.c"
+grep -Fq 'ring->query("es2_king/omega_narrative_version") != 1' "$M/cmds/adm/kring.c"
+grep -Fq 'ring->query("es2_king/omega_narrative_version") != 1' "$M/cmds/adm/seal.c"
+grep -Fq '"/cmds/adm/seal", "main", me, "omega"' "$M/cmds/adm/recall.c"
+grep -Fq '神聖Ω神盔破空扣合' "$M/cmds/adm/kring.c"
+grep -Fq '神衣雖歸，神威永存' "$M/cmds/adm/seal.c"
 
 # Slots／七件使用互不衝突且 Original 人形種族允許的裝備槽。
 grep -Fq 'set("wear_as","head_eq")' "$M/obj/king/omega_crown.c"
