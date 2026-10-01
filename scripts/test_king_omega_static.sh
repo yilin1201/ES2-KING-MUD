@@ -78,7 +78,7 @@ grep -Fq 'ring->set("es2_king/omega_sealed", 1)' "$M/cmds/adm/seal.c"
 grep -Fq 'ring->set("es2_king/omega_sealed", 0)' "$M/cmds/adm/kring.c"
 # ANSI Display／共同前綴白色、部件名稱黃色。
 for f in "$M"/obj/king/omega_{crown,plate,wings,girth,gloves,leggings,boots}.c; do
-  grep -Fq 'set_name(HIY "神聖Ω' "$f"
+  grep -Fq 'set_name(HIW "超級Ω神聖衣。" HIY "' "$f"
 done
 
 echo 'KING_OMEGA_STATIC_PASS:ring-release-kring-seven-piece-original-wear-armor300'
