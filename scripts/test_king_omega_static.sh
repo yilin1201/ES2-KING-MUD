@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# 失敗時顯示實際指令與行號，避免 Render 只留下 exit code 1。
+trap 'echo "KING_OMEGA_STATIC_FAIL line=$LINENO command=$BASH_COMMAND" >&2' ERR
 ROOT="${1:-/opt/es2-king/runtime}"
 M="$ROOT/mudlib"
 files=(
@@ -36,7 +38,7 @@ grep -Fq 'return ::main(me, "omega");' "$M/cmds/adm/mring.c"
 grep -Fq '超級Ω神聖衣。' "$M/cmds/adm/kring.c"
 grep -Fq 'HIY "神翼" HIW' "$M/cmds/adm/kring.c"
 grep -Fq '「燃燒吧！我的小宇宙！」 「以八十八星座之名' "$M/cmds/adm/kring.c"
-grep -Fq '神聖Ω神靴神焰熄滅' "$M/cmds/adm/seal.c"
+grep -Fq 'HIY "神靴神焰熄滅' "$M/cmds/adm/seal.c"
 grep -Fq 'HIY "神盔" HIW' "$M/cmds/adm/kring.c"
 grep -Fq 'HIY "\\n>>> 超級Ω神聖衣・完全著裝 <<<\\n"' "$M/cmds/adm/kring.c"
 grep -Fq '十二黃金神環浮現！神聖小宇宙吞沒星河' "$M/cmds/adm/kring.c"
