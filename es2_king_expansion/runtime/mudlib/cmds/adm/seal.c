@@ -63,13 +63,13 @@ int main(object me, string arg)
         write(HIY "「神聖Ω，榮耀永存！」\n「諸神之力，歸於永恆！」\n" NOR);
         write(HIC "「神聖Ω——神衣歸戒！！！」\n\n" NOR);
         write(HIC ">>> 神衣解鎖！歸還神戒 <<<\n" NOR);
-        write("  ◈ 頭部 ◈  神聖Ω神盔緩緩解封，神核光芒收斂！\n");
-        write("  ◈ 身體 ◈  神聖Ω神甲層層解鎖，化作萬丈金芒！\n");
-        write("  ◈ 背部 ◈  神聖Ω光翼輕振合攏，十二神羽化光！\n");
-        write("  ◈ 腰部 ◈  神聖Ω金鎖應聲解開，神脈化作流光！\n");
-        write("  ◈ 雙手 ◈  神聖Ω拳套順臂鬆脫，神威歸於平靜！\n");
-        write("  ◈ 雙腿 ◈  神聖Ω腿甲神紋逆流，甲片逐一解封！\n");
-        write("  ◈ 雙腳 ◈  神聖Ω戰靴神焰熄滅，雙足重踏凡塵！\n\n");
+        write(HIY "  ◈ 頭部 ◈  神聖Ω神盔緩緩解封，" HIC "神核光芒收斂！\n" NOR);
+        write(HIY "  ◈ 身體 ◈  神聖Ω神甲層層解鎖，" HIC "化作萬丈金芒！\n" NOR);
+        write(HIY "  ◈ 背部 ◈  神聖Ω神翼輕振合攏，" HIC "十二神羽化光！\n" NOR);
+        write(HIY "  ◈ 腰部 ◈  神聖Ω神鎖應聲解開，" HIC "神脈化作流光！\n" NOR);
+        write(HIY "  ◈ 雙手 ◈  神聖Ω拳套順臂鬆脫，" HIC "神威歸於平靜！\n" NOR);
+        write(HIY "  ◈ 雙腿 ◈  神聖Ω腿甲神紋逆流，" HIC "甲片逐一解封！\n" NOR);
+        write(HIY "  ◈ 雙腳 ◈  神聖Ω神靴神焰熄滅，" HIC "雙足重踏凡塵！\n\n" NOR);
         write("七大神甲懸浮虛空，重組為黃金戰神法相，向你莊嚴致意！\n");
         write("戰神化作億萬璀璨星塵，長鯨吸水般盡數斂入「神之戒」！\n");
         write(HIY "神衣雖歸，神威永存！\n\n" NOR);
@@ -92,6 +92,6 @@ int main(object me, string arg)
 
 int help(object me)
 {
-    write("指令格式：recall omega（或 seal omega）\n\n卸下超級Ω神聖衣全套，解除其裝備狀態，並將七件重新封回神之戒。\n");
+    write("指令格式：mring（或 recall omega / seal omega）\n\n卸下超級Ω神聖衣全套，解除其裝備狀態，並將七件重新封回神之戒。\n");
     return 1;
 }
