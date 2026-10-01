@@ -18,7 +18,7 @@ int main(object me, string arg)
     int i;
 
     if (arg != "omega")
-        return notify_fail("封印指令：seal omega\n");
+        return notify_fail("封印指令：recall omega 或 seal omega\n");
     if (!KING_D->authorized(me))
         return notify_fail("只有 KING 能將超級Ω神聖衣封回神之戒。\n");
 
@@ -33,10 +33,13 @@ int main(object me, string arg)
             return notify_fail("Ω神聖衣封印中止：發現同名但不屬於神聖衣的物件。\n");
     }
 
+    if (ring->query("es2_king/omega_narrative_version") == 1) {
     write(HIW "\n你深吸一口氣，翻湧沸騰的小宇宙如潮水般緩緩平息，氣沉丹田。\n" NOR);
     write(HIW "指間的「神之戒」泛起溫潤柔和的星芒，發出清越的空靈錚鳴。\n" NOR);
     write("周身金色甲胄劇烈震顫，各處金屬扣鎖應聲解開——\n\n");
     write(HIY ">>> 聖衣解鎖！歸還神戒（Unequip Omega Cloth）<<<\n\n" NOR);
+
+    }
 
     // 先正常 unequip，再由神戒回收實體；特效是敘事，不代表額外戰鬥倍率。
     for (i = 0; i < sizeof(omega_ids); i++) {
@@ -53,6 +56,24 @@ int main(object me, string arg)
     || me->query_temp("apply/omega_lightspeed_realm") > 0)
         return notify_fail("Ω神聖衣封印失敗：仍有神聖狀態殘留。\n");
 
+    if (ring->query("es2_king/omega_narrative_version") != 1) {
+        write(HIW "\n你深吸一口氣，沸騰的神級小宇宙緩緩平息。\n" NOR);
+        write("指間「神之戒」泛起溫潤神芒，發出清越錚鳴。\n");
+        write("八十八星座再次共鳴，十二黃金神宮依序隱入星河！\n");
+        write(HIY "「神聖Ω，榮耀永存！」\n「諸神之力，歸於永恆！」\n" NOR);
+        write(HIC "「神聖Ω——神衣歸戒！！！」\n\n" NOR);
+        write(HIC ">>> 神衣解鎖！歸還神戒 <<<\n" NOR);
+        write("  ◈ 頭部 ◈  神聖Ω神盔緩緩解封，神核光芒收斂！\n");
+        write("  ◈ 身體 ◈  神聖Ω神甲層層解鎖，化作萬丈金芒！\n");
+        write("  ◈ 背部 ◈  神聖Ω光翼輕振合攏，十二神羽化光！\n");
+        write("  ◈ 腰部 ◈  神聖Ω金鎖應聲解開，神脈化作流光！\n");
+        write("  ◈ 雙手 ◈  神聖Ω拳套順臂鬆脫，神威歸於平靜！\n");
+        write("  ◈ 雙腿 ◈  神聖Ω腿甲神紋逆流，甲片逐一解封！\n");
+        write("  ◈ 雙腳 ◈  神聖Ω戰靴神焰熄滅，雙足重踏凡塵！\n\n");
+        write("七大神甲懸浮虛空，重組為黃金戰神法相，向你莊嚴致意！\n");
+        write("戰神化作億萬璀璨星塵，長鯨吸水般盡數斂入「神之戒」！\n");
+        write(HIY "神衣雖歸，神威永存！\n\n" NOR);
+    } else {
     write("【背部】：十二道燦金神翼微振合攏，漫天羽光自背脊收斂。\n");
     write("【頭部】：天馬戰盔自兩鬢彈開，額前星芒漸歸沉寂。\n");
     write("【雙手】：神拳套寸寸鬆脫，指節星痕悄然隱去。\n");
@@ -62,6 +83,7 @@ int main(object me, string arg)
     write("【雙腳】：踏星戰靴金炎熄滅，足底重歸凡塵。\n\n");
     write(HIW "七件神甲於半空重組為黃道戰神法相，向你微微頷首，隨即化為星塵漩渦，盡數斂入神之戒。\n" NOR);
     write("四周罡風止歇，天地復歸寂靜，你斂去神威，重現宗師從容本色。\n\n");
+    }
     ring->set("es2_king/omega_sealed", 1);
     write(HIY "【神戒封印】七件神聖衣已全部收回；再次輸入 release omega 即可重新解封。\n" NOR);
     write(HIW "（系統提示：你卸下了「超級Ω神聖衣」全套防具，聖衣已完整收納回「神之戒」中，狀態「神之庇護」、「絕對霸體」、「光速境界」解除。）\n" NOR);
@@ -70,6 +92,6 @@ int main(object me, string arg)
 
 int help(object me)
 {
-    write("指令格式：seal omega\n\n卸下超級Ω神聖衣全套，解除其裝備狀態，並將七件重新封回神之戒。\n");
+    write("指令格式：recall omega（或 seal omega）\n\n卸下超級Ω神聖衣全套，解除其裝備狀態，並將七件重新封回神之戒。\n");
     return 1;
 }
