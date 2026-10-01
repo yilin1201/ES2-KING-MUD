@@ -114,4 +114,15 @@ for item in blade/butterfly_kris.c blade/golden_blade.c staff/flower_cane.c swor
   test -f "$M/custom/weapon/$item"
 done
 
+# ES2M 振武軍營完整區域：五 NPC、六物件、十七房間均需進入 Runtime。
+for item in npc/lu_xinien.c npc/mee_pei.c npc/soldier.c npc/target_stake.c npc/zhenwu_soldier.c \
+  obj/fire_gauntlets.c obj/great_axe_of_mighty.c obj/recruit_stone.c \
+  obj/short_pike.c obj/steel_armor.c obj/steel_boots.c \
+  room/big_tent.c room/camp.c room/gate.c room/shed.c; do
+  test -f "$M/custom/zhenwu/$item"
+done
+for n in $(seq -w 2 14); do
+  test -f "$M/custom/zhenwu/room/yard$n.c"
+done
+
 echo 'KING_OMEGA_STATIC_PASS:ring-release-kring-seven-piece-original-wear-armor300'
