@@ -24,10 +24,12 @@ const sealed=plain(await command("seal omega",/七件神聖衣已全部收回/))
 assert.match(sealed,/回歸神之戒/);
 inv=plain(await command("inventory"));
 for(const n of ["超級Ω神聖衣。頭盔","超級Ω神聖衣。盔甲","超級Ω神聖衣。披風光翼","超級Ω神聖衣。腰帶","超級Ω神聖衣。手套","超級Ω神聖衣。腳套","超級Ω神聖衣。鞋子"])assert.equal(inv.includes(n),false,"seal 後 Inventory 不得殘留 "+n);
+assert.equal(/神之庇護|絕對霸體|光速境界/.test(inv),false,"seal 後不得殘留 Ω 裝備狀態文字");
 console.log("KING_OMEGA_STAGE_PASS:seal-back-to-god-ring");
 const rerelease=plain(await command("release omega",/成功裝備了「超級Ω神聖衣」全套防具/));
 assert.match(rerelease,/超級Ω神聖衣。/);
-console.log("KING_OMEGA_STAGE_PASS:release-after-seal");
+assert.match(rerelease,/神之庇護/);assert.match(rerelease,/絕對霸體/);assert.match(rerelease,/光速境界/);
+console.log("KING_OMEGA_STAGE_PASS:release-after-seal-states-restored");
 
 // Persistence Gate／神聖衣不是一次性文字演出：存檔離線後七件仍須存在且不得增殖。
 // 重新登入後再執行 release omega，必須重用既有七件並恢復完整著裝。
