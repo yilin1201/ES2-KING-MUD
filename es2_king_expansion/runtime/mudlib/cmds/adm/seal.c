@@ -26,26 +26,45 @@ int main(object me, string arg)
     if (!objectp(ring) || ring->query("es2_king/owner_relic") != 1)
         return notify_fail("神之戒不在你的物品欄中，無法封印超級Ω神聖衣。\n");
 
+    // 先驗證全部物件，再卸裝回收，避免同名偽物件造成部分封印。
     for (i = 0; i < sizeof(omega_ids); i++) {
         item = present(omega_ids[i], me);
-        if (!objectp(item))
-            continue;
-        if (item->query("es2_king/omega_cloth") != 1)
+        if (objectp(item) && item->query("es2_king/omega_cloth") != 1)
             return notify_fail("Ω神聖衣封印中止：發現同名但不屬於神聖衣的物件。\n");
+    }
+
+    write(HIW "\n你深吸一口氣，翻湧沸騰的小宇宙如潮水般緩緩平息，氣沉丹田。\n" NOR);
+    write(HIW "指間的「神之戒」泛起溫潤柔和的星芒，發出清越的空靈錚鳴。\n" NOR);
+    write("周身金色甲胄劇烈震顫，各處金屬扣鎖應聲解開——\n\n");
+    write(HIY ">>> 聖衣解鎖！歸還神戒（Unequip Omega Cloth）<<<\n\n" NOR);
+
+    // 先正常 unequip，再由神戒回收實體；特效是敘事，不代表額外戰鬥倍率。
+    for (i = 0; i < sizeof(omega_ids); i++) {
+        item = present(omega_ids[i], me);
+        if (!objectp(item)) continue;
         if (item->query("equipped") && !item->unequip())
             return notify_fail("Ω神聖衣封印失敗：" + item->name() + " 無法正常卸下。\n");
         destruct(item);
     }
 
-    // 三個 Ω 狀態必須隨 Original unequip/apply 機制解除，否則不可宣告封印成功。
+    // Original apply 必須隨裝備解除。
     if (me->query_temp("apply/omega_god_protection") > 0
     || me->query_temp("apply/omega_absolute_body") > 0
     || me->query_temp("apply/omega_lightspeed_realm") > 0)
         return notify_fail("Ω神聖衣封印失敗：仍有神聖狀態殘留。\n");
 
+    write("【背部】：十二道燦金神翼微振合攏，漫天羽光自背脊收斂。\n");
+    write("【頭部】：天馬戰盔自兩鬢彈開，額前星芒漸歸沉寂。\n");
+    write("【雙手】：神拳套寸寸鬆脫，指節星痕悄然隱去。\n");
+    write("【身體】：主神甲解開神鎖，青銅與黃金神紋化光褪去。\n");
+    write("【腰部】：Ω神徽化為一縷璀璨金絲。\n");
+    write("【腿部】：雲紋甲片自雙膝與脛骨脫離，逆流而上。\n");
+    write("【雙腳】：踏星戰靴金炎熄滅，足底重歸凡塵。\n\n");
+    write(HIW "七件神甲於半空重組為黃道戰神法相，向你微微頷首，隨即化為星塵漩渦，盡數斂入神之戒。\n" NOR);
+    write("四周罡風止歇，天地復歸寂靜，你斂去神威，重現宗師從容本色。\n\n");
     ring->set("es2_king/omega_sealed", 1);
-    write(HIW "\n超級Ω神聖衣化作七道星光，自你周身解除著裝，依序回歸神之戒。\n" NOR);
     write(HIY "【神戒封印】七件神聖衣已全部收回；再次輸入 release omega 即可重新解封。\n" NOR);
+    write(HIW "（系統提示：你卸下了「超級Ω神聖衣」全套防具，聖衣已完整收納回「神之戒」中，狀態「神之庇護」、「絕對霸體」、「光速境界」解除。）\n" NOR);
     return 1;
 }
 
