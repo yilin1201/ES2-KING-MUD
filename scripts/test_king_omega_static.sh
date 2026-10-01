@@ -7,7 +7,7 @@ files=(
   "$M/obj/king/omega_plate.c" "$M/obj/king/omega_wings.c"
   "$M/obj/king/omega_girth.c" "$M/obj/king/omega_gloves.c"
   "$M/obj/king/omega_leggings.c" "$M/obj/king/omega_boots.c"
-  "$M/cmds/adm/kring.c" "$M/cmds/adm/release.c" "$M/cmds/adm/seal.c" "$M/cmds/adm/recall.c"
+  "$M/cmds/adm/kring.c" "$M/cmds/adm/release.c" "$M/cmds/adm/seal.c" "$M/cmds/adm/recall.c" "$M/cmds/adm/mring.c"
 )
 for f in "${files[@]}"; do test -r "$f" || { echo "KING OMEGA STATIC FAIL: missing $f"; exit 1; }; done
 
@@ -31,6 +31,9 @@ grep -Fq 'set("es2_king/omega_narrative_version",2)' "$M/obj/king/god_ring.c"
 grep -Fq 'ring->query("es2_king/omega_narrative_version") != 1' "$M/cmds/adm/kring.c"
 grep -Fq 'ring->query("es2_king/omega_narrative_version") != 1' "$M/cmds/adm/seal.c"
 grep -Fq '"/cmds/adm/seal", "main", me, "omega"' "$M/cmds/adm/recall.c"
+grep -Fq '"/cmds/adm/seal", "main", me, "omega"' "$M/cmds/adm/mring.c"
+grep -Fq '神聖Ω神翼轟然怒展' "$M/cmds/adm/kring.c"
+grep -Fq '神聖Ω神靴神焰熄滅' "$M/cmds/adm/seal.c"
 grep -Fq '神聖Ω神盔破空扣合' "$M/cmds/adm/kring.c"
 grep -Fq '神衣雖歸，神威永存' "$M/cmds/adm/seal.c"
 
