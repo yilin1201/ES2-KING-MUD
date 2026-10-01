@@ -149,4 +149,7 @@ for n in $(seq -w 2 14); do
   test -f "$M/custom/zhenwu/room/yard$n.c"
 done
 
+# ES2M 鬼魂類別：基底與六個 NPC 必須在 Runtime 中同時存在。
+python3 "$(dirname "$0")/test_es2m_ghost_integrity.py" "$M"
+
 echo 'KING_OMEGA_STATIC_PASS:ring-release-kring-seven-piece-original-wear-armor300'
