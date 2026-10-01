@@ -86,4 +86,11 @@ for f in "$M"/obj/king/omega_{crown,plate,wings,girth,gloves,leggings,boots}.c; 
   grep -Fq 'set_name(HIW "超級Ω神聖衣。" HIY "' "$f"
 done
 
+# KING 專屬顯示排序：生成 Runtime 的 i / look 共用七件排序。
+test -f "$M/adm/daemons/omega_sortd.c"
+grep -Fq 'ES2-KING OMEGA CANONICAL DISPLAY ORDER' "$M/cmds/usr/inventory.c"
+grep -Fq 'ES2-KING OMEGA CANONICAL DISPLAY ORDER' "$M/cmds/std/look.c"
+grep -Fq '"omega crown", "omega plate", "omega wings", "omega girth"' "$M/adm/daemons/omega_sortd.c"
+grep -Fq '"omega gloves", "omega leggings", "omega boots"' "$M/adm/daemons/omega_sortd.c"
+
 echo 'KING_OMEGA_STATIC_PASS:ring-release-kring-seven-piece-original-wear-armor300'
