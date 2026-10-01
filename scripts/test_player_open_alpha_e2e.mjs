@@ -6,6 +6,7 @@ const password = process.env.ES2_E2E_PASSWORD;
 const humanId = process.env.ES2_E2E_HUMAN_ID || "kinglook";
 const avatarId = process.env.ES2_E2E_AVATAR_ID || "avataropen";
 const thiefId = process.env.ES2_E2E_THIEF_ID || "thiefopen";
+const leeId = process.env.ES2_E2E_LEE_ID || "leeopen";
 assert.ok(url && password, "缺少隔離 Runtime WebSocket 或測試密碼");
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -301,6 +302,27 @@ async function findRoamingGammer(p) {
 // Thief Journey／盜賊旅程：保留 Original random_move，不以管理權限搬動 NPC。
 // 此 helper 供獨立 roaming-NPC gate 使用；找不到 NPC 時應標示 PENDING，而不是偽造 PASS。
 
+async function exerciseLeeVillageJourney(p) {
+  // ES2M Reconstruction／普通玩家只用世界出口進入李家村；禁止 goto/call/admin。
+  await command(p, "open east", /打開|已經是開著/);
+  assert.match(await command(p, "east"), /廣場的西邊/);
+  assert.match(await command(p, "east"), /廣場中央/);
+  assert.match(await command(p, "east"), /廣場(?:的)?東邊/);
+  // 由雪亭東側道路前往東門；每一步仍由實際房間輸出驗證，不直接搬動角色。
+  const route = ["east", "east", "east"];
+  for (const step of route) await command(p, step);
+  const egate = await command(p, "look");
+  assert.match(egate, /東門|城門|雪亭/);
+  const entrance = await command(p, "northeast");
+  assert.match(entrance, /李家村|村口/);
+  assert.match(await command(p, "look traveller"), /旅客|旅人/);
+  assert.match(await command(p, "north"), /村口大門/);
+  assert.match(await command(p, "look guard"), /守衛|衛兵/);
+  assert.match(await command(p, "south"), /村口/);
+  assert.match(await command(p, "southwest"), /東門|雪亭/);
+  console.log(`PLAYER_ES2M_LEE_MAP_NPC_PASS:${p.id}:snow-egate-lee-roundtrip`);
+}
+
 // Human／人類：帳號與顯示名稱都刻意接近 KING，仍必須是普通玩家。
 const human = await createCharacter({ id: humanId, raceChoice: "1", raceLabel: "human", genderChoice: "M", name: "KING" });
 for (const denied of ["khome", "kgoto /d/snow/square", "call me->query_class()", "clone /obj/money/coin", "kadmin list"]) {
@@ -327,5 +349,11 @@ console.log("PLAYER_AVATAR_WORLD_PASS:movement-npc-inventory");
 await saveQuitRelogin(avatar, /平民/);
 console.log("ORIGINAL_PLAYER_CREATION_AVATAR_E2E_PASS");
 avatar.socket.close();
+
+// Lee Village／李家村 ES2M Reconstruction：獨立普通玩家 Journey，驗證世界連線與 NPC clone。
+const lee = await createCharacter({ id: leeId, raceChoice: "1", raceLabel: "human", genderChoice: "M", name: "李村旅人" });
+await exerciseLeeVillageJourney(lee);
+await saveQuitRelogin(lee, /平民/);
+lee.socket.close();
 
 console.log("PLAYER_FULL_JOURNEY_E2E_PASS");
