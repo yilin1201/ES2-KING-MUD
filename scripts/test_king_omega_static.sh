@@ -102,7 +102,10 @@ for part in 神盔 神甲 神翼 神鎖 拳套 腿甲 神靴; do
 done
 
 # ES2M 第一批新增裝備：原始來源檔必須隨 Runtime 複製，不替 NPC 設定掉落。
-for item in armor/armor/battle_armor.c armor/armor/ring_mail.c armor/cloth/cyan_cloth.c; do
+for item in armor/armor/battle_armor.c armor/armor/ring_mail.c armor/cloth/cyan_cloth.c \
+  armor/armor/tiger_armor.c armor/armor/wolf_armor.c \
+  armor/cloth/suncat_skin.c armor/cloth/umber_robe.c armor/cloth/worn_robe.c \
+  armor/feet/boots_of_heroism.c armor/feet/jiaojao_boots.c armor/feet/runners_boots.c; do
   test -f "$M/custom/$item"
 done
 
