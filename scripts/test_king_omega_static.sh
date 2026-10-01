@@ -40,7 +40,7 @@ grep -Fq 'HIY "神翼" HIW' "$M/cmds/adm/kring.c"
 grep -Fq '「燃燒吧！我的小宇宙！」 「以八十八星座之名' "$M/cmds/adm/kring.c"
 grep -Fq 'HIY "神靴神焰熄滅' "$M/cmds/adm/seal.c"
 grep -Fq 'HIY "神盔" HIW' "$M/cmds/adm/kring.c"
-grep -Fq 'HIY "\\n>>> 超級Ω神聖衣・完全著裝 <<<\\n"' "$M/cmds/adm/kring.c"
+grep -Fq 'HIY "\n>>> 超級Ω神聖衣・完全著裝 <<<\n"' "$M/cmds/adm/kring.c"
 grep -Fq '十二黃金神環浮現！神聖小宇宙吞沒星河' "$M/cmds/adm/kring.c"
 grep -Fq '神衣雖歸，神威永存' "$M/cmds/adm/seal.c"
 
