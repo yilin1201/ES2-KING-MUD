@@ -44,6 +44,15 @@ grep -Fq '"omega_absolute_body":1' "$M/obj/king/omega_girth.c"
 grep -Fq '"omega_lightspeed_realm":1' "$M/obj/king/omega_wings.c"
 ! grep -Fq 'set_temp("es2_king/omega/' "$M/cmds/adm/kring.c"
 
+# Runtime State Gate／解封成功前必須確認七個 Original armor slot 與三個 Ω apply 狀態真的存在。
+grep -Fq 'private int omega_equipped(object me)' "$M/cmds/adm/kring.c"
+grep -Fq 'item->query("equipped") != "armor/" + omega_slots[i]' "$M/cmds/adm/kring.c"
+grep -Fq 'me->query_temp("armor/" + omega_slots[i]) != item' "$M/cmds/adm/kring.c"
+grep -Fq 'query_temp("apply/omega_god_protection") >= 1' "$M/cmds/adm/kring.c"
+grep -Fq 'query_temp("apply/omega_absolute_body") >= 1' "$M/cmds/adm/kring.c"
+grep -Fq 'query_temp("apply/omega_lightspeed_realm") >= 1' "$M/cmds/adm/kring.c"
+grep -Fq 'if (!omega_equipped(me))' "$M/cmds/adm/kring.c"
+
 # Duplicate Protection／再次解封重用同 ID 物件，不重複生成。
 grep -Fq 'item = present(omega_ids[i], me);' "$M/cmds/adm/kring.c"
 grep -Fq 'if (!objectp(item)) {' "$M/cmds/adm/kring.c"
