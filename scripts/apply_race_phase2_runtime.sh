@@ -85,6 +85,9 @@ fi
 # ES2M Lee Village／李家村復原區：保留 ES2M provenance，不宣稱為 Original ES2。
 ES2M_LEE_DIR="$REPO_ROOT/es2m_snapshot/mudlib/d/lee"
 if [[ -d "$ES2M_LEE_DIR" ]]; then
+  # Map Gate／地圖完整性：複製前核對已登錄房間與出口，避免將缺檔地圖導入正式 Runtime。
+  # 尚未登錄的 ES2M 房間僅回報，不自動創造或改寫 Original Canon。
+  python3 "$REPO_ROOT/scripts/test_es2m_lee_topology.py"
   mkdir -p "$ROOT/mudlib/d/lee"
   cp -a "$ES2M_LEE_DIR/." "$ROOT/mudlib/d/lee/"
 
