@@ -313,14 +313,14 @@ async function exerciseLeeVillageJourney(p) {
   const route = ["east", "east", "east", "east"];
   for (const step of route) await command(p, step);
   const egate = await command(p, "look");
-  assert.match(egate, /東門|城門|雪亭/);
+  assert.match(egate, /河邊|李家村|northeast/);
   const entrance = await command(p, "northeast");
   assert.match(entrance, /李家村|村口/);
   assert.match(await command(p, "look traveller"), /旅客|旅人/);
   assert.match(await command(p, "north"), /村口大門/);
   assert.match(await command(p, "look guard"), /守衛|衛兵/);
   assert.match(await command(p, "south"), /村口/);
-  assert.match(await command(p, "southwest"), /東門|雪亭/);
+  assert.match(await command(p, "southwest"), /河邊|李家村|northeast/);
   console.log(`PLAYER_ES2M_LEE_MAP_NPC_PASS:${p.id}:snow-egate-lee-roundtrip`);
 }
 
