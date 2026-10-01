@@ -154,4 +154,9 @@ for n in $(seq -w 2 14); do
   test -f "$M/custom/zhenwu/room/yard$n.c"
 done
 
+# ES2M 原始道具：龍麟袋與四類可堆疊符紙，保留原檔不新增取得途徑。
+for item in dragon_skin_bag.c scroll/blank.c scroll/nature.c scroll/yang.c scroll/yin.c; do
+  test -f "$M/custom/item/$item"
+done
+
 echo 'KING_OMEGA_STATIC_PASS:ring-release-kring-seven-piece-original-wear-armor300'
