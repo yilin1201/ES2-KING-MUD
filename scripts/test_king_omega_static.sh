@@ -130,6 +130,11 @@ for item in staff/cane_of_spirit.c staff/celestial_bull_cane.c staff/staff_of_ju
   test -f "$M/custom/weapon/$item"
 done
 
+# ES2M 第四批：十二件戒指，保留獨立裝備物件，不改 KING 神之戒。
+for item in freeze_ring.c frost_frog_ring.c gold_ring.c golden_ring.c han_jade_ring.c jade_ring.c lapis_ring.c leopard_ring.c lightning_ring.c magicians_ring.c meditation_ring.c pearl_ring.c; do
+  test -f "$M/custom/armor/finger/$item"
+done
+
 # 建置前先驗證保存的 ES2M 區域拓樸與 NPC／物件引用。
 python3 "$(dirname "$0")/test_es2m_zhenwu_topology.py" "$(cd "$(dirname "$0")/.." && pwd)/es2m_snapshot/mudlib"
 
