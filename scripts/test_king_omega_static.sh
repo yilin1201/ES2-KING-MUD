@@ -165,4 +165,10 @@ for item in npc/butler.c obj/bed.c obj/development_board.c obj/storage_chest.c \
   test -f "$M/custom/home/$item"
 done
 
+# 振武軍營正式連線：雙向出口與徵兵規則須存在於生成 Runtime。
+grep -Fq '"west" : "/custom/zhenwu/room/gate"' "$M/d/snow/sgate.c"
+grep -Fq '"east" : "/d/snow/sgate"' "$M/custom/zhenwu/room/gate.c"
+grep -Fq '"/custom/zhenwu/obj/recruit_stone" : 1' "$M/custom/zhenwu/room/yard10.c"
+python3 "$(dirname "$0")/test_es2m_zhenwu_recruitment.py" "$M"
+
 echo 'KING_OMEGA_STATIC_PASS:ring-release-kring-seven-piece-original-wear-armor300'
