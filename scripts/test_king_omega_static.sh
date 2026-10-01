@@ -159,4 +159,10 @@ for item in dragon_skin_bag.c scroll/blank.c scroll/nature.c scroll/yang.c scrol
   test -f "$M/custom/item/$item"
 done
 
+# ES2M WebMUD 家園擴充：只保存獨立來源資產，不與 KING khome 權限或世界混用。
+for item in npc/butler.c obj/bed.c obj/development_board.c obj/storage_chest.c \
+  room/bedroom.c room/future_room.c room/home_hall.c room/study_room.c; do
+  test -f "$M/custom/home/$item"
+done
+
 echo 'KING_OMEGA_STATIC_PASS:ring-release-kring-seven-piece-original-wear-armor300'
