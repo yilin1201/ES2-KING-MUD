@@ -30,6 +30,8 @@ class FullInventoryTest(unittest.TestCase):
             self.assertEqual(data["overridden"], ["room.c"])
             self.assertEqual(data["snapshot_conflicts_base"], ["room.c"])
             self.assertEqual(data["snapshot_conflicts_runtime"], ["room.c"])
+            self.assertTrue(data["owner_review_required"])
+            self.assertEqual(data["owner_review_queue"], {"other": ["room.c"]})
             self.assertEqual((runtime / "room.c").read_text(), "king")
 
     def test_missing_base_fails_release(self):
