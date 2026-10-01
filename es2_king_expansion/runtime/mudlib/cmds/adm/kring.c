@@ -71,7 +71,9 @@ int main(object me, string arg)
     if (!omega_equipped(me))
         return notify_fail("Ω神聖衣解封失敗：七件裝備或神聖狀態未完整套用。\n");
 
-    ring->set("es2_king/omega_sealed", 0);\n\n    write(HIY "\n你小宇宙轟然暴燃，戰意直灌指端，指間的「神之戒」驟然爆發出一道直衝九霄的璀璨星柱！\n\n" NOR);
+    ring->set("es2_king/omega_sealed", 0);
+
+    write(HIY "\n你小宇宙轟然暴燃，戰意直灌指端，指間的「神之戒」驟然爆發出一道直衝九霄的璀璨星柱！\n\n" NOR);
     write(HIW "【神物共鳴】：神之戒內部時空矩陣轟然解鎖，封印於神界的至高力量徹底甦醒！\n" NOR);
     write("億萬道純金與銀白的灼熱星輝自指尖暴湧而出，於頭頂虛空瘋狂旋轉、坍縮！\n");
     write("轟然間，一尊巍峨聳立、環繞著黃道十二星圖的金色戰神法相赫然顯化於天地之間！\n\n");
