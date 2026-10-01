@@ -25,14 +25,20 @@ RUN echo "[M30 BUILD 2/5] Checkout verified Original commit" \
     && git -C /opt/es2-king/runtime checkout "$ORIGINAL_ES2_COMMIT"
 RUN echo "[M30 BUILD 3/5] Update Original submodules" \
     && git -C /opt/es2-king/runtime submodule update --init --recursive
-# ES2M 主體基準：套用 KING 前先封存原始 mudlib，供三方差異盤點。\nRUN cp -a /opt/es2-king/runtime/mudlib /build/es2m-original-mudlib\nRUN echo "[M30 BUILD 4/5] Apply ES2M Race + ES2-KING Expansion overlays" \
+# ES2M 主體基準：套用 KING 前先封存原始 mudlib，供三方差異盤點。
+RUN cp -a /opt/es2-king/runtime/mudlib /build/es2m-original-mudlib
+RUN echo "[M30 BUILD 4/5] Apply ES2M Race + ES2-KING Expansion overlays" \
     && scripts/apply_race_phase2_runtime.sh /opt/es2-king/runtime \
     && scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime
 # ES2M 雪亭鎮整合檢查：先跑隔離單元測試，再核對真正生成的 Runtime 檔案。
 # 不將原始碼隔離區誤當成可玩的遊戲資料。
 RUN cd scripts && python3 -m unittest -v test_check_es2m_snow_runtime_baseline
 RUN python3 scripts/check_es2m_snow_runtime_baseline.py /opt/es2-king/runtime
-# 檔案層完整性：缺失原始檔阻止發布；同名覆蓋另產生清冊，待 Owner 決策。\nRUN python3 scripts/audit_es2m_full_runtime_overlay.py \\\n    /build/es2m-original-mudlib /opt/es2-king/runtime/mudlib \\\n    /build/es2m-full-runtime-inventory.json\n
+# 檔案層完整性：缺失原始檔阻止發布；同名覆蓋另產生清冊，待 Owner 決策。
+RUN python3 scripts/audit_es2m_full_runtime_overlay.py \\
+    /build/es2m-original-mudlib /opt/es2-king/runtime/mudlib \\
+    /build/es2m-full-runtime-inventory.json
+
 RUN echo "[M30 BUILD 5/5] Assert final playable Runtime" \
     && bash scripts/assert_m30_final_runtime.sh /opt/es2-king/runtime \
     && bash scripts/test_king_omega_static.sh /opt/es2-king/runtime
