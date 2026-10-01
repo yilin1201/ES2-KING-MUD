@@ -13,6 +13,31 @@ private string *omega_ids = ({
     "omega crown", "omega plate", "omega wings", "omega girth",
     "omega gloves", "omega leggings", "omega boots",
 });
+private string *omega_slots = ({
+    "head_eq", "armor", "neck_eq", "waist_eq",
+    "hand_eq", "leg_eq", "feet_eq",
+});
+
+// Runtime Verification／實際著裝驗證：七件必須真的佔用 Original armor slot，
+// 且三個既定 Ω 狀態必須由裝備 apply 機制實際掛上；不以文字訊息當成 PASS。
+private int omega_equipped(object me)
+{
+    object item;
+    int i;
+
+    for (i = 0; i < sizeof(omega_ids); i++) {
+        item = present(omega_ids[i], me);
+        if (!objectp(item)
+        || item->query("es2_king/omega_cloth") != 1
+        || item->query("equipped") != "armor/" + omega_slots[i]
+        || me->query_temp("armor/" + omega_slots[i]) != item)
+            return 0;
+    }
+
+    return me->query_temp("apply/omega_god_protection") >= 1
+        && me->query_temp("apply/omega_absolute_body") >= 1
+        && me->query_temp("apply/omega_lightspeed_realm") >= 1;
+}
 
 private void create(){ seteuid(getuid()); }
 
@@ -42,6 +67,9 @@ int main(object me, string arg)
         if (!item->query("equipped") && !item->wear())
             return notify_fail("Ω神聖衣著裝失敗：" + item->name() + " 無法穿戴。\n");
     }
+
+    if (!omega_equipped(me))
+        return notify_fail("Ω神聖衣解封失敗：七件裝備或神聖狀態未完整套用。\n");
 
     write(HIY "\n你小宇宙轟然暴燃，戰意直灌指端，指間的「神之戒」驟然爆發出一道直衝九霄的璀璨星柱！\n\n" NOR);
     write(HIW "【神物共鳴】：神之戒內部時空矩陣轟然解鎖，封印於神界的至高力量徹底甦醒！\n" NOR);
