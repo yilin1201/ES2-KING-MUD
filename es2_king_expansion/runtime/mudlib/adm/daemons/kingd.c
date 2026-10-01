@@ -22,6 +22,10 @@ private mapping owner_weapon_registry = ([
     "god cane"      : "/obj/king/god_cane",
 ]);
 
+private mapping owner_relic_registry = ([
+    "god ring" : "/obj/king/god_ring",
+]);
+
 private void create() { seteuid(getuid()); }
 
 // Authorization／授權：正常登入、精確帳號 ID 與 Original admin 三項必須同時成立。
@@ -87,6 +91,31 @@ object create_registered(object actor, string id)
     return created;
 }
 
+
+// provision_creator_relics()／KING 神物配置：只補缺失神之戒，不自動穿戴。
+int provision_creator_relics(object actor)
+{
+    object item;
+    string id, file;
+    mapping found = ([]);
+
+    if (!authorized(actor)) return 0;
+    foreach (item in all_inventory(actor))
+        foreach (id, file in owner_relic_registry)
+            if (item->id(id)) found[id] = 1;
+
+    foreach (id, file in owner_relic_registry) {
+        if (found[id]) continue;
+        if (file_size(file + ".c") < 0) return 0;
+        item = new(file);
+        if (!objectp(item) || !item->move(actor)) {
+            if (objectp(item)) destruct(item);
+            return 0;
+        }
+    }
+    actor->set("es2_king/creator_relics", 1);
+    return 1;
+}
 
 // provision_creator_weapons()／KING 登入武器配置。
 // 只補齊缺少的武器，不重複 clone；不呼叫 wield()，確保 KING 登入保持空手。
