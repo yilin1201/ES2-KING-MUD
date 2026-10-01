@@ -114,6 +114,9 @@ for item in blade/butterfly_kris.c blade/golden_blade.c staff/flower_cane.c swor
   test -f "$M/custom/weapon/$item"
 done
 
+# 建置前先驗證保存的 ES2M 區域拓樸與 NPC／物件引用。
+python3 "$(dirname "$0")/test_es2m_zhenwu_topology.py" "$(cd "$(dirname "$0")/.." && pwd)/es2m_snapshot/mudlib"
+
 # ES2M 振武軍營完整區域：五 NPC、六物件、十七房間均需進入 Runtime。
 for item in npc/lu_xinien.c npc/mee_pei.c npc/soldier.c npc/target_stake.c npc/zhenwu_soldier.c \
   obj/fire_gauntlets.c obj/great_axe_of_mighty.c obj/recruit_stone.c \
