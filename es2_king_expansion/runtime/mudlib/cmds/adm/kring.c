@@ -73,31 +73,31 @@ int main(object me, string arg)
 
     ring->set("es2_king/omega_sealed", 0);
 
-    // V2 神戒演出：既有戒指若未標記版本，也採 V2；明確標記 1 保留原版。
+    // V2 配色：敘述白色、關鍵宣告紅色；裝備前綴白色、部件名稱黃色。
+    // 每段明確以 NOR 收尾，避免 ANSI 色彩延伸至其他遊戲訊息。
     if (ring->query("es2_king/omega_narrative_version") != 1) {
-        write(HIY "\n體內億萬細胞轟然共振，奔騰熱血燃燒至極限！\n" NOR);
+        write(HIW "\n體內億萬細胞轟然共振，奔騰熱血燃燒至極限！\n" NOR);
         write(HIR "靈魂深處，沉眠的神級大爆炸轟然引爆！\n" NOR);
-        write(HIY "你仰天長嘯，高舉「神之戒」！創世神光貫穿蒼穹！\n" NOR);
-        write("八十八星座齊聲共鳴，十二黃金神宮依序點亮！\n");
-        write(HIY "黃金戰神法相破空降臨，萬千星辰匯聚於你身前！\n\n" NOR);
-        write(HIY "「燃燒吧！我的小宇宙！」\n" NOR);
-        write(HIY "「以八十八星座之名，喚醒超越諸神的奇蹟！」\n" NOR);
+        write(HIW "你仰天長嘯，高舉「神之戒」！創世神光貫穿蒼穹！\n" NOR);
+        write(HIW "八十八星座齊聲共鳴，十二黃金神宮依序點亮！\n" NOR);
+        write(HIW "黃金戰神法相破空降臨，萬千星辰匯聚於你身前！\n\n" NOR);
+        write(HIY "「燃燒吧！我的小宇宙！」 「以八十八星座之名，喚醒超越諸神的奇蹟！」\n" NOR);
         write(HIR "「神聖Ω——終極覺醒！！！」\n\n" NOR);
-        write("億萬流星撕裂虛空，七道創世神光化為戰甲，鏗鏘覆體！\n\n");
+        write(HIW "億萬流星撕裂虛空，七道創世神光化為戰甲，鏗鏘覆體！\n\n" NOR);
         write(HIR ">>> 神聖Ω・終極解封 <<<\n" NOR);
-        write(HIY "━━━━━━━━ 神聖衣・完全著裝 ━━━━━━━━\n" NOR);
-        write(HIY "  ◈ 頭部 ◈  神聖Ω神盔破空扣合，" HIC "額前神核綻放！\n" NOR);
-        write(HIY "  ◈ 身體 ◈  神聖Ω神甲萬光交織，" HIW "不滅神血護體！\n" NOR);
-        write(HIY "  ◈ 背部 ◈  神聖Ω神翼轟然怒展，" HIW "十二神羽裂空！\n" NOR);
-        write(HIY "  ◈ 腰部 ◈  神聖Ω神鎖瞬間封合，" HIW "神脈生生不息！\n" NOR);
-        write(HIY "  ◈ 雙手 ◈  神聖Ω拳套緊扣雙腕，" HIW "神威粉碎次元！\n" NOR);
-        write(HIY "  ◈ 雙腿 ◈  神聖Ω腿甲轟然覆合，" HIW "雙腿屹立如山！\n" NOR);
-        write(HIY "  ◈ 雙腳 ◈  神聖Ω神靴神焰踏落，" HIR "震撼山河！\n\n" NOR);
-        write(HIY ">>> 神聖Ω・完全著裝 <<<\n" NOR);
-        write("八十八星座神光匯聚，十二黃金神環浮現！\n");
-        write(HIY "神聖小宇宙吞沒星河，神威降世，萬界震顫！\n\n" NOR);
+        write(HIW "━━━━━━━━ 神聖衣・完全著裝 ━━━━━━━━\n" NOR);
+        write(HIW "  ◈ 頭部 ◈  超級Ω神聖衣。" HIY "神盔" HIW "破空扣合，額前神核綻放！\n" NOR);
+        write(HIW "  ◈ 身體 ◈  超級Ω神聖衣。" HIY "神甲" HIW "萬光交織，不滅神血護體！\n" NOR);
+        write(HIW "  ◈ 背部 ◈  超級Ω神聖衣。" HIY "神翼" HIW "轟然怒展，十二神羽裂空！\n" NOR);
+        write(HIW "  ◈ 腰部 ◈  超級Ω神聖衣。" HIY "神鎖" HIW "瞬間封合，神脈生生不息！\n" NOR);
+        write(HIW "  ◈ 雙手 ◈  超級Ω神聖衣。" HIY "拳套" HIW "緊扣雙腕，神威粉碎次元！\n" NOR);
+        write(HIW "  ◈ 雙腿 ◈  超級Ω神聖衣。" HIY "腿甲" HIW "轟然覆合，雙腿屹立如山！\n" NOR);
+        write(HIW "  ◈ 雙腳 ◈  超級Ω神聖衣。" HIY "神靴" HIW "神焰踏落，震撼山河！\n" NOR);
+        write(HIW "\n>>> 神聖Ω・完全著裝 <<<\n" NOR);
+        write(HIW "八十八星座神光匯聚，十二黃金神環浮現！\n" NOR);
+        write(HIW "神聖小宇宙吞沒星河，神威降世，萬界震顫！\n\n" NOR);
         write(HIW "（系統提示：你成功裝備了「超級Ω神聖衣」全套防具！）\n" NOR);
-        message("vision", HIY + me->name() + "高舉神之戒，神聖Ω七大神甲化光覆體，十二黃金神環照耀天地！\n" NOR, environment(me), me);
+        message("vision", HIW + me->name() + "高舉神之戒，神聖Ω七大神甲化光覆體，十二黃金神環照耀天地！\n" NOR, environment(me), me);
         return 1;
     }
 
