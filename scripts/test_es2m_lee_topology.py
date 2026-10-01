@@ -30,10 +30,11 @@ for room_name, record in rooms.items():
     content = source.read_text(encoding="utf-8")
     for direction, target in record.get("exits", {}).items():
         # 支援 __DIR__"room" 與絕對路徑 /d/lee/room 兩種靜態出口。
-        pattern = (r'["\\']' + re.escape(direction)
-                   + r'["\\']\\s*:\\s*(?:__DIR__\\s*["\\']'
-                   + re.escape(target) + r'["\\']|["\\']/d/lee/'
-                   + re.escape(target) + r'["\\'])')
+        quote = """["']"""
+        pattern = (quote + re.escape(direction)
+                   + quote + r'\\s*:\\s*(?:__DIR__\\s*' + quote
+                   + re.escape(target) + quote + '|' + quote + '/d/lee/'
+                   + re.escape(target) + quote + ')')
         if not re.search(pattern, content):
             print(f"ES2M_LEE_EXIT_REVIEW: {room_name}.{direction} -> {target}")
 # NPC Evidence／掃描房間實際引用的 NPC；缺檔直接阻擋匯入，未使用 NPC 只列待考證。
