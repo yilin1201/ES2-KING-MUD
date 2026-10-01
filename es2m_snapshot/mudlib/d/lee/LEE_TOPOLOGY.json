@@ -64,10 +64,11 @@
       }
     },
     "shrine": {
-      "short": "福祠",
-      "status": "GENERATED",
+      "short": "醫館",
+      "status": "USER_DIRECTIVE_RECONSTRUCTION",
       "exits": {
-        "south": "wroad3"
+        "south": "wroad3",
+        "in": "nie_backroom"
       }
     },
     "gate_w": {
@@ -316,9 +317,16 @@
         "north": "riverside_s",
         "west": "watermelon_s3"
       }
+    },
+    "nie_backroom": {
+      "short": "丹房",
+      "status": "USER_DIRECTIVE_RECONSTRUCTION",
+      "exits": {
+        "out": "shrine"
+      }
     }
   },
-  "room_count": 38,
+  "room_count": 39,
   "edge_count": 44,
   "note": "External connection south of entrance_s intentionally unresolved.",
   "external_connection": {
