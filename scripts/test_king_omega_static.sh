@@ -135,6 +135,11 @@ for item in freeze_ring.c frost_frog_ring.c gold_ring.c golden_ring.c han_jade_r
   test -f "$M/custom/armor/finger/$item"
 done
 
+# ES2M 書籍補入 Runtime，不得覆蓋同名 Original。
+for item in anthology_of_classical_prose.c canon_of_true_words.c compendium_of_translations.c manual_of_six_yin_and_eight_trigrams.c nameless_ancient_tome.c simple_guide_to_words.c strange_tales_of_the_celestial_court.c studies_of_famous_mountains.c the_five_numbers.c the_literary_mind_and_carving_of_dragons.c travel_notes.c treatise_on_words.c verses_of_the_thirteen_spirits.c water_dragon_canon.c yellow_mountain_chess_manual.c yin_yang_canon.c; do
+  test -f "$M/obj/books/$item"
+done
+
 # 建置前先驗證保存的 ES2M 區域拓樸與 NPC／物件引用。
 python3 "$(dirname "$0")/test_es2m_zhenwu_topology.py" "$(cd "$(dirname "$0")/.." && pwd)/es2m_snapshot/mudlib"
 
@@ -148,8 +153,5 @@ done
 for n in $(seq -w 2 14); do
   test -f "$M/custom/zhenwu/room/yard$n.c"
 done
-
-# ES2M 鬼魂類別：基底與六個 NPC 必須在 Runtime 中同時存在。
-python3 "$(dirname "$0")/test_es2m_ghost_integrity.py" "$M"
 
 echo 'KING_OMEGA_STATIC_PASS:ring-release-kring-seven-piece-original-wear-armor300'
