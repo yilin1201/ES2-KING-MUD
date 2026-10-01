@@ -28,7 +28,7 @@ RUN echo "[M30 BUILD 3/5] Update Original submodules" \
 RUN echo "[M30 BUILD 4/5] Apply ES2M Race + ES2-KING Expansion overlays" \
     && scripts/apply_race_phase2_runtime.sh /opt/es2-king/runtime \
     && scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime
-RUN echo "[M30 BUILD 5/5] Assert final playable Runtime" \
+# ES2M 雪亭鎮整合檢查：先跑隔離單元測試，再核對真正生成的 Runtime 檔案。\n# 不將原始碼隔離區誤當成可玩的遊戲資料。\nRUN cd scripts && python3 -m unittest -v test_check_es2m_snow_runtime_baseline\nRUN python3 scripts/check_es2m_snow_runtime_baseline.py /opt/es2-king/runtime\n\nRUN echo "[M30 BUILD 5/5] Assert final playable Runtime" \
     && bash scripts/assert_m30_final_runtime.sh /opt/es2-king/runtime \
     && bash scripts/test_king_omega_static.sh /opt/es2-king/runtime
 
