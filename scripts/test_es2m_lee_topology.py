@@ -36,7 +36,11 @@ for room_name, record in rooms.items():
                    + re.escape(target) + quote + '|' + quote + '/d/lee/'
                    + re.escape(target) + quote + ')')
         if not re.search(pattern, content):
-            print(f"ES2M_LEE_EXIT_REVIEW: {room_name}.{direction} -> {target}")
+            finding = f"{room_name}.{direction} -> {target}"
+            if record.get("status") == "USER_DIRECTIVE_RECONSTRUCTION":
+                errors.append(f"已確認重建房間出口與拓撲不一致：{finding}")
+            else:
+                print(f"ES2M_LEE_EXIT_REVIEW: {finding}")
 # 已由實際房間程式確認的關鍵雙向路線，必須阻擋意外斷線。
 # 此處只鎖定本專案已核實的路線，不推定其他 UNKNOWN 出口。
 critical_links = {
