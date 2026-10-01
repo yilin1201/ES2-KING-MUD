@@ -23,7 +23,7 @@ object *ordered(object *items)
             if (objectp(item) && item->query("es2_king/omega_cloth") == 1
             && item->id(omega_ids[i])) {
                 result += ({ item });
-                remaining = remaining[0..j-1] + remaining[j+1..];
+                remaining -= ({ item });
                 break;
             }
         }
