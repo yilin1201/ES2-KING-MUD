@@ -122,6 +122,14 @@ for item in blade/green_blade.c blade/thunderfurry_blade.c blade/warlord_blade.c
   test -f "$M/custom/weapon/$item"
 done
 
+# ES2M custom/weapon 其餘十一件：完成本輪未導入武器補齊。
+for item in staff/cane_of_spirit.c staff/celestial_bull_cane.c staff/staff_of_judgement.c \
+  sword/charm_sword.c sword/flurry_sword.c sword/godness_sword.c \
+  sword/jeweled_shortsword.c sword/loving_sword.c sword/royal_sword_of_honor.c \
+  sword/storm_chasers_sword.c whip/silk_fishing_stick.c; do
+  test -f "$M/custom/weapon/$item"
+done
+
 # 建置前先驗證保存的 ES2M 區域拓樸與 NPC／物件引用。
 python3 "$(dirname "$0")/test_es2m_zhenwu_topology.py" "$(cd "$(dirname "$0")/.." && pwd)/es2m_snapshot/mudlib"
 
