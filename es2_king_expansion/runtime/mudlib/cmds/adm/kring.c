@@ -84,15 +84,15 @@ int main(object me, string arg)
         write(HIY "「以八十八星座之名，喚醒超越諸神的奇蹟！」\n" NOR);
         write(HIR "「神聖Ω——終極覺醒！！！」\n\n" NOR);
         write("億萬流星撕裂虛空，七道創世神光化為戰甲，鏗鏘覆體！\n\n");
-        write(HIY ">>> 神聖Ω・終極解封 <<<\n" NOR);
+        write(HIR ">>> 神聖Ω・終極解封 <<<\n" NOR);
         write(HIY "━━━━━━━━ 神聖衣・完全著裝 ━━━━━━━━\n" NOR);
-        write("  ◈ 頭部 ◈  神聖Ω神盔破空扣合，額前神核綻放！\n");
-        write("  ◈ 身體 ◈  神聖Ω神甲萬光交織，不滅神血護體！\n");
-        write("  ◈ 背部 ◈  神聖Ω光翼轟然怒展，十二神羽裂空！\n");
-        write("  ◈ 腰部 ◈  神聖Ω金鎖瞬間封合，神脈生生不息！\n");
-        write("  ◈ 雙手 ◈  神聖Ω拳套緊扣雙腕，神威粉碎次元！\n");
-        write("  ◈ 雙腿 ◈  神聖Ω腿甲轟然覆合，雙腿屹立如山！\n");
-        write("  ◈ 雙腳 ◈  神聖Ω戰靴神焰踏落，震撼山河！\n\n");
+        write(HIY "  ◈ 頭部 ◈  神聖Ω神盔破空扣合，" HIC "額前神核綻放！\n" NOR);
+        write(HIY "  ◈ 身體 ◈  神聖Ω神甲萬光交織，" HIW "不滅神血護體！\n" NOR);
+        write(HIY "  ◈ 背部 ◈  神聖Ω神翼轟然怒展，" HIW "十二神羽裂空！\n" NOR);
+        write(HIY "  ◈ 腰部 ◈  神聖Ω神鎖瞬間封合，" HIW "神脈生生不息！\n" NOR);
+        write(HIY "  ◈ 雙手 ◈  神聖Ω拳套緊扣雙腕，" HIW "神威粉碎次元！\n" NOR);
+        write(HIY "  ◈ 雙腿 ◈  神聖Ω腿甲轟然覆合，" HIW "雙腿屹立如山！\n" NOR);
+        write(HIY "  ◈ 雙腳 ◈  神聖Ω神靴神焰踏落，" HIR "震撼山河！\n\n" NOR);
         write(HIY ">>> 神聖Ω・完全著裝 <<<\n" NOR);
         write("八十八星座神光匯聚，十二黃金神環浮現！\n");
         write(HIY "神聖小宇宙吞沒星河，神威降世，萬界震顫！\n\n" NOR);
@@ -124,6 +124,6 @@ int main(object me, string arg)
 
 int help(object me)
 {
-    write("指令格式：kring\n正式解封指令：release omega\n收回指令：recall omega（或 seal omega）\n\nKING 持有神之戒時，解封並自動穿戴超級Ω神聖衣七件套；seal omega 可將七件卸下並收回神之戒。\n");
+    write("指令格式：kring\n正式解封指令：release omega\n收回快捷指令：mring（或 recall omega / seal omega）\n\nKING 持有神之戒時，解封並自動穿戴超級Ω神聖衣七件套；seal omega 可將七件卸下並收回神之戒。\n");
     return 1;
 }
