@@ -101,4 +101,9 @@ for part in 神盔 神甲 神翼 神鎖 拳套 腿甲 神靴; do
   grep -Fq '" HIW "超級Ω神聖衣。" HIY "'"$part" "$M/cmds/adm/seal.c"
 done
 
+# ES2M 第一批新增裝備：原始來源檔必須隨 Runtime 複製，不替 NPC 設定掉落。
+for item in armor/armor/battle_armor.c armor/armor/ring_mail.c armor/cloth/cyan_cloth.c; do
+  test -f "$M/custom/$item"
+done
+
 echo 'KING_OMEGA_STATIC_PASS:ring-release-kring-seven-piece-original-wear-armor300'
