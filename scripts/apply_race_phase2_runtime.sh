@@ -74,6 +74,30 @@ if [[ -d "$ES2M_SKILL_DIR" ]]; then
   done
 fi
 
+# ES2M Lee Village／李家村復原區：保留 ES2M provenance，不宣稱為 Original ES2。
+ES2M_LEE_DIR="$REPO_ROOT/es2m_snapshot/mudlib/d/lee"
+if [[ -d "$ES2M_LEE_DIR" ]]; then
+  mkdir -p "$ROOT/mudlib/d/lee"
+  cp -a "$ES2M_LEE_DIR/." "$ROOT/mudlib/d/lee/"
+
+  # World connection／只修改重建 Runtime 的雪亭東門，不修改 Repository 保存的 Original source。
+  SNOW_EGATE="$ROOT/mudlib/d/snow/egate.c"
+  python3 - "$SNOW_EGATE" <<'PY'
+from pathlib import Path
+import sys
+p=Path(sys.argv[1]); s=p.read_text()
+if '"northeast" : "/d/lee/entrance_s"' not in s:
+    marker='set("exits", (['
+    i=s.find(marker)
+    if i < 0: raise SystemExit('Could not locate Snow egate exits')
+    j=s.find(']));', i)
+    if j < 0: raise SystemExit('Could not close Snow egate exits')
+    s=s[:j]+'        "northeast" : "/d/lee/entrance_s",\n'+s[j:]
+p.write_text(s)
+PY
+  echo 'ES2M LEE VILLAGE RUNTIME IMPORT PASS／李家村復原區已接入雪亭東門 northeast。'
+fi
+
 # Race Command Collision／種族指令同名衝突：Original EMOTED 也註冊 dance 表情。
 # 只在刑天本人輸入 dance 時優先走 ES2M /cmds/usr/dance；其他玩家仍保留 Original 通用 dance。
 COMMAND_D="$ROOT/mudlib/adm/daemons/cmd_d.c"
