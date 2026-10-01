@@ -10,7 +10,7 @@ async function login(){await connect();await wait(0,"您的使用者代號");awa
 await login();
 let inv=plain(await command("inventory"));assert.match(inv,/神之戒/);assert.equal(inv.split("神之戒").length-1,1);
 console.log("KING_OMEGA_STAGE_PASS:god-ring-provisioned");
-const release=plain(await command("release omega",/成功裝備了「超級Ω神聖衣」全套防具/));
+const release=plain(await command("kring",/成功裝備了「超級Ω神聖衣」全套防具/));
 // Narrative Regression／精簡版著裝敘述需完整呈現七部位及神之戒啟動。
 for(const line of [
   "體內億萬細胞轟然共振",
