@@ -16,13 +16,14 @@ for(const line of [
   "體內億萬細胞轟然共振",
   "八十八星座齊聲共鳴",
   "神聖Ω——終極覺醒",
-  "神聖Ω神盔破空扣合",
-  "神聖Ω神甲萬光交織",
-  "神聖Ω神翼轟然怒展",
-  "神聖Ω神鎖瞬間封合",
-  "神聖Ω拳套緊扣雙腕",
-  "神聖Ω腿甲轟然覆合",
-  "神聖Ω神靴神焰踏落",
+  "「燃燒吧！我的小宇宙！」 「以八十八星座之名，喚醒超越諸神的奇蹟！」",
+  "超級Ω神聖衣。神盔破空扣合",
+  "超級Ω神聖衣。神甲萬光交織",
+  "超級Ω神聖衣。神翼轟然怒展",
+  "超級Ω神聖衣。神鎖瞬間封合",
+  "超級Ω神聖衣。拳套緊扣雙腕",
+  "超級Ω神聖衣。腿甲轟然覆合",
+  "超級Ω神聖衣。神靴神焰踏落",
 ]) assert.ok(release.includes(line), "缺少正式著裝敘述："+line);
 console.log("KING_OMEGA_STAGE_PASS:release-omega-seven-piece");
 inv=plain(await command("inventory"));
@@ -40,8 +41,8 @@ assert.equal(/神之庇護|絕對霸體|光速境界/.test(inv),false,"seal 後�
 console.log("KING_OMEGA_STAGE_PASS:seal-back-to-god-ring");
 const rerelease=plain(await command("release omega",/成功裝備了「超級Ω神聖衣」全套防具/));
 // 裝備狀態由 kring.c 的 omega_equipped() 實際驗證，不再依賴已移除的舊版文字。
-assert.match(rerelease,/神聖Ω神盔破空扣合/);
-assert.match(rerelease,/神聖Ω神靴神焰踏落/);
+assert.match(rerelease,/超級Ω神聖衣。神盔破空扣合/);
+assert.match(rerelease,/超級Ω神聖衣。神靴神焰踏落/);
 console.log("KING_OMEGA_STAGE_PASS:release-after-seal-states-restored");
 
 // Persistence Gate／神聖衣不是一次性文字演出：存檔離線後七件仍須存在且不得增殖。
