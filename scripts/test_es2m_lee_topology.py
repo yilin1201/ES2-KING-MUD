@@ -50,6 +50,18 @@ for room_file in area.glob("*.c"):
 print("ES2M_LEE_NPC_SOURCE:", len(npc_sources))
 print("ES2M_LEE_NPC_REFERENCED:", len(referenced_npcs))
 print("ES2M_LEE_NPC_UNREFERENCED:", ",".join(sorted(npc_sources-referenced_npcs)) or "none")
+# Equipment Evidence／房間及 NPC 可能引用 obj/ 物件；先稽核來源，不擅自生成武器裝備。
+object_sources = {p.stem for p in (area / "obj").glob("*.c")}
+referenced_objects = set()
+for source_file in list(area.glob("*.c")) + list(npc_dir.glob("*.c")):
+    source = source_file.read_text(encoding="utf-8")
+    for obj in re.findall(r"""(?:["']/?d/lee/obj/|__DIR__\s*["']obj/)([a-zA-Z0-9_]+)["']""", source):
+        referenced_objects.add(obj)
+        if obj not in object_sources:
+            errors.append(f"{source_file.relative_to(area)} 引用不存在物件：{obj}.c")
+print("ES2M_LEE_OBJECT_SOURCE:", len(object_sources))
+print("ES2M_LEE_OBJECT_REFERENCED:", len(referenced_objects))
+print("ES2M_LEE_OBJECT_UNREFERENCED:", ",".join(sorted(object_sources-referenced_objects)) or "none")
 # Snapshot 中有但 topology 未登錄者只能列為待考證，不擅自補入地圖。
 unindexed = sorted(source_rooms - rooms.keys())
 print("ES2M_LEE_TOPOLOGY_ROOMS:", len(rooms))
