@@ -73,6 +73,34 @@ int main(object me, string arg)
 
     ring->set("es2_king/omega_sealed", 0);
 
+    // V2 神戒演出：既有戒指若未標記版本，也採 V2；明確標記 1 保留原版。
+    if (ring->query("es2_king/omega_narrative_version") != 1) {
+        write(HIY "\n體內億萬細胞轟然共振，奔騰熱血燃燒至極限！\n" NOR);
+        write(HIR "靈魂深處，沉眠的神級大爆炸轟然引爆！\n" NOR);
+        write(HIY "你仰天長嘯，高舉「神之戒」！創世神光貫穿蒼穹！\n" NOR);
+        write("八十八星座齊聲共鳴，十二黃金神宮依序點亮！\n");
+        write(HIY "黃金戰神法相破空降臨，萬千星辰匯聚於你身前！\n\n" NOR);
+        write(HIY "「燃燒吧！我的小宇宙！」\n" NOR);
+        write(HIY "「以八十八星座之名，喚醒超越諸神的奇蹟！」\n" NOR);
+        write(HIR "「神聖Ω——終極覺醒！！！」\n\n" NOR);
+        write("億萬流星撕裂虛空，七道創世神光化為戰甲，鏗鏘覆體！\n\n");
+        write(HIY ">>> 神聖Ω・終極解封 <<<\n" NOR);
+        write(HIY "━━━━━━━━ 神聖衣・完全著裝 ━━━━━━━━\n" NOR);
+        write("  ◈ 頭部 ◈  神聖Ω神盔破空扣合，額前神核綻放！\n");
+        write("  ◈ 身體 ◈  神聖Ω神甲萬光交織，不滅神血護體！\n");
+        write("  ◈ 背部 ◈  神聖Ω光翼轟然怒展，十二神羽裂空！\n");
+        write("  ◈ 腰部 ◈  神聖Ω金鎖瞬間封合，神脈生生不息！\n");
+        write("  ◈ 雙手 ◈  神聖Ω拳套緊扣雙腕，神威粉碎次元！\n");
+        write("  ◈ 雙腿 ◈  神聖Ω腿甲轟然覆合，雙腿屹立如山！\n");
+        write("  ◈ 雙腳 ◈  神聖Ω戰靴神焰踏落，震撼山河！\n\n");
+        write(HIY ">>> 神聖Ω・完全著裝 <<<\n" NOR);
+        write("八十八星座神光匯聚，十二黃金神環浮現！\n");
+        write(HIY "神聖小宇宙吞沒星河，神威降世，萬界震顫！\n\n" NOR);
+        write(HIW "（系統提示：你成功裝備了「超級Ω神聖衣」全套防具！）\n" NOR);
+        message("vision", HIY + me->name() + "高舉神之戒，神聖Ω七大神甲化光覆體，十二黃金神環照耀天地！\n" NOR, environment(me), me);
+        return 1;
+    }
+
     // Ω 著裝演出：採用專案擁有者定稿的精簡七部位敘述；裝備及狀態驗證維持原樣。
     write(HIY "\n你小宇宙轟然暴燃，戰意直灌指端！\n" NOR);
     write(HIY "指間「神之戒」爆發出一道直衝九霄的璀璨星柱！\n\n" NOR);
