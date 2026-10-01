@@ -114,6 +114,14 @@ for item in blade/butterfly_kris.c blade/golden_blade.c staff/flower_cane.c swor
   test -f "$M/custom/weapon/$item"
 done
 
+# ES2M 追加十二件武器：檢查生成 Runtime 與原始資料保持同步。
+for item in blade/green_blade.c blade/thunderfurry_blade.c blade/warlord_blade.c \
+  blunt/black_iron_hammer.c dagger/ancient_dagger.c dagger/coldblood_dagger.c \
+  dagger/dagger_of_fate.c dagger/digested_holy_sword.c dagger/dimensional_dagger.c \
+  needle/tailors_needle.c pike/golden_beast_lance.c staff/black_spark.c; do
+  test -f "$M/custom/weapon/$item"
+done
+
 # 建置前先驗證保存的 ES2M 區域拓樸與 NPC／物件引用。
 python3 "$(dirname "$0")/test_es2m_zhenwu_topology.py" "$(cd "$(dirname "$0")/.." && pwd)/es2m_snapshot/mudlib"
 
