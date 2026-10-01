@@ -13,16 +13,16 @@ console.log("KING_OMEGA_STAGE_PASS:god-ring-provisioned");
 const release=plain(await command("release omega",/成功裝備了「超級Ω神聖衣」全套防具/));
 // Narrative Regression／精簡版著裝敘述需完整呈現七部位及神之戒啟動。
 for(const line of [
-  "指間「神之戒」爆發出一道直衝九霄的璀璨星柱",
-  "黃道十二星圖環繞的金色戰神法相",
-  "黃道神盔凌空合攏",
-  "黃道盔甲鏗鏘覆體",
-  "披風光翼轟然舒展",
-  "神印Ω金鎖扣合",
-  "黃道拳套順臂扣鎖",
-  "流雲腳套緊密咬合",
-  "踏星戰靴沉沉落地",
-  "宏大小宇宙（Macro Cosmo）盡數融匯",
+  "體內億萬細胞轟然共振",
+  "八十八星座齊聲共鳴",
+  "神聖Ω——終極覺醒",
+  "神聖Ω神盔破空扣合",
+  "神聖Ω神甲萬光交織",
+  "神聖Ω光翼轟然怒展",
+  "神聖Ω金鎖瞬間封合",
+  "神聖Ω拳套緊扣雙腕",
+  "神聖Ω腿甲轟然覆合",
+  "神聖Ω戰靴神焰踏落",
 ]) assert.ok(release.includes(line), "缺少正式著裝敘述："+line);
 console.log("KING_OMEGA_STAGE_PASS:release-omega-seven-piece");
 inv=plain(await command("inventory"));
@@ -32,14 +32,14 @@ await command("release omega",/成功裝備了「超級Ω神聖衣」全套防�
 inv=plain(await command("inventory"));
 for(const n of ["超級Ω神聖衣。頭盔","超級Ω神聖衣。盔甲","超級Ω神聖衣。披風光翼","超級Ω神聖衣。腰帶","超級Ω神聖衣。手套","超級Ω神聖衣。腳套","超級Ω神聖衣。鞋子"])assert.equal(inv.split(n).length-1,1,"再次 release 不得重複 "+n);
 console.log("KING_OMEGA_STAGE_PASS:repeat-release-no-duplicate");
-const sealed=plain(await command("seal omega",/七件神聖衣已全部收回/));
-assert.match(sealed,/回歸神之戒/);
+const sealed=plain(await command("recall omega",/七件神聖衣已全部收回/));
+assert.match(sealed,/神衣雖歸，神威永存/);
 inv=plain(await command("inventory"));
 for(const n of ["超級Ω神聖衣。頭盔","超級Ω神聖衣。盔甲","超級Ω神聖衣。披風光翼","超級Ω神聖衣。腰帶","超級Ω神聖衣。手套","超級Ω神聖衣。腳套","超級Ω神聖衣。鞋子"])assert.equal(inv.includes(n),false,"seal 後 Inventory 不得殘留 "+n);
 assert.equal(/神之庇護|絕對霸體|光速境界/.test(inv),false,"seal 後不得殘留 Ω 裝備狀態文字");
 console.log("KING_OMEGA_STAGE_PASS:seal-back-to-god-ring");
 const rerelease=plain(await command("release omega",/成功裝備了「超級Ω神聖衣」全套防具/));
-// 裝備狀態由 kring.c 的 omega_equipped() 實際驗證，不再依賴已移除的舊版文字。\nassert.match(rerelease,/黃道神盔凌空合攏/);\nassert.match(rerelease,/踏星戰靴沉沉落地/);
+// 裝備狀態由 kring.c 的 omega_equipped() 實際驗證，不再依賴已移除的舊版文字。\nassert.match(rerelease,/神聖Ω神盔破空扣合/);\nassert.match(rerelease,/神聖Ω戰靴神焰踏落/);
 console.log("KING_OMEGA_STAGE_PASS:release-after-seal-states-restored");
 
 // Persistence Gate／神聖衣不是一次性文字演出：存檔離線後七件仍須存在且不得增殖。
