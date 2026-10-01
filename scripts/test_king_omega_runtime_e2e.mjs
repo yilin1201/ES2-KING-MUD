@@ -19,4 +19,19 @@ await command("release omega",/成功裝備了「超級Ω神聖衣」全套防�
 inv=await command("inventory");
 for(const n of ["超級Ω神聖衣。頭盔","超級Ω神聖衣。盔甲","超級Ω神聖衣。披風光翼","超級Ω神聖衣。腰帶","超級Ω神聖衣。手套","超級Ω神聖衣。腳套","超級Ω神聖衣。鞋子"])assert.equal(inv.split(n).length-1,1,"再次 release 不得重複 "+n);
 console.log("KING_OMEGA_STAGE_PASS:repeat-release-no-duplicate");
+
+// Persistence Gate／神聖衣不是一次性文字演出：存檔離線後七件仍須存在且不得增殖。
+// 重新登入後再執行 release omega，必須重用既有七件並恢復完整著裝。
+await command("save");
+await command("quit",/再見|Goodbye|離開|斷線|quit/i,15000).catch(()=>{});
+try{socket.close()}catch{}
+await sleep(900);
+await login();
+inv=await command("inventory");
+for(const n of ["超級Ω神聖衣。頭盔","超級Ω神聖衣。盔甲","超級Ω神聖衣。披風光翼","超級Ω神聖衣。腰帶","超級Ω神聖衣。手套","超級Ω神聖衣。腳套","超級Ω神聖衣。鞋子"])assert.equal(inv.split(n).length-1,1,"relogin 後必須保留且剛好一件 "+n);
+console.log("KING_OMEGA_STAGE_PASS:save-quit-relogin-persisted");
+await command("release omega",/成功裝備了「超級Ω神聖衣」全套防具/);
+inv=await command("inventory");
+for(const n of ["超級Ω神聖衣。頭盔","超級Ω神聖衣。盔甲","超級Ω神聖衣。披風光翼","超級Ω神聖衣。腰帶","超級Ω神聖衣。手套","超級Ω神聖衣。腳套","超級Ω神聖衣。鞋子"])assert.equal(inv.split(n).length-1,1,"relogin 後再次 release 不得重複 "+n);
+console.log("KING_OMEGA_STAGE_PASS:relogin-release-no-duplicate");
 socket.close();console.log("KING_OMEGA_RUNTIME_E2E_PASS");
