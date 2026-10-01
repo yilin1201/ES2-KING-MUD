@@ -93,9 +93,8 @@ int main(object me, string arg)
         write(HIW "  ◈ 雙手 ◈  超級Ω神聖衣。" HIY "拳套" HIW "緊扣雙腕，神威粉碎次元！\n" NOR);
         write(HIW "  ◈ 雙腿 ◈  超級Ω神聖衣。" HIY "腿甲" HIW "轟然覆合，雙腿屹立如山！\n" NOR);
         write(HIW "  ◈ 雙腳 ◈  超級Ω神聖衣。" HIY "神靴" HIW "神焰踏落，震撼山河！\n" NOR);
-        write(HIW "\n>>> 神聖Ω・完全著裝 <<<\n" NOR);
-        write(HIW "八十八星座神光匯聚，十二黃金神環浮現！\n" NOR);
-        write(HIW "神聖小宇宙吞沒星河，神威降世，萬界震顫！\n\n" NOR);
+        write(HIY "\n>>> 超級Ω神聖衣・完全著裝 <<<\n" NOR);
+        write(HIW "八十八星座神光匯聚，十二黃金神環浮現！神聖小宇宙吞沒星河，神威降世，萬界震顫！\n\n" NOR);
         write(HIW "（系統提示：你成功裝備了「超級Ω神聖衣」全套防具！）\n" NOR);
         message("vision", HIW + me->name() + "高舉神之戒，神聖Ω七大神甲化光覆體，十二黃金神環照耀天地！\n" NOR, environment(me), me);
         return 1;
