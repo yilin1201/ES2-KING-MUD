@@ -101,7 +101,7 @@
       "status": "GENERATED",
       "exits": {
         "west": "wroad2",
-        "east": "square_w",
+        "east": "wroad4",
         "north": "shrine",
         "south": "farm_w2"
       }
@@ -111,7 +111,7 @@
       "status": "GENERATED",
       "exits": {
         "north": "nroad3",
-        "west": "wroad3",
+        "west": "wroad4",
         "east": "square_e",
         "south": "square_s"
       }
@@ -324,9 +324,17 @@
       "exits": {
         "out": "shrine"
       }
+    },
+    "wroad4": {
+      "short": "石子路",
+      "status": "USER_DIRECTIVE_RECONSTRUCTION",
+      "exits": {
+        "west": "wroad3",
+        "east": "square_w"
+      }
     }
   },
-  "room_count": 39,
+  "room_count": 40,
   "edge_count": 44,
   "note": "External connection south of entrance_s intentionally unresolved.",
   "external_connection": {
