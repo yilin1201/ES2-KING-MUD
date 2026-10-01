@@ -74,6 +74,14 @@ if [[ -d "$ES2M_SKILL_DIR" ]]; then
   done
 fi
 
+# ES2M Equipment Library／朋友武器資料：只覆蓋 custom namespace，不取代 Pinned Original world files。
+ES2M_CUSTOM_DIR="$REPO_ROOT/es2m_snapshot/mudlib/custom"
+if [[ -d "$ES2M_CUSTOM_DIR" ]]; then
+  mkdir -p "$ROOT/mudlib/custom"
+  cp -a "$ES2M_CUSTOM_DIR/." "$ROOT/mudlib/custom/"
+  echo 'ES2M CUSTOM EQUIPMENT RUNTIME IMPORT PASS／ES2M custom 武器裝備資料已匯入獨立 Runtime。'
+fi
+
 # ES2M Lee Village／李家村復原區：保留 ES2M provenance，不宣稱為 Original ES2。
 ES2M_LEE_DIR="$REPO_ROOT/es2m_snapshot/mudlib/d/lee"
 if [[ -d "$ES2M_LEE_DIR" ]]; then
