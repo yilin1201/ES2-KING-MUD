@@ -32,7 +32,7 @@ for room_name, record in rooms.items():
         # 支援 __DIR__"room" 與絕對路徑 /d/lee/room 兩種靜態出口。
         quote = """["']"""
         pattern = (quote + re.escape(direction)
-                   + quote + r'\\s*:\\s*(?:__DIR__\\s*' + quote
+                   + quote + r'\s*:\s*(?:__DIR__\s*' + quote
                    + re.escape(target) + quote + '|' + quote + '/d/lee/'
                    + re.escape(target) + quote + ')')
         if not re.search(pattern, content):
