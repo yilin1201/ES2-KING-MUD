@@ -93,4 +93,10 @@ grep -Fq 'ES2-KING OMEGA CANONICAL DISPLAY ORDER' "$M/cmds/std/look.c"
 grep -Fq '"omega crown", "omega plate", "omega wings", "omega girth"' "$M/adm/daemons/omega_sortd.c"
 grep -Fq '"omega gloves", "omega leggings", "omega boots"' "$M/adm/daemons/omega_sortd.c"
 
+# Recall 敘述名稱與配色回歸：白色前綴、黃色部件、兩句宣言同一行。
+grep -Fq '「神聖Ω，榮耀永存！」 「諸神之力，歸於永恆！」' "$M/cmds/adm/seal.c"
+for part in 神盔 神甲 神翼 神鎖 拳套 腿甲 神靴; do
+  grep -Fq '" HIW "超級Ω神聖衣。" HIY "'"$part" "$M/cmds/adm/seal.c"
+done
+
 echo 'KING_OMEGA_STATIC_PASS:ring-release-kring-seven-piece-original-wear-armor300'
