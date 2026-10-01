@@ -686,3 +686,34 @@ WIZLIST="$TARGET/mudlib/adm/etc/wizlist"
 touch "$WIZLIST"
 grep -Fqx 'king (admin)' "$WIZLIST" || printf '%s\n' 'king (admin)' >> "$WIZLIST"
 echo "ES2-KING EXPANSION APPLY PASS／Expansion 已套用至獨立 Runtime：$TARGET"
+
+
+# KING Omega Display Order／僅針對 KING 的 inventory(i) 與 look 身上裝備。
+# 使用獨立 helper，原始 ES2 檔案只在生成 Runtime 套用相容補丁，不改原始碼。
+python3 - "$TARGET/mudlib/cmds/usr/inventory.c" "$TARGET/mudlib/cmds/std/look.c" <<'PY'
+from pathlib import Path
+import sys
+inventory, look = (Path(p) for p in sys.argv[1:])
+marker = "ES2-KING OMEGA CANONICAL DISPLAY ORDER"
+needle = "    inv = all_inventory(ob);"
+replacement = """    inv = all_inventory(ob);
+    // ES2-KING OMEGA CANONICAL DISPLAY ORDER：KING 七件神甲置前並按固定順序。
+    if (ob->query("id") == "king")
+        inv = call_other("/adm/daemons/omega_sortd", "ordered", inv);"""
+s = inventory.read_text()
+if marker not in s:
+    if s.count(needle) != 1:
+        raise SystemExit("OMEGA ORDER FAIL: inventory 原始入口已改動，停止補丁。")
+    inventory.write_text(s.replace(needle, replacement, 1))
+
+s = look.read_text()
+needle = "    inv = all_inventory (obj);"
+replacement = """    inv = all_inventory (obj);
+    // ES2-KING OMEGA CANONICAL DISPLAY ORDER：look KING（含本人）同一順序。
+    if (!obj->is_corpse() && obj->query("id") == "king")
+        inv = call_other("/adm/daemons/omega_sortd", "ordered", inv);"""
+if marker not in s:
+    if s.count(needle) != 1:
+        raise SystemExit("OMEGA ORDER FAIL: look_living 原始入口已改動，停止補丁。")
+    look.write_text(s.replace(needle, replacement, 1))
+PY
