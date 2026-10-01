@@ -29,6 +29,18 @@ console.log("KING_OMEGA_STAGE_PASS:release-omega-seven-piece");
 inv=plain(await command("inventory"));
 for(const n of ["超級Ω神聖衣。神盔","超級Ω神聖衣。神甲","超級Ω神聖衣。神翼","超級Ω神聖衣。神鎖","超級Ω神聖衣。拳套","超級Ω神聖衣。腿甲","超級Ω神聖衣。神靴"])assert.equal(inv.split(n).length-1,1,n+" 必須剛好一件");
 console.log("KING_OMEGA_STAGE_PASS:inventory-no-duplicate");
+// KING Omega 展示排序：inventory(i) 與 look KING 都需固定七件順序。
+const omegaOrder=["超級Ω神聖衣。神盔","超級Ω神聖衣。神甲","超級Ω神聖衣。神翼","超級Ω神聖衣。神鎖","超級Ω神聖衣。拳套","超級Ω神聖衣。腿甲","超級Ω神聖衣。神靴"];
+function assertOmegaOrder(output,label) {
+  const indices=omegaOrder.map(n=>output.indexOf(n));
+  assert.ok(indices.every(n=>n>=0),label+" 缺少 Ω 裝備");
+  assert.deepEqual(indices,[...indices].sort((a,b)=>a-b),label+" Ω 裝備順序錯誤");
+}
+assertOmegaOrder(inv,"inventory");
+const looked=plain(await command("look king"));
+assertOmegaOrder(looked,"look king");
+console.log("KING_OMEGA_STAGE_PASS:inventory-look-canonical-order");
+
 await command("release omega",/成功裝備了「超級Ω神聖衣」全套防具/);
 inv=plain(await command("inventory"));
 for(const n of ["超級Ω神聖衣。神盔","超級Ω神聖衣。神甲","超級Ω神聖衣。神翼","超級Ω神聖衣。神鎖","超級Ω神聖衣。拳套","超級Ω神聖衣。腿甲","超級Ω神聖衣。神靴"])assert.equal(inv.split(n).length-1,1,"再次 release 不得重複 "+n);
