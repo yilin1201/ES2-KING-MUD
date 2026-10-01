@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import WebSocket from "../webtelnet/node_modules/ws/wrapper.mjs";
 const url=process.env.ES2_E2E_WS_URL,password=process.env.ES2_E2E_KING_PASSWORD;assert.ok(url&&password);
-let socket,output="",lastSentAt=0;\nconst plain=s=>s.replace(/\\x1b\\[[0-9;]*m/g,"");const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let socket,output="",lastSentAt=0;
+const plain=s=>s.replace(/\\x1b\\[[0-9;]*m/g,"");const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function connect(){output="";socket=new WebSocket(url);socket.on("message",d=>{output+=Buffer.from(d).toString("utf8")});await new Promise((r,j)=>{socket.once("open",r);socket.once("error",j)})}
 function wait(offset,matcher,timeout=30000){return new Promise((r,j)=>{const s=Date.now(),t=setInterval(()=>{const x=output.slice(offset),ok=typeof matcher==="string"?x.includes(matcher):matcher.test(x);if(ok){clearInterval(t);r(x)}else if(Date.now()-s>timeout){clearInterval(t);j(new Error("KING OMEGA timeout: "+matcher+"\n"+x.slice(-2400))) }},25)})}
 async function command(line,matcher="> ",timeout=30000){const d=Math.max(0,450-(Date.now()-lastSentAt));if(d)await sleep(d);const o=output.length;socket.send(line+"\r\n");lastSentAt=Date.now();return wait(o,matcher,timeout)}
