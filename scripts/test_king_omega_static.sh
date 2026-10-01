@@ -7,7 +7,7 @@ files=(
   "$M/obj/king/omega_plate.c" "$M/obj/king/omega_wings.c"
   "$M/obj/king/omega_girth.c" "$M/obj/king/omega_gloves.c"
   "$M/obj/king/omega_leggings.c" "$M/obj/king/omega_boots.c"
-  "$M/cmds/adm/kring.c" "$M/cmds/adm/release.c"
+  "$M/cmds/adm/kring.c" "$M/cmds/adm/release.c" "$M/cmds/adm/seal.c"
 )
 for f in "${files[@]}"; do test -r "$f" || { echo "KING OMEGA STATIC FAIL: missing $f"; exit 1; }; done
 
@@ -56,4 +56,14 @@ grep -Fq 'if (!omega_equipped(me))' "$M/cmds/adm/kring.c"
 # Duplicate Protection／再次解封重用同 ID 物件，不重複生成。
 grep -Fq 'item = present(omega_ids[i], me);' "$M/cmds/adm/kring.c"
 grep -Fq 'if (!objectp(item)) {' "$M/cmds/adm/kring.c"
+# Seal／卸裝必須走 Original unequip()，解除 apply 後七件回歸神戒（Inventory 不留實體）。
+grep -Fq 'item->query("equipped") && !item->unequip()' "$M/cmds/adm/seal.c"
+grep -Fq 'destruct(item);' "$M/cmds/adm/seal.c"
+grep -Fq 'ring->set("es2_king/omega_sealed", 1)' "$M/cmds/adm/seal.c"
+grep -Fq 'ring->set("es2_king/omega_sealed", 0)' "$M/cmds/adm/kring.c"
+# ANSI Display／共同前綴白色、部件名稱黃色。
+for f in "$M"/obj/king/omega_{crown,plate,wings,girth,gloves,leggings,boots}.c; do
+  grep -Fq 'set_name(HIW "超級Ω神聖衣。" HIY "' "$f"
+done
+
 echo 'KING_OMEGA_STATIC_PASS:ring-release-kring-seven-piece-original-wear-armor300'
