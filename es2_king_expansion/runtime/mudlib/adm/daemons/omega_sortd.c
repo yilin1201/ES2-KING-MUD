@@ -1,7 +1,7 @@
 // KING 神聖Ω七件固定順序：神盔、神甲、神翼、神鎖、拳套、腿甲、神靴。
 // 僅重新排列展示用物件陣列，不改變實際背包、裝備欄或 Original ES2 玩家行為。
 #include <command.h>
-inherit F_DBASE;
+inherit F_CLEAN_UP;
 
 private string *omega_ids = ({
     "omega crown", "omega plate", "omega wings", "omega girth",
