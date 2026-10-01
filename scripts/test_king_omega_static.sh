@@ -17,6 +17,10 @@ grep -Fq 'present("god ring", me)' "$M/cmds/adm/kring.c"
 grep -Fq 'ring->query("es2_king/owner_relic") != 1' "$M/cmds/adm/kring.c"
 grep -Fq 'provision_creator_relics' "$M/adm/daemons/kingd.c"
 
+# God Ring State／神戒初始封印，release 解封、seal 回收。
+grep -Fq 'set("es2_king/omega_sealed",1)' "$M/obj/king/god_ring.c"
+grep -Fq 'seal omega' "$M/obj/king/god_ring.c"
+
 # Commands／release omega 是正式指令，kring 是共用同一著裝流程的快捷指令。
 grep -Fq 'arg != "omega"' "$M/cmds/adm/release.c"
 grep -Fq '"/cmds/adm/kring", "main", me, 0' "$M/cmds/adm/release.c"
