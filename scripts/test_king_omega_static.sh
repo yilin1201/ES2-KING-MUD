@@ -33,9 +33,11 @@ grep -Fq 'ring->query("es2_king/omega_narrative_version") != 1' "$M/cmds/adm/sea
 grep -Fq '"/cmds/adm/seal", "main", me, "omega"' "$M/cmds/adm/recall.c"
 grep -Fq 'inherit "/cmds/adm/seal";' "$M/cmds/adm/mring.c"
 grep -Fq 'return ::main(me, "omega");' "$M/cmds/adm/mring.c"
-grep -Fq '神聖Ω神翼轟然怒展' "$M/cmds/adm/kring.c"
+grep -Fq '超級Ω神聖衣。' "$M/cmds/adm/kring.c"
+grep -Fq 'HIY "神翼" HIW' "$M/cmds/adm/kring.c"
+grep -Fq '「燃燒吧！我的小宇宙！」 「以八十八星座之名' "$M/cmds/adm/kring.c"
 grep -Fq '神聖Ω神靴神焰熄滅' "$M/cmds/adm/seal.c"
-grep -Fq '神聖Ω神盔破空扣合' "$M/cmds/adm/kring.c"
+grep -Fq 'HIY "神盔" HIW' "$M/cmds/adm/kring.c"
 grep -Fq '神衣雖歸，神威永存' "$M/cmds/adm/seal.c"
 
 # Slots／七件使用互不衝突且 Original 人形種族允許的裝備槽。
