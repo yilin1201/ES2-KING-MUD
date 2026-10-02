@@ -25,8 +25,8 @@ def audit(snapshot: Path, runtime: Path):
         if src.is_file():
             code = src.read_text(encoding="utf-8")
             # Only literal dependencies can be proved by this audit.
-            local = re.findall(r'__DIR__\\s*"([^"]+)"', code)
-            absolute = re.findall(r'(?<![\\w/])"(/(?:obj|d|custom)/[\\w/]+)"', code)
+            local = re.findall(r'__DIR__\s*"([^"]+)"', code)
+            absolute = re.findall(r'(?<![\w/])"(/(?:obj|d|custom)/[\w/]+)"', code)
             deps = set()
             for item in local:
                 if not item.startswith("../"):
