@@ -47,10 +47,10 @@ int apply_creator_profile(object actor)
 
     if (!authorized(actor)) return 0;
 
-    // Project Canon：KING 八項基礎屬性固定 99。
+    // ES2M Race/Class：人類族 avatar、武者 fighter；僅更動唯一已授權 KING。\n    // set_race/set_class 走角色正式 API，避免僅改顯示名稱而保留盜賊升級邏輯。\n    if (actor->query_race() != "avatar") actor->set_race("avatar");\n    if (actor->query_race() != "avatar") return 0;\n    if (actor->query_class() != "fighter") actor->set_class("fighter");\n    if (actor->query_class() != "fighter") return 0;\n\n    // KING 八項基礎屬性採 ES2M 正式 1..50 上限。
     // 只使用正式 attribute API，不用 temp/apply 偽裝顯示值。
     foreach (attr in attrs)
-        if (actor->set_attr(attr, 99) != 99)
+        if (actor->set_attr(attr, 50) != 50)
             return 0;
 
     // Project Canon：KING 六項正式生存狀態固定 999。
@@ -66,7 +66,7 @@ int apply_creator_profile(object actor)
     }
 
     actor->set("es2_king/creator_profile", 1);
-    actor->set("es2_king/creator_attribute", 99);
+    actor->set("es2_king/creator_attribute", 50);
     actor->set("es2_king/creator_statistic", 999);
     return 1;
 }
