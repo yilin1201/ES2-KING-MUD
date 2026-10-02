@@ -54,7 +54,7 @@ for name, forms in expected_forms.items():
 for name, forms in expected_forms.items():
     source = (ROOT / SKILLS[name][0]).read_text(encoding="utf-8")
     for form in forms:
-        matches = list(re.finditer(r'"name"\\s*:\\s*"' + re.escape(form) + r'"', source))
+        matches = list(re.finditer(r'"name"\s*:\s*"' + re.escape(form) + r'"', source))
         assert matches, f"{name}: missing {form}"
         # 從招式名稱向後尋找同一個 mapping 的結尾；Parry 同名但無傷害欄位不計入。
         def has_coefficients(match):
