@@ -70,6 +70,7 @@ sockets.on("connection", (browser) => {
   const telnetText = new TelnetTextFilter();
   let runtimeTail = "";
   let numericRaceActive = false;
+  let inventoryProbePending = null;
   mud.setTimeout(10000, () => {
     console.error(`[public-session ${sessionId}] mud-timeout host=${mudHost} port=${mudPort}`);
     mud.destroy(new Error("MUD connection timeout"));
@@ -82,6 +83,12 @@ sockets.on("connection", (browser) => {
     console.log(`[public-session ${sessionId}] mud-to-browser bytes=${data.length}`);
     // Neolith 使用 UTF-8，但 Telnet IAC 控制位元組不是文字；先剝離協定再交給瀏覽器解碼。
     const text = telnetText.push(data);
+    // 僅量測背包探針後下一次 MUD 回傳的長度及延遲，不記錄玩家資訊或遊戲內容。
+    if (inventoryProbePending) {
+      const elapsed = Date.now() - inventoryProbePending.started;
+      console.log(`[public-session ${sessionId}] inventory-response probe=${inventoryProbePending.kind} bytes=${data.length} filteredChars=${text.length} elapsedMs=${elapsed}`);
+      inventoryProbePending = null;
+    }
     runtimeTail = (runtimeTail + text).slice(-1024);
     // Race State／種族狀態：一旦 Runtime 顯示數字 Race 提示，就保持到真正進入 Gender，避免提示後的「>」雜訊讓 Public iPhone 失去 Race 封套路徑。
     if (/請輸入編號 1-12 或種族 ID|請輸入編號 1 或 2/.test(text)) numericRaceActive = true;
@@ -107,6 +114,7 @@ sockets.on("connection", (browser) => {
     // 不記錄玩家帳號、密碼、訊息內容或任何其他輸入。
     const inventoryProbe = incoming.trim().toLowerCase();
     if (inventoryProbe === "i" || inventoryProbe === "inventory" || inventoryProbe === "look king") {
+      inventoryProbePending = {kind: inventoryProbe === "look king" ? "look-self" : inventoryProbe, started: Date.now()};
       console.log(`[public-session ${sessionId}] inventory-probe=${inventoryProbe === "look king" ? "look-self" : inventoryProbe} bridge-forwarded=true`);
     }
     if (/^ES2RACE:(?:[1-9]|1[0-2]|human|avatar|blackteeth|yenhold|jiaojao|woochan|dingling|headless|rainner|malik|yaksa|ashura)$/.test(incoming)) {
