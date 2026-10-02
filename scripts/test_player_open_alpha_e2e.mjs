@@ -87,7 +87,7 @@ async function createCharacter({ id, raceChoice, raceLabel, genderChoice, name }
   await waitForAfter(p, 0, /客棧大堂/);
   await waitForAfter(p, 0, "> ");
 
-  assert.match(await command(p, "look"), /客棧大堂/);
+  // 首次登入尚未執行 look、拾取或裝備時，兩種背包指令都必須有伺服器實際文字輸出。\n  assert.match(await command(p, "i"), /身上|攜帶|沒有|物品|木劍/);\n  assert.match(await command(p, "inventory"), /身上|攜帶|沒有|物品|木劍/);\n  console.log(`PLAYER_COLD_LOGIN_INVENTORY_PASS:${id}`);\n  assert.match(await command(p, "look"), /客棧大堂/);
   const score = await command(p, "score");
   assert.match(score, /平民/);
   assert.match(score, /等級|Level|級/);
@@ -111,7 +111,7 @@ async function saveQuitRelogin(p, scoreMatcher) {
   const entered = await sendLine(p, password, /目前權限: \(player\)/, 45000);
   assert.match(entered, /目前權限: \(player\)/);
   await waitForAfter(p, 0, "> ");
-  assert.match(await command(p, "score"), scoreMatcher);
+  // 既有角色重新登入後，先查背包，再執行 look/score，避免被後續動作掩蓋首次指令故障。\n  assert.match(await command(p, "i"), /身上|攜帶|沒有|物品|木劍|Inventory/i);\n  assert.match(await command(p, "inventory"), /身上|攜帶|沒有|物品|木劍|Inventory/i);\n  console.log(`PLAYER_RELOGIN_FIRST_COMMAND_INVENTORY_PASS:${p.id}`);\n  assert.match(await command(p, "score"), scoreMatcher);
   // 登入後立即驗證 i 快捷鍵可回應；跨登入物品保存另列獨立證據，不誤報。
   assert.match(await command(p, "i"), /身上|攜帶|沒有|物品|木劍|Inventory/i);
   console.log(`PLAYER_PERSISTENCE_PASS:${p.id}`);
