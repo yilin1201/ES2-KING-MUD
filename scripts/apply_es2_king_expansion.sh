@@ -760,10 +760,8 @@ if marker not in s:
         {
             mixed err;
             int result;
-            write("KING inventory handler reached.\\n");
             err = catch(result = (int)call_other("/cmds/usr/inventory", "main", this_object(), arg));
             if( err ) {
-                write("KING inventory original command failed; safe fallback.\\n");
                 {
                 object *items;
                 object item;
@@ -771,7 +769,6 @@ if marker not in s:
                 mixed failure;
                 int k;
                 items = all_inventory(this_object());
-                write("KING carried items:\\n");
                 for(k = 0; k < sizeof(items); k++) {
                 item = items[k];
                 if(!objectp(item)) continue;
