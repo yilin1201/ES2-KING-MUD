@@ -34,8 +34,7 @@ int main(object me, string arg)
     }
 
     if (ring->query("es2_king/omega_narrative_version") == 1) {
-    write(HIW "\n你深吸一口氣，翻湧沸騰的小宇宙如潮水般緩緩平息，氣沉丹田。\n" NOR);
-    write(HIW "指間的「神之戒」泛起溫潤柔和的星芒，發出清越的空靈錚鳴。\n" NOR);
+    write(HIW "\n你深吸一口氣，翻湧沸騰的小宇宙如潮水般緩緩平息。指間「神之戒」泛起溫潤柔和的星芒，發出清越的空靈錚鳴。\n" NOR);
     write("周身金色甲胄劇烈震顫，各處金屬扣鎖應聲解開——\n\n");
     write(HIY ">>> 聖衣解鎖！歸還神戒（Unequip Omega Cloth）<<<\n\n" NOR);
 
@@ -81,7 +80,7 @@ int main(object me, string arg)
     write("【腿部】：雲紋甲片自雙膝與脛骨脫離，逆流而上。\n");
     write("【雙腳】：踏星戰靴金炎熄滅，足底重歸凡塵。\n\n");
     write(HIW "七件神甲於半空重組為黃道戰神法相，向你微微頷首，隨即化為星塵漩渦，盡數斂入神之戒。\n" NOR);
-    write("四周罡風止歇，天地復歸寂靜，你斂去神威，重現宗師從容本色。\n\n");
+    write("四周罡風止歇，天地復歸寂靜，你斂去神威，重現從容本色。\n\n");
     }
     ring->set("es2_king/omega_sealed", 1);
     write(HIY "【神戒封印】七件神聖衣已全部收回；再次輸入 release omega 即可重新解封。\n" NOR);
