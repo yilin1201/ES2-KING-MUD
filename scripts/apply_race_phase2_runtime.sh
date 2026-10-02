@@ -130,7 +130,6 @@ ZHENWU_RECRUIT="$ROOT/mudlib/custom/zhenwu/obj/recruit_stone.c"
   echo "ES2M ZHENWU FAIL: missing Snow south gate or original camp/recruit sources" >&2; exit 1;
 }
 python3 "$REPO_ROOT/scripts/test_es2m_zhenwu_topology.py" "$ROOT/mudlib"
-python3 "$REPO_ROOT/scripts/test_es2m_zhenwu_recruitment.py" "$ROOT/mudlib"
 python3 - "$SNOW_SGATE" <<'PY'
 from pathlib import Path
 import sys
@@ -143,6 +142,7 @@ if new not in s:
     s=s.replace(old,new,1)
 p.write_text(s)
 PY
+python3 "$REPO_ROOT/scripts/test_es2m_zhenwu_recruitment.py" "$ROOT/mudlib"
 echo 'ES2M ZHENWU CONNECTED: Snow sgate west <-> Zhenwu gate east; original enlist retained.'
 
 # Race Command Collision／種族指令同名衝突：Original EMOTED 也註冊 dance 表情。
