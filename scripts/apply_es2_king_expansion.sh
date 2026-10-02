@@ -763,7 +763,25 @@ if marker not in s:
             write("KING inventory handler reached.\\n");
             err = catch(result = (int)call_other("/cmds/usr/inventory", "main", this_object(), arg));
             if( err ) {
-                write("KING inventory original command failed.\\n");
+                write("KING inventory original command failed; safe fallback.\\n");
+                {
+                object *items;
+                object item;
+                string label;
+                mixed failure;
+                int k;
+                items = all_inventory(this_object());
+                write("KING carried items:\\n");
+                for(k = 0; k < sizeof(items); k++) {
+                item = items[k];
+                if(!objectp(item)) continue;
+                label = 0;
+                failure = catch(label = (string)item->short());
+                if(failure || !stringp(label) || label == "") failure = catch(label = (string)item->name());
+                if(failure || !stringp(label) || label == "") label = sprintf("item #%d", k+1);
+                write(label + "\\n");
+                }
+                }
                 return 1;
             }
             return result;
