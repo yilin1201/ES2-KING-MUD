@@ -1,17 +1,17 @@
 // ES2-KING：傲劍訣 Combat daemon。
 // Original ES2 公開 Evidence 確認 skill id「au-chan sword」；招式與配色依使用者實機截圖重建。
-// 未知 Original 命中、傷害倍率、無視防禦公式、消耗與 cooldown 不補造。
+// KING V0 的 attack/force/defense 為自訂值，非 Original 係數；未知無視防禦、消耗與 cooldown 不補造。
 #include <ansi.h>
 inherit SKILL;
 
 mapping *aojian_actions = ({
-([ "name":"千嬌百媚柔似水", "action":HIW "$N劍光一閃，一招「" HIM "千嬌百媚柔似水" HIW "」，挑起$w，輕靈曼妙的刺向$n的$l……" NOR, "attack":0,"force":0,"defense":0,"damage_type":"刺傷" ]),
-([ "name":"佳人在殘醉臥君", "action":HIW "$N虛轉反側，一招「" HIR "佳人在殘醉臥君" HIW "」，手中$w上刺，隨後迴鋒下引攻$n的$l……" NOR, "attack":0,"force":0,"defense":0,"damage_type":"刺傷" ]),
-([ "name":"了絕紅塵遁山林", "action":HIW "$N獰笑一聲，一招「" HIC "了絕紅塵遁山林" HIW "」使將開來，手中$w真氣貫注，劍芒四射，一道長虹貫過$n的$l……" NOR, "attack":0,"force":0,"defense":0,"damage_type":"刺傷" ]),
-([ "name":"清風送爽墨雲飛", "action":HIW "$N一招「" HIB "清風送爽墨雲飛" HIW "」，手中$w劍氣大盛，$w挾著勁風迎面攻$n的$l……" NOR, "attack":0,"force":0,"defense":0,"damage_type":"割傷" ]),
-([ "name":"渺盡人世絕惡意", "action":HIW "$N手中$w劍芒大盛，一招「" HIG "渺盡人世絕惡意" HIW "」，劍勢封鎖中路，直逼$n的$l！" NOR, "attack":0,"force":0,"defense":0,"damage_type":"刺傷" ]),
-([ "name":"天始一乾景初開", "action":HIW "$N將手中$w一展，一式「" HIY "天始一乾景初開" HIW "」，展劍引勁後順勢攻向$n的$l！" NOR, "attack":0,"force":0,"defense":0,"damage_type":"刺傷" ]),
-([ "name":"不識江山多嬌媚", "action":HIW "$N身體有如陀螺急轉，一招「" HIM "不識江山多嬌媚" HIW "」，旋身劍勢席捲$n的$l！" NOR, "attack":0,"force":0,"defense":0,"damage_type":"割傷" ]),
+([ "name":"千嬌百媚柔似水", "action":HIW "$N劍光一閃，一招「" HIM "千嬌百媚柔似水" HIW "」，挑起$w，輕靈曼妙的刺向$n的$l……" NOR, "attack":12, "force":12, "defense":5,"damage_type":"刺傷" ]),
+([ "name":"佳人在殘醉臥君", "action":HIW "$N虛轉反側，一招「" HIR "佳人在殘醉臥君" HIW "」，手中$w上刺，隨後迴鋒下引攻$n的$l……" NOR, "attack":13, "force":13, "defense":6,"damage_type":"刺傷" ]),
+([ "name":"了絕紅塵遁山林", "action":HIW "$N獰笑一聲，一招「" HIC "了絕紅塵遁山林" HIW "」使將開來，手中$w真氣貫注，劍芒四射，一道長虹貫過$n的$l……" NOR, "attack":15, "force":15, "defense":8,"damage_type":"刺傷" ]),
+([ "name":"清風送爽墨雲飛", "action":HIW "$N一招「" HIB "清風送爽墨雲飛" HIW "」，手中$w劍氣大盛，$w挾著勁風迎面攻$n的$l……" NOR, "attack":16, "force":16, "defense":10,"damage_type":"割傷" ]),
+([ "name":"渺盡人世絕惡意", "action":HIW "$N手中$w劍芒大盛，一招「" HIG "渺盡人世絕惡意" HIW "」，劍勢封鎖中路，直逼$n的$l！" NOR, "attack":17, "force":17, "defense":12,"damage_type":"刺傷" ]),
+([ "name":"天始一乾景初開", "action":HIW "$N將手中$w一展，一式「" HIY "天始一乾景初開" HIW "」，展劍引勁後順勢攻向$n的$l！" NOR, "attack":18, "force":18, "defense":15,"damage_type":"刺傷" ]),
+([ "name":"不識江山多嬌媚", "action":HIW "$N身體有如陀螺急轉，一招「" HIM "不識江山多嬌媚" HIW "」，旋身劍勢席捲$n的$l！" NOR, "attack":20, "force":20, "defense":20,"damage_type":"割傷" ]),
 });
 
 mapping *aojian_parries = ({
@@ -45,7 +45,7 @@ void jianling_combat_attack(object me, object opponent, object weapon)
           "name":"劍領風騷・"+stage["name"],
           // Historical Evidence 顯示每一段均以完整單行呈現：四色「劍領風騷」＋段名＋同色劍氣＋目標。
           "action":HIW "$N施展傲劍訣中的極招『" HIR "劍" HIY "領" HIG "風" HIC "騷" HIW "』『"+stage["color"]+stage["name"]+HIW+"』，一道"+stage["color"]+stage["color_name"]+HIW+"的劍氣射向$n！" NOR,
-          "attack":0,"force":0,"defense":0,"damage_type":"刺傷"
+          "attack":15, "force":15, "defense":10,"damage_type":"刺傷"
         ]);
         COMBAT_D->fight(me, opponent, "sword", action, weapon);
     }
@@ -57,7 +57,7 @@ void attack_using(object me, object opponent, object weapon)
     if (!opponent) return;
 
     // 傲劍 Phase 2 持續攻擊池：七式一般招 + 劍領風騷。
-    // 8 個等權入口，劍領風騷約 1/8 attack callback 觸發；不新增命中/傷害倍率。
+    // 8 個等權入口，劍領風騷約 1/8 attack callback 觸發；使用 KING V0 招式係數，不新增其他倍率。
     index=random(sizeof(aojian_actions) + 1);
     if (index == sizeof(aojian_actions)) {
         me->set_temp("aojian/last_form","劍領風騷");
