@@ -76,6 +76,9 @@ grep -Fq '幻化出了" HIY "四道" HIW "劍氣' "$SKILL"
 grep -Fq '幻化出了" HIY "八道" HIW "劍氣' "$SKILL"
 for phrase in "明劍欺敵，暗劍藏殺；傲雪藏鋒・逆折寒梅。" 咽喉 心口 氣海 "右手" "左袖";do grep -Fq "$phrase" "$SKILL";done
 # 未知倍率／續航公式不得偷偷數值化；六式 action 係數維持 neutral 0。
-test "$(grep -Fc '"attack":0, "force":0, "defense":0' "$SKILL")" -ge 6
+# KING V0 係數已明確定義，不再使用舊版 neutral=0 假設。
+for value in 12 14 16 18 20; do
+  grep -Fq "\"attack\":$value, \"force\":$value" "$SKILL"
+done
 ! grep -Eq '1900|1850|35%|480000|360000|320000' "$NPC"
 echo "COLD PLUM ARENA STATIC PASS：梅寒霜八屬性50、Arena effective Skill 300、明鏡止水狀態與冷梅六式 Combat mapping 完整；未知倍率仍 UNKNOWN。"
