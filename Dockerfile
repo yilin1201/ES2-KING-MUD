@@ -74,6 +74,15 @@ RUN python3 scripts/audit_es2m_equipment_import.py \
     --runtime /opt/es2-king/runtime/mudlib \
     --output /build/es2m-equipment-import-inventory.json
 
+# 振武軍營完整程式導入：補入房間／NPC／道具，僅在 Original 註解舊出口時安全連接。
+# 同名衝突或未知外部出口會阻止建置，保留原始檔與衝突清冊。
+RUN python3 scripts/import_es2m_zhenwu_safe.py \\
+    --snapshot /build/repository/es2m_snapshot/mudlib \\
+    --runtime /opt/es2-king/runtime/mudlib \\
+    --output /build/es2m-zhenwu-stage.json
+RUN python3 scripts/test_es2m_zhenwu_topology.py /opt/es2-king/runtime/mudlib \\
+    && python3 scripts/test_es2m_zhenwu_recruitment.py /opt/es2-king/runtime/mudlib
+
 # 振武軍營 ES2M 原始資料閘門：地圖連結、NPC/裝備檔案及徵兵條件缺失即阻止建置。
 # 靜態來源驗證不代表遊戲內徵兵 Runtime PASS。
 RUN python3 scripts/test_es2m_zhenwu_topology.py es2m_snapshot/mudlib \
