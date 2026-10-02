@@ -7,7 +7,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        bison build-essential ca-certificates cmake git libboost-dev \
        libc-ares-dev libcurl4-openssl-dev libjsoncpp-dev libssl-dev \
-       ninja-build nodejs npm \
+       ninja-build nodejs npm python3 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /build/repository
