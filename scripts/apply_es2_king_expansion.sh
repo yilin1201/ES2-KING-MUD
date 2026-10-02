@@ -762,7 +762,7 @@ if marker not in s:
             int result;
             err = catch(result = (int)call_other("/cmds/usr/inventory", "main", this_object(), arg));
             if( err ) {
-                {
+                // Original inventory 根因記錄於 Driver log，不輸出到玩家畫面。\n                log_file("king_inventory_error", sprintf("KING inventory error: %O\\n", err));\n                {
                 object *items;
                 object item;
                 string label;
