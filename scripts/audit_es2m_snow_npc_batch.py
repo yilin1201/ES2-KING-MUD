@@ -21,6 +21,7 @@ def audit(snapshot: Path, runtime: Path):
         src, dst = snapshot / rel, runtime / rel
         row = {"npc": name, "source": str(rel), "source_present": src.is_file(),
                "runtime_present": dst.is_file(), "missing_dependencies": [],
+               "staged_dependencies": [],
                "decision": "BLOCKED"}
         if src.is_file():
             code = src.read_text(encoding="utf-8")
@@ -37,9 +38,14 @@ def audit(snapshot: Path, runtime: Path):
                 str(p) for p in deps if not (runtime / p).is_file()
                 and not (snapshot / p).is_file()
             )
+            row["staged_dependencies"] = sorted(
+                str(p) for p in deps if not (runtime / p).is_file()
+                and (snapshot / p).is_file()
+            )
             row["literal_dependencies"] = sorted(str(p) for p in deps)
             row["decision"] = ("REVIEW_EXISTING" if dst.is_file() else
                                "DEPENDENCY_REVIEW" if row["missing_dependencies"] else
+                               "STAGED_DEPENDENCIES" if row["staged_dependencies"] else
                                "SOURCE_PRESENT_RUNTIME_ABSENT")
         records.append(row)
     return {"status": "STATIC_INVENTORY_ONLY_NOT_RUNTIME_PASS",
