@@ -76,11 +76,11 @@ for name, (start_marker, end_marker) in attack_pools.items():
     start = source.find(start_marker)
     end = source.find(end_marker, start + len(start_marker))
     assert start >= 0 and end > start, f"{name}: attack pool boundaries changed"
-    pool_names = re.findall(r'"name"\\s*:\\s*"([^"]+)"', source[start:end])
+    pool_names = re.findall(r'"name"\s*:\s*"([^"]+)"', source[start:end])
     expected = expected_forms[name]
     if name.startswith("冷梅劍法"):
         basic = source[end:]
-        assert re.search(r'"name"\\s*:\\s*"冷梅劍法"', basic), "missing basic cold plum attack"
+        assert re.search(r'"name"\s*:\s*"冷梅劍法"', basic), "missing basic cold plum attack"
         expected = expected[:-1]
     assert tuple(pool_names) == expected, f"{name}: canonical attack order or uniqueness changed: {pool_names}"
 print("KING_MARTIAL_V4_ATTACK_ORDER_STATIC_PASS: canonical attack pools retain exact order")
