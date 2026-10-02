@@ -31,6 +31,18 @@ def stage(snapshot, runtime):
         text = gate.read_text()
         if '"/custom/zhenwu/room/gate"' in text:
             report["external_gate"] = "LINK_PRESENT"
+        elif '"/d/newcamp/gate"' in text and '"north" : __DIR__"sstreet1"' in text:
+            # Original 西向軍營出口仍為註解；只啟用這條有 ES2M 證據的連接。
+            import re
+            patched, count = re.subn(
+                r'^([ \\t]*)//[ \\t]*"west" : "/d/newcamp/gate",',
+                r'\\1"west" : "/custom/zhenwu/room/gate",',
+                text, count=1, flags=re.MULTILINE)
+            if count == 1:
+                gate.write_text(patched)
+                report["external_gate"] = "LINK_STAGED_FROM_ORIGINAL_COMMENT"
+            else:
+                report["external_gate"] = "REVIEW_REQUIRED"
         else:
             report["external_gate"] = "REVIEW_REQUIRED"
     return report
