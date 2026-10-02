@@ -31,6 +31,10 @@ class FullInventoryTest(unittest.TestCase):
             self.assertEqual(data["snapshot_conflicts_base"], ["room.c"])
             self.assertEqual(data["snapshot_conflicts_runtime"], ["room.c"])
             self.assertTrue(data["owner_review_required"])
+            self.assertEqual(data["priority_conflict_review"][0]["path"], "room.c")
+            self.assertEqual(data["priority_conflict_review"][0]["decision"], "REVIEW_ONLY_NO_OVERWRITE")
+            self.assertEqual(len(data["priority_conflict_review"][0]["es2m_sha256"]), 64)
+            self.assertEqual(len(data["priority_conflict_review"][0]["runtime_sha256"]), 64)
             self.assertEqual(data["owner_review_queue"], {"other": ["room.c"]})
             self.assertEqual((runtime / "room.c").read_text(), "king")
 
