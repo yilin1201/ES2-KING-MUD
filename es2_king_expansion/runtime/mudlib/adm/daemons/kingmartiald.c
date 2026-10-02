@@ -73,6 +73,8 @@ int set_cold_plum(object actor, int level)
     actor->set_skill("hainmay force", level);
     actor->set_skill("advance_lunmay", level);
     actor->set_skill("lunmay", level);
+    // 傲劍訣與冷梅劍法同時習得；保留原本預設冷梅，玩家可用 Original enable 指令切換。
+    actor->set_skill("au-chan sword", level);
     actor->set_skill("mayin", level);
     actor->set_skill("seven", level);
     // Original 與 Expansion 杖法並存：chin_staff 保留原作青邪杖法；qishang_staff 為新創大邪七傷杖訣。
@@ -85,6 +87,7 @@ int set_cold_plum(object actor, int level)
     actor->set_skill("unarmed", level);
 
     // Expansion 冷梅劍法 daemon 先登記，再交回 Original Combat 使用。
+    load_object("/daemon/skill/au-chan_sword");
     load_object("/d/arena/skill/lunmay");
     load_object("/d/arena/skill/advance_lunmay");
     load_object("/daemon/skill/qishang_staff");
@@ -142,6 +145,7 @@ int set_creator_core_martial(object actor, int level)
     CHINESE_D->add_translate("rulai shenzhang", "如來神掌");
     CHINESE_D->add_translate("hainmay force", "寒梅心法");
     CHINESE_D->add_translate("lunmay", "冷梅劍法");
+    CHINESE_D->add_translate("au-chan sword", "傲劍訣");
     CHINESE_D->add_translate("mayin", "梅影身法");
     CHINESE_D->add_translate("seven", "七巧如意手");
     CHINESE_D->add_translate("advance_lunmay", "傲梅暗劍訣");
