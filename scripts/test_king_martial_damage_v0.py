@@ -66,5 +66,11 @@ if args.runtime:
         deployed_path = args.runtime / overlay_relative
         assert deployed_path.is_file(), f"{name}: missing generated Runtime skill {deployed_path}"
         assert deployed_path.read_bytes() == expected, f"{name}: generated Runtime skill differs from V0 source"
-    print("KING_MARTIAL_V4_OVERLAY_STATIC_PASS: four generated Runtime files match source bytes")
+    # V4：技能配置服務同樣必須是本次版本，避免武學檔已更新但 KING 載入舊路由。
+    daemon_relative = "adm/daemons/kingmartiald.c"
+    daemon_source = ROOT / "es2_king_expansion/runtime/mudlib" / daemon_relative
+    daemon_runtime = args.runtime / daemon_relative
+    assert daemon_runtime.is_file(), f"missing generated KING martial daemon: {daemon_runtime}"
+    assert daemon_runtime.read_bytes() == daemon_source.read_bytes(), "generated KING martial routing daemon differs from source"
+    print("KING_MARTIAL_V4_OVERLAY_STATIC_PASS: four skills and KING martial routing daemon match source bytes")
 print("KING_MARTIAL_DAMAGE_V0_STATIC_PASS (not Runtime or gameplay validation)")
