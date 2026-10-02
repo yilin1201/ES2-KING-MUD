@@ -12,6 +12,6 @@ void attack_using(object me, object opponent, object weapon)
         call_other("/d/arena/skill/batian_lianti_jue", "show_immortal_intro", me);
     action = ([ "name":"傲梅暗劍訣",
         "action":HIW "$N左手暗劍藏於明劍之後，傲梅暗劍訣驟然折出，無聲刺向$n的$l！" NOR,
-        "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]);
+        "attack":15, "force":15, "defense":10, "damage_type":"刺傷" ]);
     COMBAT_D->fight(me, opponent, "secondhand sword", action, weapon);
 }
