@@ -50,8 +50,8 @@ def audit(snapshot: Path, runtime: Path):
                 and (snapshot / p).is_file()
             )
             row["literal_dependencies"] = sorted(str(p) for p in deps)
-            row["decision"] = ("REVIEW_EXISTING" if dst.is_file() else
-                               "DEPENDENCY_REVIEW" if row["missing_dependencies"] else
+            row["decision"] = ("DEPENDENCY_REVIEW" if row["missing_dependencies"] else
+                               "REVIEW_EXISTING" if dst.is_file() else
                                "STAGED_DEPENDENCIES" if row["staged_dependencies"] else
                                "SOURCE_PRESENT_RUNTIME_ABSENT")
         records.append(row)
