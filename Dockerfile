@@ -34,6 +34,8 @@ RUN echo "[M30 BUILD 4/5] Apply ES2M Race + ES2-KING Expansion overlays" \
 RUN python3 scripts/test_king_aojian_dual_skill.py
 # V4 武學閘門：單次驗證 V0 數值、正式招式、技能路由及生成 Runtime 檔案一致性。
 RUN python3 scripts/test_king_martial_damage_v0.py --runtime /opt/es2-king/runtime/mudlib
+# 易筋經傷害修復閘門：檢查實際生成 Runtime，非單純來源檔。
+RUN python3 scripts/test_king_yijinjing_damage.py /opt/es2-king/runtime/mudlib
 # Validate NPC audit decisions before auditing generated runtime.
 RUN cd scripts && python3 -m unittest -v test_audit_es2m_snow_npc_batch
 # ES2M Snow NPC source and dependency audit (static evidence, not gameplay PASS).
