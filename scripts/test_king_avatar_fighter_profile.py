@@ -11,6 +11,7 @@ class KingProfileTests(unittest.TestCase):
         src = (ROOT / "adm/daemons/kingd.c").read_text()
         self.assertIn('actor->set_race("avatar")', src)
         self.assertIn('actor->set_class("fighter")', src)
+        self.assertNotIn(r'\n    if (actor->query_race()', src)
         self.assertIn('actor->set_attr(attr, 50) != 50', src)
         self.assertIn('creator_attribute", 50', src)
         self.assertIn('creator_statistic", 999', src)

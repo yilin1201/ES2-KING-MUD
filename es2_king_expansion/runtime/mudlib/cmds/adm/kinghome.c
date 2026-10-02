@@ -12,7 +12,7 @@ int main(object me, string arg)
     if (!KING_D->authorized(me))
         return notify_fail("只有 ES2-KING Owner 帳號可以進入此境。\n");
 
-    // kinghome 只負責 KING 神域移動；8×99 與冷梅武學已在正式登入流程配置並保存。
+    // kinghome 只負責 KING 神域移動；人類族／武者／8×50 與冷梅武學已在正式登入流程配置並保存。
     // 將能力配置與移動指令分離，避免「必須先輸入傳送指令才成為 KING」的錯誤生命週期。
     if (!me->move("/d/king/wuji_realm"))
         return notify_fail("無法進入天神殿・無極之境。\n");

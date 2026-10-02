@@ -47,7 +47,14 @@ int apply_creator_profile(object actor)
 
     if (!authorized(actor)) return 0;
 
-    // ES2M Race/Class：人類族 avatar、武者 fighter；僅更動唯一已授權 KING。\n    // set_race/set_class 走角色正式 API，避免僅改顯示名稱而保留盜賊升級邏輯。\n    if (actor->query_race() != "avatar") actor->set_race("avatar");\n    if (actor->query_race() != "avatar") return 0;\n    if (actor->query_class() != "fighter") actor->set_class("fighter");\n    if (actor->query_class() != "fighter") return 0;\n\n    // KING 八項基礎屬性採 ES2M 正式 1..50 上限。
+    // ES2M Race/Class：人類族 avatar、武者 fighter；僅更動唯一已授權 KING。
+    // set_race/set_class 走角色正式 API，避免僅改顯示名稱而保留盜賊升級邏輯。
+    if (actor->query_race() != "avatar") actor->set_race("avatar");
+    if (actor->query_race() != "avatar") return 0;
+    if (actor->query_class() != "fighter") actor->set_class("fighter");
+    if (actor->query_class() != "fighter") return 0;
+
+    // KING 八項基礎屬性採 ES2M 正式 1..50 上限。
     // 只使用正式 attribute API，不用 temp/apply 偽裝顯示值。
     foreach (attr in attrs)
         if (actor->set_attr(attr, 50) != 50)
