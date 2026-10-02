@@ -30,8 +30,15 @@ def audit(snapshot: Path, runtime: Path):
             absolute = re.findall(r'(?<![\w/])"(/(?:obj|d|custom)/[\w/]+)"', code)
             deps = set()
             for item in local:
+                # __DIR__ may point to a source file or directory; do not invent .c for directories.
+                candidate = rel.parent / item
                 if not item.startswith("../"):
-                    deps.add(rel.parent / (item + ".c"))
+                    if (snapshot / (str(candidate) + ".c")).is_file() or (runtime / (str(candidate) + ".c")).is_file():
+                        deps.add(Path(str(candidate) + ".c"))
+                    elif (snapshot / candidate).is_dir() or (runtime / candidate).is_dir():
+                        continue
+                    else:
+                        deps.add(Path(str(candidate) + ".c"))
             for item in absolute:
                 deps.add(Path(item.lstrip("/") + ".c"))
             row["missing_dependencies"] = sorted(
