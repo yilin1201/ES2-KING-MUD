@@ -21,3 +21,11 @@
 
 ## 指令範例
 「傲劍訣，武學傷害 V0」：僅對傲劍訣的招式分配攻擊 +10～20、內力 +10～20、防禦 0～20；其他武學不受影響。
+
+## 已指定套用範圍（2026-10-02）
+- 冷梅劍法：`d/arena/skill/lunmay.c` 的基本攻擊與鏡境六式。
+- 傲梅暗劍訣：`d/arena/skill/advance_lunmay.c` 的左手劍入口；冷梅鏡境中相關進階招式亦依 V0 設定。
+- 傲劍訣：`daemon/skill/au-chan_sword.c` 七式一般招與劍領風騷六段共用模板。
+- 如來神掌：`d/arena/skill/rulai_shenzhang.c` 十一式。
+
+上述路徑均位於 `es2_king_expansion/runtime/mudlib/`。Docker 靜態回歸閘門：`scripts/test_king_martial_damage_v0.py`。此紀錄僅表示程式係數已設定，並非宣稱 Render Runtime 傷害測試通過；實際防禦欄位效果仍需對照戰鬥引擎驗證。
