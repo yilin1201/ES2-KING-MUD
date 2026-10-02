@@ -88,6 +88,14 @@ RUN python3 scripts/test_es2m_zhenwu_topology.py /opt/es2-king/runtime/mudlib \
 RUN python3 scripts/test_es2m_zhenwu_topology.py es2m_snapshot/mudlib \
     && python3 scripts/test_es2m_zhenwu_recruitment.py es2m_snapshot/mudlib
 
+# ES2M 技能三方 SHA 稽核：將同名 Original／ES2M 衝突明列，絕不直接覆蓋。
+RUN cd scripts && python3 -m unittest -v test_audit_es2m_skill_three_way
+RUN python3 scripts/audit_es2m_skill_three_way.py \
+    --snapshot /build/repository/es2m_snapshot/mudlib \
+    --original /build/es2m-original-mudlib \
+    --runtime /opt/es2-king/runtime/mudlib \
+    --output /build/es2m-skill-three-way.json
+
 # ES2M skill inventory: fail build if any of the 36 recovered daemons is absent from generated Runtime.
 RUN python3 scripts/test_es2m_skill_import.py /opt/es2-king/runtime
 
