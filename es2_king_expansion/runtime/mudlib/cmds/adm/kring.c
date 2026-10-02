@@ -79,8 +79,7 @@ int main(object me, string arg)
         write(HIW "\n體內億萬細胞轟然共振，奔騰熱血燃燒至極限！\n" NOR);
         write(HIR "靈魂深處，沉眠的神級大爆炸轟然引爆！\n" NOR);
         write(HIW "你仰天長嘯，高舉「神之戒」！創世神光貫穿蒼穹！\n" NOR);
-        write(HIW "八十八星座齊聲共鳴，十二黃金神宮依序點亮！\n" NOR);
-        write(HIW "黃金戰神法相破空降臨，萬千星辰匯聚於你身前！\n\n" NOR);
+        write(HIW "八十八星座齊聲共鳴，十二黃金神宮依序點亮！ 黃金戰神法相破空降臨，萬千星辰匯聚於你身前！\n\n" NOR);
         write(HIY "「燃燒吧！我的小宇宙！」 「以八十八星座之名，喚醒超越諸神的奇蹟！」\n" NOR);
         write(HIR "「神聖Ω——終極覺醒！！！」\n\n" NOR);
         write(HIW "億萬流星撕裂虛空，七道創世神光化為戰甲，鏗鏘覆體！\n\n" NOR);
