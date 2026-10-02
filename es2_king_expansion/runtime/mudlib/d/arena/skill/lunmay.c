@@ -1,6 +1,6 @@
 // ES2-KING Expansion：冷梅劍法 Combat daemon。
 // 冷梅劍法五式名稱來自既有 gameplay evidence；傲梅暗劍訣為 ES2-KING Expansion 正式進階殺招。
-// 未知 Original 係數不補造，attack/force/defense 全維持 0。
+// KING V0 自訂係數：attack +10～20、force +10～20、defense 0～20；非 Original 原始係數。
 // 明鏡止水啟動後，五式與進階殺招依序輪轉，避免把未知權重偽造成機率設定。
 
 #include <ansi.h>
@@ -13,22 +13,22 @@ mapping *mirror_actions = ({
     ([ "name":"梅二方劍",
        "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIR "【" HIW "梅二方劍" HIR "】" HIW "」！\n"
                 HIW "$N全力施展快劍，幻化出了" HIY "二道" HIW "劍氣將$n團團圍住！" NOR,
-       "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]),
+       "attack":12, "force":12, "defense":5, "damage_type":"刺傷" ]),
     ([ "name":"梅四方劍",
        "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIR "【" HIW "梅四方劍" HIR "】" HIW "」！\n"
                 HIW "$N全力施展快劍，幻化出了" HIY "四道" HIW "劍氣將$n團團圍住！" NOR,
-       "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]),
+       "attack":14, "force":14, "defense":8, "damage_type":"刺傷" ]),
     ([ "name":"梅八方劍",
        "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIR "【" HIW "梅八方劍" HIR "】" HIW "」！\n"
                 HIW "$N全力施展快劍，幻化出了" HIY "八道" HIW "劍氣將$n團團圍住！" NOR,
-       "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]),
+       "attack":16, "force":16, "defense":10, "damage_type":"刺傷" ]),
     ([ "name":"愛霜恨雪",
        "action":HIW "$N施展傲梅暗劍訣中的殺招" HIC "「愛霜恨雪」" HIW "！\n"
                 "一股無形的冷冽氣勁朝著$n直射而出！" NOR,
-       "attack":0, "force":0, "defense":0, "damage_type":"割傷" ]),
+       "attack":18, "force":18, "defense":12, "damage_type":"割傷" ]),
     ([ "name":"寒霜三千里",
        "action":HIW "$N催運寒梅心法使出【 寒霜三千里 】劍氣，寒霜劍劍刃嗡嗡做響，$n全身瞬間蒙上一層白霜！" NOR,
-       "attack":0, "force":0, "defense":0, "damage_type":"割傷" ]),
+       "attack":20, "force":20, "defense":15, "damage_type":"割傷" ]),
     ([ "name":"傲梅暗劍訣・傲雪藏鋒・逆折寒梅",
        "action":HIW
        "【明劍欺敵，暗劍藏殺；傲雪藏鋒・逆折寒梅。】\n"
@@ -41,14 +41,14 @@ mapping *mirror_actions = ({
        "那道暗鋒如雪夜折梅般輕巧寫意，忽自明劍劍勢相逆之處折出；"
        "明劍在前欺敵，暗劍在後藏殺，真正的鋒芒直到最後一瞬才向咽喉、心口、氣海三處要害尋隙而入，直取$n的$l！" NOR,
        // 雙手聯動與三處要害為招式敘事設定；實際命中部位仍交由 Original Combat 的 $l 決定。
-       // 未知 Original 命中、傷害、穿透、Busy、寒毒與內力消耗數值仍不補造。
-       "attack":0, "force":0, "defense":0, "damage_type":"刺傷" ]),
+       // 除 KING V0 自訂 attack/force/defense 外，未知 Original 穿透、Busy、寒毒與消耗數值仍不補造。
+       "attack":20, "force":20, "defense":20, "damage_type":"刺傷" ]),
 });
 
 mapping basic_action = ([
     "name":"冷梅劍法",
     "action":CYN "$N手中$w輕顫，循冷梅劍理刺向$n的$l" NOR,
-    "attack":0, "force":0, "defense":0, "damage_type":"刺傷"
+    "attack":10, "force":10, "defense":0, "damage_type":"刺傷"
 ]);
 
 private void create()
