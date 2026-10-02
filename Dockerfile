@@ -72,7 +72,12 @@ RUN python3 scripts/audit_es2m_equipment_import.py \
     --runtime /opt/es2-king/runtime/mudlib \
     --output /build/es2m-equipment-import-inventory.json
 
-# 振武軍營 ES2M 原始資料閘門：地圖連結、NPC/裝備檔案及徵兵條件缺失即阻止建置。\n# 靜態來源驗證不代表遊戲內徵兵 Runtime PASS。\nRUN python3 scripts/test_es2m_zhenwu_topology.py es2m_snapshot/mudlib \\\n    && python3 scripts/test_es2m_zhenwu_recruitment.py es2m_snapshot/mudlib\n\n# ES2M skill inventory: fail build if any of the 36 recovered daemons is absent from generated Runtime.
+# 振武軍營 ES2M 原始資料閘門：地圖連結、NPC/裝備檔案及徵兵條件缺失即阻止建置。
+# 靜態來源驗證不代表遊戲內徵兵 Runtime PASS。
+RUN python3 scripts/test_es2m_zhenwu_topology.py es2m_snapshot/mudlib \
+    && python3 scripts/test_es2m_zhenwu_recruitment.py es2m_snapshot/mudlib
+
+# ES2M skill inventory: fail build if any of the 36 recovered daemons is absent from generated Runtime.
 RUN python3 scripts/test_es2m_skill_import.py /opt/es2-king/runtime
 
 RUN echo "[M30 BUILD 5/5] Assert final playable Runtime" \
