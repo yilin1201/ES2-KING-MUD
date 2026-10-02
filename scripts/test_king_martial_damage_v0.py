@@ -38,4 +38,20 @@ rulai = (ROOT / SKILLS["如來神掌"][0]).read_text(encoding="utf-8")
 assert 'COMBAT_D->fight(me, opponent, "unarmed", action);' in rulai
 assert 'me->set_temp("rulai/form_index", (index + 1) % sizeof(rulai_actions));' in rulai
 print("KING_MARTIAL_V0_ROUTING_STATIC_PASS: four skills registered; six-stage sword and unarmed routes preserved")
+# V4：防止模板數量相同、招式名稱或執行入口卻遭替換。
+expected_forms = {
+    "冷梅劍法（含鏡境進階招式）": ("梅二方劍", "梅四方劍", "梅八方劍", "愛霜恨雪", "寒霜三千里", "傲梅暗劍訣・傲雪藏鋒・逆折寒梅", "冷梅劍法"),
+    "傲梅暗劍訣（左手劍）": ("傲梅暗劍訣",),
+    "傲劍訣（七式及劍領風騷六段模板）": ("千嬌百媚柔似水", "佳人在殘醉臥君", "了絕紅塵遁山林", "清風送爽墨雲飛", "渺盡人世絕惡意", "天始一乾景初開", "不識江山多嬌媚"),
+    "如來神掌": ("佛光初現", "金頂佛燈", "佛動山河", "佛問迦藍", "迎佛西天", "佛光普照", "天佛降世", "佛鎮八荒", "佛法無邊", "九九歸一・萬佛朝宗", "天舞梵輪・萬相歸墟"),
+}
+for name, forms in expected_forms.items():
+    source = (ROOT / SKILLS[name][0]).read_text(encoding="utf-8")
+    for form in forms:
+        assert f'"name":"{form}"' in source, f"{name}: missing canonical form {form}"
+assert 'sizeof(jianling_forms)' in sword and 'jianling_combat_attack(me, target, weapon);' in sword
+assert 'actor->map_skill("sword", "lunmay");' in martial, "冷梅預設不可被傲劍訣取代"
+assert 'actor->map_skill("secondhand sword", "advance_lunmay");' in martial
+assert 'actor->map_skill("unarmed", "rulai shenzhang");' in martial
+print("KING_MARTIAL_V4_CANON_STATIC_PASS: forms and default mapping retained")
 print("KING_MARTIAL_DAMAGE_V0_STATIC_PASS (not Runtime or gameplay validation)")
