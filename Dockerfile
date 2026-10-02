@@ -57,6 +57,13 @@ RUN python3 scripts/audit_es2m_full_runtime_overlay.py \
     /build/es2m-full-runtime-inventory.json \
     --snapshot /build/repository/es2m_snapshot/mudlib
 
+# ES2M 武器裝備三方清冊：盤點候選、缺檔與同名衝突，不自動覆蓋或誤報可玩。
+RUN python3 scripts/audit_es2m_equipment_import.py \\
+    --snapshot /build/repository/es2m_snapshot/mudlib \\
+    --original /build/es2m-original-mudlib \\
+    --runtime /opt/es2-king/runtime/mudlib \\
+    --output /build/es2m-equipment-import-inventory.json
+
 # ES2M skill inventory: fail build if any of the 36 recovered daemons is absent from generated Runtime.
 RUN python3 scripts/test_es2m_skill_import.py /opt/es2-king/runtime
 
