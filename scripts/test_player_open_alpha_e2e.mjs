@@ -142,6 +142,8 @@ async function getEquipmentAndFight(p) {
   assert.match(await command(p, "get wooden sword"), /撿起一把木劍/);
   assert.match(await command(p, "wield wooden sword"), /裝備.*木劍作武器/);
   assert.match(await command(p, "inventory"), /木劍/);
+  // i 必須與 inventory 顯示相同裝備，包含剛裝備的木劍；不可只依賴玩家 alias。
+  assert.match(await command(p, "i"), /木劍/);
   assert.match(await command(p, "out"), /廚房/);
   assert.match(await command(p, "east"), /客棧大堂/);
   await command(p, "open east", /打開|已經是開著/);
