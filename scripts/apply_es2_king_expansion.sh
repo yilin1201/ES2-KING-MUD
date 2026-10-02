@@ -738,3 +738,27 @@ void autoload(string param) { }
 """ + marker, 1)
     p.write_text(s)
 PY
+
+# KING Cold Login Inventory／避免 admin 路徑或命令快取在登入初期攔截 i/inventory。
+# 直接在角色指令入口委派 Original inventory；只影響唯一 admin king，不變更一般玩家指令優先序。
+CHAR_COMMAND="$TARGET/mudlib/feature/char/command.c"
+python3 - "$CHAR_COMMAND" <<'PY'
+from pathlib import Path
+import sys
+p=Path(sys.argv[1]); s=p.read_text()
+marker='ES2-KING OWNER COLD LOGIN INVENTORY'
+if marker not in s:
+    anchor='    verb = query_verb();\n'
+    if s.count(anchor)!=1: raise SystemExit('KING INVENTORY PATCH FAIL: command hook anchor changed')
+    patch='''    verb = query_verb();
+
+    // ES2-KING OWNER COLD LOGIN INVENTORY：KING 首次登入立即可查背包。
+    // 避開 admin 命令路徑/快取差異；實際清單仍由 Original inventory 唯一來源產生。
+    if( (verb == "i" || verb == "inventory")
+    &&  this_object()->query("id") == "king"
+    &&  wiz_level(this_object()) >= wiz_level("(admin)") )
+        return (int)call_other("/cmds/usr/inventory", "main", this_object(), arg);
+'''
+    s=s.replace(anchor,patch,1)
+    p.write_text(s)
+PY
