@@ -64,6 +64,27 @@ for name, forms in expected_forms.items():
             return PATTERN.search(source[match.end():end]) is not None
         assert any(has_coefficients(match) for match in matches), f"{name}: {form} missing V0 coefficients"
 print("KING_MARTIAL_V4_PER_FORM_STATIC_PASS: each canonical attack has V0 coefficients")
+# V4：驗證正式攻擊池的招式順序與唯一性；傲劍 Parry 同名招式不列入攻擊池。
+attack_pools = {
+    "冷梅劍法（含鏡境進階招式）": ("mapping *mirror_actions = ({", "mapping basic_action = (["),
+    "傲梅暗劍訣（左手劍）": ("action = ([", "COMBAT_D->fight("),
+    "傲劍訣（七式及劍領風騷六段模板）": ("mapping *aojian_actions = ({", "mapping *aojian_parries = ({"),
+    "如來神掌": ("mapping *rulai_actions = ({", "private void create()"),
+}
+for name, (start_marker, end_marker) in attack_pools.items():
+    source = (ROOT / SKILLS[name][0]).read_text(encoding="utf-8")
+    start = source.find(start_marker)
+    end = source.find(end_marker, start + len(start_marker))
+    assert start >= 0 and end > start, f"{name}: attack pool boundaries changed"
+    pool_names = re.findall(r'"name"\\s*:\\s*"([^"]+)"', source[start:end])
+    expected = expected_forms[name]
+    if name.startswith("冷梅劍法"):
+        basic = source[end:]
+        assert re.search(r'"name"\\s*:\\s*"冷梅劍法"', basic), "missing basic cold plum attack"
+        expected = expected[:-1]
+    assert tuple(pool_names) == expected, f"{name}: canonical attack order or uniqueness changed: {pool_names}"
+print("KING_MARTIAL_V4_ATTACK_ORDER_STATIC_PASS: canonical attack pools retain exact order")
+
 assert 'sizeof(jianling_forms)' in sword and 'jianling_combat_attack(me, target, weapon);' in sword
 assert 'actor->map_skill("sword", "lunmay");' in martial, "冷梅預設不可被傲劍訣取代"
 assert 'actor->map_skill("secondhand sword", "advance_lunmay");' in martial
