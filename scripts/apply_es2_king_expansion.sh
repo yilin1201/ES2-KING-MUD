@@ -772,3 +772,18 @@ if marker not in s:
     s=s.replace(anchor,patch,1)
     p.write_text(s)
 PY
+
+# ES2-KING OWNER INVENTORY INPUT BYPASS
+# Preserve KING save and user aliases; bypass alias conversion only for owner i/inventory.
+USER_INPUT="$TARGET/mudlib/obj/user.c"
+python3 - "$USER_INPUT" <<'PY'
+from pathlib import Path
+import sys
+p = Path(sys.argv[1])
+s = p.read_text()
+anchor = 'string process_input (string str) {'
+if s.count(anchor) != 1:
+    raise SystemExit('KING inventory input anchor mismatch')
+replacement = anchor + '\n    // ES2-KING OWNER INVENTORY INPUT BYPASS\n    if( query("id") == "king" && wiz_level(this_object()) >= wiz_level("(admin)")\n    && (str == "i" || str == "inventory") ) return str;'
+p.write_text(s.replace(anchor, replacement, 1))
+PY
