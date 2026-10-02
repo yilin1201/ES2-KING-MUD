@@ -34,7 +34,7 @@ int main(object me, string arg)
     }
 
     if (ring->query("es2_king/omega_narrative_version") == 1) {
-    write(HIW "\n你深吸一口氣，翻湧沸騰的小宇宙如潮水般緩緩平息。指間「神之戒」泛起溫潤柔和的星芒，發出清越的空靈錚鳴。\n" NOR);
+    write(HIW "\n你深吸一口氣，翻湧沸騰的小宇宙如潮水般緩緩平息。指間「神之戒」泛起溫潤柔和的星芒。\n" NOR);
     write("周身金色甲胄劇烈震顫，各處金屬扣鎖應聲解開——\n\n");
     write(HIY ">>> 聖衣解鎖！歸還神戒（Unequip Omega Cloth）<<<\n\n" NOR);
 
