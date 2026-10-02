@@ -57,6 +57,13 @@ RUN python3 scripts/audit_es2m_full_runtime_overlay.py \
     /build/es2m-full-runtime-inventory.json \
     --snapshot /build/repository/es2m_snapshot/mudlib
 
+# ES2M 裝備安全補檔：隔離測試後只加入獨立且缺少的物件，不覆蓋同名 Original。
+RUN cd scripts && python3 -m unittest -v test_import_es2m_equipment_missing
+RUN python3 scripts/import_es2m_equipment_missing.py \
+    --snapshot /build/repository/es2m_snapshot/mudlib \
+    --runtime /opt/es2-king/runtime/mudlib \
+    --output /build/es2m-equipment-stage.json
+
 # ES2M 武器裝備三方清冊：盤點候選、缺檔與同名衝突，不自動覆蓋或誤報可玩。
 RUN cd scripts && python3 -m unittest -v test_audit_es2m_equipment_import
 RUN python3 scripts/audit_es2m_equipment_import.py \
