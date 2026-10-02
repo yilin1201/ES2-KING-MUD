@@ -336,6 +336,9 @@ for (const denied of ["khome", "kgoto /d/snow/square", "call me->query_class()",
 }
 console.log("PLAYER_SECURITY_BOUNDARY_PASS");
 await enterInnAsPlayer(human);
+// 登入後尚未拾取任何物品時，i 必須清楚回應空背包，而非沒有畫面。
+assert.match(await command(human, "i"), /目前.*身上沒有任何東西|身上帶著下列這些東西/);
+console.log("PLAYER_LOGIN_INITIAL_INVENTORY_PASS");
 await getEquipmentAndFight(human);
 await exerciseSnowPostOffice(human);
 await exerciseSnowTownServices(human);
