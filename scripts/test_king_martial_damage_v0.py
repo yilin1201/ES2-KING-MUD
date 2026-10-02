@@ -58,9 +58,9 @@ for name, forms in expected_forms.items():
         assert matches, f"{name}: missing {form}"
         # 從招式名稱向後尋找同一個 mapping 的結尾；Parry 同名但無傷害欄位不計入。
         def has_coefficients(match):
-            end = source.find("]),", match.end())
-            if end < 0:
-                end = len(source)
+            # 以最近的 mapping 結尾截斷，包含陣列末筆的 ]);，不得借用下一招的係數。
+            end = source.find("])", match.end())
+            assert end >= 0, f"{name}: malformed mapping for {form}"
             return PATTERN.search(source[match.end():end]) is not None
         assert any(has_coefficients(match) for match in matches), f"{name}: {form} missing V0 coefficients"
 print("KING_MARTIAL_V4_PER_FORM_STATIC_PASS: each canonical attack has V0 coefficients")
