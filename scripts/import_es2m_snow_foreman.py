@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ES2M 雪亭工頭與木箱：只補 Runtime 缺檔，不覆蓋 Original；依賴缺失即停止。"""
 import argparse
+import hashlib
 import shutil
 from pathlib import Path
 
@@ -19,7 +20,10 @@ def import_foreman(snapshot: Path, runtime: Path):
     for rel, label in PAIRS:
         target = runtime / rel
         if target.exists():
-            result.append(f"ES2M_FOREMAN_PRESERVED: {rel}")
+            source_hash = hashlib.sha256((snapshot / rel).read_bytes()).hexdigest()
+            runtime_hash = hashlib.sha256(target.read_bytes()).hexdigest()
+            state = "IDENTICAL" if source_hash == runtime_hash else "DIFF_REVIEW"
+            result.append(f"ES2M_FOREMAN_{state}: {rel} source_sha256={source_hash} runtime_sha256={runtime_hash}")
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(snapshot / rel, target)
@@ -35,4 +39,4 @@ if __name__ == "__main__":
         p.error("Runtime mudlib must exist")
     for message in import_foreman(a.snapshot, a.runtime):
         print(message)
-    print("ES2M_FOREMAN_FILE_GATE_PASS: file staging only; gameplay NOT verified")
+    print("ES2M_FOREMAN_FILE_GATE_PASS: unchanged runtime preserved; DIFF_REVIEW requires source comparison; gameplay NOT verified")
