@@ -41,6 +41,9 @@ RUN python3 scripts/audit_es2m_full_runtime_overlay.py \
     /build/es2m-full-runtime-inventory.json \
     --snapshot /build/repository/es2m_snapshot/mudlib
 
+# ES2M skill inventory: fail build if any of the 36 recovered daemons is absent from generated Runtime.
+RUN python3 scripts/test_es2m_skill_import.py /opt/es2-king/runtime
+
 RUN echo "[M30 BUILD 5/5] Assert final playable Runtime" \
     && bash scripts/assert_m30_final_runtime.sh /opt/es2-king/runtime \
     && bash scripts/test_king_omega_static.sh /opt/es2-king/runtime
