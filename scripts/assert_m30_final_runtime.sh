@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# Render 診斷：保留原有失敗閘門，顯示確切失敗行與指令，禁止隱藏或跳過驗證。
+trap 'status=$?; echo "FINAL_RUNTIME_ASSERT_FAIL line=$LINENO status=$status command=$BASH_COMMAND" >&2' ERR
 
 RUNTIME_DIR="${1:-${ES2_RUNTIME_DIR:-/opt/es2-king/runtime}}"
 LOGIN_D="$RUNTIME_DIR/mudlib/adm/daemons/logind.c"
