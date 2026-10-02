@@ -78,6 +78,6 @@ def main():
         "conflicts_review": len(report["source_conflicts_runtime"]),
         "report": str(args.output)
     }, ensure_ascii=False))
-    # 缺檔或衝突均列清冊供後續有證據的批次導入；此階段不覆蓋 Original。
+    # Render 建置日誌直接列出同名衝突路徑，便於逐檔審查；不覆蓋原始資料。\n    print("ES2M_EQUIPMENT_CONFLICT_PATHS", json.dumps(\n        [row["path"] for row in report["source_conflicts_runtime"]], ensure_ascii=False))\n    # 缺檔或衝突均列清冊供後續有證據的批次導入；此階段不覆蓋 Original。
 if __name__ == "__main__":
     main()
