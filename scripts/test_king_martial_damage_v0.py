@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """KING 武學傷害 V0：四套武學靜態回歸閘門；非實際戰鬥傷害驗證。"""
 from pathlib import Path
+import argparse
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -54,4 +55,16 @@ assert 'actor->map_skill("sword", "lunmay");' in martial, "冷梅預設不可被
 assert 'actor->map_skill("secondhand sword", "advance_lunmay");' in martial
 assert 'actor->map_skill("unarmed", "rulai shenzhang");' in martial
 print("KING_MARTIAL_V4_CANON_STATIC_PASS: forms and default mapping retained")
+# V4 Runtime overlay 檔案一致性：避免部署時套用舊版或遺漏 V0 的技能檔。
+parser = argparse.ArgumentParser(description="檢查 KING V0 來源及選用的生成 Runtime overlay")
+parser.add_argument("--runtime", type=Path, help="生成後的 mudlib 根目錄（僅檔案比對，非實戰）")
+args = parser.parse_args()
+if args.runtime:
+    for name, (relative, _) in SKILLS.items():
+        overlay_relative = relative.split("es2_king_expansion/runtime/mudlib/", 1)[1]
+        expected = (ROOT / relative).read_bytes()
+        deployed_path = args.runtime / overlay_relative
+        assert deployed_path.is_file(), f"{name}: missing generated Runtime skill {deployed_path}"
+        assert deployed_path.read_bytes() == expected, f"{name}: generated Runtime skill differs from V0 source"
+    print("KING_MARTIAL_V4_OVERLAY_STATIC_PASS: four generated Runtime files match source bytes")
 print("KING_MARTIAL_DAMAGE_V0_STATIC_PASS (not Runtime or gameplay validation)")
