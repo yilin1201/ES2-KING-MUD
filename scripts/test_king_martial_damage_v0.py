@@ -50,6 +50,20 @@ for name, forms in expected_forms.items():
     source = (ROOT / SKILLS[name][0]).read_text(encoding="utf-8")
     for form in forms:
         assert f'"name":"{form}"' in source, f"{name}: missing canonical form {form}"
+# V4：逐招核對傷害欄位，避免只有全檔總數符合卻把某招漏設。
+for name, forms in expected_forms.items():
+    source = (ROOT / SKILLS[name][0]).read_text(encoding="utf-8")
+    for form in forms:
+        matches = list(re.finditer(r'"name"\\s*:\\s*"' + re.escape(form) + r'"', source))
+        assert matches, f"{name}: missing {form}"
+        # 從招式名稱向後尋找同一個 mapping 的結尾；Parry 同名但無傷害欄位不計入。
+        def has_coefficients(match):
+            end = source.find("]),", match.end())
+            if end < 0:
+                end = len(source)
+            return PATTERN.search(source[match.end():end]) is not None
+        assert any(has_coefficients(match) for match in matches), f"{name}: {form} missing V0 coefficients"
+print("KING_MARTIAL_V4_PER_FORM_STATIC_PASS: each canonical attack has V0 coefficients")
 assert 'sizeof(jianling_forms)' in sword and 'jianling_combat_attack(me, target, weapon);' in sword
 assert 'actor->map_skill("sword", "lunmay");' in martial, "冷梅預設不可被傲劍訣取代"
 assert 'actor->map_skill("secondhand sword", "advance_lunmay");' in martial
