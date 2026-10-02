@@ -103,6 +103,12 @@ sockets.on("connection", (browser) => {
     // Character Transport／角色輸入傳輸：Race 使用明確的 WebSocket 訊息封套，
     // Bridge 在伺服器端依 Runtime 模式轉換；line-input 使用 Telnet 標準 CRLF 完成整行提交，避免 Neolith 只收到 LF 而持續等待。
     const incoming = Buffer.from(data).toString("utf8");
+    // ES2-KING 登入後背包診斷：只記錄 i/inventory/look king 三種固定指令類別，
+    // 不記錄玩家帳號、密碼、訊息內容或任何其他輸入。
+    const inventoryProbe = incoming.trim().toLowerCase();
+    if (inventoryProbe === "i" || inventoryProbe === "inventory" || inventoryProbe === "look king") {
+      console.log(`[public-session ${sessionId}] inventory-probe=${inventoryProbe === "look king" ? "look-self" : inventoryProbe} bridge-forwarded=true`);
+    }
     if (/^ES2RACE:(?:[1-9]|1[0-2]|human|avatar|blackteeth|yenhold|jiaojao|woochan|dingling|headless|rainner|malik|yaksa|ashura)$/.test(incoming)) {
       const choice = incoming.slice("ES2RACE:".length);
       const raceIds = ["", "human", "avatar", "blackteeth", "yenhold", "jiaojao", "woochan", "dingling", "headless", "rainner", "malik", "yaksa", "ashura"];
