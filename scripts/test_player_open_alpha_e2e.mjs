@@ -112,6 +112,8 @@ async function saveQuitRelogin(p, scoreMatcher) {
   assert.match(entered, /目前權限: \(player\)/);
   await waitForAfter(p, 0, "> ");
   assert.match(await command(p, "score"), scoreMatcher);
+  // 登入後立即驗證 i 快捷鍵可回應；跨登入物品保存另列獨立證據，不誤報。
+  assert.match(await command(p, "i"), /身上|攜帶|沒有|物品|木劍|Inventory/i);
   console.log(`PLAYER_PERSISTENCE_PASS:${p.id}`);
 }
 
