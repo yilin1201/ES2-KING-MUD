@@ -38,8 +38,8 @@ RUN python3 scripts/audit_es2m_snow_npc_batch.py \
     --output /build/es2m-snow-npc-inventory.json
 # 工頭與木箱採 ES2M 來源，僅補入缺檔；先以隔離測試確認不覆蓋 Original。
 RUN cd scripts && python3 -m unittest -v test_import_es2m_snow_foreman
-RUN python3 scripts/import_es2m_snow_foreman.py \\
-    --snapshot /build/repository/es2m_snapshot/mudlib \\
+RUN python3 scripts/import_es2m_snow_foreman.py \
+    --snapshot /build/repository/es2m_snapshot/mudlib \
     --runtime /opt/es2-king/runtime/mudlib
 
 # ES2M 雪亭鎮整合檢查：先跑隔離單元測試，再核對真正生成的 Runtime 檔案。
