@@ -57,8 +57,7 @@ int main(object me, string arg)
         return notify_fail("Ω神聖衣封印失敗：仍有神聖狀態殘留。\n");
 
     if (ring->query("es2_king/omega_narrative_version") != 1) {
-        write(HIW "\n你深吸一口氣，沸騰的神級小宇宙緩緩平息。\n" NOR);
-        write("指間「神之戒」泛起溫潤神芒，發出清越錚鳴。\n");
+        write(HIW "\n你深吸一口氣，沸騰的神級小宇宙緩緩平息。 指間「神之戒」泛起溫潤神芒，發出清越錚鳴。\n" NOR);
         write("八十八星座再次共鳴，十二黃金神宮依序隱入星河！\n");
         write(HIY "「神聖Ω，榮耀永存！」 「諸神之力，歸於永恆！」\n" NOR);
         write(HIC "「神聖Ω——神衣歸戒！！！」\n\n" NOR);
