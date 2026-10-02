@@ -757,7 +757,17 @@ if marker not in s:
     if( (verb == "i" || verb == "inventory")
     &&  this_object()->query("id") == "king"
     &&  wiz_level(this_object()) >= wiz_level("(admin)") )
-        return (int)call_other("/cmds/usr/inventory", "main", this_object(), arg);
+        {
+            mixed err;
+            int result;
+            write("KING inventory handler reached.\\n");
+            err = catch(result = (int)call_other("/cmds/usr/inventory", "main", this_object(), arg));
+            if( err ) {
+                write("KING inventory original command failed.\\n");
+                return 1;
+            }
+            return result;
+        }
 '''
     s=s.replace(anchor,patch,1)
     p.write_text(s)
