@@ -328,14 +328,6 @@
         status.textContent = `KING Claim 安全傳輸：HEX-V1 已送出；輸入長度=${prepared.byteLength} bytes`;
         socket.send(prepared.transport + "\r\n");
       } else {
-        // 玩家回報：登入後首次 i 無畫面。先在瀏覽器確認確實送出，並提供完整指令備援；
-        // 不偽造伺服器背包內容，避免把 UI 回顯誤認為遊戲成功。
-        if (choice === "i" || choice === "inventory") {
-          const note = document.createElement("span");
-          note.textContent = "\n[背包查詢已送出：" + choice + "；若無伺服器回應，請試 inventory 並回報]\n";
-          terminal.append(note);
-          window.scrollTo(0, document.body.scrollHeight);
-        }
         socket.send(command.value + "\r\n");
       }
     }
