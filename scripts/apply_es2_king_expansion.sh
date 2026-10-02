@@ -717,3 +717,24 @@ if marker not in s:
         raise SystemExit("OMEGA ORDER FAIL: look_living 原始入口已改動，停止補丁。")
     look.write_text(s.replace(needle, replacement, 1))
 PY
+
+# P0 Inventory Persistence／依 Original F_AUTOLOAD 契約，先針對已確認的 ES2M 雪亭木劍進行最小範圍驗證。
+# 不更動原始來源、不對全部物件啟用 autoload，也不保存管理員專用物件。
+python3 - "$TARGET/mudlib/d/snow/npc/obj/woodsword.c" <<'PY'
+from pathlib import Path
+import sys
+p = Path(sys.argv[1])
+s = p.read_text()
+marker = "// ES2-KING P0 WOODSWORD AUTOLOAD"
+if marker not in s:
+    anchor = 'inherit F_SWORD;'
+    if s.count(anchor) != 1 or 'query_autoload(' in s:
+        raise SystemExit("P0 AUTOLOAD FAIL: woodsword source contract changed")
+    s = s.replace(anchor, anchor + """
+
+// ES2-KING P0 WOODSWORD AUTOLOAD：僅保存實際持有的雪亭木劍，依 Original F_AUTOLOAD 重建。
+int query_autoload() { return 1; }
+void autoload(string param) { }
+""" + marker, 1)
+    p.write_text(s)
+PY
