@@ -16,12 +16,15 @@ for name, (path, expected) in SKILLS.items():
     source = (ROOT / path).read_text(encoding="utf-8")
     values = [tuple(map(int, x)) for x in PATTERN.findall(source)]
     assert len(values) == expected, f"{name}: expected {expected} V0 templates, got {len(values)}"
+    # 如來神掌已指定升級 V1；其餘三套武學維持 V0。
+    is_v1 = name == "如來神掌"
     for attack, force, defense in values:
-        assert 10 <= attack <= 20, f"{name}: attack {attack} outside V0"
-        assert 10 <= force <= 20, f"{name}: force {force} outside V0"
-        assert 0 <= defense <= 20, f"{name}: defense {defense} outside V0"
+        low, high = (20, 40) if is_v1 else (10, 20)
+        assert low <= attack <= high, f"{name}: attack {attack} outside assigned version"
+        assert low <= force <= high, f"{name}: force {force} outside assigned version"
+        assert (20 if is_v1 else 0) <= defense <= high, f"{name}: defense {defense} outside assigned version"
     assert "COMBAT_D->fight(" in source, f"{name}: original combat entry missing"
-    print(f"V0_STATIC_PASS {name}: {len(values)} templates")
+    print(f"{'V1' if is_v1 else 'V0'}_STATIC_PASS {name}: {len(values)} templates")
 # 驗證武學實際入口及劍領風騷六段迴圈，避免只有模板係數正確、戰鬥入口卻未使用。
 martial = (ROOT / "es2_king_expansion/runtime/mudlib/adm/daemons/kingmartiald.c").read_text(encoding="utf-8")
 for learned, loaded in (
@@ -108,4 +111,4 @@ if args.runtime:
     assert daemon_runtime.is_file(), f"missing generated KING martial daemon: {daemon_runtime}"
     assert daemon_runtime.read_bytes() == daemon_source.read_bytes(), "generated KING martial routing daemon differs from source"
     print("KING_MARTIAL_V4_OVERLAY_STATIC_PASS: four skills and KING martial routing daemon match source bytes")
-print("KING_MARTIAL_DAMAGE_V0_STATIC_PASS (not Runtime or gameplay validation)")
+print("KING_MARTIAL_VERSIONED_STATIC_PASS (Rulai V1; other skills V0; not Runtime validation)")
