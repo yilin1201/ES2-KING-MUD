@@ -21,15 +21,11 @@ varargs int query_attr(string what, int raw)
 
 int set_attr(string what, int value)
 {
-    int maximum;
-
     if (!mapp(attribute))
         attribute = ([]);
 
-    maximum = (query("id") == "king") ? 99 : ATTRVAL_MAX;
-
     // Original 規則保留：玩家屬性必須先由 init_attribute() 初始化。
-    // Expansion 唯一例外只有精確 ID=king 的上限 99；其他玩家仍是 Original ATTRVAL_MAX=50。
+    // 所有角色使用相同 ATTRVAL_MAX=50；KING 由授權登入配置設為 50。
     if (userp(this_object())
     && (undefinedp(attribute[what]) || value < ATTRVAL_MIN || value > ATTRVAL_MAX))
         return 0;
