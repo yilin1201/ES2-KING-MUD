@@ -5,18 +5,23 @@ import sys
 
 root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("es2m_snapshot/mudlib")
 gate = root / "custom/zhenwu/room/gate.c"
+snow = root / "d/snow/sgate.c"
+yard = root / "custom/zhenwu/room/yard06.c"
 stone = root / "custom/zhenwu/obj/recruit_stone.c"
 lu = root / "custom/zhenwu/npc/lu_xinien.c"
 soldier = root / "daemon/class/soldier.c"
 errors = []
-for p in (gate, stone, lu, soldier):
+for p in (gate, snow, yard, stone, lu, soldier):
     if not p.is_file():
         errors.append(f"missing: {p}")
 if not errors:
     g, s, l = gate.read_text(), stone.read_text(), lu.read_text()
+    n, y = snow.read_text(), yard.read_text()
     for label, content, needle in (
         ("gate", g, '"east" : "/d/snow/sgate"'),
         ("gate", g, '"west" : __DIR__"yard06"'),
+        ("snow", n, '"west" : "/custom/zhenwu/room/gate"'),
+        ("yard06", y, '"east" : __DIR__"gate"'),
         ("stone", s, 'origin_class != "commoner" && origin_class != "fighter"'),
         ("stone", s, 'me->query("gender") != "male"'),
         ("stone", s, 'me->set_class("soldier")'),
