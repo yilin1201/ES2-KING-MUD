@@ -32,6 +32,8 @@ RUN echo "[M30 BUILD 4/5] Apply ES2M Race + ES2-KING Expansion overlays" \
     && bash scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime
 # KING 雙劍法契約：冷梅預設，傲劍訣可透過 Original enable 切換。
 RUN python3 scripts/test_king_aojian_dual_skill.py
+# KING 武學 V0 靜態閘門：四套武學的攻擊、內力與防禦範圍，避免後續匯入時回歸為 0。
+RUN python3 scripts/test_king_martial_damage_v0.py
 # Validate NPC audit decisions before auditing generated runtime.
 RUN cd scripts && python3 -m unittest -v test_audit_es2m_snow_npc_batch
 # ES2M Snow NPC source and dependency audit (static evidence, not gameplay PASS).
