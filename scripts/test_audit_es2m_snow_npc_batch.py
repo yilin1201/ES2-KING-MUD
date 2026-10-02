@@ -29,6 +29,11 @@ class SnowNpcAuditTests(unittest.TestCase):
             self.assertIn("obj/area/obj/cloth.c",
                           rows["alchemist"]["missing_dependencies"])
             self.assertEqual(rows["child"]["decision"], "REVIEW_EXISTING")
+            # 已存在於 Runtime 的 NPC，若來源仍有缺失依賴，不得遮蔽。
+            (source / npc / "child.c").write_text('"/obj/area/obj/missing";\n')
+            rows = {row["npc"]: row for row in audit(source, runtime)["records"]}
+            self.assertEqual(rows["child"]["decision"], "DEPENDENCY_REVIEW")
+            self.assertIn("obj/area/obj/missing.c", rows["child"]["missing_dependencies"])
             self.assertEqual(rows["foreman"]["decision"], "SOURCE_PRESENT_RUNTIME_ABSENT")
 
 
