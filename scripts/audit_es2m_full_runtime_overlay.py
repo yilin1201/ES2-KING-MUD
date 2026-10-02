@@ -74,6 +74,18 @@ def main():
         for path in report["snapshot_conflicts_runtime"]:
             category = classify(path)
             report["owner_review_queue"].setdefault(category, []).append(path)
+        # 優先呈現雪亭 NPC／地圖差異，附三方雜湊；僅供證據審查，絕不自動覆蓋。
+        priority = ("d/snow/npc/", "d/snow/")
+        conflicts = report["snapshot_conflicts_runtime"]
+        ordered = sorted(conflicts, key=lambda p: (
+            0 if p.startswith(priority[0]) else
+            1 if p.startswith(priority[1]) else 2, p))
+        report["priority_conflict_review"] = [
+            {"path": path, "base_sha256": before.get(path),
+             "runtime_sha256": after[path], "es2m_sha256": supplement[path],
+             "decision": "REVIEW_ONLY_NO_OVERWRITE"}
+            for path in ordered
+        ]
         report["owner_review_required"] = bool(report["snapshot_conflicts_runtime"])
         # 同名但內容不同屬待審議衝突，不在未經 Owner 決策時覆蓋。
         print("ES2M_SNAPSHOT_CONFLICT_REVIEW", json.dumps({
