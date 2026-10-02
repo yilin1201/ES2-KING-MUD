@@ -6,18 +6,18 @@ description: ES2-KING 如來神掌正式 Combat Skill／如來招式採青色【
 inherit SKILL;
 
 // Evidence：招式名稱來自 ES2-KING Project Canon M29。
-// Original ES2 未發現如來神掌 Combat Source；以下 attack/force/defense 為使用者指定的 KING 武學傷害 V0 自訂值，非 Original 原始係數；不另造 Busy、消耗或特殊效果。
+// Original ES2 未發現如來神掌 Combat Source；以下 attack/force/defense 為使用者指定的 KING 武學傷害 V1 自訂值，非 Original 原始係數；不另造 Busy、消耗或特殊效果。
 mapping *rulai_actions = ({
-    ([ "name":"佛光初現", "action":HIW "$N使出如來神掌" HIC "【" HIY "佛光初現" HIC "】" HIW "，掌勢如晨曦初綻，直取$n的$l！" NOR, "attack":10, "force":10, "defense":0, "damage_type":"瘀傷" ]),
-    ([ "name":"金頂佛燈", "action":HIW "$N使出如來神掌" HIC "【" HIY "金頂佛燈" HIC "】" HIW "，掌影如佛燈長明，直取$n的$l！" NOR, "attack":11, "force":11, "defense":2, "damage_type":"瘀傷" ]),
-    ([ "name":"佛動山河", "action":HIW "$N使出如來神掌" HIC "【" HIY "佛動山河" HIC "】" HIW "，雙掌平推，掌勢直撼$n的$l！" NOR, "attack":12, "force":12, "defense":4, "damage_type":"瘀傷" ]),
-    ([ "name":"佛問迦藍", "action":HIW "$N使出如來神掌" HIC "【" HIY "佛問迦藍" HIC "】" HIW "，掌意沉凝，直叩$n的$l！" NOR, "attack":13, "force":13, "defense":6, "damage_type":"瘀傷" ]),
-    ([ "name":"迎佛西天", "action":HIW "$N使出如來神掌" HIC "【" HIY "迎佛西天" HIC "】" HIW "，掌勢迴轉，向$n的$l拍去！" NOR, "attack":14, "force":14, "defense":8, "damage_type":"瘀傷" ]),
-    ([ "name":"佛光普照", "action":HIW "$N使出如來神掌" HIC "【" HIY "佛光普照" HIC "】" HIW "，掌影展開，直逼$n的$l！" NOR, "attack":15, "force":15, "defense":10, "damage_type":"瘀傷" ]),
-    ([ "name":"天佛降世", "action":HIW "$N使出如來神掌" HIC "【" HIY "天佛降世" HIC "】" HIW "，一掌自上而下壓向$n的$l！" NOR, "attack":16, "force":16, "defense":12, "damage_type":"瘀傷" ]),
-    ([ "name":"佛鎮八荒", "action":HIW "$N使出如來神掌" HIC "【" HIY "佛鎮八荒" HIC "】" HIW "，掌勢橫掃八方，直取$n的$l！" NOR, "attack":17, "force":17, "defense":14, "damage_type":"瘀傷" ]),
-    ([ "name":"佛法無邊", "action":HIW "$N使出如來神掌" HIC "【" HIY "佛法無邊" HIC "】" HIW "，掌勢連綿而出，攻向$n的$l！" NOR, "attack":18, "force":18, "defense":16, "damage_type":"瘀傷" ]),
-    ([ "name":"九九歸一・萬佛朝宗", "action":HIW "$N使出如來神掌" HIC "【" HIY "九九歸一・萬佛朝宗" HIC "】" HIW "，前九佛意歸一，一掌直取$n的$l！" NOR, "attack":19, "force":19, "defense":18, "damage_type":"瘀傷" ]),
+    ([ "name":"佛光初現", "action":HIW "$N使出如來神掌" HIC "【" HIY "佛光初現" HIC "】" HIW "，掌勢如晨曦初綻，直取$n的$l！" NOR, "attack":20, "force":20, "defense":20, "damage_type":"瘀傷" ]),
+    ([ "name":"金頂佛燈", "action":HIW "$N使出如來神掌" HIC "【" HIY "金頂佛燈" HIC "】" HIW "，掌影如佛燈長明，直取$n的$l！" NOR, "attack":22, "force":22, "defense":22, "damage_type":"瘀傷" ]),
+    ([ "name":"佛動山河", "action":HIW "$N使出如來神掌" HIC "【" HIY "佛動山河" HIC "】" HIW "，雙掌平推，掌勢直撼$n的$l！" NOR, "attack":24, "force":24, "defense":24, "damage_type":"瘀傷" ]),
+    ([ "name":"佛問迦藍", "action":HIW "$N使出如來神掌" HIC "【" HIY "佛問迦藍" HIC "】" HIW "，掌意沉凝，直叩$n的$l！" NOR, "attack":26, "force":26, "defense":26, "damage_type":"瘀傷" ]),
+    ([ "name":"迎佛西天", "action":HIW "$N使出如來神掌" HIC "【" HIY "迎佛西天" HIC "】" HIW "，掌勢迴轉，向$n的$l拍去！" NOR, "attack":28, "force":28, "defense":28, "damage_type":"瘀傷" ]),
+    ([ "name":"佛光普照", "action":HIW "$N使出如來神掌" HIC "【" HIY "佛光普照" HIC "】" HIW "，掌影展開，直逼$n的$l！" NOR, "attack":30, "force":30, "defense":30, "damage_type":"瘀傷" ]),
+    ([ "name":"天佛降世", "action":HIW "$N使出如來神掌" HIC "【" HIY "天佛降世" HIC "】" HIW "，一掌自上而下壓向$n的$l！" NOR, "attack":32, "force":32, "defense":32, "damage_type":"瘀傷" ]),
+    ([ "name":"佛鎮八荒", "action":HIW "$N使出如來神掌" HIC "【" HIY "佛鎮八荒" HIC "】" HIW "，掌勢橫掃八方，直取$n的$l！" NOR, "attack":34, "force":34, "defense":34, "damage_type":"瘀傷" ]),
+    ([ "name":"佛法無邊", "action":HIW "$N使出如來神掌" HIC "【" HIY "佛法無邊" HIC "】" HIW "，掌勢連綿而出，攻向$n的$l！" NOR, "attack":36, "force":36, "defense":36, "damage_type":"瘀傷" ]),
+    ([ "name":"九九歸一・萬佛朝宗", "action":HIW "$N使出如來神掌" HIC "【" HIY "九九歸一・萬佛朝宗" HIC "】" HIW "，前九佛意歸一，一掌直取$n的$l！" NOR, "attack":38, "force":38, "defense":38, "damage_type":"瘀傷" ]),
     ([ "name":"天舞梵輪・萬相歸墟",
        "action":HIW "$N神色淡漠超然，雙手緩緩於胸前結成「大日如來無相根本印」。\n"
                 "嗡————！\n"
@@ -59,7 +59,7 @@ mapping *rulai_actions = ({
                 "——八識破！\n"
                 "神輪四轉，五感斷、六識絕、七識滅、八識破！\n"
                 "萬相歸墟，諸法寂滅！" NOR,
-       "attack":20, "force":20, "defense":20, "damage_type":"瘀傷" ]),
+       "attack":40, "force":40, "defense":40, "damage_type":"瘀傷" ]),
 });
 
 private void create()
