@@ -9,7 +9,7 @@ assert 'int query_immortal_absorb_percent() { return 30; }' in text
 assert 'return strength * query_immortal_absorb_percent() / 100;' in text
 assert 'if (!objectp(me) || strength <= 0) return 0;' in text
 assert 'me->query_temp("es2_king/batian/immortal_intro")' in text
-assert '「 【 霸 天 煉 體 訣・不 滅 金 身 】 」' in text
+assert '「 【 霸 天 煉 體 訣 ・ 不 滅 金 身 】 」' in text
 if len(sys.argv)>1:
     deployed=Path(sys.argv[1])/"d/arena/skill/batian_lianti_jue.c"
     assert deployed.read_bytes()==source,"BATIAN_RUNTIME_OVERLAY_MISMATCH"
