@@ -37,7 +37,7 @@ assert.equal(core.buildSections(state).length,12,"關閉連續特攻仍應顯示
 state.moveCount=1;
 assert.equal(core.buildSections(state).length,1,"調低招式數量只顯示一式");
 assert.equal(moves.length,12,"調低數量不得刪除已編輯招式");
-state.previewMode="single";state.selectedMove=11;state.comboEnabled=true;
+state.moveCount=12;state.previewMode="single";state.selectedMove=11;state.comboEnabled=true;
 const single=core.toPlainText(core.buildSections(state));
 assert.ok(single.includes("【測試12】"),"單式模式必須顯示選中招式");
 assert.doesNotMatch(single,/連續特攻|【測試1】/,"單式模式不得混入其他招式或連續特攻");
