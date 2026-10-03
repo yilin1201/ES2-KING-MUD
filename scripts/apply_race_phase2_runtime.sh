@@ -129,11 +129,15 @@ if [[ -d "$ES2M_OLDPINE_DIR" ]]; then
     --source "$REPO_ROOT/es2m_snapshot/mudlib"
 
   if [[ -e "$ROOT/mudlib/d/oldpine" ]]; then
-    echo "ES2M OLDPINE CONFLICT: Runtime 已存在 /d/oldpine；依 Evidence First 規則停止，不覆蓋。" >&2
-    exit 1
+    # E2E 再次套用時僅允許逐檔一致的已導入區域，不得覆蓋差異。
+    diff -qr "$ES2M_OLDPINE_DIR" "$ROOT/mudlib/d/oldpine" || {
+      echo "ES2M OLDPINE CONFLICT: existing runtime differs from source" >&2; exit 1;
+    }
+    echo "ES2M OLDPINE IDEMPOTENT PASS"
+  else
+    mkdir -p "$ROOT/mudlib/d/oldpine"
+    cp -a "$ES2M_OLDPINE_DIR/." "$ROOT/mudlib/d/oldpine/"
   fi
-  mkdir -p "$ROOT/mudlib/d/oldpine"
-  cp -a "$ES2M_OLDPINE_DIR/." "$ROOT/mudlib/d/oldpine/"
 
   # World connection／世界接線：ES2M entrance 的 northwest 已回到雪亭南門；
   # 只把 Pinned Original 原本註解且指向不存在 road1 的 southeast 改接 entrance。
