@@ -13,9 +13,10 @@ private void create()
 int valid_enable(string usage) { return usage == "parry"; }
 
 // KING 戰鬥開場防禦招式：不滅金身。正式武學沿用「霸天煉體訣」名稱。
-// 防禦定位與觸發時機獨立標記，不宣稱未實測的額外減傷數值。
+// KING 專屬戰鬥開場防禦：吸收 30% 攻擊強度；不等同最終 HP 傷害減少 30%。
 string query_opening_defense_form() { return "霸天煉體訣・不滅金身"; }
 int is_opening_defense_form() { return 1; }
+int query_immortal_absorb_percent() { return 30; }
 
 
 // Combat lifecycle guard／戰鬥生命週期旗標：同一場只演出一次；
@@ -50,10 +51,11 @@ void show_immortal_intro(object me)
     display_immortal_intro(me);
 }
 
-// Original Combat 的 parry_using 正式入口；現階段不虛構額外拆招卸力數值。
+// Original/ES2M Combat 的 parry_using 正式入口；回傳吸收的攻擊強度。
 int parry_using(object me, int ability, int strength, object from)
 {
-    // Project Canon：第一次觸發拆招即視為本場戰鬥的不滅金身開場；只演出，不虛構減傷倍率。
+    // 開場只演出一次，但每次受擊均依本招式吸收 30% 攻擊強度。
+    if (!objectp(me) || strength <= 0) return 0;
     display_immortal_intro(me);
-    return 0;
+    return strength * query_immortal_absorb_percent() / 100;
 }
