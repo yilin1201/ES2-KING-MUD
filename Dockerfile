@@ -48,6 +48,13 @@ RUN python3 scripts/import_es2m_snow_foreman.py \
     --snapshot /build/repository/es2m_snapshot/mudlib \
     --runtime /opt/es2-king/runtime/mudlib
 
+# ES2M 雪亭地圖缺檔補入：只加入出口有來源證據的房間，不覆蓋 Original。
+RUN cd scripts && python3 -m unittest -v test_import_es2m_snow_rooms_safe
+RUN python3 scripts/import_es2m_snow_rooms_safe.py \
+    --snapshot /build/repository/es2m_snapshot/mudlib \
+    --runtime /opt/es2-king/runtime/mudlib \
+    --output /build/es2m-snow-rooms-stage.json
+
 # ES2M 雪亭 NPC：缺檔且依賴已滿足時保守導入；同名 Original 保留。
 RUN cd scripts && python3 -m unittest -v test_import_es2m_snow_npc_safe
 RUN python3 scripts/import_es2m_snow_npc_safe.py \
