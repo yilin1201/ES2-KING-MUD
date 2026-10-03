@@ -120,6 +120,44 @@ PY
   echo 'ES2M LEE VILLAGE RUNTIME IMPORT PASS／李家村復原區已接入雪亭東門 northeast。'
 fi
 
+# ES2M Old Pine Forest／老松林完整區域導入：
+# 僅在 Pinned Original 完全沒有 /d/oldpine 時建立新區域，避免覆蓋任何既有世界內容。
+# 來源房間、NPC、物件與三個 NPC 裝備相依檔均先由 topology gate（拓樸閘門）驗證。
+ES2M_OLDPINE_DIR="$REPO_ROOT/es2m_snapshot/mudlib/d/oldpine"
+if [[ -d "$ES2M_OLDPINE_DIR" ]]; then
+  python3 "$REPO_ROOT/scripts/test_es2m_oldpine_topology.py" \
+    --source "$REPO_ROOT/es2m_snapshot/mudlib"
+
+  if [[ -e "$ROOT/mudlib/d/oldpine" ]]; then
+    echo "ES2M OLDPINE CONFLICT: Runtime 已存在 /d/oldpine；依 Evidence First 規則停止，不覆蓋。" >&2
+    exit 1
+  fi
+  mkdir -p "$ROOT/mudlib/d/oldpine"
+  cp -a "$ES2M_OLDPINE_DIR/." "$ROOT/mudlib/d/oldpine/"
+
+  # World connection／世界接線：ES2M entrance 的 northwest 已回到雪亭南門；
+  # 只把 Pinned Original 原本註解且指向不存在 road1 的 southeast 改接 entrance。
+  SNOW_SGATE="$ROOT/mudlib/d/snow/sgate.c"
+  python3 - "$SNOW_SGATE" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+text = path.read_text()
+old = '//\t"southeast" : "/d/oldpine/road1",'
+new = '\t"southeast" : "/d/oldpine/entrance", // ES2M 老松林；只修改重建 Runtime。'
+if new not in text:
+    if old not in text:
+        raise SystemExit("ES2M OLDPINE FAIL: Snow sgate oldpine marker changed")
+    text = text.replace(old, new, 1)
+path.write_text(text)
+PY
+
+  python3 "$REPO_ROOT/scripts/test_es2m_oldpine_topology.py" \
+    --source "$REPO_ROOT/es2m_snapshot/mudlib" --runtime "$ROOT/mudlib"
+  echo 'ES2M OLDPINE CONNECTED: 50 rooms, 17 NPCs and 5 local objects; Snow sgate southeast <-> entrance northwest.'
+fi
+
 # ES2M 振武軍營正式地圖接線：Owner 已授權開放軍營與原始徵兵規則。
 # 僅修補重建 Runtime 的雪亭南門，不更動保存的 Original ES2 檔案。
 # ES2M gate.c 的 east 原本已指向 /d/snow/sgate；此處恢復對向 west 出口。
