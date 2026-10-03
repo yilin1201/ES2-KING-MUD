@@ -12,6 +12,12 @@ private void create()
 
 int valid_enable(string usage) { return usage == "parry"; }
 
+// KING 戰鬥開場防禦招式：不滅金身。正式武學沿用「霸天煉體訣」名稱。
+// 防禦定位與觸發時機獨立標記，不宣稱未實測的額外減傷數值。
+string query_opening_defense_form() { return "霸天煉體訣・不滅金身"; }
+int is_opening_defense_form() { return 1; }
+
+
 // Combat lifecycle guard／戰鬥生命週期旗標：同一場只演出一次；
 // Original Combat 結束後清除，讓下一場戰鬥仍能正常顯示開場。
 void reset_immortal_intro_after_combat(object me)
@@ -26,7 +32,7 @@ void reset_immortal_intro_after_combat(object me)
 
 private void display_immortal_intro(object me)
 {
-    if (me->query_temp("es2_king/batian/immortal_intro")) return;
+    if (!objectp(me) || me->query_temp("es2_king/batian/immortal_intro")) return;
 
     message_vision(
         HIW "面對漫天殺機，$N神色不起波瀾，只信步前踏半步。\n"
