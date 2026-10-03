@@ -8,10 +8,10 @@ from pathlib import Path
 CSV_PATH = Path("docs/migration/ES2M_IMPORT_MATRIX_20261003.csv")
 MD_PATH = Path("docs/migration/ES2M_IMPORT_MATRIX_20261003.md")
 EXPECTED = {
-    "地圖與出口": {"已導入": 163, "部分導入": 41, "未導入": 1, "UNKNOWN": 1},
+    "地圖與出口": {"已導入": 164, "部分導入": 41, "未導入": 1, "UNKNOWN": 0},
     "NPC與互動": {"已導入": 70, "部分導入": 75, "未導入": 1, "UNKNOWN": 0},
-    "武功及招式": {"已導入": 0, "部分導入": 36, "未導入": 2, "UNKNOWN": 1},
-    "武器與裝備": {"已導入": 424, "部分導入": 0, "未導入": 91, "UNKNOWN": 0},
+    "武功及招式": {"已導入": 0, "部分導入": 38, "未導入": 0, "UNKNOWN": 1},
+    "武器與裝備": {"已導入": 515, "部分導入": 0, "未導入": 0, "UNKNOWN": 0},
 }
 VALID_STATUS = {"已導入", "部分導入", "未導入", "UNKNOWN"}
 SHA = re.compile(r"^[0-9a-f]{40}$")
@@ -40,8 +40,8 @@ for category, wanted in EXPECTED.items():
         assert counts[category][status] == count, f"ES2M_MATRIX_COUNT: {category}:{status}"
 
 unknown = {row["source_path"] for row in rows if row["status"] == "UNKNOWN"}
-assert unknown == {"d/snow/sgate.c", "daemon/skill/taoism-spells.c"}
+assert unknown == {"daemon/skill/taoism-spells.c"}
 document = MD_PATH.read_text(encoding="utf-8")
-assert "**657**" in document and "**152**" in document and "**95**" in document and "**2**" in document
+assert "**749**" in document and "**154**" in document and "**2**" in document and "**1**" in document
 assert "不把 Static 結果宣稱為 Runtime 或 Gameplay PASS" in document
 print("ES2M_IMPORT_MATRIX_STATIC_PASS rows=906")

@@ -6,7 +6,7 @@ import sys
 snapshot = Path("es2m_snapshot/mudlib/daemon/skill")
 runtime = Path(sys.argv[1]) / "mudlib/daemon/skill" if len(sys.argv) > 1 else None
 expected = (
-    "archaic_attainment axe blade blunt dagger literate mysticism needle pike sanmeendo "
+    "archaic_attainment axe beast blade blunt dagger literate mysticism needle pike sanmeendo "
     "secondhand_axe secondhand_blade secondhand_blunt secondhand_dagger secondhand_needle "
     "secondhand_pike secondhand_staff secondhand_sword staff sword taoism-fire taoism-freeze "
     "taoism-spells taoism-storm taoism-thunder tiger-blade tiger-force tiger-steps "
