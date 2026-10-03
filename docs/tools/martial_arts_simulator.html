@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <title>武功招式模擬器</title>
+  <style>
+    :root{--bg:#090b10;--panel:#121722;--panel2:#0b0f17;--gold:#e5bd56;--line:#765e2b;--text:#f4f1e8;--muted:#a9afbb;--focus:#ffe55b}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#20283a 0,#0b0e14 34rem,#07090d 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;line-height:1.5}
+    main{width:min(980px,100%);margin:auto;padding:calc(18px + env(safe-area-inset-top)) 14px calc(34px + env(safe-area-inset-bottom))}
+    h1{margin:0 0 18px;text-align:center;color:var(--gold);font-size:clamp(1.65rem,6vw,2.35rem);letter-spacing:.12em;text-shadow:0 0 18px #dcae3d55}
+    h2{margin:0 0 14px;color:#f2cf72;font-size:1.08rem}.panel{margin:12px 0;padding:16px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,#151b27,#0e121b);box-shadow:0 12px 30px #0007}
+    label,.label{display:block;margin-bottom:6px;color:#d9dce3;font-size:.88rem}.field{min-width:0}.row{display:grid;gap:9px}.basic-row{grid-template-columns:22% 28% minmax(0,50%)}.name-row{grid-template-columns:minmax(0,50%) minmax(74px,22%) minmax(86px,28%)}
+    input,select,textarea,button{font:inherit}input[type=text],select,textarea{width:100%;min-width:0;border:1px solid #485064;border-radius:9px;background:#080b11;color:#fff;padding:10px 11px;outline:none}select{padding-left:8px;padding-right:5px;text-overflow:clip}textarea{min-height:64px;resize:none;overflow:hidden}input:focus,select:focus,textarea:focus,button:focus-visible{border-color:var(--focus);box-shadow:0 0 0 2px #ffe55b33}
+    .full{margin-bottom:10px}.range-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-top:12px}.range-row output{min-width:3.6em;text-align:center;color:#ffe783;font-weight:800}input[type=range]{width:100%;accent-color:var(--gold)}
+    .move-tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-bottom:13px}.move-tab,.choice{border:1px solid #4d5668;background:#171e2a;color:#e9ebef;border-radius:9px;padding:9px 6px;cursor:pointer}.move-tab.active,.choice:has(input:checked){border-color:var(--gold);background:#332912;color:#ffe897}.move-tab{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .text-row{display:grid;grid-template-columns:76px minmax(0,1fr);gap:8px;margin-top:10px;align-items:start}.text-row select{padding-left:7px;padding-right:2px}.choice-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.choice{position:relative;text-align:center}.choice input{position:absolute;opacity:0;pointer-events:none}
+    .special-settings{margin-top:12px;padding-top:12px;border-top:1px dashed #4d452f}.hidden{display:none!important}.preview-controls{margin-bottom:12px}.preview{min-height:150px;border:1px solid #40361d;border-radius:10px;background:#020304;padding:15px;white-space:pre-wrap;word-break:break-word;font-family:"SFMono-Regular",Consolas,"Noto Sans Mono CJK TC",monospace;line-height:1.75}.preview-section+.preview-section{border-top:1px dashed #635532;margin-top:11px;padding-top:11px}.preview-line{display:block}
+    .copy{width:100%;margin-top:12px;border:1px solid #e3bb55;border-radius:10px;background:linear-gradient(#e7c66e,#ad7e24);color:#160e02;font-weight:850;padding:12px;cursor:pointer}.copy:active{transform:translateY(1px)}.copy-status{min-height:1.5em;margin-top:6px;color:#9fe3a8;text-align:center;font-size:.88rem}
+    .note{color:var(--muted);font-size:.82rem;margin:8px 0 0}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:620px){main{padding-left:10px;padding-right:10px}.panel{padding:13px 11px}.move-tabs{grid-template-columns:repeat(4,1fr)}.basic-row{grid-template-columns:22% 26% minmax(0,52%)}.name-row{grid-template-columns:minmax(0,50%) minmax(66px,22%) minmax(78px,28%)}input[type=text],select,textarea{padding:9px 8px}.text-row{grid-template-columns:76px minmax(0,1fr)}}
+    @media(max-width:360px){.panel{padding-left:8px;padding-right:8px}.row{gap:5px}.basic-row{grid-template-columns:24% 26% minmax(0,50%)}.name-row{grid-template-columns:minmax(0,50%) minmax(62px,22%) minmax(72px,28%)}select{font-size:.88rem;padding-left:5px}.move-tabs{gap:5px}}
+  </style>
+</head>
+<body>
+<main>
+  <h1>武功招式模擬器</h1>
+
+  <section class="panel" aria-labelledby="basic-title">
+    <h2 id="basic-title">一、武功基本設定</h2>
+    <div class="field full"><label for="martial-name">武功名稱</label><input id="martial-name" type="text" value="傲劍訣"></div>
+    <div class="row basic-row">
+      <div class="field"><label for="martial-color">名稱顏色</label><select id="martial-color" data-color-select></select></div>
+      <div class="field"><label for="martial-frame">名稱外框</label><select id="martial-frame" data-frame-select></select></div>
+      <div class="field"><label for="opponent">對手名稱</label><input id="opponent" type="text" value="瞎眼老太婆"></div>
+    </div>
+    <div class="range-row"><label for="move-count">招式數量（1–12 式）</label><output id="move-count-value" for="move-count">6 式</output></div>
+    <input id="move-count" type="range" min="1" max="12" value="6">
+  </section>
+
+  <section class="panel" aria-labelledby="moves-title">
+    <h2 id="moves-title">二、一般招式設定</h2>
+    <div id="move-tabs" class="move-tabs" aria-label="選擇招式"></div>
+    <div class="row name-row">
+      <div class="field"><label for="move-name">招式名稱</label><input id="move-name" type="text"></div>
+      <div class="field"><label for="move-color">名稱顏色</label><select id="move-color" data-color-select></select></div>
+      <div class="field"><label for="move-frame">名稱外框</label><select id="move-frame" data-frame-select></select></div>
+    </div>
+    <div class="text-row"><div class="field"><label for="move-prelude-color">前奏顏色</label><select id="move-prelude-color" data-color-select></select></div><div class="field"><label for="move-prelude">前奏敘述</label><textarea id="move-prelude"></textarea></div></div>
+    <div class="text-row"><div class="field"><label for="move-action-color">動作顏色</label><select id="move-action-color" data-color-select></select></div><div class="field"><label for="move-action">動作敘述</label><textarea id="move-action"></textarea></div></div>
+  </section>
+
+  <section class="panel" aria-labelledby="combo-title">
+    <h2 id="combo-title">三、連續施展設定</h2>
+    <div class="choice-row" role="radiogroup" aria-label="連續特攻設定">
+      <label class="choice"><input type="radio" name="combo" value="off" checked>無連續特攻</label>
+      <label class="choice"><input type="radio" name="combo" value="on">有連續特攻</label>
+    </div>
+    <div id="combo-settings" class="special-settings hidden">
+      <div class="row name-row">
+        <div class="field"><label for="combo-name">連續特攻名稱</label><input id="combo-name" type="text" value="劍領風騷"></div>
+        <div class="field"><label for="combo-color">名稱顏色</label><select id="combo-color" data-color-select></select></div>
+        <div class="field"><label for="combo-frame">名稱外框</label><select id="combo-frame" data-frame-select></select></div>
+      </div>
+      <div class="text-row"><div class="field"><label for="combo-prelude-color">前奏顏色</label><select id="combo-prelude-color" data-color-select></select></div><div class="field"><label for="combo-prelude">前奏敘述</label><textarea id="combo-prelude">你猛然提氣，劍意凝聚，施展出華麗的連環劍舞，</textarea></div></div>
+      <div class="text-row"><div class="field"><label for="combo-action-color">動作顏色</label><select id="combo-action-color" data-color-select></select></div><div class="field"><label for="combo-action">動作敘述</label><textarea id="combo-action">無數劍光交錯，化作連綿不絕的劍氣直射向</textarea></div></div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="preview-title">
+    <h2 id="preview-title">四、戰鬥文字預覽與複製</h2>
+    <div class="choice-row preview-controls" role="radiogroup" aria-label="預覽模式">
+      <label class="choice"><input type="radio" name="preview-mode" value="single" checked>單式預覽</label>
+      <label class="choice"><input type="radio" name="preview-mode" value="all"><span id="all-mode-label">連續 6 式</span></label>
+    </div>
+    <div id="preview" class="preview" aria-live="polite"></div>
+    <button id="copy" class="copy" type="button">複製戰鬥文字</button>
+    <div id="copy-status" class="copy-status" aria-live="polite"></div>
+    <p class="note">此頁只產生文字預覽，不會修改遊戲武功、傷害、內力或角色存檔。</p>
+  </section>
+</main>
+<script>
+(() => {
+  "use strict";
+  const COLORS = [
+    ["紅", "#ff555b"], ["橙", "#ff9a45"], ["黃", "#ffe55b"],
+    ["綠", "#4cdd76"], ["青", "#43d9d1"], ["藍", "#559cff"],
+    ["靛", "#8980ee"], ["紫", "#d877e9"], ["灰", "#a9a9b3"], ["白", "#ffffff"]
+  ];
+  const FRAMES = [["angle", "「」"], ["square", "【】"], ["none", "無"]];
+  const EXAMPLES = [
+    ["忠", "綠", "你凝神守志，劍意沉著，", "一道劍光直取"],
+    ["武", "紅", "你踏步進身，劍勢驟急，", "凌厲劍鋒逼向"],
+    ["義", "紫", "你劍隨心轉，氣勢凜然，", "交錯劍影籠罩"],
+    ["德", "青", "你收攝心神，劍路渾厚，", "綿密劍氣湧向"],
+    ["狂", "黃", "你縱聲長嘯，劍勢奔放，", "狂烈劍芒席捲"],
+    ["情", "藍", "你心念流轉，劍意纏綿，", "幽藍劍光掠向"],
+    ["第七式", "白", "你穩住身形，劍意再起，", "一道劍氣射向"],
+    ["第八式", "白", "你凝聚真氣，劍鋒微顫，", "連環劍影攻向"],
+    ["第九式", "白", "你旋身引劍，氣機流轉，", "迴旋劍芒掃向"],
+    ["第十式", "白", "你屏息聚意，劍光驟亮，", "銳利劍氣刺向"],
+    ["第十一式", "白", "你踏前半步，劍勢相連，", "層疊劍影湧向"],
+    ["第十二式", "白", "你提劍凝立，劍意盡發，", "最後一道劍光斬向"]
+  ];
+  const colorHex = name => (COLORS.find(item => item[0] === name) || COLORS.at(-1))[1];
+  const framed = (text, frame) => frame === "square" ? `【${text}】` : frame === "angle" ? `「${text}」` : text;
+  const segment = (text, color = "白") => ({ text, color: colorHex(color) });
+  const lineText = line => line.map(part => part.text).join("");
+  function buildSections(state) {
+    const martial = framed(state.martialName, state.martialFrame);
+    const sections = [];
+    if (state.comboEnabled && state.previewMode === "all") {
+      const combo = framed(state.combo.name, state.combo.frame);
+      sections.push([
+        [segment("你施展"), segment(martial, state.martialColor), segment("中的連續特攻"), segment(combo, state.combo.color), segment("！")],
+        [segment(state.combo.prelude, state.combo.preludeColor), segment(state.combo.action, state.combo.actionColor), segment(state.opponent), segment("！")]
+      ]);
+    }
+    const indexes = state.previewMode === "all" ? Array.from({length: state.moveCount}, (_, i) => i) : [state.selectedMove];
+    for (const index of indexes) {
+      const move = state.moves[index];
+      const moveName = framed(move.name, move.frame);
+      sections.push([
+        [segment("你施展"), segment(martial, state.martialColor), segment("中的招式"), segment(moveName, move.color), segment("！")],
+        [segment(move.prelude, move.preludeColor), segment(move.action, move.actionColor), segment(state.opponent), segment("！")]
+      ]);
+    }
+    return sections;
+  }
+  function toPlainText(sections) {
+    return sections.map(section => section.map(lineText).join("\n")).join("\n──────────\n");
+  }
+  const Core = { COLORS, FRAMES, EXAMPLES, colorHex, framed, buildSections, toPlainText };
+  globalThis.MartialSimulatorCore = Core;
+  if (typeof document === "undefined") return;
+
+  const $ = id => document.getElementById(id);
+  const moves = EXAMPLES.map(([name, color, prelude, action]) => ({name, color, frame:"square", prelude, preludeColor:"白", action, actionColor:color}));
+  const state = {
+    martialName:"傲劍訣", martialColor:"黃", martialFrame:"angle", opponent:"瞎眼老太婆",
+    moveCount:6, selectedMove:0, moves, comboEnabled:false, previewMode:"single",
+    combo:{name:"劍領風騷",color:"黃",frame:"angle",prelude:"你猛然提氣，劍意凝聚，施展出華麗的連環劍舞，",preludeColor:"白",action:"無數劍光交錯，化作連綿不絕的劍氣直射向",actionColor:"紅"}
+  };
+  const fillSelects = () => {
+    document.querySelectorAll("[data-color-select]").forEach(select => {
+      for (const [name, hex] of COLORS) { const option=document.createElement("option"); option.value=name; option.textContent=name; option.style.color=hex; select.append(option); }
+    });
+    document.querySelectorAll("[data-frame-select]").forEach(select => {
+      for (const [value, label] of FRAMES) { const option=document.createElement("option"); option.value=value; option.textContent=label; select.append(option); }
+    });
+  };
+  const autoSize = textarea => { textarea.style.height="auto"; textarea.style.height=`${Math.max(64,textarea.scrollHeight)}px`; };
+  function renderTabs() {
+    const tabs=$("move-tabs"); tabs.replaceChildren();
+    for(let i=0;i<state.moveCount;i++){
+      const button=document.createElement("button"); button.type="button"; button.className=`move-tab${i===state.selectedMove?" active":""}`;
+      button.textContent=`${i+1}. ${state.moves[i].name}`; button.addEventListener("click",()=>{state.selectedMove=i;renderTabs();loadMove();renderPreview();}); tabs.append(button);
+    }
+  }
+  function loadMove(){
+    const move=state.moves[state.selectedMove];
+    $("move-name").value=move.name; $("move-color").value=move.color; $("move-frame").value=move.frame;
+    $("move-prelude").value=move.prelude; $("move-prelude-color").value=move.preludeColor;
+    $("move-action").value=move.action; $("move-action-color").value=move.actionColor;
+    autoSize($("move-prelude")); autoSize($("move-action"));
+  }
+  function renderPreview(){
+    const preview=$("preview"); preview.replaceChildren();
+    for(const section of buildSections(state)){
+      const block=document.createElement("div"); block.className="preview-section";
+      for(const line of section){const lineNode=document.createElement("span");lineNode.className="preview-line";for(const part of line){const span=document.createElement("span");span.textContent=part.text;span.style.color=part.color;lineNode.append(span);}block.append(lineNode);}preview.append(block);
+    }
+  }
+  function bindValue(id, target, key, after){$(id).addEventListener("input",event=>{target[key]=event.target.value;if(after)after(event.target);renderPreview();});}
+  fillSelects();
+  $("martial-color").value=state.martialColor; $("martial-frame").value=state.martialFrame;
+  $("combo-color").value=state.combo.color; $("combo-frame").value=state.combo.frame; $("combo-prelude-color").value=state.combo.preludeColor; $("combo-action-color").value=state.combo.actionColor;
+  bindValue("martial-name",state,"martialName"); bindValue("martial-color",state,"martialColor"); bindValue("martial-frame",state,"martialFrame"); bindValue("opponent",state,"opponent");
+  bindValue("combo-name",state.combo,"name"); bindValue("combo-color",state.combo,"color"); bindValue("combo-frame",state.combo,"frame"); bindValue("combo-prelude",state.combo,"prelude",autoSize); bindValue("combo-prelude-color",state.combo,"preludeColor"); bindValue("combo-action",state.combo,"action",autoSize); bindValue("combo-action-color",state.combo,"actionColor");
+  [["move-name","name",true],["move-color","color"],["move-frame","frame"],["move-prelude","prelude",false,true],["move-prelude-color","preludeColor"],["move-action","action",false,true],["move-action-color","actionColor"]].forEach(([id,key,refreshTabs,grow])=>{$(id).addEventListener("input",event=>{state.moves[state.selectedMove][key]=event.target.value;if(grow)autoSize(event.target);if(refreshTabs)renderTabs();renderPreview();});});
+  $("move-count").addEventListener("input",event=>{state.moveCount=Number(event.target.value);if(state.selectedMove>=state.moveCount)state.selectedMove=state.moveCount-1;$("move-count-value").textContent=`${state.moveCount} 式`;$("all-mode-label").textContent=`連續 ${state.moveCount} 式`;renderTabs();loadMove();renderPreview();});
+  document.querySelectorAll('input[name="combo"]').forEach(input=>input.addEventListener("change",event=>{state.comboEnabled=event.target.value==="on";$("combo-settings").classList.toggle("hidden",!state.comboEnabled);renderPreview();}));
+  document.querySelectorAll('input[name="preview-mode"]').forEach(input=>input.addEventListener("change",event=>{state.previewMode=event.target.value;renderPreview();}));
+  $("copy").addEventListener("click",async()=>{const text=toPlainText(buildSections(state));let copied=false;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);copied=true;}}catch(_){copied=false;}if(!copied){const helper=document.createElement("textarea");helper.value=text;helper.className="sr-only";document.body.append(helper);helper.select();copied=document.execCommand("copy");helper.remove();}$("copy-status").textContent=copied?"已複製目前預覽文字":"無法自動複製，請長按預覽文字複製";});
+  [$("move-prelude"),$("move-action"),$("combo-prelude"),$("combo-action")].forEach(autoSize);
+  renderTabs(); loadMove(); renderPreview();
+})();
+</script>
+</body>
+</html>
