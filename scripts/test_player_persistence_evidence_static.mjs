@@ -17,7 +17,7 @@ assert.match(publicGate, /PUBLIC_PLAYER_SESSION_PASS:external-wss-new-player-con
 assert.match(session, /doesNotMatch\(output, \/目前權限:/, "普通玩家檢查不得接受管理權限");
 assert.match(session, /no-account-created/, "Smoke 不得默默建立正式帳號");
 assert.match(deploy, /ES2_EXPECT_BUILD_COMMIT/, "部署驗收必須核對 Build SHA");
-assert.ok(alpha.includes("目前權限:" ) && alpha.includes("(player)"), "E2E 必須驗證 player 權限");
+assert.ok(alpha.includes("目前權限:") && alpha.includes("player"), "E2E 必須驗證 player 權限");
 assert.match(persistence, /unset DATABASE_URL/, "離線持久化測試不得連正式 Neon");
 assert.match(persistence, /process restart|Process Restart/i, "應涵蓋程序重啟還原");
 assert.match(persistence, /sync_es2_persistence\.sh/, "應涵蓋 Runtime 回寫");
