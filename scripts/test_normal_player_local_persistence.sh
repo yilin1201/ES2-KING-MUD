@@ -23,9 +23,16 @@ grep -Fqx 'saved-account' "$ES2_RUNTIME_DIR/mudlib/data/login/a/alpha.o"
 printf '%s\n' 'player-inventory-after-save' > "$ES2_RUNTIME_DIR/mudlib/data/user/a/alpha.o"
 bash "$ROOT/scripts/sync_es2_persistence.sh"
 grep -Fqx 'player-inventory-after-save' "$ES2_SAVE_DIR/user/a/alpha.o"
+grep -Fqx 'saved-account' "$ES2_SAVE_DIR/login/a/alpha.o"
 # 隔離模擬程序重啟，驗證同一路徑恢復已同步的玩家檔案。
 rm -rf "$ES2_RUNTIME_DIR/mudlib/data"
 bash "$ROOT/scripts/prepare_es2_persistence.sh"
 grep -Fqx 'player-inventory-after-save' "$ES2_RUNTIME_DIR/mudlib/data/user/a/alpha.o"
 grep -Fqx 'saved-account' "$ES2_RUNTIME_DIR/mudlib/data/login/a/alpha.o"
+# 不應在模擬重啟後退回 seed；同時確認資料路徑沒有轉成跨 sandbox symlink。
+test ! -L "$ES2_RUNTIME_DIR/mudlib/data"
+if grep -Fqx 'seed-inventory' "$ES2_RUNTIME_DIR/mudlib/data/user/a/alpha.o"; then
+  echo "NORMAL_PLAYER_LOCAL_PERSISTENCE_FAIL: restored seed over player data" >&2
+  exit 1
+fi
 echo "NORMAL_PLAYER_LOCAL_PERSISTENCE_PASS (file-path simulation only; Driver/Neon/Gameplay UNKNOWN)"
