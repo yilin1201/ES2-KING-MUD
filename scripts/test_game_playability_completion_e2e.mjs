@@ -182,8 +182,12 @@ await move(death, "east", /雪亭鎮廣場的西邊/);
 await move(death, "east", /廣場中央/);
 await move(death, "climb 榕樹", /榕樹上/);
 const playerDeathOffset = death.output.length;
+// Deterministic Combat／可重現戰鬥：僅提高隔離診斷角色的木劍傷害，避免亂數低傷害
+// 讓 90 秒測試逾時；deathprobe 仍是普通玩家，死亡、鬼魂移動與漩渦復活皆走 Original Runtime。
+await command(play, 'call me->set_temp("apply/damage",100)');
 await sendLine(play, "kill deathprobe");
 await waitForAfter(death, playerDeathOffset, /你死了/, 90000);
+await command(play, 'call me->set_temp("apply/damage",0)');
 await move(death, "down", /廣場中央/);
 await move(death, "north", /雪亭鎮廣場北邊/);
 await move(death, "north", /北街|街道/);

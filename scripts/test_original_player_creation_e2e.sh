@@ -15,6 +15,19 @@ cp -a "$SOURCE_RUNTIME/mudlib" "$TEMP_ROOT/mudlib"
 cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
 "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh" "$TEMP_ROOT"
 "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
+# Test-only Host Throttle／測試專用主機限流處理：12 個種族皆由同一個 localhost 建立，
+# 會觸發 Original ES2 的每 IP 十帳號保護。只在 mktemp Runtime 套用既有 KING
+# bootstrap 政策，不修改來源保存區，也不把「同 IP 大量創角」宣稱為正式 Gameplay。
+grep -RIl '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' \
+  "$TEMP_ROOT/mudlib/include" "$TEMP_ROOT/mudlib/adm" 2>/dev/null \
+  | while read -r file; do
+      sed -i 's/^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM.*/\/\/ ES2-KING isolated test: ENABLE_ANTISPAM disabled/' "$file"
+    done
+if grep -R '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' \
+  "$TEMP_ROOT/mudlib/include" "$TEMP_ROOT/mudlib/adm" 2>/dev/null; then
+  echo 'ORIGINAL PLAYER CREATION E2E BLOCKED：測試 Runtime 仍啟用 localhost 創角限流。' >&2
+  exit 1
+fi
 mkdir -p "$TEMP_ROOT/mudlib/data/login"/{a..z} "$TEMP_ROOT/mudlib/data/user"/{a..z} "$TEMP_ROOT/mudlib/log"
 for id in humanprobe avatarprobe blackprobe yenprobe wooprobe dingprobe jiaoprobe rainprobe ashprobe headprobe yaksaprobe malikprobe; do
   initial="${id:0:1}"
