@@ -17,7 +17,8 @@ for path in \
   scripts/test_normal_player_local_persistence.sh \
   scripts/test_king_weapon_loadout_static.sh \
   scripts/test_es2m_skill_armor_import.py \
-  scripts/test_audit_es2m_equipment_import.py; do
+  scripts/test_audit_es2m_equipment_import.py \
+  scripts/test_apply_es2m_weapon_affix_runtime.py; do
   test -f "$path" || { echo "BLOCKED: missing $path" >&2; exit 2; }
 done
 node scripts/test_martial_arts_simulator.mjs
@@ -33,4 +34,6 @@ bash scripts/test_king_weapon_loadout_static.sh "$ROOT"
 # 91 件防具導入後的來源 SHA／部位／依賴證據檢查，及三方盤點隔離單元測試。
 python3 scripts/test_es2m_skill_armor_import.py
 python3 scripts/test_audit_es2m_equipment_import.py
+# 新武器附加屬性只核對已保存來源、依賴及衝突停止機制；Runtime 另由 Driver E2E 驗證。
+python3 -m unittest -v scripts/test_apply_es2m_weapon_affix_runtime.py
 echo "ES2_INDEPENDENT_OFFLINE_TESTS_PASS (static/local only; no Runtime or Gameplay claim)"

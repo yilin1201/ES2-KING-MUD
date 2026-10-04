@@ -246,4 +246,10 @@ s=s.replace(marker, marker+extra, 1)
 p.write_text(s)
 PY
 
+# ES2M Weapon Affix Runtime Overlay／武器附加屬性 Runtime 覆蓋：
+# 來源保留在獨立證據目錄，全部 SHA 與既有 Runtime 基準先驗證後才一次套用；
+# 任何同路徑差異均停止，不覆蓋未知的 KING／其他工作成果。
+python3 "$REPO_ROOT/scripts/apply_es2m_weapon_affix_runtime.py" \
+  --runtime "$ROOT/mudlib"
+
 echo 'ES2M RACE RUNTIME OVERLAY PASS／10 個缺失種族改由 ES2M daemon 恢復；保留 Original Human/Avatar；登入流程接受 12 種族。'

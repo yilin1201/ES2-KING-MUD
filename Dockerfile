@@ -90,6 +90,13 @@ RUN python3 scripts/audit_es2m_equipment_import.py \
     --runtime /opt/es2-king/runtime/mudlib \
     --output /build/es2m-equipment-import-inventory.json
 
+# 91 件 ES2M 防具的保存快照維持原始 SHA；只在生成 Runtime 加入背包與穿戴狀態 autoload。
+# 先完成三方原始碼稽核再套用 adapter，避免把 KING Runtime 行為誤認成 ES2M 原始證據。
+RUN cd scripts && python3 -m unittest -v test_apply_es2m_armor_persistence_runtime
+RUN python3 scripts/apply_es2m_armor_persistence_runtime.py \
+    --matrix docs/migration/ES2M_IMPORT_MATRIX_20261003.csv \
+    --runtime /opt/es2-king/runtime/mudlib
+
 # 振武軍營完整程式導入：補入房間／NPC／道具，僅在 Original 註解舊出口時安全連接。
 # 同名衝突或未知外部出口會阻止建置，保留原始檔與衝突清冊。
 RUN python3 scripts/import_es2m_zhenwu_safe.py \

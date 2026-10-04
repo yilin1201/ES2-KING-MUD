@@ -32,4 +32,28 @@
 - 鎖定 ES2M `e93dad172cb1472dae3eba0a2d1978c12b678985` 的新版本 blob：`2a6fcab2584841f38571d7b6462b025a7c43ff7b`，已原樣保存至 `source/es2m_updates/20261004/mudlib/custom/home/obj/storage_chest.c`。
 - 更新版本在 `pack_object` 保存空或非空 `affix`，`do_retrieve` 透過 `ENHANCE_D->apply_affix` 套用；依賴同批 `enhanced.c`。
 - 新增 `scripts/test_es2m_affix_chest_source.mjs` 驗證來源 SHA 與關鍵呼叫。**不可單獨升級 12 件武器的 Runtime overlay**；須連同 daemon 和儲物箱驗證後再導入。
-- 目前不具 LPC 隔離 Runtime／普通玩家實測證據；詞綴跨登入與儲物箱功能仍為 **BLOCKED**，不是 PASS。
+- 本節是導入前審查紀錄；下方 Runtime 結果完成後才解除此 BLOCKED，不回寫或改稱當時已經 PASS。
+
+## V9 增量追蹤（ES2M `087c1736b50a1352b56fd66b3f5d34861dd99228`）
+
+- `e93dad17…` 至 `087c1736…` 共 10 個 Commit、GitHub 比對列出 17 個變更檔。
+- 本輪只保存遊戲內容與其正式規格／測試相依，共 12 檔，位置為
+  `source/es2m_updates/20261004_087c1736/`；部署腳本、Catalog 與 Web Server
+  安全設定不屬 Mudlib 導入範圍，未複製進 Runtime。
+- Runtime 安全整合共 19 檔：`enhanced.c`、私人儲物箱及 17 件可產生詞綴的武器。
+  覆蓋器在任何寫入前核對來源 SHA 與既有 Runtime SHA；未知同路徑內容會整批停止。
+- `d/oldpine/cave_deep.c` 文字修訂與 `d/wutang/npc/guard.c` 新增刀法／單刀已保存，
+  但會改變既有完整區域的逐檔一致性閘門，本批不直接覆蓋，狀態維持「已保存／待區域回歸決策」。
+- 武器詞綴正式規則未改寫：普通 60%、前綴 30%、前綴＋後綴 10%；
+  `taoism-spells.c` 未修改，仍維持 UNKNOWN。
+- 隔離 Runtime 驗證必須另外執行；本節的來源保存與 SHA 檢查本身不代表 Gameplay PASS。
+
+## V9 Work 隔離 Runtime 結果
+
+- `ES2M_WEAPON_AFFIX_RUNTIME_E2E_PASS`：普通玩家載入 17 件武器，確定套用「黑鋼火炎」後核對
+  攻擊 +10、傷害 +15、膂力 +3、價值 1125，並完成匕首裝備／卸下。
+- 私人儲物箱已使用真正 `do_store()`／`do_retrieve()`，完成 save → quit → relogin → retrieve；
+  詞綴與能力保持一致，狀態為隔離 Runtime／Gameplay PASS。
+- 初次測試誤用防具 `remove` 指令，修正為武器 `unwield`；其後又發現新手無法揮動長劍，
+  改用符合普通玩家能力的匕首後通過。這兩項均為測試情境缺陷，未篡改武器重量或玩家屬性。
+- 正式 Render、正式 Neon 與公開玩家資料均未使用，因此 Public Runtime／正式 Gameplay 仍未驗證。
