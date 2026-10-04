@@ -96,7 +96,8 @@ do
   grep -Fq "$marker" "$LOG" || { echo "PLAYABILITY COMPLETION FAIL：缺少 $marker" >&2; exit 1; }
 done
 
-if rg -n '編譯時段錯誤|Runtime error|Cannot #include|Undefined variable' "$TEMP_ROOT/driver.stdout"; then
+test -r "$TEMP_ROOT/driver.stdout" || { echo 'PLAYABILITY COMPLETION BLOCKED：缺少 Driver log。' >&2; exit 1; }
+if grep -En '編譯時段錯誤|Runtime error|Cannot #include|Undefined variable|Undefined function' "$TEMP_ROOT/driver.stdout"; then
   echo 'PLAYABILITY COMPLETION FAIL：Driver Log 存在編譯／執行錯誤。' >&2
   exit 1
 fi
