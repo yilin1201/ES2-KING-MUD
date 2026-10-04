@@ -16,4 +16,33 @@ assert.ok(latest.includes('if (mapp(data["affix"]))'), "必須有帶詞綴還原
 assert.ok(latest.includes('ENHANCE_D->apply_affix(ob, data["affix"])'), "取出時必須套用原有詞綴");
 assert.ok(daemon.includes('void apply_affix(object ob, mapping affix)'), "還原依賴的 daemon 必須同批保存");
 assert.ok(daemon.includes('affix_base_apply/'), "必須保留原武器能力的合併入口");
+
+const mustAppearInOrder = (source, snippets, label) => {
+  let start = 0;
+  for (const part of snippets) {
+    const index = source.indexOf(part, start);
+    assert.notEqual(index, -1, label + ": missing/out-of-order " + part);
+    start = index + part.length;
+  }
+};
+// 普通武器的空 mapping 同樣必須儲存：取出時覆蓋 new() 產生的隨機詞綴。
+assert.ok(latest.includes('data["affix"] = mapp(ob->query("affix")) ? copy(ob->query("affix")) : ([])'));
+mustAppearInOrder(latest, [
+  'items += ({ pack_object(ob) });',
+  'me->save();',
+  'destruct(ob);'
+], "存放必須先保存角色資料才銷毀原物件");
+mustAppearInOrder(latest, [
+  'ob = new(data["file"]);',
+  'if (mapp(data["affix"]))',
+  'ENHANCE_D->apply_affix(ob, data["affix"]);',
+  'if (!ob->move(me))',
+  'items[n - 1] = 0;'
+], "取出時先套用既存詞綴且成功移動後才移除儲物格");
+assert.ok(latest.includes('if (!ob->move(me)) {\n        destruct(ob);'), "移動失敗不可刪除儲物格");
+assert.ok(daemon.includes('affix_base_name') && daemon.includes('affix_base_apply/'),
+  "反覆套用已存詞綴必須從武器原始名稱及屬性重算");
+assert.ok(daemon.includes('if( r >= 60 )') && daemon.includes('if( r >= 90 )'),
+  "來源標示的 60/30/10 機率分界必須存在");
+
 console.log("ES2M_AFFIX_CHEST_SOURCE_STATIC_PASS (source gate only; Runtime/save-relogin UNKNOWN)");
