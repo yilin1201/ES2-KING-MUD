@@ -242,7 +242,7 @@ Wikipedia 不作為遊戲公式、
 
 已知可能來源包含：
 
-- MudRen ES2-big5
+- MudRen ES2-big5（已核對歷史版本；使用清單： [MudRen 安全補充與差異考證](evidence/supplemental/mudren_es2_big5_reuse.md)）
 - MudChina ES2
 - ES2 UTF-8
 - FluffOS / MudOS 相容版本
