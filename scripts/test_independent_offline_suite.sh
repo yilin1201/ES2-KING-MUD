@@ -11,6 +11,7 @@ for path in \
   scripts/test_martial_simulator_edge_cases.mjs \
   scripts/test_martial_mobile_standalone_static.mjs \
   scripts/test_es2m_affix_source_evidence.mjs \
+  scripts/test_es2m_affix_chest_source.mjs \
   scripts/test_player_persistence_evidence_static.mjs \
   scripts/test_m30_persistence_paths.sh \
   scripts/test_normal_player_local_persistence.sh \
@@ -23,6 +24,7 @@ node scripts/test_martial_arts_simulator.mjs
 node scripts/test_martial_simulator_edge_cases.mjs
 node scripts/test_martial_mobile_standalone_static.mjs
 node scripts/test_es2m_affix_source_evidence.mjs
+node scripts/test_es2m_affix_chest_source.mjs
 node scripts/test_player_persistence_evidence_static.mjs
 # 現有 persistence 腳本內部取消 DATABASE_URL 並使用 mktemp 隔離。
 bash scripts/test_m30_persistence_paths.sh
