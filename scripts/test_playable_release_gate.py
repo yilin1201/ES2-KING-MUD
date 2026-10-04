@@ -19,6 +19,15 @@ class GateTests(unittest.TestCase):
     def test_predeploy_does_not_claim_public(self):
         self.assertEqual(audit(HEAD, self.logs), [])
 
+    def test_missing_playability_blocks(self):
+        del self.logs["playability"]
+        self.assertIn("playability: 缺少實測日誌", audit(HEAD, self.logs))
+
+    def test_incomplete_gameplay_blocks(self):
+        self.logs["playability"].write_text(
+            f"TESTED_HEAD={HEAD}\\nGAME_PLAYABILITY_COMPLETION_RUNTIME_PASS\\n", encoding="utf-8")
+        self.assertTrue(any("PLAYABILITY_PASS:" in x for x in audit(HEAD, self.logs)))
+
     def test_wrong_sha_blocks(self):
         self.assertTrue(audit("b"*40, self.logs))
 

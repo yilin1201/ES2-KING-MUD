@@ -14,6 +14,14 @@ REQUIRED = {
     "affix": ("ES2_AFFIX_PLAYER_SECURITY_PASS", "ES2_AFFIX_LOAD_PASS",
               "ES2_AFFIX_EQUIP_PASS", "ES2_AFFIX_STORAGE_PERSISTENCE_PASS",
               "ES2M_WEAPON_AFFIX_RUNTIME_E2E_PASS"),
+    "playability": ("PLAYABILITY_PASS:connection-login-character",
+                    "PLAYABILITY_PASS:world-navigation",
+                    "PLAYABILITY_PASS:npc-interaction",
+                    "PLAYABILITY_PASS:item-equipment",
+                    "PLAYABILITY_PASS:npc-death-respawn",
+                    "PLAYABILITY_PASS:player-death-recovery",
+                    "PLAYABILITY_PASS:save-quit-reconnect-restore",
+                    "GAME_PLAYABILITY_COMPLETION_RUNTIME_PASS"),
 }
 
 def audit(head, evidence, live_sha=None, public_log=None):
