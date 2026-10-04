@@ -28,6 +28,19 @@ class GateTests(unittest.TestCase):
             f"TESTED_HEAD={HEAD}\\nGAME_PLAYABILITY_COMPLETION_RUNTIME_PASS\\n", encoding="utf-8")
         self.assertTrue(any("PLAYABILITY_PASS:" in x for x in audit(HEAD, self.logs)))
 
+    def test_missing_fresh_player_blocks(self):
+        del self.logs["fresh_player"]
+        self.assertIn("fresh_player: 缺少實測日誌", audit(HEAD, self.logs))
+
+    def test_incomplete_fresh_player_blocks(self):
+        self.logs["fresh_player"].write_text(
+            f"TESTED_HEAD={HEAD}\\nPLAYER_FULL_JOURNEY_E2E_PASS\\n", encoding="utf-8")
+        self.assertTrue(any("fresh_player: 缺少 " in x for x in audit(HEAD, self.logs)))
+
+    def test_missing_races_blocks(self):
+        del self.logs["races"]
+        self.assertIn("races: 缺少實測日誌", audit(HEAD, self.logs))
+
     def test_wrong_sha_blocks(self):
         self.assertTrue(audit("b"*40, self.logs))
 

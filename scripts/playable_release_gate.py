@@ -22,6 +22,13 @@ REQUIRED = {
                     "PLAYABILITY_PASS:player-death-recovery",
                     "PLAYABILITY_PASS:save-quit-reconnect-restore",
                     "GAME_PLAYABILITY_COMPLETION_RUNTIME_PASS"),
+    # 全新普通玩家與十二種族必須有獨立 Driver 實測，不得用 KING fixture 的旅程替代。
+    "fresh_player": ("ORIGINAL_PLAYER_CREATION_HUMAN_E2E_PASS",
+                     "ORIGINAL_PLAYER_CREATION_AVATAR_E2E_PASS",
+                     "PLAYER_SECURITY_BOUNDARY_PASS",
+                     "PLAYER_WOODSWORD_AUTOLOAD_RELOGIN_PASS",
+                     "PLAYER_FULL_JOURNEY_E2E_PASS"),
+    "races": ("ES2M_PLAYER_CREATION_12_RACES_E2E_PASS",),
 }
 
 def audit(head, evidence, live_sha=None, public_log=None):
