@@ -25,3 +25,11 @@
 | `obj/area/obj/weirblade.c` | `2fea001993b1e95785b688e03474ff2cc93ffd99` | 武器 clonep 隨機詞綴與既有裝備、存檔相容性 |
 
 後續：使用隔離環境檢查 daemon 編譯、前後綴與裝備存檔行為；不以靜態存在宣稱實際可玩。
+
+## 獨立審查：儲物箱相容性阻礙（V9）
+
+- KING 既存 `es2m_snapshot/mudlib/custom/home/obj/storage_chest.c` blob：`1a9c445394cbf4498f1467b9aec4468bf7547003`；儲物箱未保存或還原 `affix`。
+- 鎖定 ES2M `e93dad172cb1472dae3eba0a2d1978c12b678985` 的新版本 blob：`2a6fcab2584841f38571d7b6462b025a7c43ff7b`，已原樣保存至 `source/es2m_updates/20261004/mudlib/custom/home/obj/storage_chest.c`。
+- 更新版本在 `pack_object` 保存空或非空 `affix`，`do_retrieve` 透過 `ENHANCE_D->apply_affix` 套用；依賴同批 `enhanced.c`。
+- 新增 `scripts/test_es2m_affix_chest_source.mjs` 驗證來源 SHA 與關鍵呼叫。**不可單獨升級 12 件武器的 Runtime overlay**；須連同 daemon 和儲物箱驗證後再導入。
+- 目前不具 LPC 隔離 Runtime／普通玩家實測證據；詞綴跨登入與儲物箱功能仍為 **BLOCKED**，不是 PASS。
