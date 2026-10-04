@@ -18,11 +18,21 @@ cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
 # Test-only Host Throttle／測試專用主機限流處理：12 個種族皆由同一個 localhost 建立，
 # 會觸發 Original ES2 的每 IP 十帳號保護。只在 mktemp Runtime 套用既有 KING
 # bootstrap 政策，不修改來源保存區，也不把「同 IP 大量創角」宣稱為正式 Gameplay。
-grep -RIl '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' \
-  "$TEMP_ROOT/mudlib/include" "$TEMP_ROOT/mudlib/adm" 2>/dev/null \
-  | while read -r file; do
-      sed -i 's/^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM.*/\/\/ ES2-KING isolated test: ENABLE_ANTISPAM disabled/' "$file"
-    done
+# No-match is normal: avoid set -e/pipefail abort when antispam is already disabled.
+# Preserve real grep errors (status > 1) instead of silently bypassing the gate.
+if grep -RIl '^[[:space:]]*#define[[:space:]]\\+ENABLE_ANTISPAM' \\
+  "$TEMP_ROOT/mudlib/include" "$TEMP_ROOT/mudlib/adm" > "$TEMP_ROOT/antispam-files" 2>"$TEMP_ROOT/antispam-grep.stderr"; then
+  while IFS= read -r file; do
+    sed -i 's/^[[:space:]]*#define[[:space:]]\\+ENABLE_ANTISPAM.*/\\/\\/ ES2-KING isolated test: ENABLE_ANTISPAM disabled/' "$file"
+  done < "$TEMP_ROOT/antispam-files"
+else
+  grep_status=$?
+  if (( grep_status != 1 )); then
+    cat "$TEMP_ROOT/antispam-grep.stderr" >&2
+    echo 'ORIGINAL PLAYER CREATION E2E BLOCKED：無法確認測試 Runtime 的防洗版設定。' >&2
+    exit 1
+  fi
+fi
 if grep -R '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' \
   "$TEMP_ROOT/mudlib/include" "$TEMP_ROOT/mudlib/adm" 2>/dev/null; then
   echo 'ORIGINAL PLAYER CREATION E2E BLOCKED：測試 Runtime 仍啟用 localhost 創角限流。' >&2
@@ -42,4 +52,10 @@ ES2_TEST_PORT="$WEB_PORT" node -e 'const h=require("http"),d=Date.now()+10000;(f
 LOG="$TEMP_ROOT/player-creation.log"
 ES2_E2E_WS_URL="ws://127.0.0.1:$WEB_PORT/mud" ES2_E2E_SAVE_DIR="$TEMP_ROOT/mudlib/data" ES2_E2E_PASSWORD="$TEST_PASSWORD" node "$REPO_ROOT/scripts/test_original_player_creation_e2e.mjs" | tee "$LOG"
 for marker in ORIGINAL_PLAYER_CREATION_HUMAN_E2E_PASS ORIGINAL_PLAYER_CREATION_AVATAR_E2E_PASS ES2M_PLAYER_CREATION_12_RACES_E2E_PASS; do grep -Fq "$marker" "$LOG"; done
+# Runtime evidence must be free of compilation/runtime errors, not merely JS markers.
+test -r "$TEMP_ROOT/driver.stdout" || { echo 'ORIGINAL PLAYER CREATION E2E BLOCKED：缺少 Driver log。' >&2; exit 1; }
+if grep -En '編譯時段錯誤|Runtime error|Cannot #include|Undefined variable|Undefined function' "$TEMP_ROOT/driver.stdout"; then
+  echo 'ORIGINAL PLAYER CREATION E2E FAIL：Driver Log 存在編譯／執行錯誤。' >&2
+  exit 1
+fi
 echo "ES2M PLAYER CREATION E2E：12 種族由零存檔逐一驗證創角、世界指令、save、quit、relogin。"
