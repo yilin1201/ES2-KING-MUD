@@ -65,6 +65,18 @@ async function command(p, value, matcher = "> ", timeout = 30000) {
   return sendLine(p, value, matcher, timeout);
 }
 
+async function waitForStatDeficit(p, label, minimum = 1, timeout = 50000) {
+  const started = Date.now();
+  while (Date.now() - started <= timeout) {
+    const status = (await command(p, "hp")).replace(/\x1b\[[0-9;]*m/g, "");
+    const match = status.match(new RegExp(`${label}\\s*(\\d+)\\/(\\d+)`));
+    assert.ok(match, `hp 未顯示${label}目前值／上限`);
+    if (Number(match[2]) - Number(match[1]) >= minimum) return status;
+    await delay(1500);
+  }
+  throw new Error(`等待普通玩家${label}自然消耗逾時`);
+}
+
 async function createCharacter({ id, raceChoice, raceLabel, genderChoice, name }) {
   const p = peer(id);
   await connect(p);
@@ -173,6 +185,10 @@ async function getEquipmentAndFight(p) {
   // Combat Recovery／戰鬥結束後不能只看到畫面：普通玩家必須恢復可操作狀態並能繼續世界移動。
   assert.match(await command(p, "south"), /廣場中央/);
   assert.match(await command(p, "north"), /小廣場|廣場北邊/);
+  assert.match(await command(p, "unwield wooden sword"), /放下.*木劍/);
+  assert.match(await command(p, "inventory"), /木劍/);
+  assert.match(await command(p, "wield wooden sword"), /裝備.*木劍作武器/);
+  console.log(`PLAYER_EQUIPMENT_UNEQUIP_PASS:${p.id}:unwield-inventory-rewield`);
   console.log(`PLAYER_COMBAT_RECOVERY_PASS:${p.id}:command-and-movement-after-sparring`);
   console.log(`PLAYER_COMBAT_PASS:${p.id}:source-backed-sparring`);
 }
@@ -331,6 +347,37 @@ async function exerciseLeeVillageJourney(p) {
   assert.match(await command(p, "look traveller"), /旅客|旅人/);
   assert.match(await command(p, "north"), /村口大門/);
   assert.match(await command(p, "look guard"), /守衛|衛兵/);
+
+  // Waterskin Journey／牛皮水袋：沿正常地圖前往雜貨鋪購買，驗證容器單位、價值與飲水。
+  assert.match(await command(p, "north"), /街道/);
+  assert.match(await command(p, "north"), /街道/);
+  assert.match(await command(p, "north"), /廣場/);
+  assert.match(await command(p, "west"), /廣場/);
+  assert.match(await command(p, "north"), /廣場/);
+  assert.match(await command(p, "north"), /道路|街道|石子路/);
+  assert.match(await command(p, "north"), /道路|街道|石子路/);
+  assert.match(await command(p, "west"), /雜貨鋪/);
+  assert.match(await command(p, "look zhong"), /李忠|雜貨/);
+  const grocery = await command(p, "list zhong");
+  assert.match(grocery, /牛皮水袋/);
+  assert.match(grocery, /五十文錢/);
+  assert.match(await command(p, "buy 1 waterskin from zhong"), /買下一個牛皮水袋/);
+  let inventory = await command(p, "inventory");
+  assert.match(inventory, /一百五十文錢/);
+  assert.match(inventory, /牛皮水袋/);
+  // 不以管理指令改數值：等待 living heart beat 的既有 TYPE_WASTING 自然消耗後再飲用。
+  await waitForStatDeficit(p, "飲水");
+  assert.match(await command(p, "drink from waterskin"), /從牛皮水袋喝了幾口清水/);
+  console.log(`PLAYER_ES2M_WATERSKIN_DRINK_PASS:${p.id}:source-route-value-unit-liquid`);
+
+  assert.match(await command(p, "east"), /道路|街道|石子路/);
+  assert.match(await command(p, "south"), /道路|街道|石子路/);
+  assert.match(await command(p, "south"), /廣場/);
+  assert.match(await command(p, "south"), /廣場/);
+  assert.match(await command(p, "east"), /廣場/);
+  assert.match(await command(p, "south"), /街道/);
+  assert.match(await command(p, "south"), /街道/);
+  assert.match(await command(p, "south"), /村口大門/);
   assert.match(await command(p, "south"), /村口/);
   assert.match(await command(p, "southwest"), /河邊|李家村|northeast/);
   console.log(`PLAYER_ES2M_LEE_MAP_NPC_PASS:${p.id}:snow-egate-lee-roundtrip`);
@@ -365,6 +412,21 @@ async function exerciseShopQuantityJourney(p) {
   for (let i = 0; i < 7; i++) snowRoom = await command(p, "west");
   assert.match(snowRoom, /客棧大堂/);
 
+  // Money Exchange／普通玩家到既有錢莊換零錢，避免以管理指令製造測試貨幣。
+  await command(p, "open east", /打開|已經是開著/);
+  assert.match(await command(p, "east"), /廣場的西邊/);
+  assert.match(await command(p, "east"), /廣場中央/);
+  assert.match(await command(p, "south"), /廣場/);
+  assert.match(await command(p, "south"), /街道/);
+  assert.match(await command(p, "east"), /魚記小鋪/);
+  assert.match(await command(p, "convert 2 silver to coin"), /換成二百文錢/);
+  assert.match(await command(p, "inventory"), /二百四十文錢/);
+  assert.match(await command(p, "west"), /街道/);
+  assert.match(await command(p, "north"), /廣場/);
+  assert.match(await command(p, "north"), /廣場中央/);
+  assert.match(await command(p, "west"), /廣場的西邊/);
+  assert.match(await command(p, "west"), /客棧大堂/);
+
   const list = await command(p, "list waiter");
   assert.match(list, /牛肉包子/);
   assert.match(list, /饅頭/);
@@ -372,8 +434,7 @@ async function exerciseShopQuantityJourney(p) {
   assert.match(await command(p, "buy 31 chicken from waiter"), /只剩下三十隻/);
   assert.match(await command(p, "buy 1 chicken from waiter"), /錢不夠/);
   inventory = await command(p, "inventory");
-  assert.match(inventory, /四十文錢/);
-  assert.match(inventory, /二兩碎銀/);
+  assert.match(inventory, /二百四十文錢/);
 
   // Delivery Failure／交貨失敗：點餐後立刻離房，店小二取消交貨且不得扣款。
   const leaveBuyOffset = p.output.length;
@@ -386,8 +447,7 @@ async function exerciseShopQuantityJourney(p) {
   await waitForAfter(p, leaveOffset, /廣場的西邊/);
   await delay(3500);
   const unchanged = await command(p, "inventory");
-  assert.match(unchanged, /四十文錢/);
-  assert.match(unchanged, /二兩碎銀/);
+  assert.match(unchanged, /二百四十文錢/);
   assert.doesNotMatch(unchanged, /牛肉包子/);
   assert.match(await command(p, "west"), /客棧大堂/);
 
@@ -398,8 +458,7 @@ async function exerciseShopQuantityJourney(p) {
   await waitForAfter(p, singleOffset, /馬上來/);
   await waitForAfter(p, singleOffset, /買下一個牛肉包子/, 30000);
   inventory = await command(p, "inventory");
-  assert.match(inventory, /三十文錢/);
-  assert.match(inventory, /二兩碎銀/);
+  assert.match(inventory, /二百三十文錢/);
   assert.match(inventory, /牛肉包子/);
   assert.match(await command(p, "buy 50 dumpling from waiter"), /只剩下四十九個/);
 
@@ -409,9 +468,14 @@ async function exerciseShopQuantityJourney(p) {
   await waitForAfter(p, quantityOffset, /馬上來/);
   await waitForAfter(p, quantityOffset, /買下三個饅頭/, 30000);
   inventory = await command(p, "inventory");
-  assert.match(inventory, /二兩碎銀/);
-  assert.match(inventory, /零文錢/);
+  assert.match(inventory, /二百文錢/);
   assert.match(inventory, /三個饅頭|饅頭.*三個/);
+  // 新角色出生時飽食已滿；先驗證正式容量限制，且失敗不得吞掉已購商品。
+  assert.match(await command(p, "eat dumpling"), /肚子已經裝不下/);
+  inventory = await command(p, "inventory");
+  assert.match(inventory, /牛肉包子/);
+  assert.match(inventory, /三個饅頭|饅頭.*三個/);
+  console.log(`PLAYER_FOOD_CAPACITY_PASS:${p.id}:full-stat-rejection-item-retained`);
   console.log(`PLAYER_ES2M_SHOP_QUANTITY_PASS:${p.id}:ordinary-source-money-atomic-delivery-persistence-ready`);
 }
 
@@ -454,7 +518,7 @@ await exerciseShopQuantityJourney(lee);
 await exerciseLeeVillageJourney(lee);
 await saveQuitRelogin(lee, /平民/);
 const leeInventory = await command(lee, "inventory");
-assert.match(leeInventory, /二兩碎銀/);
+assert.match(leeInventory, /一百五十文錢/);
 // Original 食物沒有 autoload 契約；本 Gate 只宣告交易餘額跨登入保存，
 // 不為測試補造包子／饅頭的永久物品行為。
 console.log("PLAYER_ES2M_SHOP_BALANCE_PERSISTENCE_PASS:ordinary-save-quit-relogin");

@@ -62,9 +62,12 @@ for marker in \
   ORIGINAL_PLAYER_CREATION_AVATAR_E2E_PASS \
   PLAYER_AVATAR_WORLD_PASS:movement-npc-inventory \
   PLAYER_SECURITY_BOUNDARY_PASS \
+  PLAYER_EQUIPMENT_UNEQUIP_PASS:kinglook:unwield-inventory-rewield \
   PLAYER_COMBAT_RECOVERY_PASS:kinglook:command-and-movement-after-sparring \
   PLAYER_CLASS_PASS:kinglook:alchemist \
   PLAYER_ES2M_SHOP_QUANTITY_PASS:leeopen:ordinary-source-money-atomic-delivery-persistence-ready \
+  PLAYER_FOOD_CAPACITY_PASS:leeopen:full-stat-rejection-item-retained \
+  PLAYER_ES2M_WATERSKIN_DRINK_PASS:leeopen:source-route-value-unit-liquid \
   PLAYER_ES2M_SHOP_BALANCE_PERSISTENCE_PASS:ordinary-save-quit-relogin \
   PLAYER_FULL_JOURNEY_E2E_PASS
 do

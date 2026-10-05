@@ -257,4 +257,9 @@ python3 "$REPO_ROOT/scripts/apply_es2m_weapon_affix_runtime.py" \
 python3 "$REPO_ROOT/scripts/apply_es2m_shop_quantity_runtime.py" \
   --runtime "$ROOT/mudlib"
 
+# ES2M Container Runtime／容器修復：讓複製出的容器繼承原型單位、價值與說明，
+# 並同步最新 10 公升牛皮水袋；來源與目標都先經 SHA 閘門驗證。
+python3 "$REPO_ROOT/scripts/apply_es2m_container_runtime.py" \
+  --runtime "$ROOT/mudlib"
+
 echo 'ES2M RACE RUNTIME OVERLAY PASS／10 個缺失種族改由 ES2M daemon 恢復；保留 Original Human/Avatar；登入流程接受 12 種族。'
