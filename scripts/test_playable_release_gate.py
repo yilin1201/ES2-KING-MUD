@@ -25,8 +25,10 @@ class GateTests(unittest.TestCase):
 
     def test_incomplete_gameplay_blocks(self):
         self.logs["playability"].write_text(
-            f"TESTED_HEAD={HEAD}\\nGAME_PLAYABILITY_COMPLETION_RUNTIME_PASS\\n", encoding="utf-8")
-        self.assertTrue(any("PLAYABILITY_PASS:" in x for x in audit(HEAD, self.logs)))
+            f"TESTED_HEAD={HEAD}\nGAME_PLAYABILITY_COMPLETION_RUNTIME_PASS\n", encoding="utf-8")
+        problems = audit(HEAD, self.logs)
+        self.assertIn("playability: 缺少 PLAYABILITY_PASS:connection-login-character", problems)
+        self.assertNotIn("playability: 實測 SHA 與 HEAD 不一致", problems)
 
     def test_missing_fresh_player_blocks(self):
         del self.logs["fresh_player"]
@@ -34,8 +36,10 @@ class GateTests(unittest.TestCase):
 
     def test_incomplete_fresh_player_blocks(self):
         self.logs["fresh_player"].write_text(
-            f"TESTED_HEAD={HEAD}\\nPLAYER_FULL_JOURNEY_E2E_PASS\\n", encoding="utf-8")
-        self.assertTrue(any("fresh_player: 缺少 " in x for x in audit(HEAD, self.logs)))
+            f"TESTED_HEAD={HEAD}\nPLAYER_FULL_JOURNEY_E2E_PASS\n", encoding="utf-8")
+        problems = audit(HEAD, self.logs)
+        self.assertIn("fresh_player: 缺少 ORIGINAL_PLAYER_CREATION_HUMAN_E2E_PASS", problems)
+        self.assertNotIn("fresh_player: 實測 SHA 與 HEAD 不一致", problems)
 
     def test_missing_races_blocks(self):
         del self.logs["races"]
