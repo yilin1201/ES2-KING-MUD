@@ -64,6 +64,8 @@ for marker in \
   PLAYER_SECURITY_BOUNDARY_PASS \
   PLAYER_COMBAT_RECOVERY_PASS:kinglook:command-and-movement-after-sparring \
   PLAYER_CLASS_PASS:kinglook:alchemist \
+  PLAYER_ES2M_SHOP_QUANTITY_PASS:leeopen:ordinary-source-money-atomic-delivery-persistence-ready \
+  PLAYER_ES2M_SHOP_BALANCE_PERSISTENCE_PASS:ordinary-save-quit-relogin \
   PLAYER_FULL_JOURNEY_E2E_PASS
 do
   grep -Fq "$marker" "$LOG" || { echo "PLAYER OPEN ALPHA FAIL：缺少 $marker" >&2; exit 1; }

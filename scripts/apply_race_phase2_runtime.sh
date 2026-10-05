@@ -252,4 +252,9 @@ PY
 python3 "$REPO_ROOT/scripts/apply_es2m_weapon_affix_runtime.py" \
   --runtime "$ROOT/mudlib"
 
+# ES2M Shop Quantity／批量商店：只套用 buy、vendor、waiter 三個已鎖定檔案。
+# KING 整合版保留店小二延遲送菜，並把扣款延後到完整交貨成功之後。
+python3 "$REPO_ROOT/scripts/apply_es2m_shop_quantity_runtime.py" \
+  --runtime "$ROOT/mudlib"
+
 echo 'ES2M RACE RUNTIME OVERLAY PASS／10 個缺失種族改由 ES2M daemon 恢復；保留 Original Human/Avatar；登入流程接受 12 種族。'

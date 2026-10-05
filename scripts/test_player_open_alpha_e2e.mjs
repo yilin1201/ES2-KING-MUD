@@ -336,6 +336,85 @@ async function exerciseLeeVillageJourney(p) {
   console.log(`PLAYER_ES2M_LEE_MAP_NPC_PASS:${p.id}:snow-egate-lee-roundtrip`);
 }
 
+async function exerciseShopQuantityJourney(p) {
+  // Source-backed Money／來源支持的金錢：普通玩家自行拾取木刀並到李記當鋪賣出，
+  // 不使用 clone、call、KING 或直接修改存檔來提供測試貨幣。
+  assert.match(await command(p, "west"), /廚房/);
+  assert.match(await command(p, "enter 大灶"), /大灶內/);
+  assert.match(await command(p, "get wooden blade"), /撿起一把木刀/);
+  assert.match(await command(p, "out"), /廚房/);
+  assert.match(await command(p, "east"), /客棧大堂/);
+  await command(p, "open east", /打開|已經是開著/);
+  for (let i = 0; i < 7; i++) await command(p, "east");
+  assert.match(await command(p, "northeast"), /李家村|村口/);
+  assert.match(await command(p, "north"), /村口大門/);
+  assert.match(await command(p, "north"), /街道/);
+  assert.match(await command(p, "north"), /街道/);
+  assert.match(await command(p, "west"), /李記當鋪/);
+  assert.match(await command(p, "pawn wooden blade"), /典當|二兩又四十文錢/);
+  let inventory = await command(p, "inventory");
+  assert.match(inventory, /四十文錢/);
+  assert.match(inventory, /二兩碎銀/);
+
+  assert.match(await command(p, "east"), /街道/);
+  assert.match(await command(p, "south"), /街道/);
+  assert.match(await command(p, "south"), /村口大門/);
+  assert.match(await command(p, "south"), /村口/);
+  assert.match(await command(p, "southwest"), /河邊|李家村/);
+  let snowRoom = "";
+  for (let i = 0; i < 7; i++) snowRoom = await command(p, "west");
+  assert.match(snowRoom, /客棧大堂/);
+
+  const list = await command(p, "list waiter");
+  assert.match(list, /牛肉包子/);
+  assert.match(list, /饅頭/);
+  assert.match(await command(p, "buy mystery from waiter"), /並沒有賣/);
+  assert.match(await command(p, "buy 31 chicken from waiter"), /只剩下三十隻/);
+  assert.match(await command(p, "buy 1 chicken from waiter"), /錢不夠/);
+  inventory = await command(p, "inventory");
+  assert.match(inventory, /四十文錢/);
+  assert.match(inventory, /二兩碎銀/);
+
+  // Delivery Failure／交貨失敗：點餐後立刻離房，店小二取消交貨且不得扣款。
+  const leaveBuyOffset = p.output.length;
+  p.socket.send("buy 1 dumpling from waiter\r\n");
+  p.lastSentAt = Date.now();
+  await waitForAfter(p, leaveBuyOffset, /馬上來/);
+  const leaveOffset = p.output.length;
+  p.socket.send("east\r\n");
+  p.lastSentAt = Date.now();
+  await waitForAfter(p, leaveOffset, /廣場的西邊/);
+  await delay(3500);
+  const unchanged = await command(p, "inventory");
+  assert.match(unchanged, /四十文錢/);
+  assert.match(unchanged, /二兩碎銀/);
+  assert.doesNotMatch(unchanged, /牛肉包子/);
+  assert.match(await command(p, "west"), /客棧大堂/);
+
+  // Single + Quantity／單件與批量：同一普通玩家交易並核對扣款、庫存與物品數量。
+  const singleOffset = p.output.length;
+  p.socket.send("buy 1 dumpling from waiter\r\n");
+  p.lastSentAt = Date.now();
+  await waitForAfter(p, singleOffset, /馬上來/);
+  await waitForAfter(p, singleOffset, /買下一個牛肉包子/, 30000);
+  inventory = await command(p, "inventory");
+  assert.match(inventory, /三十文錢/);
+  assert.match(inventory, /二兩碎銀/);
+  assert.match(inventory, /牛肉包子/);
+  assert.match(await command(p, "buy 50 dumpling from waiter"), /只剩下四十九個/);
+
+  const quantityOffset = p.output.length;
+  p.socket.send("buy 3 manto from waiter\r\n");
+  p.lastSentAt = Date.now();
+  await waitForAfter(p, quantityOffset, /馬上來/);
+  await waitForAfter(p, quantityOffset, /買下三個饅頭/, 30000);
+  inventory = await command(p, "inventory");
+  assert.match(inventory, /二兩碎銀/);
+  assert.match(inventory, /零文錢/);
+  assert.match(inventory, /三個饅頭|饅頭.*三個/);
+  console.log(`PLAYER_ES2M_SHOP_QUANTITY_PASS:${p.id}:ordinary-source-money-atomic-delivery-persistence-ready`);
+}
+
 // Human／人類：帳號與顯示名稱都刻意接近 KING，仍必須是普通玩家。
 const human = await createCharacter({ id: humanId, raceChoice: "1", raceLabel: "human", genderChoice: "M", name: "KING" });
 for (const denied of ["khome", "kgoto /d/snow/square", "call me->query_class()", "clone /obj/money/coin", "kadmin list"]) {
@@ -371,8 +450,14 @@ avatar.socket.close();
 
 // Lee Village／李家村 ES2M Reconstruction：獨立普通玩家 Journey，驗證世界連線與 NPC clone。
 const lee = await createCharacter({ id: leeId, raceChoice: "1", raceLabel: "human", genderChoice: "M", name: "李村旅人" });
+await exerciseShopQuantityJourney(lee);
 await exerciseLeeVillageJourney(lee);
 await saveQuitRelogin(lee, /平民/);
+const leeInventory = await command(lee, "inventory");
+assert.match(leeInventory, /二兩碎銀/);
+// Original 食物沒有 autoload 契約；本 Gate 只宣告交易餘額跨登入保存，
+// 不為測試補造包子／饅頭的永久物品行為。
+console.log("PLAYER_ES2M_SHOP_BALANCE_PERSISTENCE_PASS:ordinary-save-quit-relogin");
 lee.socket.close();
 
 console.log("PLAYER_FULL_JOURNEY_E2E_PASS");
