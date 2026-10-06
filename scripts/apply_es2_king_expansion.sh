@@ -803,39 +803,42 @@ replacement = anchor + '\n    // ES2-KING OWNER INVENTORY INPUT BYPASS\n    if( 
 p.write_text(s.replace(anchor, replacement, 1))
 PY
 
-
-# KING Ordinary Sparring Growth／一般玩家真正贏得 NPC 比武後，保守增加實戰經驗與武術造詣。
-# Evidence：Original win_fight() 僅結束比武，沒有一般勝利成長公式；因此此段明確屬 KING Extension。
-# 不改 kill/corpse bounty，不在輸掉或中止時給分；玩家對玩家也不給，避免互刷。
-USER_FIGHT_GROWTH="$TARGET/mudlib/obj/user.c"
-python3 - "$USER_FIGHT_GROWTH" <<'PY'
+# KING Combat Hit Growth／有效命中 NPC 時即時增加實戰經驗；使用正式映射武學時增加武術造詣。
+# KING Extension：Original/ES2M 未提供一般戰鬥雙成長 Canon 公式。
+# PvP 不給分；只有 damage > 0 的有效命中才給分；win_fight 不再額外給分，避免重複計算。
+COMBAT_HIT_GROWTH="$TARGET/mudlib/adm/daemons/combatd.c"
+python3 - "$COMBAT_HIT_GROWTH" <<'PY'
 from pathlib import Path
 import sys
 p = Path(sys.argv[1])
 s = p.read_text()
-marker = "// ES2-KING ORDINARY SPARRING SCORE GROWTH"
+marker = "// ES2-KING COMBAT HIT SCORE GROWTH"
 if marker not in s:
-    old = '''void win_fight(object opponent) {
-    tell_object(this_object(), opponent->name() + "招架不住，你贏了這場比試。\\n");
-    // add to test -Dragoon
-    remove_all_enemy();
-}'''
-    new = '''void win_fight(object opponent) {
-    tell_object(this_object(), opponent->name() + "招架不住，你贏了這場比試。\\n");
-    // ES2-KING ORDINARY SPARRING SCORE GROWTH
-    // KING Extension: Original ES2 has no generic win_fight score formula.
-    // Reward only a real player defeating a non-player opponent in sparring;
-    // loss/abort and PvP do not pass this gate, and kill bounty remains separate.
-    if( userp(this_object()) && objectp(opponent) && !userp(opponent) ) {
-        gain_score("combat", 1);
-        gain_score("martial art", 1);
-        tell_object(this_object(), "這場實戰讓你的實戰經驗與武術造詣各增加一點。\\n");
+    anchor = '''        else damage = 0;
     }
-    // add to test -Dragoon
-    remove_all_enemy();
-}'''
-    if s.count(old) != 1:
-        raise SystemExit("KING SPARRING GROWTH FAIL: Original win_fight anchor changed")
-    s = s.replace(old, new, 1)
+
+    /* 招式帶有元素屬性'''
+    patch = '''        else damage = 0;
+    }
+
+    // ES2-KING COMBAT HIT SCORE GROWTH
+    // KING Extension: only real damaging player->NPC hits gain score.
+    // PvP, miss, parry/absorb-to-zero and aborted fights do not gain score.
+    if( damage > 0 && userp(me) && objectp(victim) && !userp(victim) ) {
+        string mapped_art;
+        me->gain_score("combat", 1 + random(3));
+
+        // Martial-art score requires an actual mapped art different from the
+        // base strike skill. Plain blade/sword/unarmed practice gains combat
+        // and its normal skill progress, but does not fabricate martial art.
+        mapped_art = me->skill_mapped(skill);
+        if( stringp(mapped_art) && mapped_art != skill )
+            me->gain_score("martial art", 1 + random(2));
+    }
+
+    /* 招式帶有元素屬性'''
+    if s.count(anchor) != 1:
+        raise SystemExit("KING COMBAT HIT GROWTH FAIL: combat damage anchor changed")
+    s = s.replace(anchor, patch, 1)
     p.write_text(s)
 PY
