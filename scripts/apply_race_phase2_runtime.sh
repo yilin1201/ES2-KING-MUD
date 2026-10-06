@@ -246,6 +246,16 @@ s=s.replace(marker, marker+extra, 1)
 p.write_text(s)
 PY
 
+# ES2M 657f682 gameplay delta／最新安全增量：留言板、當鋪、UTF-8 對齊與七彩石已讀紀錄。
+# 這四檔不覆蓋 KING Combat／Save／Permission；vendor 另由 atomic shop adapter 管理，避免回退交易安全性。
+for rel in adm/simul_efun/utf8.c std/bboard.c std/room/hockshop.c d/snow/obj/stone.c; do
+  src="$REPO_ROOT/es2m_snapshot/mudlib/$rel"
+  dst="$ROOT/mudlib/$rel"
+  [[ -f "$src" && -f "$dst" ]] || { echo "ES2M 657f682 SAFE DELTA FAIL: $rel" >&2; exit 1; }
+  cp "$src" "$dst"
+done
+echo 'ES2M 657f682 SAFE RUNTIME DELTA PASS／留言板、當鋪、UTF-8 對齊與七彩石已同步。'
+
 # ES2M Weapon Affix Runtime Overlay／武器附加屬性 Runtime 覆蓋：
 # 來源保留在獨立證據目錄，全部 SHA 與既有 Runtime 基準先驗證後才一次套用；
 # 任何同路徑差異均停止，不覆蓋未知的 KING／其他工作成果。
