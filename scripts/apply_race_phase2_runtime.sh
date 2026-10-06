@@ -61,6 +61,12 @@ if [[ -f "$REPO_ROOT/es2m_snapshot/mudlib/include/class_level.h" ]]; then
   cp "$REPO_ROOT/es2m_snapshot/mudlib/include/class_level.h" "$ROOT/mudlib/include/class_level.h"
 fi
 
+# ES2M Score Progression／職業 target_score 與種族職業等級上限必須和 class daemon 同版。
+# 若只更新 daemon/class 而保留 Original score.c，轉職/升級契約會不完整。
+ES2M_SCORE="$REPO_ROOT/es2m_snapshot/mudlib/feature/char/score.c"
+[[ -f "$ES2M_SCORE" ]] || { echo "Missing ES2M score progression: feature/char/score.c" >&2; exit 1; }
+cp "$ES2M_SCORE" "$ROOT/mudlib/feature/char/score.c"
+
 # ES2M Skill Recovery／只補 pinned Original 不存在的 ES2M skill daemon；Original 同名技能永不覆蓋。
 ES2M_SKILL_DIR="$REPO_ROOT/es2m_snapshot/mudlib/daemon/skill"
 if [[ -d "$ES2M_SKILL_DIR" ]]; then
