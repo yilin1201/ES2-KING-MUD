@@ -27,12 +27,18 @@ RUN echo "[M30 BUILD 3/5] Update Original submodules" \
     && git -C /opt/es2-king/runtime submodule update --init --recursive
 # ES2M 主體基準：套用 KING 前先封存原始 mudlib，供三方差異盤點。
 RUN cp -a /opt/es2-king/runtime/mudlib /build/es2m-original-mudlib
-RUN echo "[M30 BUILD 4/5] Apply ES2M Race + ES2-KING Expansion overlays" \
-    && bash scripts/apply_race_phase2_runtime.sh /opt/es2-king/runtime \
+RUN echo "[M30 BUILD 4/5] Apply ES2M Race overlay" \
+    && bash scripts/apply_race_phase2_runtime.sh /opt/es2-king/runtime
+
+# Fighter 升級鏈來源契約必須在 KING 戰鬥成長擴充前驗證：
+# ES2M class/score 已套入，但 combatd.c 此時仍不得含 KING generic hit gain。
+RUN python3 scripts/test_es2m_fighter_level_contract.py /opt/es2-king/runtime/mudlib
+
+RUN echo "[M30 BUILD 4/5] Apply ES2-KING Expansion overlay" \
     && bash scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime
-# Fighter 升級鏈 Runtime Gate：驗證真正生成 Runtime 的 target_score、升級函式與 KING 戰鬥成長來源。
-RUN python3 scripts/test_es2m_fighter_level_contract.py /opt/es2-king/runtime/mudlib \
-    && grep -q 'ES2-KING COMBAT HIT SCORE GROWTH' /opt/es2-king/runtime/mudlib/adm/daemons/combatd.c \
+
+# KING 戰鬥成長 Runtime Gate：Expansion 套用後再確認 combat/martial-art 命中成長已存在。
+RUN grep -q 'ES2-KING COMBAT HIT SCORE GROWTH' /opt/es2-king/runtime/mudlib/adm/daemons/combatd.c \
     && grep -q 'gain_score("combat", 1 + random(3))' /opt/es2-king/runtime/mudlib/adm/daemons/combatd.c \
     && grep -q 'gain_score("martial art", 1 + random(2))' /opt/es2-king/runtime/mudlib/adm/daemons/combatd.c
 
