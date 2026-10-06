@@ -802,3 +802,40 @@ if s.count(anchor) != 1:
 replacement = anchor + '\n    // ES2-KING OWNER INVENTORY INPUT BYPASS\n    if( query("id") == "king" && wiz_level(this_object()) >= wiz_level("(admin)")\n    && (str == "i" || str == "inventory") ) return str;'
 p.write_text(s.replace(anchor, replacement, 1))
 PY
+
+
+# KING Ordinary Sparring Growth／一般玩家真正贏得 NPC 比武後，保守增加實戰經驗與武術造詣。
+# Evidence：Original win_fight() 僅結束比武，沒有一般勝利成長公式；因此此段明確屬 KING Extension。
+# 不改 kill/corpse bounty，不在輸掉或中止時給分；玩家對玩家也不給，避免互刷。
+USER_FIGHT_GROWTH="$TARGET/mudlib/obj/user.c"
+python3 - "$USER_FIGHT_GROWTH" <<'PY'
+from pathlib import Path
+import sys
+p = Path(sys.argv[1])
+s = p.read_text()
+marker = "// ES2-KING ORDINARY SPARRING SCORE GROWTH"
+if marker not in s:
+    old = '''void win_fight(object opponent) {
+    tell_object(this_object(), opponent->name() + "招架不住，你贏了這場比試。\\n");
+    // add to test -Dragoon
+    remove_all_enemy();
+}'''
+    new = '''void win_fight(object opponent) {
+    tell_object(this_object(), opponent->name() + "招架不住，你贏了這場比試。\\n");
+    // ES2-KING ORDINARY SPARRING SCORE GROWTH
+    // KING Extension: Original ES2 has no generic win_fight score formula.
+    // Reward only a real player defeating a non-player opponent in sparring;
+    // loss/abort and PvP do not pass this gate, and kill bounty remains separate.
+    if( userp(this_object()) && objectp(opponent) && !userp(opponent) ) {
+        gain_score("combat", 1);
+        gain_score("martial art", 1);
+        tell_object(this_object(), "這場實戰讓你的實戰經驗與武術造詣各增加一點。\\n");
+    }
+    // add to test -Dragoon
+    remove_all_enemy();
+}'''
+    if s.count(old) != 1:
+        raise SystemExit("KING SPARRING GROWTH FAIL: Original win_fight anchor changed")
+    s = s.replace(old, new, 1)
+    p.write_text(s)
+PY

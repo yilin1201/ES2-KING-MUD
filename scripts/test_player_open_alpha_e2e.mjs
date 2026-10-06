@@ -173,6 +173,9 @@ async function getEquipmentAndFight(p) {
   assert.match(await command(p, "east"), /廣場中央/);
   assert.match(await command(p, "north"), /小廣場|廣場北邊/);
   assert.match(await command(p, "look child"), /小孩/);
+  const scoreBeforeFight = await command(p, "score");
+  const combatBefore = Number((scoreBeforeFight.match(/實戰經驗[^0-9]*([0-9]+)/) || [])[1] || 0);
+  const martialBefore = Number((scoreBeforeFight.match(/武術造詣[^0-9]*([0-9]+)/) || [])[1] || 0);
   const fightOffset = p.output.length;
   p.socket.send("fight child\r\n");
   p.lastSentAt = Date.now();
@@ -180,6 +183,12 @@ async function getEquipmentAndFight(p) {
   assert.doesNotMatch(combat, /這裡禁止戰鬥|你想攻擊誰/);
   await waitForAfter(p, fightOffset, /哇.*哭|打我/, 90000);
   await delay(2500);
+  const scoreAfterFight = await command(p, "score");
+  const combatAfter = Number((scoreAfterFight.match(/實戰經驗[^0-9]*([0-9]+)/) || [])[1] || 0);
+  const martialAfter = Number((scoreAfterFight.match(/武術造詣[^0-9]*([0-9]+)/) || [])[1] || 0);
+  assert.ok(combatAfter >= combatBefore + 1, `combat score did not grow: ${combatBefore} -> ${combatAfter}`);
+  assert.ok(martialAfter >= martialBefore + 1, `martial art score did not grow: ${martialBefore} -> ${martialAfter}`);
+  console.log(`PLAYER_COMBAT_SCORE_GROWTH_PASS:${p.id}:combat-${combatBefore}-${combatAfter}:martial-${martialBefore}-${martialAfter}`);
   const recovered = await command(p, "look");
   assert.match(recovered, /小廣場|廣場北邊/);
   // Combat Recovery／戰鬥結束後不能只看到畫面：普通玩家必須恢復可操作狀態並能繼續世界移動。
