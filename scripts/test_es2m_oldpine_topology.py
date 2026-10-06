@@ -68,7 +68,7 @@ def main() -> None:
     validate_tree(args.source, False)
     if args.runtime:
         validate_tree(args.runtime, True)
-    print("ES2M OLDPINE TOPOLOGY PASS／50 房間、17 NPC、5 物件及雙向入口引用閉合。")
+    print("ES2M OLDPINE TOPOLOGY PASS／50 房間、17 NPC、5 物件、雙向入口及高慎虎刀門拜師主線引用閉合。")
 
 
 if __name__ == "__main__":
