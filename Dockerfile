@@ -30,6 +30,12 @@ RUN cp -a /opt/es2-king/runtime/mudlib /build/es2m-original-mudlib
 RUN echo "[M30 BUILD 4/5] Apply ES2M Race + ES2-KING Expansion overlays" \
     && bash scripts/apply_race_phase2_runtime.sh /opt/es2-king/runtime \
     && bash scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime
+# Fighter 升級鏈 Runtime Gate：驗證真正生成 Runtime 的 target_score、升級函式與 KING 戰鬥成長來源。
+RUN python3 scripts/test_es2m_fighter_level_contract.py /opt/es2-king/runtime/mudlib \
+    && grep -q 'ES2-KING COMBAT HIT SCORE GROWTH' /opt/es2-king/runtime/mudlib/adm/daemons/combatd.c \
+    && grep -q 'gain_score("combat", 1 + random(3))' /opt/es2-king/runtime/mudlib/adm/daemons/combatd.c \
+    && grep -q 'gain_score("martial art", 1 + random(2))' /opt/es2-king/runtime/mudlib/adm/daemons/combatd.c
+
 # KING 雙劍法契約：冷梅預設，傲劍訣可透過 Original enable 切換。
 RUN python3 scripts/test_king_aojian_dual_skill.py
 # V4 武學閘門：單次驗證 V0 數值、正式招式、技能路由及生成 Runtime 檔案一致性。
