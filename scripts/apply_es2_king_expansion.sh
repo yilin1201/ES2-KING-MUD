@@ -817,7 +817,7 @@ if marker not in s:
     anchor = '''        else damage = 0;
     }
 
-    /* 招式帶有元素屬性'''
+    /* 將傷害程度的訊息加入戰鬥訊息。 */'''
     patch = '''        else damage = 0;
     }
 
