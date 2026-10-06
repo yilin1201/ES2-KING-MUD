@@ -20,10 +20,10 @@ cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
 # bootstrap 政策，不修改來源保存區，也不把「同 IP 大量創角」宣稱為正式 Gameplay。
 # No-match is normal: avoid set -e/pipefail abort when antispam is already disabled.
 # Preserve real grep errors (status > 1) instead of silently bypassing the gate.
-if grep -RIl '^[[:space:]]*#define[[:space:]]\\+ENABLE_ANTISPAM' \\
+if grep -RIl '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' \
   "$TEMP_ROOT/mudlib/include" "$TEMP_ROOT/mudlib/adm" > "$TEMP_ROOT/antispam-files" 2>"$TEMP_ROOT/antispam-grep.stderr"; then
   while IFS= read -r file; do
-    sed -i 's/^[[:space:]]*#define[[:space:]]\\+ENABLE_ANTISPAM.*/\\/\\/ ES2-KING isolated test: ENABLE_ANTISPAM disabled/' "$file"
+    sed -i 's/^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM.*/\/\/ ES2-KING isolated test: ENABLE_ANTISPAM disabled/' "$file"
   done < "$TEMP_ROOT/antispam-files"
 else
   grep_status=$?
