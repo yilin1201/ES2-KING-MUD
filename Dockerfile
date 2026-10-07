@@ -37,10 +37,9 @@ RUN python3 scripts/test_es2m_fighter_level_contract.py /opt/es2-king/runtime/mu
 RUN echo "[M30 BUILD 4/5] Apply ES2-KING Expansion overlay" \
     && bash scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime
 
-# KING 戰鬥成長 Runtime Gate：Expansion 套用後確認實際正傷害會增加 combat score。
-# martial art 不由基本木劍命中偽造，另由正式映射武學的既有路徑驗證。
-RUN grep -q 'ES2-KING COMBAT DAMAGE SCORE GROWTH' /opt/es2-king/runtime/mudlib/feature/char/combat.c \
-    && grep -q 'attacker->gain_score("combat", 1 + random(3))' /opt/es2-king/runtime/mudlib/feature/char/combat.c
+# Combat progression contract：不得在 KING overlay 偽造「每次造成傷害就增加 combat」。
+# Pinned Original 無此 generic hit gain；ES2M 的 combat 成長來自成功閃躲／格擋。
+RUN ! grep -q 'ES2-KING COMBAT DAMAGE SCORE GROWTH' /opt/es2-king/runtime/mudlib/feature/char/combat.c
 
 # KING 雙劍法契約：冷梅預設，傲劍訣可透過 Original enable 切換。
 RUN python3 scripts/test_king_aojian_dual_skill.py
