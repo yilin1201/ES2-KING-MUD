@@ -803,35 +803,7 @@ replacement = anchor + '\n    // ES2-KING OWNER INVENTORY INPUT BYPASS\n    if( 
 p.write_text(s.replace(anchor, replacement, 1))
 PY
 
-# KING Combat Damage Growth／以 receive_damage 的實際正傷害作為普通玩家對 NPC 實戰成長證據。
-# KING Extension：Original/ES2M 未提供一般戰鬥實戰經驗成長 Canon 公式。
-# PvP 不給分；damage <= 0 不給分；每個真正進入 receive_damage 的玩家→NPC 傷害封包才計分。
-COMBAT_DAMAGE_GROWTH="$TARGET/mudlib/feature/char/combat.c"
-python3 - "$COMBAT_DAMAGE_GROWTH" <<'PY'
-from pathlib import Path
-import sys
-p = Path(sys.argv[1])
-s = p.read_text()
-marker = "// ES2-KING COMBAT DAMAGE SCORE GROWTH"
-if marker not in s:
-    anchor = '''    if( damage < 1 ) return 0;
-    if( !living(this_object()) ) damage *= 10;
-'''
-    patch = '''    if( damage < 1 ) return 0;
-    if( !living(this_object()) ) damage *= 10;
-
-    // ES2-KING COMBAT DAMAGE SCORE GROWTH
-    // KING Extension: only real player -> NPC positive damage grows combat score.
-    // This hook is placed at receive_damage(), where positive post-resistance
-    // damage is already proven. PvP and zero-damage events are excluded.
-    if( objectp(attacker) && userp(attacker) && !userp(this_object()) )
-        attacker->gain_score("combat", 1 + random(3));
-'''
-    if s.count(anchor) != 1:
-        raise SystemExit("KING COMBAT DAMAGE GROWTH FAIL: receive_damage anchor changed")
-    s = s.replace(anchor, patch, 1)
-    p.write_text(s)
-PY
-# Original Runtime may contain a precompiled combat.b; remove it so Neolith
-# recompiles the patched source instead of silently loading the stale binary.
-rm -f "$TARGET/mudlib/bin/feature/char/combat.b"
+# Combat score growth is intentionally not injected here.
+# Evidence: pinned Original has no generic damaging-hit combat gain; ES2M grants
+# combat score on successful dodge/parry and martial-art score only for mapped
+# non-basic martial arts. Import that behavior separately from ES2M evidence.
