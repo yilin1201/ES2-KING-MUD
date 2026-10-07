@@ -64,7 +64,8 @@ def validate(runtime_mudlib: Path) -> None:
         if not target.is_file():
             raise RuntimeError(f"Runtime 缺少交易相依檔：{item.path}")
         actual = digest(target)
-        if actual not in (item.baseline_sha256, item.source_sha256):
+        accepted_source = digest(source)
+        if actual not in (item.baseline_sha256, accepted_source):
             raise RuntimeError(f"Runtime 交易檔衝突，停止覆蓋：{item.path} {actual}")
 
 
