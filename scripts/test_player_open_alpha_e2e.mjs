@@ -532,8 +532,11 @@ await exerciseLeeVillageJourney(lee);
 await saveQuitRelogin(lee, /平民/);
 const leeInventory = await command(lee, "inventory");
 assert.match(leeInventory, /一百五十文錢/);
-// Original 食物沒有 autoload 契約；本 Gate 只宣告交易餘額跨登入保存，
-// 不為測試補造包子／饅頭的永久物品行為。
+// KING Runtime 沿用既有 user autoload 存檔欄位，COMBINED_ITEM 只補保存正整數 amount；
+// 因此實際購買的一個包子與三個饅頭必須在 save/quit/relogin 後仍存在且數量不變。
+assert.match(leeInventory, /牛肉包子/);
+assert.match(leeInventory, /三個饅頭|饅頭.*三個/);
+console.log("PLAYER_ES2M_SHOP_ITEM_PERSISTENCE_PASS:ordinary-save-quit-relogin");
 console.log("PLAYER_ES2M_SHOP_BALANCE_PERSISTENCE_PASS:ordinary-save-quit-relogin");
 lee.socket.close();
 
