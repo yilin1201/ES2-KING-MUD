@@ -79,12 +79,8 @@ sockets.on("connection", (browser, request) => {
       if (existing.browser && existing.browser.readyState === existing.browser.OPEN) {
         try { existing.browser.close(4001, "Session resumed in another browser connection"); } catch {}
       }
-      existing.browser = browser;
-      existing.expiryTimer = null;
+      existing.attach(browser);
       console.log(`[public-session ${existing.sessionId}] websocket-resume`);
-      browser.on("message", data => existing.forwardBrowserMessage(data));
-      browser.on("close", () => existing.detachBrowser(browser));
-      browser.on("error", () => existing.detachBrowser(browser));
       browser.send("\n[ES2-KING] 已恢復原遊戲連線。\n");
       return;
     }
@@ -200,17 +196,18 @@ sockets.on("connection", (browser, request) => {
     resumableSessions.set(resumeToken, {
       sessionId, mud, browser, expiryTimer,
       forwardBrowserMessage,
-      detachBrowser: closedBrowser => {
-        activeBrowser = null;
+      attach: newBrowser => {
+        activeBrowser = newBrowser;
         const session = resumableSessions.get(resumeToken);
         if (!session) return;
+        session.browser = newBrowser;
         clearTimeout(session.expiryTimer);
-        session.expiryTimer = setTimeout(() => {
-          console.log(`[public-session ${sessionId}] resume-expired`);
-          resumableSessions.delete(resumeToken);
-          mud.destroy();
-        }, resumeGraceMs);
-      }
+        session.expiryTimer = null;
+        newBrowser.on("message", forwardBrowserMessage);
+        newBrowser.on("close", () => detachBrowser(newBrowser));
+        newBrowser.on("error", () => detachBrowser(newBrowser));
+      },
+      detachBrowser
     });
   }
 });
