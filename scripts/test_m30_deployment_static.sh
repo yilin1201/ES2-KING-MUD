@@ -41,6 +41,9 @@ grep -Fq 'build_commit: buildCommit' webtelnet/server.mjs
 grep -Fq 'pathname === "/health"' webtelnet/server.mjs
 grep -Fq 'bash scripts/assert_m30_final_runtime.sh /opt/es2-king/runtime' Dockerfile
 grep -Fq 'bash "$SCRIPT_DIR/assert_m30_final_runtime.sh" "$RUNTIME_DIR"' scripts/start_es2_king_web.sh
+grep -Fq 'rm -f \\' scripts/start_es2_king_web.sh
+grep -Fq '"$RUNTIME_DIR/mudlib/bin/adm/daemons/logind.b" \\' scripts/start_es2_king_web.sh
+grep -Fq '"$RUNTIME_DIR/mudlib/bin/adm/daemons/cmd_d.b"' scripts/start_es2_king_web.sh
 grep -Fq 'chmod --reference="$LOGIN_D" "$temp_login"' scripts/apply_es2_king_expansion.sh
 grep -Fq 'chmod go+r "$LOGIN_D"' scripts/apply_es2_king_expansion.sh
 grep -Fq 'mudlib/bin/adm/daemons/logind.b' scripts/apply_es2_king_expansion.sh

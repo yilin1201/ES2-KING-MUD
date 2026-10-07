@@ -16,6 +16,13 @@ test -f "$WEBTELNET_DIR/server.mjs" || { echo "START FAIL：缺少 WebSocket/Tel
 
 "$SCRIPT_DIR/prepare_es2_persistence.sh"
 
+# Restart-safe Binary Cache Invalidation：
+# Neolith 執行後會重新產生這兩個 .b；同一容器 restart 前必須移除，
+# 讓 Startup Assertion 驗證的是目前 Runtime Source，而不是上一次 Boot 的 cache。
+rm -f \
+  "$RUNTIME_DIR/mudlib/bin/adm/daemons/logind.b" \
+  "$RUNTIME_DIR/mudlib/bin/adm/daemons/cmd_d.b"
+
 # Startup Assertion（啟動斷言）：在 Neolith 啟動前再檢查容器最終 mudlib，
 # 防止錯誤映像、複製順序或舊 Overlay 讓公開服務退回不安全版本。
 bash "$SCRIPT_DIR/assert_m30_final_runtime.sh" "$RUNTIME_DIR"
