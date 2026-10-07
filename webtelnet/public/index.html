@@ -72,6 +72,14 @@
   const command = document.querySelector("#command");
   const characterChoices = document.querySelector("#character-choices");
   const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+  // Resume Token／續接權杖：只識別這個瀏覽器的短期 Bridge session，不保存帳號或密碼。
+  const resumeStorageKey = "es2-king-web-resume-v1";
+  let resumeToken = localStorage.getItem(resumeStorageKey);
+  if (!/^[A-Za-z0-9_-]{32,128}$/.test(resumeToken || "")) {
+    const bytes = crypto.getRandomValues(new Uint8Array(32));
+    resumeToken = Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
+    localStorage.setItem(resumeStorageKey, resumeToken);
+  }
   const mobileLayout = matchMedia("(max-width: 600px)");
   const terminalColumns = 80;
   const mobileNoWrapMinFontPx = 8; // 完整原文＋不斷行優先；低於此值改用水平捲動，避免不可讀。
@@ -282,7 +290,7 @@
   };
   function connect() {
     status.textContent = "連線中……";
-    socket = new WebSocket(`${protocol}//${location.host}/mud`);
+    socket = new WebSocket(`${protocol}//${location.host}/mud?resume=${encodeURIComponent(resumeToken)}`);
     socket.binaryType = "arraybuffer";
     socket.onopen = () => {
       retryDelay = 1000;
@@ -298,6 +306,18 @@
     socket.onerror = () => { status.textContent = "WebSocket 橋接連線失敗"; };
   }
   connect();
+  // iOS Safari 從背景回到前景時立即檢查連線；若 WebSocket 已被系統回收，立刻續接，
+  // 不等待指數退避計時器。Bridge 會在 grace window 內接回原 Telnet session。
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState !== "visible") return;
+    if (!socket || socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) {
+      retryDelay = 1000;
+      connect();
+    }
+  });
+  window.addEventListener("pageshow", () => {
+    if (!socket || socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) connect();
+  });
   const commandForm = document.querySelector("form");
   commandForm.addEventListener("submit", event => {
     event.preventDefault();
