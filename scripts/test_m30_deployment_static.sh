@@ -18,6 +18,11 @@ node scripts/test_m30_webtelnet_display.mjs
 node scripts/test_m30_mobile_responsive.mjs
 node scripts/test_m30_desktop_centering.mjs
 bash -n scripts/start_es2_king_web.sh scripts/prepare_es2_persistence.sh scripts/sync_es2_persistence.sh scripts/assert_m30_final_runtime.sh scripts/test_m30_final_runtime_permissions.sh scripts/test_m30_persistence_paths.sh scripts/test_m30_king_reservation_e2e.sh scripts/test_m30_king_claim_e2e.sh scripts/test_m30_production_equivalent_king_reservation.sh
+bash -n deploy/oracle/update-fast.sh
+grep -Fq 'ARG BASE_IMAGE=es2-king:oracle' deploy/oracle/Dockerfile.fast
+grep -Fq 'ES2-KING UPDATE MODE' deploy/oracle/update-fast.sh
+grep -Fq 'sudo docker stop -t 30' deploy/oracle/update-fast.sh
+grep -Fq 'ROLLBACK PASS' deploy/oracle/update-fast.sh
 bash scripts/test_es2_cn_standard.sh
 
 grep -Fq 'EXPOSE 8080' Dockerfile
