@@ -836,7 +836,7 @@ if marker not in s:
             me->gain_score("martial art", 1 + random(2));
     }
 
-    /* 招式帶有元素屬性'''
+    /* 將傷害程度的訊息加入戰鬥訊息。 */'''
     if s.count(anchor) != 1:
         raise SystemExit("KING COMBAT HIT GROWTH FAIL: combat damage anchor changed")
     s = s.replace(anchor, patch, 1)
