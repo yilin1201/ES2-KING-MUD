@@ -832,3 +832,6 @@ if marker not in s:
     s = s.replace(anchor, patch, 1)
     p.write_text(s)
 PY
+# Original Runtime may contain a precompiled combat.b; remove it so Neolith
+# recompiles the patched source instead of silently loading the stale binary.
+rm -f "$TARGET/mudlib/bin/feature/char/combat.b"
