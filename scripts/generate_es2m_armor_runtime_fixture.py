@@ -48,6 +48,21 @@ private object find_path(object me, string path)
     return 0;
 }}
 
+private int ordinary_audit(object me)
+{{
+    object ob;
+    int count, equipped;
+
+    foreach(ob in all_inventory(me)) {{
+        if( base_name(ob) != "/d/snow/npc/obj/woodsword"
+        &&  base_name(ob) != "/d/snow/npc/obj/blue_cloth" ) continue;
+        count++;
+        if( stringp(ob->query("equipped")) ) equipped++;
+    }}
+    write(sprintf("ES2_ORDINARY_EQUIPMENT_AUDIT count=%d equipped=%d\n", count, equipped));
+    return 1;
+}}
+
 int main(object me, string arg)
 {{
     object ob, duplicate, corpse;
@@ -69,6 +84,22 @@ int main(object me, string arg)
         write("ES2_ARMOR_LOADALL count=" + count + " total=" + sizeof(armors) + "\n");
         return 1;
     }}
+
+    if( arg == "give ordinary" ) {{
+        foreach(path in ({{
+            "/d/snow/npc/obj/woodsword",
+            "/d/snow/npc/obj/blue_cloth"
+        }})) {{
+            if( objectp(find_path(me, path)) ) continue;
+            ob = new(path);
+            if( !objectp(ob) || !ob->move(me) )
+                return notify_fail("ES2_ORDINARY_EQUIPMENT_GIVE_FAIL:" + path + "\n");
+        }}
+        write("ES2_ORDINARY_EQUIPMENT_GIVE_PASS\n");
+        return 1;
+    }}
+
+    if( arg == "ordinary-audit" ) return ordinary_audit(me);
 
     if( sscanf(arg, "give %s", key) == 1 ) {{
         path = armors[key];
@@ -141,7 +172,7 @@ int main(object me, string arg)
         return 1;
     }}
 
-    return notify_fail("用法：es2armor loadall|give <key>|purge <key>|audit|identity <class> <race>|unique|corpse\n");
+    return notify_fail("用法：es2armor loadall|give ordinary|ordinary-audit|give <key>|purge <key>|audit|identity <class> <race>|unique|corpse\n");
 }}
 '''
     output.parent.mkdir(parents=True, exist_ok=True)
