@@ -17,8 +17,10 @@ int main(object me, string arg)
         return notify_fail("指令格式﹕buy [數量] <某物> from <某人>\n");
 
     // Quantity Purchase／批量購買：保留單件語法，數量上限沿用 ES2M 5f042999。
-    if( sscanf(item, "%d %s", amount, rest) == 2 && amount > 0 ) item = rest;
-    else amount = 1;
+    if( sscanf(item, "%d %s", amount, rest) == 2 ) {
+        if( amount < 1 ) return notify_fail("購買數量必須至少是一個。\n");
+        item = rest;
+    } else amount = 1;
     if( amount > 100 ) return notify_fail("一次最多只能買一百個。\n");
 
     if( !objectp(owner = present(targ, environment(me))) )
