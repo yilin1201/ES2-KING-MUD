@@ -9,7 +9,7 @@ int main(object me, string arg)
     string item, targ, rest, err;
     object owner;
     mixed handle, delivered;
-    int price, amount;
+    int price, unit_price, amount;
 
     if( me->is_busy() ) return notify_fail("你現在沒有空﹗\n");
 
@@ -42,7 +42,12 @@ int main(object me, string arg)
 
     notify_fail("對方好像不願意跟你交易。\n");
     if( !(handle = owner->affirm_merchandise(me, item, amount)) ) return 0;
-    price = owner->query_trading_price(handle) * amount;
+    unit_price = owner->query_trading_price(handle);
+    // Price Safety／價格安全：拒絕免費、負價及 32-bit 整數乘法溢位。
+    // 數量已限制為 1..100，因此先做除法界線檢查，不讓溢位後的負數進入 can_afford/pay_money。
+    if( unit_price < 1 || unit_price > 2147483647 / amount )
+        return notify_fail("商品價格異常，這筆交易已取消。\n");
+    price = unit_price * amount;
 
     switch( me->can_afford(price) ) {
         case 0: return notify_fail("你身上的錢不夠。\n");

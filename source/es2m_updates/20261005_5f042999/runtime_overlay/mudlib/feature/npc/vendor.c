@@ -19,7 +19,8 @@ affirm_merchandise(object buyer, string what, int amount)
     string item, name_part;
     int index, count;
 
-    if( amount < 1 ) amount = 1;
+    if( amount < 1 )
+        return notify_fail("購買數量必須至少是一個。\n");
     // 商品名稱可能含空格；只有尾端確實是索引數字時才拆開。
     if( sscanf(what, "%s %d", name_part, index) == 2 ) what = name_part;
     else index = 1;
@@ -64,7 +65,10 @@ deliver_merchandise(object me, string what, int amount, int price)
     if( !living(this_object()) ) return 0;
     list = query("merchandise");
     if( !mapp(list) || undefinedp(list[what]) ) return 0;
-    if( amount < 1 ) amount = 1;
+    if( amount < 1 ) return 0;
+    if( !mapp(stock) ) stock = copy(list);
+    // Delivery Recheck／交貨重查：延遲或重複請求不得越過已變動的庫存。
+    if( undefinedp(stock[what]) || stock[what] < amount ) return 0;
 
     goods = ({});
     if( err = catch(ob = new(what)) ) return 0;
@@ -74,7 +78,12 @@ deliver_merchandise(object me, string what, int amount, int price)
         if( !(container = ob->query("default_container")) ) container = "/obj/bottle";
         for( i = 0; i < amount; i++ ) {
             if( i && (err = catch(ob = new(what))) ) break;
-            if( err = catch(container_ob = new(container)) ) break;
+            if( !objectp(ob) ) break;
+            if( err = catch(container_ob = new(container)) ) {
+                destruct(ob);
+                break;
+            }
+            if( !objectp(container_ob) ) { destruct(ob); break; }
             unit = container_ob->query("container_unit");
             if( !ob->move(container_ob) ) { destruct(ob); destruct(container_ob); break; }
             goods += ({ container_ob });
@@ -107,7 +116,6 @@ deliver_merchandise(object me, string what, int amount, int price)
 
     if( !unit ) unit = "個";
     tell_object(me, "你向" + name() + "買下" + chinese_number(amount) + unit + item_name + "。\n");
-    if( !mapp(stock) ) stock = copy(query("merchandise"));
     stock[what] -= amount;
     return 1;
 }
@@ -129,9 +137,11 @@ do_vendor_list(string arg)
 
     if( !mapp(goods = query("merchandise")) ) return 0;
     if( arg && !id(arg) ) return 0;
+    if( !mapp(stock) ) stock = copy(goods);
 
     list = "";
-    foreach(item, count in goods) {
+    // Stock-consistent List／庫存一致清單：顯示即時剩餘庫存，不把已售罄商品繼續列出。
+    foreach(item, count in stock) {
         if( count < 1 ) continue;
         // Compatibility／相容性：KING 基準沒有 ES2M 新增的 cjk_pad，保留 Original 列表格式。
         list += sprintf("  %-30s：%s\n",

@@ -283,4 +283,9 @@ python3 "$REPO_ROOT/scripts/apply_es2m_container_runtime.py" \
 python3 "$REPO_ROOT/scripts/apply_combined_item_autoload_runtime.py" \
   --runtime "$ROOT/mudlib"
 
+# Shop Item Persistence／非堆疊商店商品：沿用 user autoload，保存毛皮帽與牛皮水袋物件。
+python3 "$REPO_ROOT/scripts/apply_shop_item_autoload_runtime.py" \
+  --runtime "$ROOT/mudlib"
+
 echo 'ES2M RACE RUNTIME OVERLAY PASS／10 個缺失種族改由 ES2M daemon 恢復；保留 Original Human/Avatar；登入流程接受 12 種族。'
+

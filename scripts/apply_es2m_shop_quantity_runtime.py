@@ -25,10 +25,10 @@ class Overlay:
 
 OVERLAYS = (
     Overlay("cmds/std/buy.c",
-            "e53157c553678fac87be4bf76604a4cc355e870e06eaf2eacb5d754e2b85f71f",
+            "95c1e7d1d85e7347a1ae49984a6d10459c47e431710e9bb7b11af68307a9c90a",
             "f087bd029bc84ab92b0fc9fdb84dfa61aa0efc2574ebd7ff80cfc5e52ffeccb4"),
     Overlay("feature/npc/vendor.c",
-            "e37b58a489a57a28cf82a682475368fa9eca7097de355bcd419cd74fd3f8536a",
+            "d39374b854eaabbf8d03371626a3b7aa5ccc4ec4920c17839d68a75fb0de0447",
             "2871cd5edcea2c300ac668e38d901f8e9a7ac21219ff878d2e4943844f29ea8b"),
     Overlay("d/snow/npc/waiter.c",
             "a5c3a0d2b99ecdc977d05695bbe4009b0cd756d5b130d0854a84a1e1716a14f8",
@@ -77,7 +77,7 @@ def apply(runtime_mudlib: Path) -> int:
     for item in OVERLAYS:
         source = SOURCE / item.path
         target = runtime_mudlib / item.path
-        if digest(target) != digest(source):
+        if digest(target) != item.source_sha256:
             shutil.copy2(source, target)
             changed += 1
         (runtime_mudlib / "bin" / Path(item.path).with_suffix(".b")).unlink(missing_ok=True)

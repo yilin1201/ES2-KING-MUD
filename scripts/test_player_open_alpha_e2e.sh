@@ -66,10 +66,12 @@ for marker in \
   PLAYER_COMBAT_RECOVERY_PASS:kinglook:command-and-movement-after-sparring \
   PLAYER_CLASS_PASS:kinglook:alchemist \
   PLAYER_ES2M_SHOP_QUANTITY_PASS:leeopen:ordinary-source-money-atomic-delivery-persistence-ready \
+  PLAYER_ES2M_SHOP_MULTI_VENDOR_PASS:leeopen:snow-fish-lee-grocery \
   PLAYER_FOOD_CAPACITY_PASS:leeopen:full-stat-rejection-item-retained \
   PLAYER_ES2M_WATERSKIN_DRINK_PASS:leeopen:source-route-value-unit-liquid \
   PLAYER_ES2M_SHOP_ITEM_PERSISTENCE_PASS:ordinary-save-quit-relogin \
   PLAYER_ES2M_SHOP_BALANCE_PERSISTENCE_PASS:ordinary-save-quit-relogin \
+  PLAYER_ES2M_SHOP_NONSTACK_PERSISTENCE_PASS:fur-hat-waterskin-no-duplicates \
   PLAYER_FULL_JOURNEY_E2E_PASS
 do
   grep -Fq "$marker" "$LOG" || { echo "PLAYER OPEN ALPHA FAIL：缺少 $marker" >&2; exit 1; }
@@ -105,3 +107,4 @@ if grep -En '編譯時段錯誤|Runtime error|Cannot #include|Undefined variable
 fi
 
 echo 'PLAYER_OPEN_ALPHA_LOCAL_RUNTIME_PASS：12 Race 創角另有獨立 Gate；本 Gate 驗證全新 Human／Avatar、普通玩家世界／NPC／物品／裝備／戰鬥、Alchemist、save／quit／relogin。'
+

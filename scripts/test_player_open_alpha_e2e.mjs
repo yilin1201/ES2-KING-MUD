@@ -374,14 +374,22 @@ async function exerciseLeeVillageJourney(p) {
   const grocery = await command(p, "list zhong");
   assert.match(grocery, /牛皮水袋/);
   assert.match(grocery, /五十文錢/);
+  assert.match(await command(p, "buy 1 sugar from zhong"), /買下一包糖/);
+  assert.match(await command(p, "buy 3 sugar from zhong"), /買下三包糖/);
+  assert.match(await command(p, "buy 10 sugar from zhong"), /買下十包糖/);
   assert.match(await command(p, "buy 1 waterskin from zhong"), /買下一個牛皮水袋/);
   let inventory = await command(p, "inventory");
-  assert.match(inventory, /一百五十文錢/);
+  assert.match(inventory, /六十文錢/);
+  assert.match(inventory, /十四包糖|糖.*十四包/);
   assert.match(inventory, /牛皮水袋/);
   // 不以管理指令改數值：等待 living heart beat 的既有 TYPE_WASTING 自然消耗後再飲用。
   await waitForStatDeficit(p, "飲水");
   assert.match(await command(p, "drink from waterskin"), /從牛皮水袋喝了幾口清水/);
+  // Original drink 會留下短暫 busy；等待其 callback，再明確 halt 後走回雪亭。
+  await delay(5000);
+  await command(p, "halt");
   console.log(`PLAYER_ES2M_WATERSKIN_DRINK_PASS:${p.id}:source-route-value-unit-liquid`);
+  console.log(`PLAYER_ES2M_SHOP_MULTI_VENDOR_PASS:${p.id}:snow-fish-lee-grocery`);
 
   assert.match(await command(p, "east"), /道路|街道|石子路/);
   assert.match(await command(p, "south"), /道路|街道|石子路/);
@@ -434,6 +442,14 @@ async function exerciseShopQuantityJourney(p) {
   assert.match(await command(p, "east"), /魚記小鋪/);
   assert.match(await command(p, "convert 2 silver to coin"), /換成二百文錢/);
   assert.match(await command(p, "inventory"), /二百四十文錢/);
+  const fishList = await command(p, "list yu");
+  assert.match(fishList, /藍衣套/);
+  assert.match(fishList, /毛皮帽/);
+  assert.match(fishList, /玻璃瓶/);
+  assert.match(await command(p, "buy 1 fur hat from yu"), /買下一頂毛皮帽/);
+  assert.match(await command(p, "wear fur hat"), /戴上.*毛皮帽|穿上.*毛皮帽|裝備.*毛皮帽/);
+  assert.match(await command(p, "remove fur hat"), /脫了下來|卸除/);
+  assert.match(await command(p, "inventory"), /一百九十文錢/);
   assert.match(await command(p, "west"), /街道/);
   assert.match(await command(p, "north"), /廣場/);
   assert.match(await command(p, "north"), /廣場中央/);
@@ -450,7 +466,7 @@ async function exerciseShopQuantityJourney(p) {
   assert.match(await command(p, "buy 31 chicken from waiter"), /只剩下三十隻/);
   assert.match(await command(p, "buy 1 chicken from waiter"), /錢不夠/);
   inventory = await command(p, "inventory");
-  assert.match(inventory, /二百四十文錢/);
+  assert.match(inventory, /一百九十文錢/);
 
   // Delivery Failure／交貨失敗：點餐後立刻離房，店小二取消交貨且不得扣款。
   const leaveBuyOffset = p.output.length;
@@ -463,34 +479,27 @@ async function exerciseShopQuantityJourney(p) {
   await waitForAfter(p, leaveOffset, /廣場的西邊/);
   await delay(3500);
   const unchanged = await command(p, "inventory");
-  assert.match(unchanged, /二百四十文錢/);
+  assert.match(unchanged, /一百九十文錢/);
   assert.doesNotMatch(unchanged, /牛肉包子/);
   assert.match(await command(p, "west"), /客棧大堂/);
 
-  // Single + Quantity／單件與批量：同一普通玩家交易並核對扣款、庫存與物品數量。
+  // Duplicate Request／重複請求：第一筆延遲交貨期間，第二筆不得再次成立。
   const singleOffset = p.output.length;
-  p.socket.send("buy 1 dumpling from waiter\r\n");
+  // 同一個 WebSocket frame 送兩行，讓第二筆在 waiter 的延遲 callback 前進入命令佇列。
+  p.socket.send("buy 1 dumpling from waiter\r\nbuy 1 dumpling from waiter\r\n");
   p.lastSentAt = Date.now();
   await waitForAfter(p, singleOffset, /馬上來/);
+  await waitForAfter(p, singleOffset, /正忙著招呼其他客人/);
   await waitForAfter(p, singleOffset, /買下一個牛肉包子/, 30000);
   inventory = await command(p, "inventory");
-  assert.match(inventory, /二百三十文錢/);
+  assert.match(inventory, /一百八十文錢/);
   assert.match(inventory, /牛肉包子/);
+  assert.equal((inventory.match(/牛肉包子/g) || []).length, 1);
   assert.match(await command(p, "buy 50 dumpling from waiter"), /只剩下四十九個/);
-
-  const quantityOffset = p.output.length;
-  p.socket.send("buy 3 manto from waiter\r\n");
-  p.lastSentAt = Date.now();
-  await waitForAfter(p, quantityOffset, /馬上來/);
-  await waitForAfter(p, quantityOffset, /買下三個饅頭/, 30000);
-  inventory = await command(p, "inventory");
-  assert.match(inventory, /二百文錢/);
-  assert.match(inventory, /三個饅頭|饅頭.*三個/);
   // 新角色出生時飽食已滿；先驗證正式容量限制，且失敗不得吞掉已購商品。
   assert.match(await command(p, "eat dumpling"), /肚子已經裝不下/);
   inventory = await command(p, "inventory");
   assert.match(inventory, /牛肉包子/);
-  assert.match(inventory, /三個饅頭|饅頭.*三個/);
   console.log(`PLAYER_FOOD_CAPACITY_PASS:${p.id}:full-stat-rejection-item-retained`);
   console.log(`PLAYER_ES2M_SHOP_QUANTITY_PASS:${p.id}:ordinary-source-money-atomic-delivery-persistence-ready`);
 }
@@ -534,13 +543,17 @@ await exerciseShopQuantityJourney(lee);
 await exerciseLeeVillageJourney(lee);
 await saveQuitRelogin(lee, /平民/);
 const leeInventory = await command(lee, "inventory");
-assert.match(leeInventory, /一百五十文錢/);
+assert.match(leeInventory, /六十文錢/);
 // KING Runtime 沿用既有 user autoload 存檔欄位，COMBINED_ITEM 只補保存正整數 amount；
-// 因此實際購買的一個包子與三個饅頭必須在 save/quit/relogin 後仍存在且數量不變。
+// 因此實際購買的一個包子與十四包糖必須在 save/quit/relogin 後仍存在且數量不變。
 assert.match(leeInventory, /牛肉包子/);
-assert.match(leeInventory, /三個饅頭|饅頭.*三個/);
+assert.match(leeInventory, /十四包糖|糖.*十四包/);
+assert.equal((leeInventory.match(/毛皮帽/g) || []).length, 1);
+assert.equal((leeInventory.match(/牛皮水袋/g) || []).length, 1);
+console.log("PLAYER_ES2M_SHOP_NONSTACK_PERSISTENCE_PASS:fur-hat-waterskin-no-duplicates");
 console.log("PLAYER_ES2M_SHOP_ITEM_PERSISTENCE_PASS:ordinary-save-quit-relogin");
 console.log("PLAYER_ES2M_SHOP_BALANCE_PERSISTENCE_PASS:ordinary-save-quit-relogin");
 lee.socket.close();
 
 console.log("PLAYER_FULL_JOURNEY_E2E_PASS");
+

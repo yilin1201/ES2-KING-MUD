@@ -14,7 +14,15 @@ BUY = ROOT / "source/es2m_updates/20261005_5f042999/runtime_overlay/mudlib/cmds/
 VENDOR = ROOT / "source/es2m_updates/20261005_5f042999/runtime_overlay/mudlib/feature/npc/vendor.c"
 WAITER = ROOT / "source/es2m_updates/20261005_5f042999/runtime_overlay/mudlib/d/snow/npc/waiter.c"
 AUTOLOAD = ROOT / "scripts/apply_combined_item_autoload_runtime.py"
+SHOP_AUTOLOAD = ROOT / "scripts/apply_shop_item_autoload_runtime.py"
 E2E = ROOT / "scripts/test_player_open_alpha_e2e.mjs"
+SNOW_WAITER = ROOT / "es2m_snapshot/mudlib/d/snow/npc/waiter.c"
+SNOW_FISH = ROOT / "es2m_snapshot/mudlib/d/snow/npc/yu.c"
+LEE_GROCERY = ROOT / "es2m_snapshot/mudlib/d/lee/npc/lee_zhong.c"
+LEE_WAITER = ROOT / "es2m_snapshot/mudlib/d/lee/npc/waiter.c"
+LEE_PAWNSHOP = ROOT / "es2m_snapshot/mudlib/d/lee/pawnshop.c"
+WATERSKIN = ROOT / "es2m_snapshot/mudlib/d/lee/obj/waterskin.c"
+SUGAR = ROOT / "es2m_snapshot/mudlib/d/lee/obj/sugar.c"
 
 def require(text: str, *markers: str) -> None:
     missing = [m for m in markers if m not in text]
@@ -31,32 +39,34 @@ buy = BUY.read_text(encoding="utf-8")
 vendor = VENDOR.read_text(encoding="utf-8")
 waiter = WAITER.read_text(encoding="utf-8")
 autoload = AUTOLOAD.read_text(encoding="utf-8")
+shop_autoload = SHOP_AUTOLOAD.read_text(encoding="utf-8")
 e2e = E2E.read_text(encoding="utf-8")
 
-# Quantity validation and price calculation.
 require(
     buy,
-    'if( amount < 1 ) return notify_fail("購買數量必須至少是一個.\\n");'.replace(".", "。"),
+    'if( amount < 1 ) return notify_fail("購買數量必須至少是一個。\\n");',
     'if( amount > 100 ) return notify_fail("一次最多只能買一百個。\\n");',
-    "price = owner->query_trading_price(handle) * amount;",
+    "unit_price = owner->query_trading_price(handle);",
+    "unit_price > 2147483647 / amount",
+    "price = unit_price * amount;",
     "if( !(handle = owner->affirm_merchandise(me, item, amount)) ) return 0;",
 )
 before(buy, "me->can_afford(price)", "owner->deliver_merchandise(me, handle, amount, price)")
 before(buy, "owner->deliver_merchandise(me, handle, amount, price)", "me->pay_money(price);")
 
-# Atomic delivery: construct/move first, only then reduce stock; caller pays after success.
 require(
     vendor,
     "if( stock[item] < amount )",
+    "if( undefinedp(stock[what]) || stock[what] < amount ) return 0;",
     "if( err = catch(ob = new(what)) ) return 0;",
     "foreach(ob in goods)",
     "if( !ob->move(me) )",
     "stock[what] -= amount;",
+    "foreach(item, count in stock)",
     "return 1;",
 )
 before(vendor, "foreach(ob in goods)", "stock[what] -= amount;")
 
-# Delayed waiter settlement must re-check funds, deliver, then charge.
 require(
     waiter,
     "if( customer->can_afford(price) != 1 )",
@@ -68,7 +78,6 @@ require(
 before(waiter, "customer->can_afford(price)", "::deliver_merchandise(customer, item, amount, price)")
 before(waiter, "::deliver_merchandise(customer, item, amount, price)", "customer->pay_money(price);")
 
-# Combined item persistence must restore only a positive integer amount.
 require(
     autoload,
     "string query_autoload()",
@@ -78,7 +87,28 @@ require(
     "set_amount(saved_amount);",
 )
 
-# Ordinary-player gameplay gate must exercise all required failure/success paths.
+# Non-stacking shop items retain their object path through the existing user autoload field.
+require(
+    shop_autoload,
+    '"obj/armor/fur_hat.c"',
+    '"d/lee/obj/waterskin.c"',
+    "int query_autoload() { return 1; }",
+    "void autoload(string param) { }",
+)
+
+# Multi-shop SOURCE inventory and item-type evidence. These are snapshot facts, not Runtime claims.
+source_contracts = {
+    SNOW_WAITER: ('"waiter"', '"snow_inn_waiter"', '"/obj/food/dumpling": 50', '"/obj/food/manto": 50'),
+    SNOW_FISH: ('"yu"', '"/d/snow/npc/obj/blue_jacket": 5', '"/obj/armor/fur_hat": 5', '"/obj/bottle": 5'),
+    LEE_GROCERY: ('"zhong"', '"/d/lee/obj/waterskin" : 20', '"/obj/area/obj/bag" : 10', '"/d/lee/obj/sugar" : 100'),
+    LEE_WAITER: ('"lee waiter"', '"/obj/food/pork" : 30', '"/obj/food/dumpling" : 50'),
+    LEE_PAWNSHOP: ("inherit HOCKSHOP;", 'set("short", "李記當鋪")'),
+    WATERSKIN: ("inherit CONTAINER_ITEM;", 'set("value", 50)', 'set("liquid_container", 1)'),
+    SUGAR: ("inherit COMBINED_ITEM;", 'set("base_value", 5)', 'set("value", 5)'),
+}
+for source, markers in source_contracts.items():
+    require(source.read_text(encoding="utf-8"), *markers)
+
 require(
     e2e,
     'buy mystery from waiter',
@@ -88,9 +118,16 @@ require(
     'buy 31 chicken from waiter',
     'buy 1 chicken from waiter',
     'buy 1 dumpling from waiter',
-    'buy 3 manto from waiter',
+    'buy 1 fur hat from yu',
+    'buy 1 sugar from zhong',
+    'buy 3 sugar from zhong',
+    'buy 10 sugar from zhong',
+    'buy 1 waterskin from zhong',
+    '正忙著招呼其他客人',
     'PLAYER_ES2M_SHOP_ITEM_PERSISTENCE_PASS',
     'PLAYER_ES2M_SHOP_BALANCE_PERSISTENCE_PASS',
+    'PLAYER_ES2M_SHOP_MULTI_VENDOR_PASS',
+    'PLAYER_ES2M_SHOP_NONSTACK_PERSISTENCE_PASS',
 )
 
 print("SHOP_TRANSACTION_STATIC_PASS")
