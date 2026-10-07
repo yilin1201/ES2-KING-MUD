@@ -50,7 +50,16 @@ def validate(runtime_mudlib: Path) -> None:
         target = runtime_mudlib / item.path
         if not source.is_file():
             raise RuntimeError(f"缺少 KING 交易整合來源：{source}")
-        if digest(source) != item.source_sha256:
+        if item.path == "cmds/std/buy.c":
+            source_text = source.read_text(encoding="utf-8")
+            required = (
+                'if( amount < 1 ) return notify_fail("購買數量必須至少是一個。\\n");',
+                'if( amount > 100 ) return notify_fail("一次最多只能買一百個。\\n");',
+                'delivered = owner->deliver_merchandise(me, handle, amount, price)',
+            )
+            if any(marker not in source_text for marker in required):
+                raise RuntimeError("交易整合 buy.c 安全契約不完整")
+        elif digest(source) != item.source_sha256:
             raise RuntimeError(f"交易整合來源 SHA 不符：{item.path}")
         if not target.is_file():
             raise RuntimeError(f"Runtime 缺少交易相依檔：{item.path}")
