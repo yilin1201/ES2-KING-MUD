@@ -77,7 +77,7 @@ def apply(runtime_mudlib: Path) -> int:
     for item in OVERLAYS:
         source = SOURCE / item.path
         target = runtime_mudlib / item.path
-        if digest(target) != item.source_sha256:
+        if digest(target) != digest(source):
             shutil.copy2(source, target)
             changed += 1
         (runtime_mudlib / "bin" / Path(item.path).with_suffix(".b")).unlink(missing_ok=True)
