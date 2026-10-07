@@ -1,6 +1,7 @@
 import { createReadStream } from "node:fs";
 import { createServer } from "node:http";
 import { connect } from "node:net";
+import { randomBytes } from "node:crypto";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { WebSocketServer } from "ws";
@@ -62,31 +63,43 @@ const http = createServer(async (request, response) => {
 const sockets = new WebSocketServer({ server: http, path: "/mud" });
 let publicSessionSequence = 0;
 
-// Mobile Session Resume／手機背景續接：Safari 切到其他 App 時可能關閉 WebSocket。
-// Bridge 暫時保留原 Telnet 連線，瀏覽器以隨機 resume token 回來時接回同一個 MUD session。
-// Token 不是帳號或密碼，只存在瀏覽器 localStorage 與本機 Bridge 記憶體；Container 重啟即失效。
+// Mobile Session Resume／手機背景續接：Safari 回收 WebSocket 時保留原 Telnet 連線五分鐘。
+// Token 由 Bridge 在 Original Login 成功後才以 CSPRNG（密碼學安全亂數）產生；它不是密碼或權限，
+// 只經加密 WebSocket 控制訊息傳送，絕不放在 URL、一般 log 或玩家存檔。Container restart 後記憶體表自然失效。
+const resumeControlPrefix = "\x1eES2RESUME:";
+const resumeTokenPattern = /^[A-Za-z0-9_-]{43}$/;
+const configuredGraceMs = Number(process.env.ES2_WEB_RESUME_GRACE_MS || 300000);
+const resumeGraceMs = Number.isFinite(configuredGraceMs) && configuredGraceMs >= 100
+  ? configuredGraceMs
+  : 300000;
+const resumeHandshakeMs = 250;
 const resumableSessions = new Map();
-const resumeGraceMs = Number(process.env.ES2_WEB_RESUME_GRACE_MS || 300000);
-const resumeTokenPattern = /^[A-Za-z0-9_-]{32,128}$/;
 
-sockets.on("connection", (browser, request) => {
-  const requestUrl = new URL(request.url || "/mud", "http://127.0.0.1");
-  const resumeToken = requestUrl.searchParams.get("resume") || "";
-  if (resumeTokenPattern.test(resumeToken)) {
-    const existing = resumableSessions.get(resumeToken);
-    if (existing && !existing.mud.destroyed) {
-      clearTimeout(existing.expiryTimer);
-      if (existing.browser && existing.browser.readyState === existing.browser.OPEN) {
-        try { existing.browser.close(4001, "Session resumed in another browser connection"); } catch {}
-      }
-      existing.attach(browser);
-      console.log(`[public-session ${existing.sessionId}] websocket-resume`);
-      browser.send("\n[ES2-KING] 已恢復原遊戲連線。\n");
-      return;
-    }
+function sendResumeControl(browser, message) {
+  if (browser && browser.readyState === browser.OPEN) browser.send(resumeControlPrefix + JSON.stringify(message));
+}
+
+function parseResumeControl(data, isBinary) {
+  if (isBinary) return null;
+  const text = Buffer.from(data).toString("utf8");
+  if (!text.startsWith(resumeControlPrefix)) return null;
+  try {
+    const message = JSON.parse(text.slice(resumeControlPrefix.length));
+    return message?.type === "resume" && typeof message.token === "string" ? message : null;
+  } catch {
+    return null;
   }
-  // 每個瀏覽器連線各自建立一條 Telnet（文字終端連線協定）TCP 連線。
-  // Public Session ID（公開工作階段編號）只用於除錯生命週期，不記錄玩家輸入、密碼或 Claim Token。
+}
+
+function createResumeToken() {
+  let token;
+  do token = randomBytes(32).toString("base64url");
+  while (resumableSessions.has(token));
+  return token;
+}
+
+function createMudSession(browser, firstMessage = null) {
+  // Public Session ID（公開工作階段編號）只用於除錯生命週期，不記錄玩家輸入、密碼或 Resume Token。
   const sessionId = ++publicSessionSequence;
   console.log(`[public-session ${sessionId}] websocket-open`);
   const mud = connect({ host: mudHost, port: mudPort });
@@ -94,51 +107,51 @@ sockets.on("connection", (browser, request) => {
   let runtimeTail = "";
   let numericRaceActive = false;
   let inventoryProbePending = null;
-  let activeBrowser = browser;
+  let activeBrowser = null;
   let expiryTimer = null;
-  mud.setTimeout(10000, () => {
-    console.error(`[public-session ${sessionId}] mud-timeout host=${mudHost} port=${mudPort}`);
-    mud.destroy(new Error("MUD connection timeout"));
-  });
-  mud.once("connect", () => {
-    mud.setTimeout(0);
-    console.log(`[public-session ${sessionId}] mud-connected host=${mudHost} port=${mudPort}`);
-  });
-  mud.on("data", (data) => {
-    console.log(`[public-session ${sessionId}] mud-to-browser bytes=${data.length}`);
-    // Neolith 使用 UTF-8，但 Telnet IAC 控制位元組不是文字；先剝離協定再交給瀏覽器解碼。
-    const text = telnetText.push(data);
-    // 僅量測背包探針後下一次 MUD 回傳的長度及延遲，不記錄玩家資訊或遊戲內容。
-    if (inventoryProbePending) {
-      const elapsed = Date.now() - inventoryProbePending.started;
-      console.log(`[public-session ${sessionId}] inventory-response probe=${inventoryProbePending.kind} bytes=${data.length} filteredChars=${text.length} elapsedMs=${elapsed}`);
-      inventoryProbePending = null;
+  let resumeToken = null;
+  let explicitQuit = false;
+
+  const invalidateResume = () => {
+    clearTimeout(expiryTimer);
+    expiryTimer = null;
+    if (resumeToken && resumableSessions.get(resumeToken) === session) resumableSessions.delete(resumeToken);
+    resumeToken = null;
+  };
+
+  const armExpiry = () => {
+    clearTimeout(expiryTimer);
+    expiryTimer = setTimeout(() => {
+      console.log(`[public-session ${sessionId}] resume-expired`);
+      invalidateResume();
+      mud.destroy();
+    }, resumeGraceMs);
+  };
+
+  const detachBrowser = closedBrowser => {
+    if (activeBrowser !== closedBrowser) return;
+    console.log(`[public-session ${sessionId}] websocket-detach`);
+    activeBrowser = null;
+    session.browser = null;
+    if (explicitQuit || !resumeToken) {
+      mud.destroy();
+      return;
     }
-    runtimeTail = (runtimeTail + text).slice(-1024);
-    // Race State／種族狀態：一旦 Runtime 顯示數字 Race 提示，就保持到真正進入 Gender，避免提示後的「>」雜訊讓 Public iPhone 失去 Race 封套路徑。
-    if (/請輸入編號 1-12 或種族 ID|請輸入編號 1 或 2/.test(text)) numericRaceActive = true;
-    if (/您要扮演的哪種性別/.test(text)) numericRaceActive = false;
-    if (text.length > 0 && activeBrowser && activeBrowser.readyState === activeBrowser.OPEN) activeBrowser.send(text);
-  });
-  mud.on("error", (error) => {
-    console.error(`[public-session ${sessionId}] mud-error code=${error.code || "unknown"} message=${error.message}`);
-    if (activeBrowser && activeBrowser.readyState === activeBrowser.OPEN) activeBrowser.close(1011, `MUD connection failed: ${error.message}`);
-  });
-  mud.on("close", hadError => {
-    console.log(`[public-session ${sessionId}] mud-close hadError=${hadError}`);
-    if (resumeTokenPattern.test(resumeToken)) resumableSessions.delete(resumeToken);
-    if (activeBrowser && activeBrowser.readyState === activeBrowser.OPEN) activeBrowser.close(1000, "MUD connection closed");
-  });
-  const forwardBrowserMessage = (data) => {
+    armExpiry();
+  };
+
+  const forwardBrowserMessage = data => {
     if (!mud.writable) return;
-    // 只記錄位元組數，不記錄內容，讓 Public blocker 可判斷 Browser→Bridge 是否真的有送資料且不洩漏秘密。
-    console.log(`[public-session ${sessionId}] browser-to-mud bytes=${data.length}`);
-    // Character Transport／角色輸入傳輸：Race 使用明確的 WebSocket 訊息封套，
-    // Bridge 在伺服器端依 Runtime 模式轉換；line-input 使用 Telnet 標準 CRLF 完成整行提交，避免 Neolith 只收到 LF 而持續等待。
     const incoming = Buffer.from(data).toString("utf8");
-    // ES2-KING 登入後背包診斷：只記錄 i/inventory/look king 三種固定指令類別，
-    // 不記錄玩家帳號、密碼、訊息內容或任何其他輸入。
+    // 控制訊息只屬 Bridge，任何情況都不得落入 Original Login／遊戲命令。
+    if (incoming.startsWith(resumeControlPrefix)) return;
+    // 只記錄位元組數，不記錄內容，避免帳號、密碼或 Token 進入 log。
+    console.log(`[public-session ${sessionId}] browser-to-mud bytes=${data.length}`);
     const inventoryProbe = incoming.trim().toLowerCase();
+    if (inventoryProbe === "quit") {
+      explicitQuit = true;
+      invalidateResume();
+    }
     if (inventoryProbe === "i" || inventoryProbe === "inventory" || inventoryProbe === "look king") {
       inventoryProbePending = {kind: inventoryProbe === "look king" ? "look-self" : inventoryProbe, started: Date.now()};
       console.log(`[public-session ${sessionId}] inventory-probe=${inventoryProbe === "look king" ? "look-self" : inventoryProbe} bridge-forwarded=true`);
@@ -147,69 +160,115 @@ sockets.on("connection", (browser, request) => {
       const choice = incoming.slice("ES2RACE:".length);
       const raceIds = ["", "human", "avatar", "blackteeth", "yenhold", "jiaojao", "woochan", "dingling", "headless", "rainner", "malik", "yaksa", "ashura"];
       const race = /^\d+$/.test(choice) ? raceIds[Number(choice)] : choice;
-      // Runtime Adaptive Race／Runtime 自適應種族輸入：
-      // 新 Runtime 使用 input_to 文字行；尚未更新的 Original Runtime 仍使用 get_char 游標選單。
-      // 依實際 Prompt 選擇傳輸，讓 Public 部署新舊不同步時仍可完成 Race。
       const lineRace = numericRaceActive
         || /請輸入編號 1-12 或種族 ID|請輸入編號 1 或 2/.test(runtimeTail)
         || /選擇你的角色所屬的種族\s*\(human\/avatar\)/.test(runtimeTail)
         || /請輸入 human 或 avatar/.test(runtimeTail);
       if (lineRace) {
-        // Telnet Line Submit／Telnet 整行送出：依固定 Neolith Driver 的 copy_chars() 原始碼，
-        // 非 SINGLE_CHAR 模式的 lone CR 會被丟棄；只有 CRLF/CR-NUL 才建立 newline。Race 使用 input_to，因此必須送 CRLF。
         mud.write(Buffer.from((/^\d+$/.test(choice) ? choice : race) + "\r\n", "utf8"));
-        // 保持 numericRaceActive，直到 Runtime 實際輸出 Gender；若 Race callback 拒絕輸入，下一次 1/2 仍走同一安全路徑。
       } else if (race === "human") {
-        // Original cursor 預設停在 human；CR 確認目前選項。
         mud.write(Buffer.from("\r", "utf8"));
       } else {
-        // Original avatar 為第二項；ANSI Down 移到下一項後再確認。
         mud.write(Buffer.from("\x1b[B", "binary"));
         setTimeout(() => { if (mud.writable) mud.write(Buffer.from("\r", "utf8")); }, 80);
       }
       return;
     }
-    // 其他 Original get_char／一般文字輸入維持原始位元組。
+    // Original get_char／Login／一般命令維持原始位元組；Resume 不解析或保存密碼。
     mud.write(Buffer.from(data));
   };
-  const detachBrowser = (closedBrowser) => {
-    if (activeBrowser !== closedBrowser) return;
-    console.log(`[public-session ${sessionId}] websocket-detach`);
-    activeBrowser = null;
-    if (!resumeTokenPattern.test(resumeToken)) {
-      mud.destroy();
+
+  const attach = (newBrowser, resumed = false) => {
+    const oldBrowser = activeBrowser;
+    activeBrowser = newBrowser;
+    session.browser = newBrowser;
+    clearTimeout(expiryTimer);
+    expiryTimer = null;
+    newBrowser.on("message", forwardBrowserMessage);
+    newBrowser.on("close", () => detachBrowser(newBrowser));
+    newBrowser.on("error", () => detachBrowser(newBrowser));
+    if (oldBrowser && oldBrowser !== newBrowser && oldBrowser.readyState === oldBrowser.OPEN) {
+      try { oldBrowser.close(4001, "Session resumed in another browser connection"); } catch {}
+    }
+    if (resumed) {
+      console.log(`[public-session ${sessionId}] websocket-resume`);
+      sendResumeControl(newBrowser, {type: "resume-ok", grace_ms: resumeGraceMs});
+      newBrowser.send("\n[ES2-KING] 連線已恢復。\n");
+    }
+  };
+
+  const session = {sessionId, mud, browser, attach};
+  attach(browser);
+  mud.setTimeout(10000, () => {
+    console.error(`[public-session ${sessionId}] mud-timeout host=${mudHost} port=${mudPort}`);
+    mud.destroy(new Error("MUD connection timeout"));
+  });
+  mud.once("connect", () => {
+    mud.setTimeout(0);
+    console.log(`[public-session ${sessionId}] mud-connected host=${mudHost} port=${mudPort}`);
+    if (firstMessage) forwardBrowserMessage(firstMessage);
+  });
+  mud.on("data", data => {
+    console.log(`[public-session ${sessionId}] mud-to-browser bytes=${data.length}`);
+    const text = telnetText.push(data);
+    if (inventoryProbePending) {
+      const elapsed = Date.now() - inventoryProbePending.started;
+      console.log(`[public-session ${sessionId}] inventory-response probe=${inventoryProbePending.kind} bytes=${data.length} filteredChars=${text.length} elapsedMs=${elapsed}`);
+      inventoryProbePending = null;
+    }
+    runtimeTail = (runtimeTail + text).slice(-1024);
+    if (/請輸入編號 1-12 或種族 ID|請輸入編號 1 或 2/.test(text)) numericRaceActive = true;
+    if (/您要扮演的哪種性別/.test(text)) numericRaceActive = false;
+    // Original Login 成功後才發 Token；權限仍完全由既有 interactive actor／帳號／admin 判定。
+    if (!resumeToken && /目前權限:\s*\((?:player|wizard|arch|admin)\)/.test(runtimeTail)) {
+      resumeToken = createResumeToken();
+      resumableSessions.set(resumeToken, session);
+      sendResumeControl(activeBrowser, {type: "resume-token", token: resumeToken, grace_ms: resumeGraceMs});
+      console.log(`[public-session ${sessionId}] resume-enabled`);
+    }
+    if (text.length > 0 && activeBrowser && activeBrowser.readyState === activeBrowser.OPEN) activeBrowser.send(text);
+  });
+  mud.on("error", error => {
+    console.error(`[public-session ${sessionId}] mud-error code=${error.code || "unknown"} message=${error.message}`);
+    if (activeBrowser && activeBrowser.readyState === activeBrowser.OPEN) activeBrowser.close(1011, `MUD connection failed: ${error.message}`);
+  });
+  mud.on("close", hadError => {
+    console.log(`[public-session ${sessionId}] mud-close hadError=${hadError}`);
+    invalidateResume();
+    if (activeBrowser && activeBrowser.readyState === activeBrowser.OPEN) activeBrowser.close(1000, "MUD connection closed");
+  });
+}
+
+sockets.on("connection", browser => {
+  let settled = false;
+  const beginNewSession = firstMessage => {
+    if (settled) return;
+    settled = true;
+    clearTimeout(handshakeTimer);
+    browser.off("message", firstBrowserMessage);
+    createMudSession(browser, firstMessage);
+  };
+  const firstBrowserMessage = (data, isBinary) => {
+    const request = parseResumeControl(data, isBinary);
+    if (!request) {
+      beginNewSession(data);
       return;
     }
-    clearTimeout(expiryTimer);
-    expiryTimer = setTimeout(() => {
-      console.log(`[public-session ${sessionId}] resume-expired`);
-      resumableSessions.delete(resumeToken);
-      mud.destroy();
-    }, resumeGraceMs);
-    const session = resumableSessions.get(resumeToken);
-    if (session) session.expiryTimer = expiryTimer;
+    settled = true;
+    clearTimeout(handshakeTimer);
+    browser.off("message", firstBrowserMessage);
+    const existing = resumeTokenPattern.test(request.token) ? resumableSessions.get(request.token) : null;
+    if (existing && !existing.mud.destroyed && existing.mud.writable) {
+      existing.attach(browser, true);
+      return;
+    }
+    sendResumeControl(browser, {type: "resume-failed"});
+    createMudSession(browser);
   };
-  browser.on("message", forwardBrowserMessage);
-  browser.on("close", () => detachBrowser(browser));
-  browser.on("error", () => detachBrowser(browser));
-  if (resumeTokenPattern.test(resumeToken)) {
-    resumableSessions.set(resumeToken, {
-      sessionId, mud, browser, expiryTimer,
-      forwardBrowserMessage,
-      attach: newBrowser => {
-        activeBrowser = newBrowser;
-        const session = resumableSessions.get(resumeToken);
-        if (!session) return;
-        session.browser = newBrowser;
-        clearTimeout(session.expiryTimer);
-        session.expiryTimer = null;
-        newBrowser.on("message", forwardBrowserMessage);
-        newBrowser.on("close", () => detachBrowser(newBrowser));
-        newBrowser.on("error", () => detachBrowser(newBrowser));
-      },
-      detachBrowser
-    });
-  }
+  const handshakeTimer = setTimeout(() => beginNewSession(null), resumeHandshakeMs);
+  browser.on("message", firstBrowserMessage);
+  browser.once("close", () => { if (!settled) clearTimeout(handshakeTimer); });
+  browser.once("error", () => { if (!settled) clearTimeout(handshakeTimer); });
 });
 
 http.listen(webPort, "0.0.0.0", () => {

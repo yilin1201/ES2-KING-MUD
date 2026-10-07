@@ -72,18 +72,21 @@
   const command = document.querySelector("#command");
   const characterChoices = document.querySelector("#character-choices");
   const protocol = location.protocol === "https:" ? "wss:" : "ws:";
-  // Resume Token／續接權杖：只識別這個瀏覽器的短期 Bridge session，不保存帳號或密碼。
+  // Resume Token／續接權杖：只保存 Bridge 登入成功後核發的隨機權杖，不保存帳號或密碼。
+  // Token 透過 WSS 第一個控制訊息傳送，不放進 URL、Cookie 或一般終端輸出。
   const resumeStorageKey = "es2-king-web-resume-v1";
+  const resumeControlPrefix = "\x1eES2RESUME:";
+  const resumeTokenPattern = /^[A-Za-z0-9_-]{43}$/;
   let resumeToken = localStorage.getItem(resumeStorageKey);
-  if (!/^[A-Za-z0-9_-]{32,128}$/.test(resumeToken || "")) {
-    const bytes = crypto.getRandomValues(new Uint8Array(32));
-    resumeToken = Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
-    localStorage.setItem(resumeStorageKey, resumeToken);
+  if (!resumeTokenPattern.test(resumeToken || "")) {
+    localStorage.removeItem(resumeStorageKey);
+    resumeToken = null;
   }
   const mobileLayout = matchMedia("(max-width: 600px)");
   const terminalColumns = 80;
   const mobileNoWrapMinFontPx = 8; // 完整原文＋不斷行優先；低於此值改用水平捲動，避免不可讀。
   let socket;
+  let reconnectTimer = null;
   let retryDelay = 1000;
   let outputTail = "";
   let pendingCharacterFollowup = null;
@@ -288,26 +291,71 @@
     }
     window.scrollTo(0, document.body.scrollHeight);
   };
+  function handleSocketMessage(data) {
+    if (typeof data === "string" && data.startsWith(resumeControlPrefix)) {
+      try {
+        const message = JSON.parse(data.slice(resumeControlPrefix.length));
+        if (message.type === "resume-token" && resumeTokenPattern.test(message.token || "")) {
+          resumeToken = message.token;
+          localStorage.setItem(resumeStorageKey, resumeToken);
+        } else if (message.type === "resume-ok") {
+          status.textContent = "連線已恢復";
+          command.focus();
+        } else if (message.type === "resume-failed") {
+          resumeToken = null;
+          localStorage.removeItem(resumeStorageKey);
+          status.textContent = "續接已失效，已返回正常登入";
+        }
+      } catch {
+        // 無效 Bridge 控制訊息不得顯示、不得轉成遊戲命令，也不得改動現有 Session。
+      }
+      return;
+    }
+    append(typeof data === "string" ? new TextEncoder().encode(data) : data);
+  }
+
+  function scheduleReconnect() {
+    if (reconnectTimer !== null) return;
+    reconnectTimer = setTimeout(() => {
+      reconnectTimer = null;
+      connect();
+    }, retryDelay);
+    retryDelay = Math.min(retryDelay * 2, 10000);
+  }
+
   function connect() {
+    if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) return;
+    if (reconnectTimer !== null) {
+      clearTimeout(reconnectTimer);
+      reconnectTimer = null;
+    }
     status.textContent = "連線中……";
-    socket = new WebSocket(`${protocol}//${location.host}/mud?resume=${encodeURIComponent(resumeToken)}`);
-    socket.binaryType = "arraybuffer";
-    socket.onopen = () => {
+    const nextSocket = new WebSocket(`${protocol}//${location.host}/mud`);
+    socket = nextSocket;
+    nextSocket.binaryType = "arraybuffer";
+    nextSocket.onopen = () => {
+      if (socket !== nextSocket) return;
       retryDelay = 1000;
-      status.textContent = "已連線 ES2-KING";
-      command.focus();
+      // 第一個 WSS frame 僅交給 Bridge；沒有有效 Token 時建立正常 Original Login。
+      nextSocket.send(resumeControlPrefix + JSON.stringify({type: "resume", token: resumeToken || ""}));
+      status.textContent = resumeToken ? "正在恢復連線……" : "已連線 ES2-KING";
+      if (!resumeToken) command.focus();
     };
-    socket.onmessage = event => append(event.data);
-    socket.onclose = event => {
+    nextSocket.onmessage = event => {
+      if (socket === nextSocket) handleSocketMessage(event.data);
+    };
+    nextSocket.onclose = event => {
+      if (socket !== nextSocket) return;
+      socket = null;
       status.textContent = `連線中斷 (${event.code})，將自動重連`;
-      setTimeout(connect, retryDelay);
-      retryDelay = Math.min(retryDelay * 2, 10000);
+      scheduleReconnect();
     };
-    socket.onerror = () => { status.textContent = "WebSocket 橋接連線失敗"; };
+    nextSocket.onerror = () => {
+      if (socket === nextSocket) status.textContent = "WebSocket 橋接連線失敗";
+    };
   }
   connect();
-  // iOS Safari 從背景回到前景時立即檢查連線；若 WebSocket 已被系統回收，立刻續接，
-  // 不等待指數退避計時器。Bridge 會在 grace window 內接回原 Telnet session。
+  // iOS Safari 回到前景才檢查連線；hidden／pagehide／blur 不主動 close 或 logout。
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState !== "visible") return;
     if (!socket || socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) {
@@ -328,6 +376,11 @@
     }
     if (socket.readyState === WebSocket.OPEN) {
       const choice = command.value.trim().toLowerCase();
+      if (choice === "quit") {
+        // Explicit Logout／明確登出：瀏覽器與 Bridge 都立即丟棄 Resume Token。
+        resumeToken = null;
+        localStorage.removeItem(resumeStorageKey);
+      }
       // Race Line Input／種族整行輸入：Runtime 已改成 input_to，因此直接送完整 human/avatar + LF。
       // 使用單一 LF（換行）避免 Telnet/Neolith 將 CRLF 拆成「Race 輸入 + 下一狀態空輸入」。
       const activeMenu = characterMenuFor(outputTail);
