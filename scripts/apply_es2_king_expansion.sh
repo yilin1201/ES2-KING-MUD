@@ -803,42 +803,32 @@ replacement = anchor + '\n    // ES2-KING OWNER INVENTORY INPUT BYPASS\n    if( 
 p.write_text(s.replace(anchor, replacement, 1))
 PY
 
-# KING Combat Hit Growth／有效命中 NPC 時即時增加實戰經驗；使用正式映射武學時增加武術造詣。
-# KING Extension：Original/ES2M 未提供一般戰鬥雙成長 Canon 公式。
-# PvP 不給分；只有 damage > 0 的有效命中才給分；win_fight 不再額外給分，避免重複計算。
-COMBAT_HIT_GROWTH="$TARGET/mudlib/adm/daemons/combatd.c"
-python3 - "$COMBAT_HIT_GROWTH" <<'PY'
+# KING Combat Damage Growth／以 receive_damage 的實際正傷害作為普通玩家對 NPC 實戰成長證據。
+# KING Extension：Original/ES2M 未提供一般戰鬥實戰經驗成長 Canon 公式。
+# PvP 不給分；damage <= 0 不給分；每個真正進入 receive_damage 的玩家→NPC 傷害封包才計分。
+COMBAT_DAMAGE_GROWTH="$TARGET/mudlib/feature/char/combat.c"
+python3 - "$COMBAT_DAMAGE_GROWTH" <<'PY'
 from pathlib import Path
 import sys
 p = Path(sys.argv[1])
 s = p.read_text()
-marker = "// ES2-KING COMBAT HIT SCORE GROWTH"
+marker = "// ES2-KING COMBAT DAMAGE SCORE GROWTH"
 if marker not in s:
-    anchor = '''        else damage = 0;
-    }
+    anchor = '''    if( damage < 1 ) return 0;
+    if( !living(this_object()) ) damage *= 10;
+'''
+    patch = '''    if( damage < 1 ) return 0;
+    if( !living(this_object()) ) damage *= 10;
 
-    /* 將傷害程度的訊息加入戰鬥訊息。 */'''
-    patch = '''        else damage = 0;
-    }
-
-    // ES2-KING COMBAT HIT SCORE GROWTH
-    // KING Extension: only real damaging player->NPC hits gain score.
-    // PvP, miss, parry/absorb-to-zero and aborted fights do not gain score.
-    if( damage > 0 && userp(me) && objectp(victim) && !userp(victim) ) {
-        string mapped_art;
-        me->gain_score("combat", 1 + random(3));
-
-        // Martial-art score requires an actual mapped art different from the
-        // base strike skill. Plain blade/sword/unarmed practice gains combat
-        // and its normal skill progress, but does not fabricate martial art.
-        mapped_art = me->skill_mapped(skill);
-        if( stringp(mapped_art) && mapped_art != skill )
-            me->gain_score("martial art", 1 + random(2));
-    }
-
-    /* 將傷害程度的訊息加入戰鬥訊息。 */'''
+    // ES2-KING COMBAT DAMAGE SCORE GROWTH
+    // KING Extension: only real player -> NPC positive damage grows combat score.
+    // This hook is placed at receive_damage(), where positive post-resistance
+    // damage is already proven. PvP and zero-damage events are excluded.
+    if( objectp(attacker) && userp(attacker) && !userp(this_object()) )
+        attacker->gain_score("combat", 1 + random(3));
+'''
     if s.count(anchor) != 1:
-        raise SystemExit("KING COMBAT HIT GROWTH FAIL: combat damage anchor changed")
+        raise SystemExit("KING COMBAT DAMAGE GROWTH FAIL: receive_damage anchor changed")
     s = s.replace(anchor, patch, 1)
     p.write_text(s)
 PY
