@@ -444,6 +444,9 @@ async function exerciseShopQuantityJourney(p) {
   assert.match(list, /牛肉包子/);
   assert.match(list, /饅頭/);
   assert.match(await command(p, "buy mystery from waiter"), /並沒有賣/);
+  assert.match(await command(p, "buy 0 manto from waiter"), /數量必須至少是一個/);
+  assert.match(await command(p, "buy -1 manto from waiter"), /數量必須至少是一個/);
+  assert.match(await command(p, "buy 101 manto from waiter"), /一次最多只能買一百個/);
   assert.match(await command(p, "buy 31 chicken from waiter"), /只剩下三十隻/);
   assert.match(await command(p, "buy 1 chicken from waiter"), /錢不夠/);
   inventory = await command(p, "inventory");
