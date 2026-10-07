@@ -61,7 +61,34 @@ const http = createServer(async (request, response) => {
 
 const sockets = new WebSocketServer({ server: http, path: "/mud" });
 let publicSessionSequence = 0;
-sockets.on("connection", (browser) => {
+
+// Mobile Session Resume／手機背景續接：Safari 切到其他 App 時可能關閉 WebSocket。
+// Bridge 暫時保留原 Telnet 連線，瀏覽器以隨機 resume token 回來時接回同一個 MUD session。
+// Token 不是帳號或密碼，只存在瀏覽器 localStorage 與本機 Bridge 記憶體；Container 重啟即失效。
+const resumableSessions = new Map();
+const resumeGraceMs = Number(process.env.ES2_WEB_RESUME_GRACE_MS || 300000);
+const resumeTokenPattern = /^[A-Za-z0-9_-]{32,128}$/;
+
+sockets.on("connection", (browser, request) => {
+  const requestUrl = new URL(request.url || "/mud", "http://127.0.0.1");
+  const resumeToken = requestUrl.searchParams.get("resume") || "";
+  if (resumeTokenPattern.test(resumeToken)) {
+    const existing = resumableSessions.get(resumeToken);
+    if (existing && !existing.mud.destroyed) {
+      clearTimeout(existing.expiryTimer);
+      if (existing.browser && existing.browser.readyState === existing.browser.OPEN) {
+        try { existing.browser.close(4001, "Session resumed in another browser connection"); } catch {}
+      }
+      existing.browser = browser;
+      existing.expiryTimer = null;
+      console.log(`[public-session ${existing.sessionId}] websocket-resume`);
+      browser.on("message", data => existing.forwardBrowserMessage(data));
+      browser.on("close", () => existing.detachBrowser(browser));
+      browser.on("error", () => existing.detachBrowser(browser));
+      browser.send("\n[ES2-KING] 已恢復原遊戲連線。\n");
+      return;
+    }
+  }
   // 每個瀏覽器連線各自建立一條 Telnet（文字終端連線協定）TCP 連線。
   // Public Session ID（公開工作階段編號）只用於除錯生命週期，不記錄玩家輸入、密碼或 Claim Token。
   const sessionId = ++publicSessionSequence;
@@ -71,6 +98,8 @@ sockets.on("connection", (browser) => {
   let runtimeTail = "";
   let numericRaceActive = false;
   let inventoryProbePending = null;
+  let activeBrowser = browser;
+  let expiryTimer = null;
   mud.setTimeout(10000, () => {
     console.error(`[public-session ${sessionId}] mud-timeout host=${mudHost} port=${mudPort}`);
     mud.destroy(new Error("MUD connection timeout"));
@@ -93,17 +122,18 @@ sockets.on("connection", (browser) => {
     // Race State／種族狀態：一旦 Runtime 顯示數字 Race 提示，就保持到真正進入 Gender，避免提示後的「>」雜訊讓 Public iPhone 失去 Race 封套路徑。
     if (/請輸入編號 1-12 或種族 ID|請輸入編號 1 或 2/.test(text)) numericRaceActive = true;
     if (/您要扮演的哪種性別/.test(text)) numericRaceActive = false;
-    if (text.length > 0 && browser.readyState === browser.OPEN) browser.send(text);
+    if (text.length > 0 && activeBrowser && activeBrowser.readyState === activeBrowser.OPEN) activeBrowser.send(text);
   });
   mud.on("error", (error) => {
     console.error(`[public-session ${sessionId}] mud-error code=${error.code || "unknown"} message=${error.message}`);
-    browser.close(1011, `MUD connection failed: ${error.message}`);
+    if (activeBrowser && activeBrowser.readyState === activeBrowser.OPEN) activeBrowser.close(1011, `MUD connection failed: ${error.message}`);
   });
   mud.on("close", hadError => {
     console.log(`[public-session ${sessionId}] mud-close hadError=${hadError}`);
-    browser.close(1000, "MUD connection closed");
+    if (resumeTokenPattern.test(resumeToken)) resumableSessions.delete(resumeToken);
+    if (activeBrowser && activeBrowser.readyState === activeBrowser.OPEN) activeBrowser.close(1000, "MUD connection closed");
   });
-  browser.on("message", (data) => {
+  const forwardBrowserMessage = (data) => {
     if (!mud.writable) return;
     // 只記錄位元組數，不記錄內容，讓 Public blocker 可判斷 Browser→Bridge 是否真的有送資料且不洩漏秘密。
     console.log(`[public-session ${sessionId}] browser-to-mud bytes=${data.length}`);
@@ -145,9 +175,44 @@ sockets.on("connection", (browser) => {
     }
     // 其他 Original get_char／一般文字輸入維持原始位元組。
     mud.write(Buffer.from(data));
-  });
-  browser.on("close", () => { console.log(`[public-session ${sessionId}] websocket-close`); mud.destroy(); });
-  browser.on("error", () => mud.destroy());
+  };
+  const detachBrowser = (closedBrowser) => {
+    if (activeBrowser !== closedBrowser) return;
+    console.log(`[public-session ${sessionId}] websocket-detach`);
+    activeBrowser = null;
+    if (!resumeTokenPattern.test(resumeToken)) {
+      mud.destroy();
+      return;
+    }
+    clearTimeout(expiryTimer);
+    expiryTimer = setTimeout(() => {
+      console.log(`[public-session ${sessionId}] resume-expired`);
+      resumableSessions.delete(resumeToken);
+      mud.destroy();
+    }, resumeGraceMs);
+    const session = resumableSessions.get(resumeToken);
+    if (session) session.expiryTimer = expiryTimer;
+  };
+  browser.on("message", forwardBrowserMessage);
+  browser.on("close", () => detachBrowser(browser));
+  browser.on("error", () => detachBrowser(browser));
+  if (resumeTokenPattern.test(resumeToken)) {
+    resumableSessions.set(resumeToken, {
+      sessionId, mud, browser, expiryTimer,
+      forwardBrowserMessage,
+      detachBrowser: closedBrowser => {
+        activeBrowser = null;
+        const session = resumableSessions.get(resumeToken);
+        if (!session) return;
+        clearTimeout(session.expiryTimer);
+        session.expiryTimer = setTimeout(() => {
+          console.log(`[public-session ${sessionId}] resume-expired`);
+          resumableSessions.delete(resumeToken);
+          mud.destroy();
+        }, resumeGraceMs);
+      }
+    });
+  }
 });
 
 http.listen(webPort, "0.0.0.0", () => {
