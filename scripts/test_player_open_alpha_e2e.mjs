@@ -186,10 +186,13 @@ async function getEquipmentAndFight(p) {
   const scoreAfterFight = await command(p, "score");
   const combatAfter = Number((scoreAfterFight.match(/實戰經驗[^0-9]*([0-9]+)/) || [])[1] || 0);
   const martialAfter = Number((scoreAfterFight.match(/武術造詣[^0-9]*([0-9]+)/) || [])[1] || 0);
-  assert.ok(combatAfter >= combatBefore + 1, `combat score did not grow during damaging NPC combat: ${combatBefore} -> ${combatAfter}`);
+  // Pinned Original does not grant generic combat score merely for dealing damage.
+  // Current ES2M evidence grants combat score on successful dodge/parry; that rule
+  // is imported separately and must not be fabricated by this plain-weapon journey.
+  assert.ok(combatAfter >= combatBefore, `combat score regressed during NPC combat: ${combatBefore} -> ${combatAfter}`);
   // 此段普通玩家只使用基本木劍；martial art 必須由已映射特殊武學的有效命中取得，不在此偽造。
   assert.equal(martialAfter, martialBefore, `plain weapon combat unexpectedly changed martial art: ${martialBefore} -> ${martialAfter}`);
-  console.log(`PLAYER_COMBAT_SCORE_GROWTH_PASS:${p.id}:combat-${combatBefore}-${combatAfter}:plain-martial-unchanged-${martialAfter}`);
+  console.log(`PLAYER_COMBAT_FLOW_PASS:${p.id}:combat-${combatBefore}-${combatAfter}:plain-martial-unchanged-${martialAfter}`);
   const recovered = await command(p, "look");
   assert.match(recovered, /小廣場|廣場北邊/);
   // Combat Recovery／戰鬥結束後不能只看到畫面：普通玩家必須恢復可操作狀態並能繼續世界移動。
