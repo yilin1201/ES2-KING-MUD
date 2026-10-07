@@ -278,4 +278,9 @@ python3 "$REPO_ROOT/scripts/apply_es2m_shop_quantity_runtime.py" \
 python3 "$REPO_ROOT/scripts/apply_es2m_container_runtime.py" \
   --runtime "$ROOT/mudlib"
 
+# Combined Item Persistence／組合物品保存：商店購買的包子、饅頭等數量在 save/quit/relogin 後保留。
+# 不修改玩家 save format；沿用既有 user autoload 陣列，只補 COMBINED_ITEM 的既有 autoload 契約。
+python3 "$REPO_ROOT/scripts/apply_combined_item_autoload_runtime.py" \
+  --runtime "$ROOT/mudlib"
+
 echo 'ES2M RACE RUNTIME OVERLAY PASS／10 個缺失種族改由 ES2M daemon 恢復；保留 Original Human/Avatar；登入流程接受 12 種族。'
