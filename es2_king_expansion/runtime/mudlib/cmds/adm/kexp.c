@@ -20,8 +20,7 @@ int main(object me,string arg)
         t=K->resolve_target(me,id);
         if(!objectp(t))
             return notify_fail("找不到在線玩家帳號。\n");
-        if(!K->change_score_field(me,t,"combat_exp",op,v)
-        || !K->change_score_field(me,t,"potential",op,v))
+        if(!K->change_exp_potential(me,t,op,v))
             return notify_fail("經驗／潛能修改失敗。\n");
         write("經驗／潛能修改完成："+id+" "+op+" "+v+"\n");
         return 1;
