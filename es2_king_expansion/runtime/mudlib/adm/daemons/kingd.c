@@ -78,6 +78,55 @@ int apply_creator_profile(object actor)
     return 1;
 }
 
+
+/* V0 人物管理核心：所有修改均由此服務集中驗證，避免指令直接建立平行人物資料。 */
+int set_managed_attr(object actor, object target, string attr, int value)
+{
+    if(!authorized(actor)||!objectp(target)||!userp(target)||member_array(attr,({"str","cor","int","spi","cps","dex","con","wis"}))<0) return 0;
+    if(value<1||value>99) return 0;
+    return target->set_attr(attr,value)==value;
+}
+int set_managed_stat(object actor, object target, string stat, int value)
+{
+    if(!authorized(actor)||!objectp(target)||!userp(target)||member_array(stat,({"gin","kee","sen"}))<0) return 0;
+    if(value<1||value>999) return 0;
+    if(target->set_stat_maximum(stat,value)!=value) return 0;
+    if(target->set_stat_effective(stat,value)!=value) return 0;
+    if(target->set_stat_current(stat,value)!=value) return 0;
+    return 1;
+}
+int set_managed_skill(object actor, object target, string skill, int value)
+{
+    object daemon;
+    if(!authorized(actor)||!objectp(target)||!userp(target)||!stringp(skill)||skill==""||value<0||value>300) return 0;
+    daemon=SKILL_D(skill);
+    if(!objectp(daemon)) return 0;
+    target->set_skill(skill,value);
+    return target->query_skill(skill,1)==value;
+}
+int set_managed_class(object actor, object target, string class_id)
+{
+    object daemon;
+    if(!authorized(actor)||!objectp(target)||!userp(target)||!stringp(class_id)||class_id=="") return 0;
+    daemon=CLASS_D(class_id);
+    if(!objectp(daemon)) return 0;
+    return target->set_class(class_id);
+}
+int add_managed_money(object actor, object target, int amount)
+{
+    object ob; int total,gold,silver,coin;
+    if(!authorized(actor)||!objectp(target)||!userp(target)||amount==0) return 0;
+    ob=present("gold_money",target); if(ob) total+=(int)ob->value();
+    ob=present("silver_money",target); if(ob) total+=(int)ob->value();
+    ob=present("coin_money",target); if(ob) total+=(int)ob->value();
+    total+=amount; if(total<0) return 0;
+    gold=total/10000; total%=10000; silver=total/100; coin=total%100;
+    ob=present("gold_money",target); if(gold){if(!ob){ob=new("/obj/money/gold");if(!ob||!ob->move(target)){if(ob)destruct(ob);return 0;}}ob->set_amount(gold);}else if(ob)ob->set_amount(0);
+    ob=present("silver_money",target); if(silver){if(!ob){ob=new("/obj/money/silver");if(!ob||!ob->move(target)){if(ob)destruct(ob);return 0;}}ob->set_amount(silver);}else if(ob)ob->set_amount(0);
+    ob=present("coin_money",target); if(coin){if(!ob){ob=new("/obj/money/coin");if(!ob||!ob->move(target)){if(ob)destruct(ob);return 0;}}ob->set_amount(coin);}else if(ob)ob->set_amount(0);
+    return 1;
+}
+
 mapping query_creation_registry(object actor)
 {
     if (!authorized(actor)) return ([]);
