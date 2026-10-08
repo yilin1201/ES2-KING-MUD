@@ -8,7 +8,8 @@ private void create() { seteuid(getuid()); }
 int main(object me, string arg)
 {
     object who;
-    string extra;\n    string *keys = ({ "str", "cor", "int", "spi", "cps", "dex", "con", "wis" });
+    string extra;
+    string *keys = ({ "str", "cor", "int", "spi", "cps", "dex", "con", "wis" });
     string *labels = ({ "膂力", "膽識", "悟性", "靈性", "定力", "機敏", "根骨", "慧根" });
     int i;
     SECURED_ADMIN_COMMAND;
@@ -23,9 +24,9 @@ int main(object me, string arg)
     write("帳號 (id)：" + (string)who->query("id") + "\n");
     write("名稱 (name)：" + (string)who->name() + "\n");
     write("【精氣神：當前／上限】\n");
-    write(sprintf("精 (gin/max_gin)：%d / %d\n", (int)who->query("gin"), (int)who->query("max_gin")));
-    write(sprintf("氣 (kee/max_kee)：%d / %d\n", (int)who->query("kee"), (int)who->query("max_kee")));
-    write(sprintf("神 (sen/max_sen)：%d / %d\n", (int)who->query("sen"), (int)who->query("max_sen")));
+    write(sprintf("精 (gin)：%d / %d\n", (int)who->query_stat_current("gin"), (int)who->query_stat_maximum("gin")));
+    write(sprintf("氣 (kee)：%d / %d\n", (int)who->query_stat_current("kee"), (int)who->query_stat_maximum("kee")));
+    write(sprintf("神 (sen)：%d / %d\n", (int)who->query_stat_current("sen"), (int)who->query_stat_maximum("sen")));
     write("【八大基本屬性】\n");
     for (i = 0; i < sizeof(keys); i++)
         write(sprintf("%s (%s)：%d\n", labels[i], keys[i], (int)who->query_attr(keys[i], 1)));
