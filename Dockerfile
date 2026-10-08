@@ -122,6 +122,31 @@ RUN python3 scripts/test_es2m_zhenwu_topology.py /opt/es2-king/runtime/mudlib \
 RUN python3 scripts/test_es2m_zhenwu_topology.py es2m_snapshot/mudlib \
     && python3 scripts/test_es2m_zhenwu_recruitment.py es2m_snapshot/mudlib
 
+# V13 ES2M 世界區域：Lee／Oldpine／Wutang 只補入 Runtime 缺檔，禁止覆蓋同名 Original。
+RUN cd scripts && python3 -m unittest -v test_import_es2m_world_zones_safe
+RUN python3 scripts/import_es2m_world_zones_safe.py \
+    --snapshot /build/repository/es2m_snapshot/mudlib \
+    --runtime /opt/es2-king/runtime/mudlib \
+    --output /build/es2m-world-zones-stage.json
+# Lee／Oldpine／Wutang Runtime topology gates：SOURCE PASS 不等於 Runtime PASS。
+RUN python3 scripts/test_es2m_lee_topology.py \
+    && python3 scripts/test_es2m_lee_runtime.py \
+        --snapshot /build/repository/es2m_snapshot/mudlib \
+        --runtime /opt/es2-king/runtime/mudlib
+RUN python3 scripts/test_es2m_oldpine_topology.py \
+    --source /build/repository/es2m_snapshot/mudlib \
+    --runtime /opt/es2-king/runtime/mudlib
+RUN python3 scripts/test_es2m_wutang_topology.py \
+    --source /build/repository/es2m_snapshot/mudlib \
+    --runtime /opt/es2-king/runtime/mudlib
+
+# V13 ES2M NPC Dialogue：恢復 ask/inquiryd 介面；不自行新增缺失 NPC 劇情文字。
+RUN python3 scripts/test_es2m_dialogue_static.py
+RUN python3 scripts/apply_es2m_v13_dialogue_overlay.py \
+    --overlay /build/repository/source/es2m_updates/20261008_v13/runtime_overlay/mudlib \
+    --runtime /opt/es2-king/runtime/mudlib \
+    --output /build/es2m-dialogue-stage.json
+
 # ES2M 技能三方 SHA 稽核：將同名 Original／ES2M 衝突明列，絕不直接覆蓋。
 RUN cd scripts && python3 -m unittest -v test_audit_es2m_skill_three_way
 RUN python3 scripts/audit_es2m_skill_three_way.py \
