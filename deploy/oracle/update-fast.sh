@@ -85,7 +85,8 @@ if [[ "$mode" == "fast" ]]; then
 fi
 
 # Docker image 名稱已含 tag（例如 es2-king:oracle）；候選 tag 應接在既有 tag 後，避免產生第二個冒號。
-candidate="${IMAGE}-candidate-${short}"
+# 將映像 repository 與既有 tag 分開組合，確保候選映像永遠只有一個冒號。
+candidate="${IMAGE%:*}-candidate-${short}:${IMAGE##*:}"
 sudo docker image rm "$candidate" >/dev/null 2>&1 || true
 
 if [[ "$mode" == "fast" ]]; then
