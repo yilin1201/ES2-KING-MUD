@@ -20,7 +20,6 @@ private int es2_king_skill_cap()
         return 300;
     return 200;
 }
-private int es2_king_skill_cap(){ if(this_object()->query("id")=="king" && wiz_level(this_object())>=wiz_level("(admin)")) return 300; return 200; }
 void refresh_taoist_spell_mastery(string skill)
 {
     if( skill != "taoism-fire" && skill != "taoism-freeze"
