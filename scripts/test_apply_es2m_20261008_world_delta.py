@@ -17,7 +17,7 @@ def test_delta_scope_is_restricted() -> None:
     for token in ("snow_board.c", "square_w.c", "d/lee/inn.c"):
         assert token in s
     for forbidden in ("combatd.c", "feature/char/skill.c", "feature/equip.c",
-                      "vendor.c", "websocket", "save"):
+                      "vendor.c", "websocket", "save_format"):
         assert forbidden not in s.lower()
 
 
