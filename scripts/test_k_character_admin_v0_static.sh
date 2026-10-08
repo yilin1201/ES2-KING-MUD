@@ -8,8 +8,10 @@ grep -Fq 'wiz_level(a)>=wiz_level("(admin)")' "$ROOT/adm/daemons/kcharadmind.c"
 grep -Fq 'interactive(a)' "$ROOT/adm/daemons/kcharadmind.c"
 grep -Fq 'value > ATTRVAL_MAX' "$ROOT/feature/attribute.c"
 grep -Fq 'kcharadmind' "$ROOT/feature/attribute.c"
-grep -Fq 'val > 300' "es2m_snapshot/mudlib/feature/char/skill.c"
-grep -Fq 'kcharadmind' "es2m_snapshot/mudlib/feature/char/skill.c"
+grep -Fq 'val > 300' "$ROOT/feature/char/skill.c"
+grep -Fq 'es2_king_skill_cap' "$ROOT/feature/char/skill.c"
+# Original Snapshot 必須維持 ES2 原始 200 上限，不允許 V0 修改保存來源。
+if grep -Fq 'es2_king_skill_cap' "es2m_snapshot/mudlib/feature/char/skill.c"; then echo 'STATIC FAIL: Original Snapshot 被修改'; exit 1; fi
 grep -Fq 'set_stat_maximum' "$ROOT/adm/daemons/kcharadmind.c"
 grep -Fq 'set_stat_effective' "$ROOT/adm/daemons/kcharadmind.c"
 grep -Fq 'set_stat_current' "$ROOT/adm/daemons/kcharadmind.c"
