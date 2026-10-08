@@ -59,4 +59,16 @@ for class_id in commoner fighter taoist alchemist soldier scholar monk thief; do
   test -f "es2m_snapshot/mudlib/daemon/class/$class_id.c"
 done
 ! grep -Fq 'ES2-KING OWNER SKILL CAP 300' "es2m_snapshot/mudlib/feature/char/skill.c"
+# 21 項指令→核心 API 對應 Gate：避免只有檔案存在但實際沒有接到管理 daemon。
+grep -Fq 'K->set_stat(me,t,f,v)' "$ROOT/cmds/adm/kset.c"
+grep -Fq 'K->set_attribute(me,t,f,v)' "$ROOT/cmds/adm/kset.c"
+grep -Fq 'K->set_skill_level(me,t,s,v)' "$ROOT/cmds/adm/kskill.c"
+grep -Fq 'K->set_class(me,t,c)' "$ROOT/cmds/adm/kclass.c"
+grep -Fq 'K->change_exp_potential(me,t,op,v)' "$ROOT/cmds/adm/kexp.c"
+grep -Fq 'K->change_money(me,t,op,v)' "$ROOT/cmds/adm/kmoney.c"
+grep -Fq 'K->give_item(me,t,item)' "$ROOT/cmds/adm/kitem.c"
+grep -Fq 'K->remove_item(me,t,item)' "$ROOT/cmds/adm/kitem.c"
+grep -Fq 'environment' "$ROOT/cmds/adm/klocate.c"
+grep -Fq 'K->save_target(me,t)' "$ROOT/cmds/adm/ksave.c"
+grep -Fq 'KADMIN_D->query_audit(me,id)' "$ROOT/cmds/adm/kadmin.c"
 echo "ES2-KING 人物管理系統 V0 STATIC SOURCE GATE PASS"
