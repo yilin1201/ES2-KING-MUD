@@ -66,7 +66,9 @@ mapping query_skill_map()
 
 void set_skill(string skill, int val)
 {
-    if( val > 200 ) val = 200;
+    /* 一般技能仍維持 200；V0 KING 管理 API 可受控寫入 300。 */
+    if( val > 300 ) val = 300;
+    if( val > 200 && previous_object() != "/adm/daemons/kcharadmind" ) val = 200;
     skills[skill] = val;
     refresh_taoist_spell_mastery(skill);
 }
@@ -140,7 +142,7 @@ varargs int query_skill(string skill, int raw)
 	if( skill_map[skill]==0 ) return 0;
 	s += (skills[skill] + query_skill(skill_map[skill]) ) / 2;
     }
-    return (s > 200) ? 200 : s;
+    return (s > 300) ? 300 : s;
 }
 
 int query_learn(string skill)
