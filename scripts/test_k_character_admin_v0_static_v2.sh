@@ -30,5 +30,9 @@ grep -Fq '21 help kset' "$ROOT/cmds/adm/khelp.c"
 grep -Fq 'KING Registry' "$ROOT/cmds/adm/kitem.c"
 grep -Fq 'save_target' "$ROOT/cmds/adm/ksave.c"
 grep -Fq 'query_skill("sword",1)' "$ROOT/cmds/adm/kinfo.c"
+for class_id in commoner fighter taoist alchemist soldier scholar monk thief; do
+  grep -Fq "\"$class_id\"" "$ROOT/adm/daemons/kcharadmind.c"
+  test -f "es2m_snapshot/mudlib/daemon/class/$class_id.c"
+done
 ! grep -Fq 'ES2-KING OWNER SKILL CAP 300' "es2m_snapshot/mudlib/feature/char/skill.c"
 echo "ES2-KING 人物管理系統 V0 STATIC SOURCE GATE PASS"
