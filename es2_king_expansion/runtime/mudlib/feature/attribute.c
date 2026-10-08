@@ -1,6 +1,6 @@
 /*
  * ES2-KING Expansion overlay for Original ES2 attribute handling.
- * 所有角色（包括 KING）均維持 Original／ES2M 的 1..50 正式屬性範圍。
+ * 一般角色維持 Original／ES2M 的 1..50；V0 只允許 KING 核心服務將管理目標提高到 99。
  */
 #include <dbase.h>
 #include <attribute.h>
