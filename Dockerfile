@@ -125,7 +125,7 @@ RUN python3 scripts/test_es2m_zhenwu_topology.py es2m_snapshot/mudlib \
 # V13 ES2M 世界區域 coverage gate：快照新增任何 d/<zone> 都必須先有明確導入策略，避免靜默漏圖。
 RUN python3 scripts/test_es2m_world_coverage.py \
     --snapshot /build/repository/es2m_snapshot/mudlib
-RUN cd scripts && python3 -m unittest -v test_test_es2m_world_coverage
+RUN cd scripts && python3 -m unittest -v test_es2m_world_coverage_unit
 
 # V13 ES2M 世界區域：Lee／Oldpine／Wutang 只補入 Runtime 缺檔，禁止覆蓋同名 Original。
 RUN cd scripts && python3 -m unittest -v test_import_es2m_world_zones_safe
