@@ -3,7 +3,8 @@
 inherit F_DBASE;
 #define SAVE_FILE "/data/daemon/es2_king_kadmin"
 private mapping roles = ([]);
-private void create() { seteuid(getuid()); if (file_size(SAVE_FILE + ".o") >= 0) restore_object(SAVE_FILE); }
+private mapping audit_log = ([]);
+private void create() { seteuid(getuid()); if (file_size(SAVE_FILE + ".o") >= 0) restore_object(SAVE_FILE); if (!mapp(audit_log)) audit_log = ([]); }
 private int owner(object ob) { return objectp(ob) && interactive(ob) && ob->query("id")=="king" && wiz_level(ob)>=wiz_level("(admin)"); }
 int is_owner(object ob) { return owner(ob); }
 string role(object ob) { string id; if (owner(ob)) return "king"; if (!objectp(ob)) return "player"; id=ob->query("id"); return stringp(roles[id]) ? roles[id] : "player"; }
