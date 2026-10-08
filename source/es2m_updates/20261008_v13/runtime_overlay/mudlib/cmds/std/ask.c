@@ -1,116 +1,85 @@
 // ask.c
-// ES2M dialogue reconstruction：保留 Original ES2「ask <NPC> about <topic>」
-// 與 inquiry mapping 架構；不依賴未保存的跨 MUD 對話協定。
+// Original ES2 / Annihilator lineage：保留 ask <某人> about <關鍵字>
+// 與 ask <某人> for <交涉目標> 的原始 NPC callback 架構。
+// Source: taedlar/es2_mudlib 7309240af1720b813cef3eb0ba135afc1f19c2ac
 
-#include <ansi.h>
+inherit F_CLEAN_UP;
 
-#define INQUIRY_D "/adm/daemons/inquiryd"
-
-private string *msg_dunno = ({
-    "$n搖搖頭，說道：沒聽說過。\n",
-    "$n睜大眼睛望著$N，顯然不知道$P在說什麼。\n",
-    "$n聳了聳肩，很抱歉地說：無可奉告。\n",
-    "$n說道：嗯……這我可不清楚，你最好問問別人吧。\n"
-});
+int help();
 
 int main(object me, string arg)
 {
-    string dest, topic, msg, *ids;
-    object ob, env;
-    mapping inquiry;
-    int i;
+    string targ, key;
+    object target;
 
-    seteuid(getuid());
+    if( !arg || arg=="" ) return notify_fail("問什麼？\n");
 
-    if( !arg || arg=="" )
-        return notify_fail("你要問誰什麼事？\n");
+    if( sscanf(arg, "%s about %s", targ, key)==2 ) {
+        target = present(targ, environment(me));
+        if( !target || !target->is_character() )
+            return notify_fail("這裡沒有這個人。\n");
 
-    if( sscanf(arg, "%s about %s", dest, topic) != 2 )
-        topic = "";
+        // Original ES2：對 no_fight NPC 不進行 ask 互動。
+        if( objectp(target) && target->query("no_fight") )
+            return notify_fail("什麼??\n");
 
-    if( !objectp(ob = present(dest, environment(me))) )
-        return notify_fail("這裡沒有這個人。\n");
-
-    if( !ob->is_character() ) {
-        message_vision("$N對著$n自言自語……\n", me, ob);
+        message_vision("$N向$n打聽有關「" + key + "」的消息。\n", me, target);
+        target->accept_inquiry(me, key);
         return 1;
     }
+    else if( sscanf(arg, "%s for %s", targ, key)==2 )
+    {
+        target = present(targ, environment(me));
+        if( !target || !target->is_character() )
+            return notify_fail("這裡沒有這個人。\n");
 
-    if( topic == "" ) {
-        if( mapp(inquiry = ob->query("inquiry")) ) {
-            ids = keys(inquiry);
-            msg = "你可以打聽這些事情：\n"
-                "※『這裡』\n※『名字』\n※『傳聞』\n";
-            for( i=0; i<sizeof(ids); i++ )
-                msg += sprintf("※『%s』\n", ids[i]);
-            write(msg);
-            return 1;
+        // Original ES2：對 no_fight NPC 不進行 ask 交涉。
+        if( objectp(target) && target->query("no_fight") )
+            return notify_fail("什麼??\n");
+
+        switch(key) {
+        case "help":
+            message_vision("$N對著$n大叫：" + target->rank("respectful")
+                + "救命！\n", me, target);
+            break;
+        case "peace":
+            if( !target->is_fighting(me) ) {
+                write(target->name() + "和你並沒有結仇。\n");
+                return 1;
+            }
+            message_vision("$N向$n拱手一揖，說道：這位"
+                + target->rank("respectful")
+                + "武藝高強，在下佩服得緊，不如化敵為友如何？\n", me, target);
+            break;
+        case "mercy":
+            if( target->is_killing(me) )
+                message_vision("$N向$n雙膝跪倒，哀求道：" + target->rank("respectful")
+                    + "饒命！小的下次再也不敢了！\n", me, target);
+            break;
+        default:
         }
-        topic = "詢問";
-    }
-
-    if( !ob->query("can_speak") ) {
-        message_vision("$N向$n打聽有關『" + topic
-            + "』的消息，但是$n顯然聽不懂人話。\n", me, ob);
+        target->accept_negotiation(me, key);
         return 1;
     }
-
-    if( !INQUIRY_D->parse_inquiry(me, ob, topic) )
-        message_vision("$N向$n打聽有關『" + topic + "』的消息。\n", me, ob);
-
-    if( userp(ob) )
-        return 1;
-
-    if( !living(ob) ) {
-        message_vision("但是很顯然，$n現在的狀況沒有辦法給$N任何答覆。\n",
-            me, ob);
-        return 1;
-    }
-
-    msg = ob->query("inquiry/" + topic);
-    if( stringp(msg) ) {
-        message_vision(CYN "$N說道：" + msg + "\n" NOR, ob);
-        return 1;
-    }
-
-    if( arrayp(msg) ) {
-        for( i=0; i<sizeof(msg); i++ )
-            if( stringp(msg[i]) )
-                message_vision(CYN "$N說道：" + msg[i] + "\n" NOR, ob);
-        return 1;
-    }
-
-    if( ob->query("name") == topic || topic=="name" || topic=="名字" ) {
-        message_vision(CYN "$N對$n說道：我叫" + ob->query("name")
-            + "。\n" NOR, ob, me);
-        return 1;
-    }
-
-    env = environment(ob);
-    if( (topic=="here" || topic=="這裡") && objectp(env) ) {
-        message_vision(CYN "$n對$N說道：這裡是"
-            + env->query("short") + "。\n" NOR, me, ob);
-        return 1;
-    }
-
-    if( topic=="rumors" || topic=="傳聞" ) {
-        message_vision(CYN "$n對$N說道：最近倒沒有什麼特別的消息。\n"
-            NOR, me, ob);
-        return 1;
-    }
-
-    message_vision(msg_dunno[random(sizeof(msg_dunno))], me, ob);
-    return 1;
+    else
+        return notify_fail("請用 help ask 參考說明。\n");
 }
 
-int help(object me)
+int help()
 {
-    write(@HELP
-指令格式：ask <someone> about <something>
+    write(@TEXT
+指令格式：ask <某人> about <關鍵字>
+          ask <某人> for <交涉目標>
 
-這個指令用來向房間中的 NPC 打聽資訊。
-NPC 可透過 set("inquiry", ([ ... ])) 提供對話主題。
-HELP
+這個指令讓你和 npc 進行一些簡單的互動，用第一種格式的時候表示向 npc 打聽
+有關某關鍵字的消息，第二種格式則是和 npc 進行交涉，目前大多數 npc 能夠了
+解的交涉目標有：
+
+help     向對方求助。
+peace    向跟你有仇恨的人要求和解。
+mercy    向正在攻擊你的敵人求饒。
+
+TEXT
     );
     return 1;
 }
