@@ -26,6 +26,8 @@ grep -Fq 'change_exp_potential' "$ROOT/cmds/adm/kexp.c"
 grep -Fq 'resolve_target(me,arg)' "$ROOT/cmds/adm/ksave.c"
 ! grep -Fq '目前 BLOCKED' "$ROOT/cmds/adm/kexp.c"
 grep -Fq '/obj/money/' "$ROOT/adm/daemons/kcharadmind.c"
+grep -Fq 'money_amount(o,"gold",og)' "$ROOT/adm/daemons/kcharadmind.c"
+grep -Fq 'set_stat_effective(st,old)' "$ROOT/adm/daemons/kcharadmind.c"
 grep -Fq 'query_audit' "$ROOT/adm/daemons/kcharadmind.c"
 grep -Fq 'kadmin audit' "$ROOT/cmds/adm/kadmin.c"
 for f in kset kskill kclass kexp kmoney kitem klocate ksave; do grep -Fq 'SECURED_ADMIN_COMMAND' "$ROOT/cmds/adm/$f.c"; done
