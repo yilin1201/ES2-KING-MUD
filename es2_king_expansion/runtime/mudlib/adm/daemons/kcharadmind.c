@@ -2,6 +2,7 @@
 #pragma save_binary
 inherit F_DBASE;
 #define KADMIN_D "/adm/daemons/kadmind"
+#define KING_D "/adm/daemons/kingd"
 #define SAVE_FILE "/data/daemon/es2_king_kcharadmin"
 private mixed *audit_log = ({});
 private void create(){seteuid(getuid());if(file_size(SAVE_FILE+".o")>=0)restore_object(SAVE_FILE);}
