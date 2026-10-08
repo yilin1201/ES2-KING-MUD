@@ -27,9 +27,7 @@ int set_attr(string what, int value)
     // Original 規則保留：玩家屬性必須先由 init_attribute() 初始化。
     // 所有角色使用相同 ATTRVAL_MAX=50；KING 由授權登入配置設為 50。
     if (userp(this_object())
-    && (undefinedp(attribute[what])
-        || value < ATTRVAL_MIN
-        || (value > ATTRVAL_MAX && previous_object() != "/adm/daemons/kcharadmind")))
+    && (undefinedp(attribute[what]) || value < ATTRVAL_MIN || value > ATTRVAL_MAX))
         return 0;
 
     return (attribute[what] = value);
