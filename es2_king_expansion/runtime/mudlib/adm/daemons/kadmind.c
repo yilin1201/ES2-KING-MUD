@@ -35,7 +35,7 @@ void record(object actor, object target, string action, string field, mixed valu
     save_object(SAVE_FILE);
 }
 
-mapping query_audit(object actor, string id)
+mixed query_audit(object actor, string id)
 {
     if(!owner(actor) || !stringp(id)) return ([]);
     return arrayp(audit_log[id]) ? copy(audit_log[id]) : ([]);
