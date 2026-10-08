@@ -10,9 +10,6 @@ mapping skill_map       = ([]);         // The links of mapped skill.
 mapping skill_flag      = ([]);         // Ultra skill flags.
 
 string best_skill = "";
-
-// ES2-KING Expansion：唯一 admin KING 可使用 300；一般玩家仍維持 Original 200。
-private int es2_king_skill_cap(){if(this_object()->query("id")=="king"&&wiz_level(this_object())>=wiz_level("(admin)"))return 300;if(objectp(previous_object())&&file_name(previous_object())=="/adm/daemons/kcharadmind")return 300;return 200;}
 void refresh_taoist_spell_mastery(string skill)
 {
     if( skill != "taoism-fire" && skill != "taoism-freeze"
@@ -69,7 +66,8 @@ mapping query_skill_map()
 
 void set_skill(string skill, int val)
 {
-    if( val > es2_king_skill_cap() ) val = es2_king_skill_cap();
+    if( val > 300 && objectp(previous_object()) && file_name(previous_object()) == "/adm/daemons/kingd") val = 300;
+    else if( val > 200 ) val = 200;
     skills[skill] = val;
     refresh_taoist_spell_mastery(skill);
 }
@@ -143,8 +141,7 @@ varargs int query_skill(string skill, int raw)
 	if( skill_map[skill]==0 ) return 0;
 	s += (skills[skill] + query_skill(skill_map[skill]) ) / 2;
     }
-    if( s > 200 && !undefinedp(skills[skill]) && skills[skill] > 200 ) return s;
-    return (s > 200) ? 200 : s;
+    return (s > 300) ? 300 : s;
 }
 
 int query_learn(string skill)
@@ -370,7 +367,7 @@ varargs void advance_skill(string skill, int amount)
     else
 	skills[skill] += amount;
 
-    if( skills[skill] > es2_king_skill_cap() ) skills[skill] = es2_king_skill_cap();
+    if( skills[skill] > 200 ) skills[skill] = 200;
 
     SKILL_D(skill)->skill_advanced(this_object(), skill);
     roll_attr_growth(skill, old_level, skills[skill]);
