@@ -1,6 +1,6 @@
 /*
  * ES2-KING Expansion overlay for Original ES2 attribute handling.
- * 一般角色維持 Original／ES2M 的 1..50；V0 只允許 KING 核心服務將管理目標提高到 99。
+ * 所有角色（包括 KING）均維持 Original／ES2M 的 1..50 正式屬性範圍。
  */
 #include <dbase.h>
 #include <attribute.h>
@@ -27,7 +27,7 @@ int set_attr(string what, int value)
     // Original 規則保留：玩家屬性必須先由 init_attribute() 初始化。
     // 所有角色使用相同 ATTRVAL_MAX=50；KING 由授權登入配置設為 50。
     if (userp(this_object())
-    && (undefinedp(attribute[what]) || value < ATTRVAL_MIN || value > ATTRVAL_MAX))
+    && (undefinedp(attribute[what]) || value < ATTRVAL_MIN || value > ATTRVAL_MAX && (!objectp(previous_object()) || file_name(previous_object()) != "/adm/daemons/kcharadmind")))
         return 0;
 
     return (attribute[what] = value);
