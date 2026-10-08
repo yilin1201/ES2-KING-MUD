@@ -676,7 +676,7 @@ done
 for arena_preload in /d/arena/skill/lunmay /d/arena/npc/mei_hanshuang; do
   grep -Fqx "$arena_preload" "$PRELOAD_FILE" || printf '%s\n' "$arena_preload" >> "$PRELOAD_FILE"
 done
-for owner_command in kingcreate kinghome kingmartial kingcanon kadmin kcreate khome kmartial kcanon; do
+for owner_command in kingcreate kinghome kingmartial kingcanon kadmin kcreate khome kmartial kcanon kinfo kset kskill kclass kexp kmoney kitem klocate ksave khelp; do
   grep -Fqx "/cmds/adm/$owner_command" "$PRELOAD_FILE" \
     || printf '%s\n' "/cmds/adm/$owner_command" >> "$PRELOAD_FILE"
 done
