@@ -66,8 +66,7 @@ mapping query_skill_map()
 
 void set_skill(string skill, int val)
 {
-    if( val > 300 && objectp(previous_object()) && file_name(previous_object()) == "/adm/daemons/kingd") val = 300;
-    else if( val > 200 ) val = 200;
+    if( val > 200 ) val = 200;
     skills[skill] = val;
     refresh_taoist_spell_mastery(skill);
 }
@@ -141,7 +140,7 @@ varargs int query_skill(string skill, int raw)
 	if( skill_map[skill]==0 ) return 0;
 	s += (skills[skill] + query_skill(skill_map[skill]) ) / 2;
     }
-    return (s > 300) ? 300 : s;
+    return (s > 200) ? 200 : s;
 }
 
 int query_learn(string skill)
