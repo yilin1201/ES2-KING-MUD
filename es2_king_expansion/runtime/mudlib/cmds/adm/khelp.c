@@ -18,7 +18,7 @@ ES2-KING 人物管理系統 V0
 12 kset king wis 99           慧根上限
 13 kskill king sword 300      武功等級
 14 kclass king fighter        門派／職業
-15 kexp king add 10000        經驗潛能（目前 BLOCKED）
+15 kexp king add 10000        經驗／潛能
 16 kmoney king add 10000      金錢
 17 kitem king give <物品ID>   裝備／道具
 18 klocate king               人物位置
