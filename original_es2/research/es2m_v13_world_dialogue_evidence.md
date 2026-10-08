@@ -32,7 +32,7 @@ Original ES2`. The snapshot remains a separate evidence layer.
 
 ## Dialogue evidence
 
-The legacy `mudchina/es2-utf8` ES2 lineage preserves:
+The legacy `mudchina/es2-utf8` ES2 lineage preserves (reviewed at commit `87bba6bd2249beec8424b0d6623486a0dd1f7b30`):
 
 - `mudlib/cmds/std/ask.c`
 - `mudlib/adm/daemons/inquiryd.c`
