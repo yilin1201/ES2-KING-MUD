@@ -254,12 +254,23 @@ PY
 
 # ES2M 657f682 gameplay delta／最新安全增量：留言板、當鋪、UTF-8 對齊與七彩石已讀紀錄。
 # 這四檔不覆蓋 KING Combat／Save／Permission；vendor 另由 atomic shop adapter 管理，避免回退交易安全性。
+SIMUL_EFUN_CHANGED=0
 for rel in adm/simul_efun/utf8.c std/bboard.c std/room/hockshop.c d/snow/obj/stone.c; do
   src="$REPO_ROOT/es2m_snapshot/mudlib/$rel"
   dst="$ROOT/mudlib/$rel"
   [[ -f "$src" && -f "$dst" ]] || { echo "ES2M 657f682 SAFE DELTA FAIL: $rel" >&2; exit 1; }
+  if [[ "$rel" == "adm/simul_efun/utf8.c" ]] && ! cmp -s "$src" "$dst"; then
+    SIMUL_EFUN_CHANGED=1
+  fi
   cp "$src" "$dst"
 done
+# Neolith 的預編譯 .b 以 simul-efun 函式索引呼叫；新增 cjk_pad/cjk_align 後，舊快取會把
+# log_file/seteuid 等呼叫錯派到新函式。只在 utf8 simul-efun 實際改變時清除 Runtime
+# binary cache，讓 Driver 依新介面重編；玩家 data/save 不在此路徑，也不受影響。
+if (( SIMUL_EFUN_CHANGED )); then
+  find "$ROOT/mudlib/bin" -type f -name '*.b' -delete 2>/dev/null || true
+  echo 'ES2M SIMUL_EFUN CACHE INVALIDATED／UTF-8 介面變更，已清除隔離 Runtime 舊 binary cache。'
+fi
 echo 'ES2M 657f682 SAFE RUNTIME DELTA PASS／留言板、當鋪、UTF-8 對齊與七彩石已同步。'
 
 # ES2M Weapon Affix Runtime Overlay／武器附加屬性 Runtime 覆蓋：

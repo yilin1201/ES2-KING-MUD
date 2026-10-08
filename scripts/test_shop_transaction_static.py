@@ -16,6 +16,8 @@ WAITER = ROOT / "source/es2m_updates/20261005_5f042999/runtime_overlay/mudlib/d/
 AUTOLOAD = ROOT / "scripts/apply_combined_item_autoload_runtime.py"
 SHOP_AUTOLOAD = ROOT / "scripts/apply_shop_item_autoload_runtime.py"
 E2E = ROOT / "scripts/test_player_open_alpha_e2e.mjs"
+E2E_RUNNER = ROOT / "scripts/test_player_open_alpha_e2e.sh"
+RUNTIME_APPLY = ROOT / "scripts/apply_race_phase2_runtime.sh"
 SNOW_WAITER = ROOT / "es2m_snapshot/mudlib/d/snow/npc/waiter.c"
 SNOW_FISH = ROOT / "es2m_snapshot/mudlib/d/snow/npc/yu.c"
 LEE_GROCERY = ROOT / "es2m_snapshot/mudlib/d/lee/npc/lee_zhong.c"
@@ -41,6 +43,8 @@ waiter = WAITER.read_text(encoding="utf-8")
 autoload = AUTOLOAD.read_text(encoding="utf-8")
 shop_autoload = SHOP_AUTOLOAD.read_text(encoding="utf-8")
 e2e = E2E.read_text(encoding="utf-8")
+e2e_runner = E2E_RUNNER.read_text(encoding="utf-8")
+runtime_apply = RUNTIME_APPLY.read_text(encoding="utf-8")
 
 require(
     buy,
@@ -128,6 +132,35 @@ require(
     'PLAYER_ES2M_SHOP_BALANCE_PERSISTENCE_PASS',
     'PLAYER_ES2M_SHOP_MULTI_VENDOR_PASS',
     'PLAYER_ES2M_SHOP_NONSTACK_PERSISTENCE_PASS',
+)
+
+# The ordinary-player runner must invalidate stale Neolith binaries whenever
+# the simul-efun interface changes; otherwise old .b indexes can dispatch
+# log_file/seteuid calls into cjk_align before any shop journey starts.
+require(
+    runtime_apply,
+    'SIMUL_EFUN_CHANGED=0',
+    'cmp -s "$src" "$dst"',
+    'find "$ROOT/mudlib/bin" -type f -name \'*.b\' -delete',
+    'ES2M SIMUL_EFUN CACHE INVALIDATED',
+)
+
+# Repeatable Gameplay matrix: emitted only after the runner verifies every
+# required ordinary-player Runtime marker in the E2E log.
+require(
+    e2e_runner,
+    'SHOP_ACCEPTANCE:NPC_REACHABLE:PASS',
+    'SHOP_ACCEPTANCE:LIST:PASS',
+    'SHOP_ACCEPTANCE:BUY:PASS',
+    'SHOP_ACCEPTANCE:BULK_BUY:PASS',
+    'SHOP_ACCEPTANCE:INVENTORY:PASS',
+    'SHOP_ACCEPTANCE:SAVE_QUIT_RELOGIN:PASS',
+    'SHOP_ACCEPTANCE:INVALID_QUANTITY:PASS',
+    'SHOP_ACCEPTANCE:INSUFFICIENT_MONEY:PASS',
+    'SHOP_ACCEPTANCE:INSUFFICIENT_STOCK:PASS',
+    'SHOP_ACCEPTANCE:DELIVERY_FAILURE:PASS',
+    'SHOP_ACCEPTANCE:NO_DUPLICATE_NONSTACK:PASS',
+    'SHOP_ACCEPTANCE:BALANCE_PERSISTENCE:PASS',
 )
 
 print("SHOP_TRANSACTION_STATIC_PASS")
