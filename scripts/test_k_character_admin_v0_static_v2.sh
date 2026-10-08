@@ -38,6 +38,7 @@ grep -Fq '21 help kset' "$ROOT/cmds/adm/khelp.c"
 grep -Fq 'KING Registry' "$ROOT/cmds/adm/kitem.c"
 grep -Fq 'save_target' "$ROOT/cmds/adm/ksave.c"
 grep -Fq 'query_skill("sword",1)' "$ROOT/cmds/adm/kinfo.c"
+grep -Fq 'o->set_class(old)' "$ROOT/adm/daemons/kcharadmind.c"
 for class_id in commoner fighter taoist alchemist soldier scholar monk thief; do
   grep -Fq "\"$class_id\"" "$ROOT/adm/daemons/kcharadmind.c"
   test -f "es2m_snapshot/mudlib/daemon/class/$class_id.c"
