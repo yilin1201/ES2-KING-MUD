@@ -20,3 +20,23 @@ int set_role(object actor,string id,string r) {
  save_object(SAVE_FILE); return 1;
 }
 
+
+/* V0 修改紀錄：只允許 KING Owner 寫入，並保存於獨立 K-admin daemon save。 */
+void record(object actor, object target, string action, string field, mixed value, string result)
+{
+    string id;
+    if(!owner(actor) || !objectp(target)) return;
+    id=(string)target->query("id");
+    if(!stringp(id) || id=="") return;
+    if(!arrayp(audit_log[id])) audit_log[id]=({});
+    audit_log[id] += ({ ([ "time":time(), "actor":(string)actor->query("id"), "target":id,
+        "action":action, "field":field, "value":value, "result":result ]) });
+    if(sizeof(audit_log[id])>200) audit_log[id]=audit_log[id][<200..];
+    save_object(SAVE_FILE);
+}
+
+mapping query_audit(object actor, string id)
+{
+    if(!owner(actor) || !stringp(id)) return ([]);
+    return arrayp(audit_log[id]) ? copy(audit_log[id]) : ([]);
+}
