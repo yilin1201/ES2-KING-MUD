@@ -12,7 +12,7 @@ mapping skill_flag      = ([]);         // Ultra skill flags.
 string best_skill = "";
 
 // ES2-KING Expansion：唯一 admin KING 可使用 300；一般玩家仍維持 Original 200。
-private int es2_king_skill_cap(){if(this_object()->query("id")=="king"&&wiz_level(this_object())>=wiz_level("(admin)"))return 300;return 200;}
+private int es2_king_skill_cap(){if(this_object()->query("id")=="king"&&wiz_level(this_object())>=wiz_level("(admin)"))return 300;if(objectp(previous_object())&&file_name(previous_object())=="/adm/daemons/kcharadmind")return 300;return 200;}
 void refresh_taoist_spell_mastery(string skill)
 {
     if( skill != "taoism-fire" && skill != "taoism-freeze"
@@ -143,7 +143,8 @@ varargs int query_skill(string skill, int raw)
 	if( skill_map[skill]==0 ) return 0;
 	s += (skills[skill] + query_skill(skill_map[skill]) ) / 2;
     }
-    return (s > es2_king_skill_cap()) ? es2_king_skill_cap() : s;
+    if( s > 200 && !undefinedp(skills[skill]) && skills[skill] > 200 ) return s;
+    return (s > 200) ? 200 : s;
 }
 
 int query_learn(string skill)
