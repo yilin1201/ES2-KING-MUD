@@ -146,7 +146,6 @@ RUN python3 scripts/apply_es2m_20261008_world_delta.py \
     --overlay /build/repository/source/es2m_updates/20261008_latest/source/upstream/mudlib \
     --runtime /opt/es2-king/runtime/mudlib
 
-# V13 ES2M NPC Dialogue：恢復 ask/inquiryd 介面；不自行新增缺失 NPC 劇情文字。
 RUN python3 scripts/test_es2m_dialogue_static.py
 RUN python3 scripts/apply_es2m_v13_dialogue_overlay.py \
     --overlay /build/repository/source/es2m_updates/20261008_v13/runtime_overlay/mudlib \
