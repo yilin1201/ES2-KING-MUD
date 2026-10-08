@@ -32,28 +32,44 @@ Original ES2`. The snapshot remains a separate evidence layer.
 
 ## Dialogue evidence
 
-The legacy `mudchina/es2-utf8` ES2 lineage preserves (reviewed at commit `87bba6bd2249beec8424b0d6623486a0dd1f7b30`):
+The legacy `mudchina/es2-utf8` ES2 lineage was reviewed at commit
+`87bba6bd2249beec8424b0d6623486a0dd1f7b30`.
 
-- `mudlib/cmds/std/ask.c`
-- `mudlib/adm/daemons/inquiryd.c`
-- NPC `set("inquiry", ([ ... ]))` mappings.
+Direct evidence confirms:
 
-The recovered `ask` command uses the established form:
+- `mudlib/cmds/std/ask.c` parses:
+  - `ask <NPC> about <topic>`
+  - `ask <NPC> for <negotiation>`
+- The command validates `target->is_character()`.
+- The `about` branch calls:
+  `target->accept_inquiry(me, key)`.
+- The `for` branch calls:
+  `target->accept_negotiation(me, key)`.
+- `no_fight` NPC protection and `rank("respectful")` dialogue formatting
+  are part of the preserved command implementation.
+- Historical NPC source contains `set("inquiry", ([ ... ]))` mappings. Examples
+  include Snow blacksmith and Snow teacher, plus many city/NPC records.
 
-`ask <NPC> about <topic>`
+V13 therefore restores **only the verified command contract**. It does not
+invent an `inquiryd` daemon, an `inquiry` mapping fallback, or new NPC story
+text when the corresponding Original source evidence is unavailable.
 
-V13 restores this interface as an isolated runtime overlay. The implementation
-does not add new NPC story text or invent missing inquiry topics. NPCs without an
-`inquiry` mapping use the generic ES2 fallback responses.
+The V13 `ask.c` overlay is a source-preserving reconstruction of the verified
+Original command contract; NPC-specific `accept_inquiry` implementation must
+come from the target NPC lineage before it can be declared runtime-complete.
 
-Evidence status: `CORROBORATED_RUNTIME_CANDIDATE` / `ARCHIVED_SOURCE` for the
-legacy ES2M dialogue interface. This does **not** upgrade the current taedlar
-Original runtime evidence to `CONFIRMED_RUNTIME`.
+Evidence status:
+- `CONFIRMED_SOURCE`: command syntax and NPC callback contract.
+- `ARCHIVED_SOURCE`: historical NPC `inquiry` mappings from the pinned legacy
+  lineage.
+- `RUNTIME_PENDING`: V13 overlay has not been executed in the generated MUD
+  during this chat run.
+- `GAMEPLAY_PENDING`: no player journey has yet exercised imported NPC dialogue.
 
 ## Verification boundary
 
 - SOURCE: PASS — source files and topology evidence are present.
-- STATIC: PASS — importer safety and dialogue contracts are testable.
+- STATIC: PASS — importer safety and dialogue contract tests are present.
 - RUNTIME: PENDING until the generated Runtime is actually executed.
 - GAMEPLAY: PENDING until a player can traverse an imported zone and exercise
   NPC dialogue in the running MUD.
