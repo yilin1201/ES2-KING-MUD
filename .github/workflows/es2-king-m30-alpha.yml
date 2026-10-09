@@ -23,7 +23,7 @@ jobs:
       - name: Install build prerequisites／安裝建置依賴
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build bison libcmark-dev
+          sudo apt-get install -y ninja-build bison libcmark-dev cmark
           python -m pip install --upgrade cmake
       - name: Driver Build／建置 Driver
         working-directory: .runtime/es2-king/neolith
