@@ -645,25 +645,17 @@ import sys
 
 path = Path(sys.argv[1])
 text = path.read_text()
-marker = '''    if (!pointerp(path))
-        return 0;
-
-    p = path - cached_path;
-'''
-patch = '''    if (!pointerp(path))
-        return 0;
-
-    // ES2-KING OWNER COMMAND REHASH／不擴張一般玩家搜尋路徑。
+marker = '    p = path - cached_path;'
+patch = '''    // ES2-KING OWNER COMMAND REHASH／不擴張一般玩家搜尋路徑。
     if (member_array("/cmds/adm/", path) >= 0
     &&  member_array(verb, ({ "kingcreate", "kinghome", "kingmartial", "kingcanon" })) >= 0
     &&  file_size("/cmds/adm/" + verb + ".c") >= 0)
         cache[verb + ".c"] = ({ "/cmds/adm/" });
 
-    p = path - cached_path;
-'''
+    p = path - cached_path;'''
 if 'ES2-KING OWNER COMMAND REHASH' not in text:
     if marker not in text:
-        raise SystemExit("EXPANSION APPLY FAIL：cmd_d.lpc 找不到指令索引 path guard。")
+        raise SystemExit("EXPANSION APPLY FAIL：cmd_d.lpc 找不到 path cache 更新錨點。")
     text = text.replace(marker, patch, 1)
 path.write_text(text)
 PY
