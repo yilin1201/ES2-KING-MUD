@@ -2,9 +2,9 @@ name: ES2-KING M29 Canon Martial Arts
 on:
   push:
     branches: [build/original-es2-races-phase2]
-    paths: ['es2_king_expansion/runtime/mudlib/adm/daemons/kingcanon_d.c', 'es2_king_expansion/runtime/mudlib/cmds/adm/kingcanon.c', 'es2_king_expansion/research/m29_*', 'es2_king_expansion/runtime/m29_*', 'scripts/test_m29_*', '.github/workflows/es2-king-m29-canon.yml']
+    paths: ['es2_king_expansion/runtime/mudlib/adm/daemons/kingcanon_d.c', 'es2_king_expansion/runtime/mudlib/cmds/adm/kingcanon.c', 'es2_king_expansion/research/m29_*', 'es2_king_expansion/runtime/m29_*', 'scripts/test_m29_*', 'king_library/MARTIAL_DAMAGE_FORMULA_V1.md', 'king_library/MARTIAL_DAMAGE_V1.md', 'scripts/test_king_martial_damage_formula.py', 'scripts/apply_king_martial_damage_formula.py', '.github/workflows/es2-king-m29-canon.yml']
   pull_request:
-    paths: ['es2_king_expansion/runtime/mudlib/adm/daemons/kingcanon_d.c', 'es2_king_expansion/runtime/mudlib/cmds/adm/kingcanon.c', 'es2_king_expansion/research/m29_*', 'es2_king_expansion/runtime/m29_*', 'scripts/test_m29_*', '.github/workflows/es2-king-m29-canon.yml']
+    paths: ['es2_king_expansion/runtime/mudlib/adm/daemons/kingcanon_d.c', 'es2_king_expansion/runtime/mudlib/cmds/adm/kingcanon.c', 'es2_king_expansion/research/m29_*', 'es2_king_expansion/runtime/m29_*', 'scripts/test_m29_*', 'king_library/MARTIAL_DAMAGE_FORMULA_V1.md', 'king_library/MARTIAL_DAMAGE_V1.md', 'scripts/test_king_martial_damage_formula.py', 'scripts/apply_king_martial_damage_formula.py', '.github/workflows/es2-king-m29-canon.yml']
   workflow_dispatch:
 jobs:
   m29-canon:
@@ -15,3 +15,5 @@ jobs:
       - run: bash scripts/bootstrap_original_es2.sh .runtime/es2-king
       - run: bash scripts/apply_es2_king_expansion.sh .runtime/es2-king
       - run: bash scripts/test_m29_canon_runtime_gate.sh .runtime/es2-king
+      # 傷害公式靜態閘門＋生成 Runtime 來源檢查；不冒充 Neolith 實戰 E2E。
+      - run: python3 scripts/test_king_martial_damage_formula.py --runtime .runtime/es2-king/mudlib
