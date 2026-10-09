@@ -35,10 +35,10 @@ jobs:
           LPC
       - name: Configure Neolith
         working-directory: .runtime/original-es2/neolith
-        run: cmake --preset linux -DBUILD_TESTING=OFF
+        run: cmake --preset linux-gcc -DBUILD_TESTING=OFF
       - name: Build Neolith
         working-directory: .runtime/original-es2/neolith
-        run: cmake --build --preset dev-linux
+        run: cmake --build --preset dev-linux-gcc
       - name: Locate driver executable
         run: |
           DRIVER="$(find .runtime/original-es2/neolith/out -type f -name neolith -perm -111 | head -n 1)"; test -n "$DRIVER"; echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"

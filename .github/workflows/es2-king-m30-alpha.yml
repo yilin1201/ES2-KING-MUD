@@ -20,6 +20,11 @@ jobs:
         run: bash scripts/apply_es2_king_expansion.sh .runtime/es2-king
       - name: Runtime Gate／Original 與 Expansion 相容性
         run: bash scripts/test_m30_alpha_runtime_gate.sh .runtime/es2-king
+      - name: Install build prerequisites／安裝建置依賴
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build bison
+          python -m pip install --upgrade cmake
       - name: Driver Build／建置 Driver
         working-directory: .runtime/es2-king/neolith
-        run: cmake --preset linux -DBUILD_TESTING=OFF && cmake --build --preset dev-linux
+        run: cmake --preset linux-gcc -DBUILD_TESTING=OFF && cmake --build --preset dev-linux-gcc

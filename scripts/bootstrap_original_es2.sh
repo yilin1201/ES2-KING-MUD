@@ -40,8 +40,8 @@ ES2-KING runtime policy applied: ENABLE_ANTISPAM disabled
 
 Next build steps (Linux):
   cd $WORKDIR/neolith
-  cmake --preset linux -DBUILD_TESTING=OFF
-  cmake --build --preset dev-linux
+  cmake --preset linux-gcc -DBUILD_TESTING=OFF
+  cmake --build --preset dev-linux-gcc
 
 Then locate the built neolith executable and run from the ES2 repository root:
   ./neolith/<path-to-built-neolith> -f neolith.conf -c
