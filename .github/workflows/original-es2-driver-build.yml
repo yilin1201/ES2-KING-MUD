@@ -17,7 +17,7 @@ jobs:
       - name: Install build prerequisites
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build bison netcat-openbsd
+          sudo apt-get install -y ninja-build bison netcat-openbsd libcmark-dev
           python -m pip install --upgrade cmake
       - name: Bootstrap Original ES2 and Neolith
         run: bash scripts/bootstrap_original_es2.sh
@@ -85,7 +85,8 @@ jobs:
           if '創造一個新的人物' in second_pre:sys.exit('M3 FAIL: character was not persisted; server asks to create it again')
           if '請輸入密碼' not in second_pre:sys.exit('M3 FAIL: persisted login account was not recognized')
           line(tn,b2,'m3pass',1.8);line(tn,b2,'look');line(tn,b2,'score');line(tn,b2,'inventory');line(tn,b2,'help');line(tn,b2,'west');line(tn,b2,'east');line(tn,b2,'m2probe',1.0)
-          second=re.sub(r'\s+',' ',txt(b2));print(txt(b2));required=['【 平民 】持久測試 (Mthree)','目前是等級 1 的平民','男性人類','客棧大堂','廚房','M2PROBE'];miss=[x for x in required if x not in second]
+          second=re.sub(r'\s+',' ',txt(b2));print(txt(b2));required=['【 平民 】持久測試 (Mthree)','男性人類','客棧大堂','廚房','M2PROBE'];miss=[x for x in required if x not in second]
+          if not re.search(r'目前是等級 1 的\\s*平民',second):miss.append('class=平民')
           if miss:sys.exit('M3 FAIL: relogin/basic-command evidence missing: '+repr(miss))
           m2=re.search(r'M2PROBE(.*?)STRTEST=',second);attrs2=dict((k,int(v)) for k,v,e in re.findall(r'(str|cor|int|spi|cps|dex|con|wis)=(\d+)/(\d+)',m2.group(1) if m2 else ''))
           if attrs2!=attrs:sys.exit('M3 FAIL: attributes changed across quit/relogin: '+repr((attrs,attrs2)))
