@@ -16,7 +16,7 @@ grep -Fq 'me->interrupt(me, "exhausted")' "$ROOT/d/snow/skill/dragon_force.c"
 ! grep -Fq 'me->interrupt_me(me, "exhausted")' "$ROOT/d/snow/skill/dragon_force.c"
 
 # Expansion core／Expansion 核心：M26-M29 全部同一 overlay／覆蓋層。
-for f in adm/daemons/kingd.c adm/daemons/kingmartiald.c adm/daemons/kingcanon_d.c cmds/adm/kingcreate.c cmds/adm/kingrealm.c cmds/adm/kingmartial.c cmds/adm/kingcanon.c d/king/wuji_realm.c obj/king/creation_mark.c; do
+for f in adm/daemons/kingd.c adm/daemons/kingmartiald.c adm/daemons/kingcanon_d.c cmds/adm/kingcreate.c cmds/adm/kinghome.c cmds/adm/kingmartial.c cmds/adm/kingcanon.c d/king/wuji_realm.c obj/king/creation_mark.c; do
   test -f "$ROOT/$f" || { echo "M30 RUNTIME FAIL：Expansion 缺少 $f"; exit 1; }
 done
 grep -Fq 'level > 300' "$ROOT/adm/daemons/kingmartiald.c"

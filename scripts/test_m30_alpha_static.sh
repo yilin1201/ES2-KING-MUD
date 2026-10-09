@@ -20,11 +20,21 @@ grep -Fq 'Expansion' "$MATRIX"
 grep -Fq 'UNKNOWN' "$MATRIX"
 grep -Fq 'ACTIONS-INFRA-BLOCKED' "$MATRIX"
 
-# TODO/FIXME/stub scan／待辦、修正標記與佔位實作掃描：只報告，不把 UNKNOWN 誤判成程式錯誤。
-if rg -n 'TODO|FIXME|placeholder|STUB' original_es2 es2_king_expansion scripts --glob '!m30_*' --glob '!test_m30_*' --glob '!m30_completion_matrix.md' > .m30_todo_scan; then
-  echo 'M30 NOTICE／發現待確認標記（詳見 .m30_todo_scan），不自動改寫 Canon。'
+# TODO/FIXME/stub scan／待辦、修正標記與佔位實作掃描：不把工具缺失誤判成掃描通過。
+scan_status=0
+if command -v rg >/dev/null 2>&1; then
+  rg -n 'TODO|FIXME|placeholder|STUB' original_es2 es2_king_expansion scripts --glob '!m30_*' --glob '!test_m30_*' --glob '!m30_completion_matrix.md' > .m30_todo_scan || scan_status=$?
 else
+  # GitHub runner 不保證預裝 ripgrep；使用 POSIX/GNU grep 作為等價備援。
+  grep -RInE --exclude='m30_*' --exclude='test_m30_*' --exclude='m30_completion_matrix.md' 'TODO|FIXME|placeholder|STUB' original_es2 es2_king_expansion scripts > .m30_todo_scan || scan_status=$?
+fi
+if [[ $scan_status -eq 0 ]]; then
+  echo 'M30 NOTICE／發現待確認標記（詳見 .m30_todo_scan），不自動改寫 Canon。'
+elif [[ $scan_status -eq 1 ]]; then
   : > .m30_todo_scan
   echo 'M30 TODO SCAN PASS／未發現 TODO、FIXME、placeholder、STUB。'
+else
+  echo "M30 STATIC FAIL／待辦掃描工具錯誤，exit=$scan_status" >&2
+  exit "$scan_status"
 fi
 echo 'M30 ALPHA STATIC PASS／M1-M30 矩陣、完成證據與邊界完整。'
