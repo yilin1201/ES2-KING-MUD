@@ -2,7 +2,7 @@ name: ES2-KING M28 Martial Arts
 on:
   push:
     branches: [build/original-es2-races-phase2]
-    paths: ['es2_king_expansion/runtime/mudlib/adm/daemons/kingmartiald.c', 'es2_king_expansion/runtime/mudlib/cmds/adm/kingmartial.c', 'es2_king_expansion/research/m28_*', 'es2_king_expansion/runtime/m28_*', 'scripts/test_m28_*', '.github/workflows/es2-king-m28-martial.yml']
+    paths: ['es2_king_expansion/runtime/mudlib/adm/daemons/kingmartiald.c', 'es2_king_expansion/runtime/mudlib/cmds/adm/kingmartial.c', 'es2_king_expansion/research/m28_*', 'es2_king_expansion/runtime/m28_*', 'scripts/test_m28_*', 'king_library/MARTIAL_DAMAGE_FORMULA_V1.md', 'scripts/test_king_martial_damage_formula.py', 'source/es2m_updates/20261009_latest/**', '.github/workflows/es2-king-m28-martial.yml']
   pull_request:
     paths: ['es2_king_expansion/runtime/mudlib/adm/daemons/kingmartiald.c', 'es2_king_expansion/runtime/mudlib/cmds/adm/kingmartial.c', 'es2_king_expansion/research/m28_*', 'es2_king_expansion/runtime/m28_*', 'scripts/test_m28_*', '.github/workflows/es2-king-m28-martial.yml']
   workflow_dispatch:
@@ -12,6 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: bash scripts/test_m28_martial_static.sh
+      - name: Damage Formula Static Gate／武學傷害公式來源核對
+        run: python3 scripts/test_king_martial_damage_formula.py
       - run: bash scripts/bootstrap_original_es2.sh .runtime/es2-king
       - run: bash scripts/apply_es2_king_expansion.sh .runtime/es2-king
       - run: bash scripts/test_m28_martial_runtime_gate.sh .runtime/es2-king
