@@ -6,7 +6,10 @@ ROOT="${1:-.runtime/es2-king}/mudlib"
 for f in adm/daemons/logind.c obj/login.c obj/user.c feature/char/skill.c feature/study.c feature/char/combat.c cmds/std/study.c cmds/usr/enable.c cmds/std/exert.c cmds/std/perform.c cmds/std/apprentice.c feature/save.c d/snow/inn_hall.c d/snow/square.c; do
   test -f "$ROOT/$f" || { echo "M30 RUNTIME FAIL：Original 核心缺少 $f"; exit 1; }
 done
-grep -Fq 'if( val > 200 ) val = 200;' "$ROOT/feature/char/skill.c"
+# KING 300 級例外不得破壞一般玩家的 Original 200 級上限。
+grep -Fq 'private int es2_king_skill_cap()' "$ROOT/feature/char/skill.c"
+grep -Fq 'return 200;' "$ROOT/feature/char/skill.c"
+grep -Fq 'if( val > cap ) val = cap;' "$ROOT/feature/char/skill.c"
 grep -Fq 'save_object (file)' "$ROOT/feature/save.c"
 grep -Fq 'restore_object (file, 1)' "$ROOT/feature/save.c"
 grep -Fq 'me->interrupt(me, "exhausted")' "$ROOT/d/snow/skill/dragon_force.c"
