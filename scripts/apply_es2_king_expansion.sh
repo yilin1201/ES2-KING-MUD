@@ -6,18 +6,36 @@ test -d "$TARGET/mudlib" || { echo "EXPANSION APPLY FAIL：缺少 $TARGET/mudlib
 test -d "$SOURCE"
 cp -a "$SOURCE/." "$TARGET/mudlib/"
 
-# ES2M Headless Dance Routing／Expansion 會覆蓋 cmd_d，因此同名指令路由必須在 Expansion 套用後保留。
-# 刑天 dance 走 ES2M 戰舞；其他玩家仍使用 Original EMOTED 通用表情。
-COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.c"
+# ES2M Headless Dance Routing／Neolith 上游命令索引檔名為 cmd_d.lpc（不是 cmd_d.c）。
+# 刑天 dance 走種族戰舞；其他種族仍使用 Original EMOTED 通用表情。
+COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.lpc"
 python3 - "$COMMAND_D" <<'PY'
 from pathlib import Path
 import sys
-p=Path(sys.argv[1]); s=p.read_text()
-marker='''    if( !pointerp(path) ) return 0;\n\n'''
-patch='''    if( !pointerp(path) ) return 0;\n\n    // ES2M HEADLESS DANCE COMMAND ROUTING／刑天 dance 優先使用種族戰舞；其他種族保留 Original 表情。\n    if( verb == "dance" && objectp(this_player())\n    &&  this_player()->query("race") == "headless"\n    &&  file_size("/cmds/usr/dance.c") > 0 )\n        return "/cmds/usr/dance";\n\n'''
+
+# 原始碼來源採 Neolith 的 LPC 檔名與實際縮排；只插入刑天 dance 的單一分流。
+p = Path(sys.argv[1])
+s = p.read_text()
+marker = '''    if (!pointerp(path))
+        return 0;
+
+    p = path - cached_path;
+'''
+patch = '''    if (!pointerp(path))
+        return 0;
+
+    // ES2M HEADLESS DANCE COMMAND ROUTING／刑天 dance 優先使用種族戰舞；其他種族保留 Original 表情。
+    if (verb == "dance" && objectp(this_player())
+    &&  this_player()->query("race") == "headless"
+    &&  file_size("/cmds/usr/dance.c") > 0)
+        return "/cmds/usr/dance";
+
+    p = path - cached_path;
+'''
 if 'ES2M HEADLESS DANCE COMMAND ROUTING' not in s:
-    if marker not in s: raise SystemExit('EXPANSION APPLY FAIL：找不到 COMMAND_D find_command path guard。')
-    s=s.replace(marker,patch,1)
+    if marker not in s:
+        raise SystemExit('EXPANSION APPLY FAIL：cmd_d.lpc 找不到 find_command 的 path guard。')
+    s = s.replace(marker, patch, 1)
 p.write_text(s)
 PY
 
