@@ -23,7 +23,7 @@ class TestES2MWorldCoverage(unittest.TestCase):
         for zone in ("lee", "oldpine", "wutang", "snow"):
             room = self.snapshot / "d" / zone / "entry.c"
             room.parent.mkdir(parents=True)
-            room.write_text("inherit ROOM;\\n", encoding="utf-8")
+            room.write_text("inherit ROOM;\n", encoding="utf-8")
 
     def run_coverage(self):
         # 使用目前 Python 執行器執行正式 coverage gate。
@@ -35,15 +35,13 @@ class TestES2MWorldCoverage(unittest.TestCase):
 
     def test_classified_zones_pass(self):
         result = self.run_coverage()
-        self.assertEqual(
-            result.returncode, 0, result.stdout + result.stderr
-        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("ES2M_WORLD_COVERAGE_STATIC_PASS", result.stdout)
 
     def test_unclassified_zone_fails(self):
         room = self.snapshot / "d" / "newzone" / "entry.c"
         room.parent.mkdir(parents=True)
-        room.write_text("inherit ROOM;\\n", encoding="utf-8")
+        room.write_text("inherit ROOM;\n", encoding="utf-8")
 
         result = self.run_coverage()
         self.assertNotEqual(result.returncode, 0)
