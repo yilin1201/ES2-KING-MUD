@@ -14,18 +14,22 @@
 
 ## 2. 八大基本屬性 Attribute
 
-| Code | ES2 中文名稱 | 狀態 |
-|---|---|---|
-| `str` | 臂力 | [Player Memory / Archived] |
-| `cor` | 膽識 | [Owner-confirmed / Archived] |
-| `int` | 悟性 | [Archived / Player Record] |
-| `spi` | 靈性 | [Archived / Player Record] |
-| `cps` | 定力 | [Owner-confirmed / Archived / Player Record] |
-| `dex` | 機敏 | [Archived / Player Record] |
-| `con` | 根骨 | [Confirmed / Archived] |
-| `wis` | 慧根 | [Archived / Player Record] |
+上游來源：`cmds/std/identify.c`。
 
-注意：`str` 正式採用專案擁有者確認用語「臂力」，不使用「膂力」。第四階段 4C 另由專案擁有者確認 `cor=膽識`、`cps=定力`；舊文件若有反向映射不得再沿用。
+[Confirmed] 上游原始碼的代碼與中文名稱如下。ES2-KING 顯示名稱另依專案決定處理；`str` 的上游中文為「膂力」，但本專案正式顯示為「臂力」。
+
+| Code | 上游原始碼中文 | ES2-KING 顯示名稱 | 狀態 |
+|---|---|---|---|
+| `str` | 膂力 | 臂力 | [Confirmed upstream / Owner display decision] |
+| `cor` | 膽識 | 膽識 | [Confirmed] |
+| `int` | 悟性 | 悟性 | [Confirmed] |
+| `spi` | 靈性 | 靈性 | [Confirmed] |
+| `cps` | 定力 | 定力 | [Confirmed] |
+| `dex` | 機敏 | 機敏 | [Confirmed] |
+| `con` | 根骨 | 根骨 | [Confirmed] |
+| `wis` | 慧根 | 慧根 | [Confirmed] |
+
+**衝突修正規則：** `cor = 膽識`、`cps = 定力`。不得將兩者對調。若其他文件仍出現 `cps = 膽識` 或 `cor = 定力`，應視為舊版文件錯誤並依上游 `cmds/std/identify.c` 修正。
 
 ## 3. 角色資源
 
