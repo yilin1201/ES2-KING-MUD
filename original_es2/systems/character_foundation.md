@@ -16,11 +16,11 @@
 
 上游來源：`cmds/std/identify.c`。
 
-[Confirmed] 上游原始碼的代碼與中文名稱如下。ES2-KING 顯示名稱另依專案決定處理；`str` 的上游中文為「膂力」，但本專案正式顯示為「臂力」。
+[Confirmed] 上游原始碼的代碼與中文名稱如下。ES2-KING 按照 Original ES2M 上游設定，正式顯示名稱採用「膂力」。
 
 | Code | 上游原始碼中文 | ES2-KING 顯示名稱 | 狀態 |
 |---|---|---|---|
-| `str` | 膂力 | 臂力 | [Confirmed upstream / Owner display decision] |
+| `str` | 膂力 | 膂力 | [Confirmed] |
 | `cor` | 膽識 | 膽識 | [Confirmed] |
 | `int` | 悟性 | 悟性 | [Confirmed] |
 | `spi` | 靈性 | 靈性 | [Confirmed] |
