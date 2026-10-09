@@ -572,7 +572,7 @@ PY
 
 # KING Score Grid Bars／KING score 方格狀態條：只修改 Expansion Runtime 顯示層。
 # Current／Effective／Maximum 仍沿用 Original tribar_graph 三值語意；不改 Statistic 或 Combat。
-SCORE_CMD="$TARGET/mudlib/cmds/usr/score.c"
+SCORE_CMD="$TARGET/mudlib/cmds/usr/score.lpc"
 SCORE_GRID_MARKER='ES2-KING SCORE GRID BARS'
 if ! grep -Fq "$SCORE_GRID_MARKER" "$SCORE_CMD"; then
   python3 - "$SCORE_CMD" <<'PY'
@@ -635,28 +635,38 @@ path.write_text(text)
 PY
 fi
 
-# Command Reindex Compatibility／指令重索引相容層：只有實際管理員搜尋路徑包含
-# /cmds/adm/ 且指令檔存在時，才補入四個已定稿 KING 指令的 Runtime 記憶體索引。
-COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.c"
+# Command Reindex Compatibility／Neolith 上游使用 cmd_d.lpc，管理員指令索引只增加已定稿指令。
+COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.lpc"
 COMMAND_REHASH_MARKER='ES2-KING OWNER COMMAND REHASH'
 if ! grep -Fq "$COMMAND_REHASH_MARKER" "$COMMAND_D"; then
-  temp_command="$(mktemp)"
-  awk -v marker="$COMMAND_REHASH_MARKER" '
-    /^    if\( !pointerp\(path\) \) return 0;/ && !inserted {
-      print
-      print ""
-      print "    // " marker "／不擴張一般玩家搜尋路徑。"
-      print "    if (member_array(\"/cmds/adm/\", path) >= 0"
-      print "    && member_array(verb, ({ \"kingcreate\", \"kinghome\", \"kingmartial\", \"kingcanon\" })) >= 0"
-      print "    && file_size(\"/cmds/adm/\" + verb + \".c\") >= 0)"
-      print "        cache[verb + \".c\"] = ({ \"/cmds/adm/\" });"
-      inserted=1
-      next
-    }
-    { print }
-  ' "$COMMAND_D" > "$temp_command"
-  chmod --reference="$COMMAND_D" "$temp_command"
-  mv "$temp_command" "$COMMAND_D"
+  python3 - "$COMMAND_D" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+text = path.read_text()
+marker = '''    if (!pointerp(path))
+        return 0;
+
+    p = path - cached_path;
+'''
+patch = '''    if (!pointerp(path))
+        return 0;
+
+    // ES2-KING OWNER COMMAND REHASH／不擴張一般玩家搜尋路徑。
+    if (member_array("/cmds/adm/", path) >= 0
+    &&  member_array(verb, ({ "kingcreate", "kinghome", "kingmartial", "kingcanon" })) >= 0
+    &&  file_size("/cmds/adm/" + verb + ".c") >= 0)
+        cache[verb + ".c"] = ({ "/cmds/adm/" });
+
+    p = path - cached_path;
+'''
+if 'ES2-KING OWNER COMMAND REHASH' not in text:
+    if marker not in text:
+        raise SystemExit("EXPANSION APPLY FAIL：cmd_d.lpc 找不到指令索引 path guard。")
+    text = text.replace(marker, patch, 1)
+path.write_text(text)
+PY
 fi
 
 # Selective Binary Cache Invalidation／選擇性二進位快取失效：只移除會遮蔽新版 logind、
@@ -709,7 +719,7 @@ echo "ES2-KING EXPANSION APPLY PASS／Expansion 已套用至獨立 Runtime：$TA
 
 # KING Omega Display Order／僅針對 KING 的 inventory(i) 與 look 身上裝備。
 # 使用獨立 helper，原始 ES2 檔案只在生成 Runtime 套用相容補丁，不改原始碼。
-python3 - "$TARGET/mudlib/cmds/usr/inventory.c" "$TARGET/mudlib/cmds/std/look.c" <<'PY'
+python3 - "$TARGET/mudlib/cmds/usr/inventory.lpc" "$TARGET/mudlib/cmds/std/look.lpc" <<'PY'
 from pathlib import Path
 import sys
 inventory, look = (Path(p) for p in sys.argv[1:])
