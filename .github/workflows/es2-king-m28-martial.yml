@@ -16,4 +16,6 @@ jobs:
         run: python3 scripts/test_king_martial_damage_formula.py
       - run: bash scripts/bootstrap_original_es2.sh .runtime/es2-king
       - run: bash scripts/apply_es2_king_expansion.sh .runtime/es2-king
+      - name: Damage Formula Runtime Gate／生成 Runtime 傷害參數核對
+        run: python3 scripts/test_king_martial_damage_formula.py --runtime .runtime/es2-king/mudlib
       - run: bash scripts/test_m28_martial_runtime_gate.sh .runtime/es2-king

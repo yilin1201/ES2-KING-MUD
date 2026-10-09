@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """ES2-KING 傷害公式規格靜態閘門；不宣稱是真實 Runtime 傷害測試。"""
+import argparse
 from pathlib import Path
+
+parser = argparse.ArgumentParser(description="ES2M 公式與生成 Runtime 傷害參數靜態檢查")
+parser.add_argument("--runtime", type=Path, help="可選：已套用 Expansion 的生成 Runtime mudlib 目錄")
+args = parser.parse_args()
 
 ROOT = Path(__file__).resolve().parents[1]
 ARCHIVE = ROOT / "source/es2m_updates/20261009_latest/source/upstream/mudlib"
@@ -43,4 +48,39 @@ for needle in ("action[\"attack\"]", "action[\"force\"]", "action[\"defense\"]",
 # 保留 V1 既有係數範圍，不把文件建置誤作武學改版。
 assert "20～40" in V1 and "不自動覆蓋已完成或凍結的武學" in V1
 print("KING_MARTIAL_DAMAGE_FORMULA_STATIC_PASS: ES2M source formulas and parameter semantics verified")
-print("KING_MARTIAL_DAMAGE_FORMULA_RUNTIME: NOT RUN (static source check only)")
+
+# 可選檢查生成 Runtime；這是來源程式靜態閘門，不冒充實際傷害 E2E。
+if args.runtime:
+    runtime = args.runtime.resolve()
+    runtime_checks = {
+        "adm/daemons/combatd.c": (
+            "ES2-KING MARTIAL DAMAGE PARAMS",
+            'action["damage_pct"] > 0 ? action["damage_pct"] : 100',
+            'me->delete_temp("martial_damage_pct")',
+            'me->delete_temp("martial_no_armor")',
+        ),
+        "feature/char/combat.c": (
+            "ES2-KING MARTIAL DAMAGE PCT",
+            'query_temp("martial_damage_pct")',
+            '!query_temp("martial_no_armor")',
+        ),
+        "feature/equip.c": (
+            "ES2-KING MARTIAL DAMAGE PCT",
+            'owner->query_temp("martial_damage_pct")',
+            '!owner->query_temp("martial_no_armor")',
+        ),
+        "d/arena/skill/yijinjing.c": (
+            "ES2-KING MARTIAL DAMAGE PCT",
+            'attacker->query_temp("martial_damage_pct")',
+            '!attacker->query_temp("martial_no_armor")',
+        ),
+    }
+    for relative, needles in runtime_checks.items():
+        path = runtime / relative
+        assert path.is_file(), f"生成 Runtime 缺少檔案：{relative}"
+        content = path.read_text(encoding="utf-8")
+        for needle in needles:
+            assert needle in content, f"生成 Runtime {relative} 缺少參數處理：{needle}"
+    print("KING_MARTIAL_DAMAGE_RUNTIME_SOURCE_PASS: damage_pct/no_armor hooks present in generated Runtime")
+else:
+    print("KING_MARTIAL_DAMAGE_RUNTIME: NOT CHECKED (pass --runtime to verify generated Runtime)")

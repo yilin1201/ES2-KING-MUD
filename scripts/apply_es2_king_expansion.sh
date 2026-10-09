@@ -706,7 +706,7 @@ done
 WIZLIST="$TARGET/mudlib/adm/etc/wizlist"
 touch "$WIZLIST"
 grep -Fqx 'king (admin)' "$WIZLIST" || printf '%s\n' 'king (admin)' >> "$WIZLIST"
-echo "ES2-KING EXPANSION APPLY PASS／Expansion 已套用至獨立 Runtime：$TARGET"
+# Expansion PASS 訊息移至所有相容補丁成功後，避免中途錯誤被誤讀為完成。
 
 
 # KING Omega Display Order／僅針對 KING 的 inventory(i) 與 look 身上裝備。
@@ -828,3 +828,8 @@ PY
 # Evidence: pinned Original has no generic damaging-hit combat gain; ES2M grants
 # combat score on successful dodge/parry and martial-art score only for mapped
 # non-basic martial arts. Import that behavior separately from ES2M evidence.
+
+
+# ES2-KING 武學傷害參數／只修改生成 Runtime，保留 Repository 內 Original ES2 原始來源。
+python3 "$(dirname "$0")/apply_king_martial_damage_formula.py" "$TARGET/mudlib"
+echo "ES2-KING EXPANSION APPLY PASS／Expansion 與武學傷害參數已套用至獨立 Runtime：$TARGET"

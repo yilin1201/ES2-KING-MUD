@@ -36,6 +36,7 @@ RUN python3 scripts/test_es2m_fighter_level_contract.py /opt/es2-king/runtime/mu
 
 RUN echo "[M30 BUILD 4/5] Apply ES2-KING Expansion overlay" \
     && bash scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime
+RUN python3 scripts/test_king_martial_damage_formula.py --runtime /opt/es2-king/runtime/mudlib
 
 # Combat progression contract：不得在 KING overlay 偽造「每次造成傷害就增加 combat」。
 # Pinned Original 無此 generic hit gain；ES2M 的 combat 成長來自成功閃躲／格擋。

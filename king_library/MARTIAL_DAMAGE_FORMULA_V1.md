@@ -5,7 +5,7 @@
 - **保留既有武學定義**：不得改動已建立武學的名稱、招式順序、招式敘述、顏色、招式輪替、原有特效、技能 ID、啟用／映射關係。
 - 本文件是既有戰鬥引擎的公式與參數規格補全，不是重新平衡武學，也不代表所有武學已套用新係數。
 - ES2M 上游公式作為本次參考來源；KING 自創武學係數仍標記為 **ES2-KING Expansion**，不得回標成 Original ES2。
-- 本次只建立公式規格與靜態證據閘門；不修改戰鬥引擎或任何現有武學程式。正式 Runtime 整合須另經差異確認與隔離測試。
+- 本輪為生成 Runtime 加入可選 `damage_pct`／`no_armor` 參數處理；不修改任何既有武學定義、係數或招式資料。所有補丁只作用於生成 Runtime，Repository 內 Original ES2 來源保持不變。
 
 ## 2. 參數定義
 
@@ -16,7 +16,7 @@
 | 防禦效果 | `action["defense"]` | 隨招式保存於 `last_action`，供對手下一次攻擊判定扣除 | 否 |
 | 傷害倍率百分比 | `action["damage_pct"]` | 直接調整換算後的基礎傷害；缺省或非正值時按 100% 處理 | **是，傷害倍率** |
 | 不扣防具 | `action["no_armor"]` | 命中時跳過一般護甲減傷 | 不增加基礎傷害，只取消此減傷步驟 |
-| 元素類型 | `action["element"]` | 依 fire／ice／lightning／wind 加入對應額外傷害 | 可額外增加傷害，但須有對應傷害值 |
+| 元素類型 | `action["element"]` | ES2M 封存版本有元素追加傷害；本輪 KING Runtime 尚未啟用此參數 | **參考資料，尚未啟用** |
 
 **重要：** attack、force、defense 不是三個可以直接相加的傷害數值。傷害倍率請使用獨立的 `damage_pct`；既有招式沒有該欄位時，維持原本 100% 行為。
 
@@ -53,7 +53,7 @@ ES2M 角色戰鬥基礎力道（克）由屬性與當前氣值計算：
 
 ### D. 格擋／吸收
 
-未被閃躲時，先由目標的 `absorb()` 扣除被招架吸收的力道。若招架結果為部分減傷，依 `parry_reduce` 調整 `damage_pct`；若完全擋下則不造成傷害。一般護甲減傷仍在傷害換算後執行。
+未被閃躲時，先沿用目前 KING Runtime 的 Original `absorb()` 流程處理被吸收的力道。封存 ES2M 變體另有 `parry_result`／`parry_reduce` 整合，但本輪不移植該自訂招架系統，以免改變既有戰鬥行為。
 
 ### E. 力道換算為基礎傷害
 
@@ -72,13 +72,13 @@ ES2M 預設徒手換算式：
 - `damage_pct` 缺省／非正值：使用 100%。
 - 除非 `no_armor` 為真，否則再扣除目標 `resist_damage()` 所回傳的護甲減傷。
 - 最終傷害小於 1 時，實際扣血為 0。
-- 元素追加傷害獨立計算：`extra = floor(damage_vs_element × 100 / (100 + armor_vs_element))`（依來源程式的非負防禦處理），然後由目標接收實際傷害。
+- 封存 ES2M 變體的元素追加傷害依 `damage_vs_element` 與 `armor_vs_element` 計算；此功能目前仍屬參考，不可將 `element` 寫入 KING 招式並期待它已生效。
 
 ## 4. 目前 KING 既有係數的處理方式
 
 - 現有武學的 `attack`、`force`、`defense` 數值原樣保留。
 - 如來神掌目前為既有 V1 自訂配置；冷梅劍法、傲梅暗劍訣、傲劍訣維持各自已記錄的版本與數值。不得為了讓公式看起來一致而批次改值。
-- `damage_pct` 是可選的新參數規格，不代表本次要對任何既有招式加入此欄位。
+- 生成 Runtime 現在支援可選的 `damage_pct` 與 `no_armor`，但本輪不對任何既有招式加入這些欄位；缺省倍率維持 100%，一般護甲照常計算。
 - 後續如需新增傷害倍率，必須逐招指定、記錄原值／新值與測試結果；不得把文字敘事當成必中、破防或必殺效果。
 
 ## 5. 來源與可信度
@@ -87,10 +87,10 @@ ES2M 預設徒手換算式：
    - [combatd.c](../source/es2m_updates/20261009_latest/source/upstream/mudlib/adm/daemons/combatd.c) — 攻擊技巧、內功加成、格擋、倍率與元素傷害流程。
    - [feature/char/combat.c](../source/es2m_updates/20261009_latest/source/upstream/mudlib/feature/char/combat.c) — 基礎力道、徒手傷害換算、護甲與實際扣血。
 2. **KING 現有武學參數版本**：[`MARTIAL_DAMAGE_V0.md`](MARTIAL_DAMAGE_V0.md)、[`MARTIAL_DAMAGE_V1.md`](MARTIAL_DAMAGE_V1.md)。
-3. 本文件的公式解讀屬來源程式的結構化說明，不表示 KING 正式 Runtime 已逐項通過實戰驗證。
+3. KING Runtime adapter 只補上 `damage_pct`／`no_armor`，並保留 Original 的基礎攻擊、武器傷害骰、內功映射與吸收邏輯；元素追加傷害及封存變體的 `parry_reduce` 尚未移植。
 
 ## 6. 驗收邊界
 
 - 靜態驗收可確認來源公式存在、參數語義有明確定義、已凍結武學招式資料未被本次修改。
 - 靜態驗收**不能**取代 Neolith Driver／普通玩家隔離實戰測試。
-- 本次未更動 Runtime，因此不宣告 Runtime Damage PASS。
+- Runtime source gate 會確認生成 Runtime 的參數處理位置；這仍是靜態檢查，不宣告實戰傷害 E2E PASS。
