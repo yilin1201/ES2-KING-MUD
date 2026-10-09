@@ -26,7 +26,7 @@ grep -Fq 'me->pay_money(price)' "$ROOT/cmds/std/buy.c"
 
 # Item protection／物品保護：跨 drop、give、put 指令維持一致。
 grep -Fq 'obj->query("no_drop")' "$ROOT/cmds/std/drop.lpc"
-grep -Fq 'item->query("no_drop")' "$ROOT/cmds/std/give.lpc"
+grep -Eq 'item->query[[:space:]]*\("no_drop"\)' "$ROOT/cmds/std/give.lpc"
 grep -Fq 'obj->query("no_drop") || obj->query("no_get")' "$ROOT/cmds/std/put.c"
 
 echo 'M24 DATA INTEGRITY RUNTIME PASS／保存、恢復、死亡、分數、經濟與物品保護介面一致。'
