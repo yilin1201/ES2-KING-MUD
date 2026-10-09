@@ -38,7 +38,7 @@ Original ES2 的考證資料統一保存在：
 - ES2-KING 中文名稱
 - 種族定位
 - 世界觀設定
-- 六大 Attribute 傾向
+- 八大 Attribute 傾向
 - Kee / Gin / Sen / Force
 - 種族優勢
 - 種族弱點

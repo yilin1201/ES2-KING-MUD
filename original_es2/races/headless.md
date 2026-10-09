@@ -48,19 +48,41 @@ ES2-KING 專案中文名稱統一使用「刑天」。歷史資料若出現「�
 
 待確認 Original ES2 中 `headless` 的：
 
-- Str 力量
-- Con 體魄
-- Dex 身法
-- Int 悟性
-- Wis 慧根
-- Cor 膽識
-- Cps 定力
+- str 臂力
+- cor 膽識
+- int 悟性
+- spi 靈性
+- cps 定力
+- dex 機敏
+- con 根骨
+- wis 慧根
 - 屬性生成公式
 - 種族 Bonus / Penalty
 
 不得使用 ES2-KING 的設計值反推 Original ES2。
 
 ---
+
+### 第三方重建資料 [Archived／第三方重建]
+
+來源：wolfer168/es2-webmud `source/upstream/mudlib/daemon/race/headless.c`
+（檔頭註明 CUSTOM A-H RACE，依使用者提供之 2006-09-15 原始種族資料；尚未對照 Original 原始碼）
+
+| 屬性 | 初始值 |
+|---|---|
+| str 臂力 | 25 + random(6) |
+| cor 膽識 | 15 + random(6) |
+| int 悟性 | 8 + random(6) |
+| spi 靈性 | 5 + random(6) |
+| cps 定力 | 11 + random(6) |
+| dex 機敏 | 19 + random(6) |
+| con 根骨 | 23 + random(6) |
+| wis 慧根 | 13 + random(6) |
+
+- 精／氣／神初始值：80 / 100 / 30
+- karma 25；commoner_score_base 160
+- 職業等級上限：commoner 1、fighter 65、taoist 40、alchemist 40、soldier 60、scholar 50、thief 50、monk -1（意義待確認）
+- 無頭無頸：不可穿 armor、cloth、head_eq、neck_eq 類護具
 
 ## 5. Health / Resource
 
@@ -113,7 +135,7 @@ ES2-KING 專案中文名稱統一使用「刑天」。歷史資料若出現「�
 
 - Original Race daemon / source file
 - 中文名稱在原始遊戲中的正式顯示
-- 六大 Attribute 公式
+- 八大 Attribute 公式
 - Kee / Gin / Sen / Force 公式
 - 特殊能力與 Command
 - 武器、職業、門派限制
