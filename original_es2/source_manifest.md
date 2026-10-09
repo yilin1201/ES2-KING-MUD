@@ -59,7 +59,7 @@ Upstream: `mudlib/daemon/race/human.c`
 
 | Code | 中文 |
 |---|---|
-| str | 臂力 |
+| str | 膂力 |
 | cor | 膽識 |
 | int | 悟性 |
 | spi | 靈性 |
@@ -68,7 +68,7 @@ Upstream: `mudlib/daemon/race/human.c`
 | con | 根骨 |
 | wis | 慧根 |
 
-[Confirmed] 上游 `cmds/std/identify.c` 的實際對照為：`str=膂力`、`cor=膽識`、`int=悟性`、`spi=靈性`、`cps=定力`、`dex=機敏`、`con=根骨`、`wis=慧根`。ES2-KING 顯示名稱依專案決定將 `str` 顯示為「臂力」；其餘名稱沿用上述對照。程式代碼的上游含義與 ES2-KING 顯示文字需分開記錄。
+[Confirmed] 上游 `cmds/std/identify.c` 的實際對照為：`str=膂力`、`cor=膽識`、`int=悟性`、`spi=靈性`、`cps=定力`、`dex=機敏`、`con=根骨`、`wis=慧根`。ES2-KING 依 Original ES2M 上游名稱，將 `str` 顯示為「膂力」；其餘名稱沿用上述對照。程式代碼的上游含義與 ES2-KING 顯示文字需分開記錄。
 
 ## Bootstrap 原則
 
