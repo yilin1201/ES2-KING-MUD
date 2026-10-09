@@ -60,15 +60,15 @@ Upstream: `mudlib/daemon/race/human.c`
 | Code | 中文 |
 |---|---|
 | str | 臂力 |
-| cps | 膽識 |
+| cor | 膽識 |
 | int | 悟性 |
 | spi | 靈性 |
-| cor | 定力 |
+| cps | 定力 |
 | dex | 機敏 |
 | con | 根骨 |
 | wis | 慧根 |
 
-注意：上述「程式 Code 存在」與「中文顯示名稱的來源等級」分開管理。`str = 臂力` 已由專案擁有者明確校正。
+[Confirmed] 上游 `cmds/std/identify.c` 的實際對照為：`str=膂力`、`cor=膽識`、`int=悟性`、`spi=靈性`、`cps=定力`、`dex=機敏`、`con=根骨`、`wis=慧根`。ES2-KING 顯示名稱依專案決定將 `str` 顯示為「臂力」；其餘名稱沿用上述對照。程式代碼的上游含義與 ES2-KING 顯示文字需分開記錄。
 
 ## Bootstrap 原則
 
