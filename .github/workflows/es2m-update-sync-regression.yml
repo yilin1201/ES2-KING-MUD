@@ -25,6 +25,7 @@ on:
       - 'scripts/test_es2m_cold_plum_overlay.py'
       - 'scripts/test_es2m_update_snapshot.py'
       - 'scripts/test_es2m_latest_martial_updates.py'
+      - 'scripts/test_es2m_latest_martial_lpc_load.sh'
       - 'Dockerfile'
   pull_request:
     paths:
@@ -48,6 +49,7 @@ on:
       - 'scripts/test_es2m_cold_plum_overlay.py'
       - 'scripts/test_es2m_update_snapshot.py'
       - 'scripts/test_es2m_latest_martial_updates.py'
+      - 'scripts/test_es2m_latest_martial_lpc_load.sh'
       - 'Dockerfile'
 
 permissions:
@@ -68,5 +70,7 @@ jobs:
         run: python3 scripts/test_es2m_cold_plum_overlay.py
       - name: Verify latest ES2M martial progression and NPC update
         run: python3 scripts/test_es2m_latest_martial_updates.py
+      - name: Validate true Driver LPC load gate shell syntax
+        run: bash -n scripts/test_es2m_latest_martial_lpc_load.sh
       - name: Verify pinned ES2M snapshot contracts
         run: python3 scripts/test_es2m_update_snapshot.py
