@@ -10,6 +10,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--runtime", type=Path, help="可選：檢查已套用 Expansion 的 Runtime 根目錄")
 ARGS = parser.parse_args()
 SNAPSHOT = ROOT / "es2m_snapshot/mudlib"
+FROZEN_BASELINE = ROOT / "es2m_snapshot/king_frozen_baseline/mudlib"
 OVERLAY = ROOT / "es2_king_expansion/runtime/mudlib"
 RUNTIME = ARGS.runtime / "mudlib" if ARGS.runtime else None
 # 僅覆蓋本次新增的技能；既有凍結武功保留 KDS／KING 原始檔，不以 ES2M 最新版整檔覆寫。
@@ -29,12 +30,20 @@ for name in SKILL_FILES:
     elif digest(source) != digest(overlay):
         errors.append(f"來源快照與 Expansion 技能檔 SHA-256 不一致：{name}")
 
-# 冷梅劍法、寒梅心法、傲梅暗劍訣屬既有凍結武功；保留底層原始檔，不建立覆蓋副本。
+# 冷梅劍法、寒梅心法、傲梅暗劍訣屬既有凍結武功。
+# pinned Original Runtime 沒有這三個技能檔，因此只帶入 KDS/KING 凍結基準，不採用 ES2M 最新改版。
 for name in FROZEN_SKILLS:
-    if not (SNAPSHOT / "daemon/skill" / name).is_file():
-        errors.append(f"缺少凍結武功的 ES2M 證據快照：{name}")
-    if (OVERLAY / "daemon/skill" / name).exists():
-        errors.append(f"不允許 Expansion 整檔覆蓋凍結武功：{name}")
+    source = SNAPSHOT / "daemon/skill" / name
+    baseline = FROZEN_BASELINE / "daemon/skill" / name
+    overlay = OVERLAY / "daemon/skill" / name
+    if not source.is_file():
+        errors.append(f"缺少凍結武功的最新 ES2M 證據快照：{name}")
+    if not baseline.is_file() or not overlay.is_file():
+        errors.append(f"缺少凍結武功的 KING 基準或 Runtime overlay：{name}")
+    elif digest(baseline) != digest(overlay):
+        errors.append(f"凍結武功 Runtime overlay 不等於 KING 基準版本：{name}")
+    if source.is_file() and overlay.is_file() and digest(source) == digest(overlay):
+        errors.append(f"凍結武功不得被 ES2M 最新版本取代：{name}")
 
 # 新版武功共用引擎需支援學成點數、學成等級及學成當級獎勵。
 martial = OVERLAY / "std/martial_art.c"
