@@ -1,0 +1,39 @@
+name: ADMIN GM Regression
+
+on:
+  push:
+    branches:
+      - build/original-es2-races-phase2
+    paths:
+      - '.github/workflows/admin-gm-regression.yml'
+      - 'es2_king_expansion/runtime/mudlib/cmds/adm/admin.c'
+      - 'scripts/test_admin_gm_static.sh'
+      - 'scripts/test_admin_gm_runtime_gate.sh'
+      - 'scripts/apply_es2_king_expansion.sh'
+      - 'Dockerfile'
+  pull_request:
+    paths:
+      - '.github/workflows/admin-gm-regression.yml'
+      - 'es2_king_expansion/runtime/mudlib/cmds/adm/admin.c'
+      - 'scripts/test_admin_gm_static.sh'
+      - 'scripts/test_admin_gm_runtime_gate.sh'
+      - 'scripts/apply_es2_king_expansion.sh'
+      - 'Dockerfile'
+
+permissions:
+  contents: read
+
+jobs:
+  admin-gm-static:
+    name: ADMIN GM source regression
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ES2-KING
+        uses: actions/checkout@v4
+      - name: Validate shell test scripts
+        run: |
+          bash -n scripts/test_admin_gm_static.sh
+          bash -n scripts/test_admin_gm_runtime_gate.sh
+          bash -n scripts/apply_es2_king_expansion.sh
+      - name: Run ADMIN GM static gate
+        run: bash scripts/test_admin_gm_static.sh
