@@ -239,6 +239,8 @@ jobs:
         if: steps.gate.outputs.passed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          # 選填：設定此 fine-grained PAT（Contents: Read and write）後，機器人 push 可觸發下一輪。
+          AUTOMATION_PUSH_TOKEN: ${{ secrets.AUTOMATION_PUSH_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
@@ -251,7 +253,14 @@ jobs:
             exit 0
           fi
           git commit -m "ES2-KING: 自主維護修正與測試驗證"
-          AUTH="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          # 優先使用專用 PAT 讓已驗證的提交可以啟動下一輪；未設定時退回 GITHUB_TOKEN（只跑本輪，避免宣稱可自動續跑）。
+          PUSH_TOKEN="${AUTOMATION_PUSH_TOKEN:-$GH_TOKEN}"
+          if [[ -z "${AUTOMATION_PUSH_TOKEN:-}" ]]; then
+            echo "未設定 AUTOMATION_PUSH_TOKEN：本輪可推送，但 GitHub 不會因 GITHUB_TOKEN 的 push 自動啟動下一輪。若要持續接續待辦，請新增有 Contents: Read and write 權限的 AUTOMATION_PUSH_TOKEN Secret。" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "已啟用遠端自動接續：本輪驗證通過的程式提交將觸發下一輪工作流程。" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          AUTH="$(printf 'x-access-token:%s' "$PUSH_TOKEN" | base64 -w0)"
           git -c "http.extraheader=AUTHORIZATION: basic $AUTH" push origin "HEAD:build/original-es2-races-phase2"
 
       - name: 上傳診斷資料（不推送失敗修改）
