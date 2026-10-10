@@ -29,7 +29,7 @@ grep -Fq 'member_array(verb, ({ "admin", "kingcreate"' "$APPLY"
 grep -Fq 'for owner_command in admin kingcreate' "$APPLY"
 
 # 反回歸：不允許錯誤的雙重跳脫換行字串殘留。
-if grep -Fq '\\\\n' "$COMMAND"; then
+if grep -Fq '\\n' "$COMMAND"; then
   echo 'ADMIN GM STATIC FAIL：發現多重跳脫的換行字串。' >&2
   exit 1
 fi
