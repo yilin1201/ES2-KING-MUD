@@ -39,6 +39,15 @@ grep -Fq 'present(replace_string(cmd, "_", " "), ob)' "$COMMAND"
 echo 'ADMIN GM RUNTIME GATE PASS／生成 Runtime 已包含 admin.c、命令索引、預載與目標安全檢查。'
 
 
+# Unlearn regression／實際生成 Runtime 必須採用同一個安全映射清理 helper。
+grep -Fq 'private void unlearn_skill(object ob, string skill)' "$COMMAND"
+grep -Fq 'unlearn_skill(ob, skill);' "$COMMAND"
+grep -Fq 'unlearn_skill(me, skill);' "$COMMAND"
+if grep -Fq 'map_skill(skill, "none")' "$COMMAND"; then
+  echo 'ADMIN GM RUNTIME FAIL：unlearn 將技能錯誤設為 disabled。' >&2
+  exit 1
+fi
+
 # Skill mapping regression／生成 Runtime 不可將技能映射寫反。
 grep -Fq 'ob->map_skill(cmd, skill)' "$COMMAND"
 grep -Fq 'me->map_skill(cmd, skill)' "$COMMAND"
