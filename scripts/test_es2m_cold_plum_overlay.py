@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--runtime", type=Path, help="可選：檢查已套用 Expansion 的 Runtime 根目錄")
 ARGS = parser.parse_args()
 SNAPSHOT = ROOT / "es2m_snapshot/mudlib"
-FROZEN_BASELINE = ROOT / "es2m_snapshot/king_frozen_baseline/mudlib"
+FROZEN_BASELINE = ROOT / "es2m_snapshot/king_frozen_baseline"
 OVERLAY = ROOT / "es2_king_expansion/runtime/mudlib"
 RUNTIME = ARGS.runtime / "mudlib" if ARGS.runtime else None
 # 僅覆蓋本次新增的技能；既有凍結武功保留 KDS／KING 原始檔，不以 ES2M 最新版整檔覆寫。
