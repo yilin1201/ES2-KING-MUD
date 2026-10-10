@@ -188,7 +188,32 @@ bad_level = line(tn, buf, 'admin level 1000', 0.8)
 require('角色等級須介於 1～999' in bad_level,
         'admin level 1000 未被原版角色等級上限拒絕。', bad_level)
 
-print('ADMIN GM E2E PASS：admin probe、用途技能對應、屬性 50/51、技能 200/201、等級 1000 邊界均通過。')
+# 狀態管理回歸：批次精氣神、最大 HP、HP 不可超過最大值。
+stats = line(tn, buf, 'admin stats 999', 0.8)
+require('精氣神全部設定為 999' in stats, 'admin stats 999 未成功。', stats)
+inspect = line(tn, buf, 'admin inspect', 0.8)
+require(re.search(r'GIN\s+:\s*999\s*/\s*999', inspect) is not None
+        and re.search(r'KEE\s+:\s*999\s*/\s*999', inspect) is not None
+        and re.search(r'SEN\s+:\s*999\s*/\s*999', inspect) is not None,
+        '精氣神 999 設定後讀回不一致。', inspect)
+
+maxhp = line(tn, buf, 'admin maxhp 120', 0.8)
+require('最大 HP = 120' in maxhp, 'admin maxhp 120 未成功。', maxhp)
+hp = line(tn, buf, 'admin hp 150', 0.8)
+require('HP = 120' in hp, 'admin hp 150 未被最大 HP 120 限制。', hp)
+inspect = line(tn, buf, 'admin inspect', 0.8)
+require(re.search(r'HP\s+:\s*120\s*/\s*120', inspect) is not None,
+        'HP 上限檢查後讀回不一致。', inspect)
+
+saved = line(tn, buf, 'admin save', 0.8)
+require('人物資料已保存' in saved, 'admin save 未回報成功。', saved)
+
+# Setup 必須在預檢物件、設定數值及裝備結果後才宣稱成功。
+setup = line(tn, buf, 'admin setup', 1.8)
+require('ADMIN SETUP OK' in setup and '虎紋刀已裝備並確認' in setup,
+        'admin setup 未完成數值設定、虎紋刀裝備及保存驗證。', setup)
+
+print('ADMIN GM E2E PASS：admin probe、技能映射/unlearn、屬性/技能邊界、精氣神、HP 上限、save 與 setup 均通過。')
 line(tn, buf, 'quit', 0.4)
 tn.close()
 PY
