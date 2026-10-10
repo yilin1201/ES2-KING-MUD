@@ -110,7 +110,7 @@ patch_once(fight, "ES2M TRAINING DUMMY FIGHT", patch_fight)
 # Kill command／正式攻擊指令：假人不喊救命，避免把訓練訊息當成真實敵對 NPC。
 kill = source_file("cmds/std/kill")
 def patch_kill(s):
-    pattern = re.compile(r'(?m)^    if\(\s*! ?me->is_fighting\(obj\)\s*\|\|\s*! ?me->is_killing\(obj\)\s*\)\s*\{')
+    pattern = re.compile(r'(?m)^    if\s*\(\s*! ?me->is_fighting\(obj\)\s*\|\|\s*! ?me->is_killing\(obj\)\s*\)\s*\{')
     matches = list(pattern.finditer(s))
     if len(matches) != 1:
         raise SystemExit("ES2M TRAINING DUMMY FAIL：kill 既有戰鬥訊息條件數量不符。")
