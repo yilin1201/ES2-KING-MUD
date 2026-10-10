@@ -157,12 +157,25 @@ set_skill = line(tn, buf, 'admin skill blade 200', 0.8)
 require('blade = 200' in set_skill, '技能等級 200 未成功設定。', set_skill)
 learn_skill = line(tn, buf, 'admin learn blade', 0.8)
 require('已學會 blade' in learn_skill, 'admin learn blade 未成功。', learn_skill)
+# 以 0 級 unarmed 驗證用途映射：映射 blade 200 後 query_skill(unarmed) 應為 100。
+set_unarmed = line(tn, buf, 'admin skill unarmed 0', 0.8)
+require('unarmed = 0' in set_unarmed, '無法建立 unarmed 0 級映射測試基線。', set_unarmed)
 mapping = line(tn, buf, 'admin enable unarmed with blade', 0.8)
 require('已將用途 unarmed 對應至技能 blade' in mapping,
         'admin enable 用途 with 技能 的自用格式未成功。', mapping)
 inspect = line(tn, buf, 'admin inspect', 0.8)
 require(re.search(r'blade\s*:\s*200', inspect) is not None,
         '技能等級 200 讀回不一致。', inspect)
+require(re.search(r'unarmed\s*:\s*100', inspect) is not None,
+        '用途 unarmed 未正確映射至 blade（預期有效等級 100）。', inspect)
+
+unlearn = line(tn, buf, 'admin unlearn blade', 0.8)
+require('已取消學會 blade' in unlearn, 'admin unlearn blade 未成功。', unlearn)
+inspect = line(tn, buf, 'admin inspect', 0.8)
+require(re.search(r'blade\s*:\s*200', inspect) is not None,
+        'unlearn 不應刪除已設定的 blade 技能等級。', inspect)
+require(re.search(r'unarmed\s*:\s*0', inspect) is not None,
+        'unlearn blade 後仍殘留 unarmed → blade 用途映射。', inspect)
 
 bad_skill = line(tn, buf, 'admin skill blade 201', 0.8)
 require('技能等級須介於 0～200' in bad_skill,
