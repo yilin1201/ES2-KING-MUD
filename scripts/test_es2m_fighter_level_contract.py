@@ -30,7 +30,7 @@ for token in required_score:
 dodge_start = combat.find("void restored_dodge_gain(")
 parry_start = combat.find("void restored_parry_gain(")
 hit_start = combat.find("private void restored_hit_gain(")
-fight_start = combat.find("varargs int\\nfight (")
+fight_start = combat.find("varargs int" + chr(10) + "fight (")
 assert min(dodge_start, parry_start, hit_start, fight_start) >= 0, "ES2M COMBAT CONTRACT FAIL: missing progression function"
 dodge_fn = combat[dodge_start:parry_start]
 parry_fn = combat[parry_start:hit_start]
