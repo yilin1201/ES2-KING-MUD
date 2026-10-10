@@ -50,9 +50,25 @@ private object target_player(object me, string name)
     if (!stringp(name) || !sizeof(name))
         return me;
 
+    /* 只接受真正在線的玩家，避免 find_living 把 NPC 誤認為可修改目標。 */
     ob = find_player(name);
-    if (!ob)
-        ob = find_living(name);
+    if (!objectp(ob) || !interactive(ob))
+        return 0;
+
+    return ob;
+}
+
+private object mutable_target(object me, string name)
+{
+    object ob;
+
+    ob = target_player(me, name);
+    if (!objectp(ob))
+        return 0;
+
+    /* 角色資料修改不得作用於其他最高管理員；自己仍可操作自己的角色。 */
+    if (ob != me && wiz_level(ob) >= wiz_level("(admin)"))
+        return 0;
 
     return ob;
 }
@@ -238,6 +254,7 @@ private int set_stat(object ob, string stat, int value)
 
     /* Confirm the character object accepted the requested values. */
     if ((int)ob->query_stat_maximum(stat) != value
+    ||  (int)ob->query_stat_effective(stat) != value
     ||  (int)ob->query_stat_current(stat) != value)
         return 0;
 
@@ -297,7 +314,7 @@ int main(object me, string arg)
      */
 
     if (sscanf(arg, "learn %s %s", skill, target_name) == 2) {
-        ob = target_player(me, target_name);
+        ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         ob->set_learn(skill, 1);
         printf("ADMIN: %s 已學會 %s。\n", ob->query("id"), skill);
@@ -311,7 +328,7 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "unlearn %s %s", skill, target_name) == 2) {
-        ob = target_player(me, target_name);
+        ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         ob->set_learn(skill, 0);
         ob->map_skill(skill, "none");
@@ -327,7 +344,7 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "skill %s %d %s", skill, value, target_name) == 3) {
-        ob = target_player(me, target_name);
+        ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         if (value < 0 || value > ADMIN_SKILL_MAX) return notify_fail("技能等級須介於 0～200（Original ES2 原版上限）。\n");
         ob->set_skill(skill, value);
@@ -343,7 +360,7 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "skills %d %s", value, target_name) == 2) {
-        ob = target_player(me, target_name);
+        ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         if (value < 0 || value > ADMIN_SKILL_MAX) return notify_fail("技能等級須介於 0～200（Original ES2 原版上限）。\n");
         foreach (skill in ({ "blade", "force", "parry", "dodge",
@@ -363,11 +380,12 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "stats %d %s", value, target_name) == 2) {
-        ob = target_player(me, target_name);
+        ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         if (value < 0) return notify_fail("數值不可小於 0。\n");
         foreach (cmd in ({ "gin", "kee", "sen" }))
-            set_stat(ob, cmd, value);
+            if (!set_stat(ob, cmd, value))
+                return notify_fail("精氣神設定失敗；請使用 admin inspect 核對。\n");
         printf("ADMIN: %s 精氣神全部設定為 %d。\n", ob->query("id"), value);
         return 1;
     }
@@ -375,13 +393,14 @@ int main(object me, string arg)
     if (sscanf(arg, "stats %d", value) == 1) {
         if (value < 0) return notify_fail("數值不可小於 0。\n");
         foreach (cmd in ({ "gin", "kee", "sen" }))
-            set_stat(me, cmd, value);
+            if (!set_stat(me, cmd, value))
+                return notify_fail("精氣神設定失敗；請使用 admin inspect 核對。\n");
         printf("ADMIN: 精氣神全部設定為 %d。\n", value);
         return 1;
     }
 
     if (sscanf(arg, "attrs %d %s", value, target_name) == 2) {
-        ob = target_player(me, target_name);
+        ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         if (value < ATTRVAL_MIN || value > ATTRVAL_MAX) return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\n");
         foreach (cmd in ({ "str", "cor", "int", "spi", "cps", "dex", "con", "wis" }))
@@ -461,7 +480,7 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "level %d %s", value, target_name) == 2) {
-        ob = target_player(me, target_name);
+        ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         if (value < 1 || value > ADMIN_LEVEL_MAX) return notify_fail("角色等級須介於 1～999（Original ES2 原版範圍）。\n");
         ob->set_level(value);
@@ -517,7 +536,7 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "give %s %s", value_s, target_name) == 2) {
-        ob = target_player(me, target_name);
+        ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         if (!(skill = object_file(value_s)))
             return notify_fail("找不到物件：" + value_s + "\n");
@@ -541,17 +560,18 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "enable %s with %s %s", cmd, skill, target_name) == 3) {
-        ob = target_player(me, target_name);
+        ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         if (!ob->query_learn(skill))
             return notify_fail("目標尚未學會此技能；請先使用既有學習系統。\n");
-        ob->map_skill(skill, skill);
+        /* 用途是第一個參數、技能是第二個參數，避免把技能映射到自己。 */
+        ob->map_skill(cmd, skill);
         write("ADMIN: 已設定目標技能對應。\n");
         return 1;
     }
 
     if (sscanf(arg, "enable %s %s", cmd, target_name) == 2) {
-        ob = target_player(me, target_name);
+        ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         if (!ob->query_learn(cmd))
             return notify_fail("目標尚未學會此技能；請先使用既有學習系統。\n");
@@ -586,9 +606,11 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "wield %s %s", cmd, target_name) == 2) {
-        ob = target_player(me, target_name);
+        ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         weapon = present(cmd, ob);
+        if (!objectp(weapon))
+            weapon = present(replace_string(cmd, "_", " "), ob);
         if (!objectp(weapon))
             return notify_fail("目標身上找不到：" + cmd + "\n");
         if (!weapon->wield())
@@ -608,7 +630,7 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "hp %d %s", value, target_name) == 2) {
-        ob = target_player(me, target_name);
+        ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         if (value < 0) return notify_fail("HP 不可小於 0。\n");
         /* score's HP bar assumes current <= maximum; larger values break it. */
@@ -630,7 +652,7 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "maxhp %d %s", value, target_name) == 2) {
-        ob = target_player(me, target_name);
+        ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         if (value < 1) return notify_fail("最大 HP 必須大於 0。\n");
         /* maximum, effective and current must move together (see set_stat). */
@@ -660,7 +682,7 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "heal %s", target_name) == 1) {
-        ob = target_player(me, target_name);
+        ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         foreach (cmd in ({ "HP", "gin", "kee", "sen" })) {
             value = (int)ob->query_stat_maximum(cmd);
