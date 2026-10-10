@@ -428,7 +428,7 @@ int main(object me, string arg)
      */
     if (sscanf(arg, "%s %d %s", cmd, value, target_name) == 3) {
         if (member_array(cmd, ({ "gin", "kee", "sen" })) != -1) {
-            ob = target_player(me, target_name);
+            ob = mutable_target(me, target_name);
             if (!ob)
                 return notify_fail("找不到玩家。\n");
             if (!set_stat(ob, cmd, value))
@@ -453,7 +453,7 @@ int main(object me, string arg)
     if (sscanf(arg, "%s %d %s", cmd, value, target_name) == 3) {
         if (member_array(cmd, ({ "str", "cor", "int", "spi", "cps",
                                  "dex", "con", "wis" })) != -1) {
-            ob = target_player(me, target_name);
+            ob = mutable_target(me, target_name);
             if (!ob)
                 return notify_fail("找不到玩家。\n");
             if (value < ATTRVAL_MIN || value > ATTRVAL_MAX)
