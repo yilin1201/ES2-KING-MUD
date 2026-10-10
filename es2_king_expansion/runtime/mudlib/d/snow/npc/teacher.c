@@ -97,7 +97,8 @@ void teach_literate()
 	&&  ob->query_class()=="commoner"
 	&&  ob->query_skill("literate") >= 5
 	&&  member_array(ob->query_race(), ({
-		"avatar", "human", "rainner", "malik", "woochan", "jiaojao", "yaksa"
+        // ES2-KING 種族代碼相容：Original ES2 使用 rainnar，ES2M 快照的 rainner 不直接沿用。
+		"avatar", "human", "rainnar", "malik", "woochan", "jiaojao", "yaksa"
 	    })) != -1
 	&&  ob->query_attr("int") > random(20) )
 	    do_chat( (: pick_student, ob :) );
