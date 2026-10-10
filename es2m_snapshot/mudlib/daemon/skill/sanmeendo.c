@@ -12,3 +12,18 @@ mapping *actions = ({
 private void create(){ seteuid(getuid()); DAEMON_D->register_skill_daemon("sanmeendo"); setup(); }
 int valid_enable(string usage){ return usage=="blade"; }
 void attack_using(object me, object opponent, object weapon){ if(opponent) COMBAT_D->fight(me,opponent,"sanmeendo",actions[random(sizeof(actions))],weapon); }
+
+
+/* ES2M 2026-10-08：三門刀法 30 級起獲得武學之道；保留 King 現有招式資料。 */
+void skill_advanced(object me, string sk)
+{
+    int lv;
+
+    if( !userp(me) ) return;
+    lv = me->query_skill("sanmeendo", 1);
+    if( lv < 1 ) return;
+
+    me->gain_score("martial art", lv * 10);
+    if( lv >= 30 )
+        me->gain_score("martial mastery", (lv - 29) * 10);
+}
