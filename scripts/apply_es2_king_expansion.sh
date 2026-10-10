@@ -6,6 +6,134 @@ test -d "$TARGET/mudlib" || { echo "EXPANSION APPLY FAIL：缺少 $TARGET/mudlib
 test -d "$SOURCE"
 cp -a "$SOURCE/." "$TARGET/mudlib/"
 
+# ES2M Training Dummy／練武假人：只在生成 Runtime 套用 ES2M 行為，不改寫保存的 Original ES2。
+# 此補丁只調整假人命中、防禦、敘述與教學指令；一般戰鬥公式維持原始來源。
+python3 - "$TARGET/mudlib" <<'PY'
+from pathlib import Path
+import re
+import sys
+
+root = Path(sys.argv[1])
+
+def patch_once(path, marker, transform):
+    text = path.read_text()
+    if marker in text:
+        return
+    updated = transform(text)
+    if updated == text:
+        raise SystemExit("ES2M TRAINING DUMMY FAIL：未能套用 " + marker + "：" + str(path))
+    path.write_text(updated)
+
+# Combat daemon／戰鬥精靈：假人必定命中、不閃避、不格擋、不報體力傷勢，
+# 但攻擊者仍消耗正常精力，假人仍回報命中供練功系統使用。
+combat = root / "adm/daemons/combatd.c"
+def patch_combat(s):
+    anchor = "string *dead_msg = ({"
+    if s.count(anchor) != 1:
+        raise SystemExit("ES2M TRAINING DUMMY FAIL：combatd dead_msg anchor 數量不符。")
+    s = s.replace(anchor, '''/* ES2M TRAINING DUMMY COMBAT／假人命中只顯示簡短訊息，不顯示部位與傷勢。 */
+string *dummy_hit_msg = ({
+    "結果扎扎實實的命中$n。\\n",
+    "結果不偏不倚地擊中$n。\\n",
+    "結果「啪」地一聲落在$n上，$n紋風不動。\\n",
+});
+
+''' + anchor, 1)
+    anchor = "    int ability, strength, damage, gin_cost, force_bonus;"
+    if s.count(anchor) != 1:
+        raise SystemExit("ES2M TRAINING DUMMY FAIL：combatd fight 變數宣告 anchor 數量不符。")
+    s = s.replace(anchor, "    int ability, strength, damage, gin_cost, force_bonus, dummy;", 1)
+    anchor = '    me->set_temp("last_action", action);'
+    if s.count(anchor) != 1:
+        raise SystemExit("ES2M TRAINING DUMMY FAIL：combatd last_action anchor 數量不符。")
+    s = s.replace(anchor, anchor + '''
+    // ES2M TRAINING DUMMY COMBAT／只有明確標記的訓練假人套用必中規則。
+    dummy = victim->query("training_dummy");''', 1)
+    anchor = "    ability -= random( victim->query_skill(skill) );"
+    if s.count(anchor) != 1:
+        raise SystemExit("ES2M TRAINING DUMMY FAIL：combatd 命中率 anchor 數量不符。")
+    s = s.replace(anchor, "    if( !dummy ) ability -= random( victim->query_skill(skill) );", 1)
+    anchor = "    if( !victim->is_busy()"
+    if s.count(anchor) != 1:
+        raise SystemExit("ES2M TRAINING DUMMY FAIL：combatd 防禦 anchor 數量不符。")
+    s = s.replace(anchor, "    if( !dummy && !victim->is_busy()", 1)
+    anchor = "        strength -= (int)victim->absorb(ability, strength,"
+    if s.count(anchor) != 1:
+        raise SystemExit("ES2M TRAINING DUMMY FAIL：combatd absorb anchor 數量不符。")
+    s = s.replace(anchor, "        if( !dummy ) strength -= (int)victim->absorb(ability, strength,", 1)
+    anchor = '    msg = me->get_combat_message();\n    if( stringp(msg) )'
+    replacement = '''    msg = me->get_combat_message();
+    // ES2M TRAINING DUMMY COMBAT／假人只顯示出招與簡短命中，不輸出身體部位。
+    if( dummy && stringp(msg) ) {
+        msg = action["action"];
+        msg = replace_string(msg, "$n的$l", "$n");
+        msg = replace_string(msg, "$n$l", "$n");
+        msg = replace_string(msg, "$l", "$n");
+        msg += "﹐" + dummy_hit_msg[random(sizeof(dummy_hit_msg))];
+    }
+    if( stringp(msg) )'''
+    if s.count(anchor) != 1:
+        raise SystemExit("ES2M TRAINING DUMMY FAIL：combatd 戰鬥敘述 anchor 數量不符。")
+    s = s.replace(anchor, replacement, 1)
+    anchor = "        if( damage > 0 ) report_status(victim);"
+    if s.count(anchor) != 1:
+        raise SystemExit("ES2M TRAINING DUMMY FAIL：combatd report_status anchor 數量不符。")
+    s = s.replace(anchor, "        if( damage > 0 && !dummy ) report_status(victim);", 1)
+    return s
+patch_once(combat, "ES2M TRAINING DUMMY COMBAT", patch_combat)
+
+# Fight command／切磋指令：假人不需說話或接受挑戰，直接進入練招流程。
+fight = root / "cmds/std/fight.c"
+def patch_fight(s):
+    anchor = '    if( obj->query("civilized") ) {'
+    if s.count(anchor) != 1:
+        raise SystemExit("ES2M TRAINING DUMMY FAIL：fight civilized anchor 數量不符。")
+    return s.replace(anchor, '''    // ES2M TRAINING DUMMY FIGHT／假人是死物，不要求對話或雙方同意。
+    if( obj->query("training_dummy") ) {
+        message_vision("\\n$N在$n前站定，擺開架勢練起招式來。\\n\\n", me, obj);
+        me->fight_ob(obj);
+        obj->fight_ob(me);
+        return 1;
+    }
+
+''' + anchor, 1)
+patch_once(fight, "ES2M TRAINING DUMMY FIGHT", patch_fight)
+
+# Kill command／正式攻擊指令：假人不喊救命，避免把訓練訊息當成真實敵對 NPC。
+kill = root / "cmds/std/kill.c"
+def patch_kill(s):
+    pattern = re.compile(r'(?m)^    if\(\s*! ?me->is_fighting\(obj\)\s*\|\|\s*! ?obj->is_killing\(me\)\s*\)\s*\{')
+    matches = list(pattern.finditer(s))
+    if len(matches) != 1:
+        raise SystemExit("ES2M TRAINING DUMMY FAIL：kill 既有戰鬥訊息條件數量不符。")
+    replacement = '''    // ES2M TRAINING DUMMY KILL／假人不喊話，只提示玩家開始練招。
+    if( obj->query("training_dummy") ) {
+        if( !me->is_fighting(obj) )
+            message_vision("\\n$N在$n前站定，擺開架勢練起招式來。\\n\\n", me, obj);
+    }
+    else if( !me->is_fighting(obj) || !obj->is_killing(me) ) {'''
+    return s[:matches[0].start()] + replacement + s[matches[0].end():]
+patch_once(kill, "ES2M TRAINING DUMMY KILL", patch_kill)
+
+# Look command／查看指令：訓練假人不顯示人物外貌與年齡，保留物件說明。
+look = root / "cmds/std/look.c"
+def patch_look(s):
+    pattern = re.compile(r'if\s*\(\s*\(string\)obj->query\("humanoid"\)\s*&&\s*intp\(age\s*=\s*obj->query\("age"\)\)\s*\)\s*\{')
+    matches = list(pattern.finditer(s))
+    if len(matches) != 1:
+        raise SystemExit("ES2M TRAINING DUMMY FAIL：look 外貌／年齡條件數量不符。")
+    replacement = 'if ((string)obj->query("humanoid") && intp(age = obj->query("age")) && !obj->query("training_dummy")) {'
+    return s[:matches[0].start()] + replacement + s[matches[0].end():]
+patch_once(look, "ES2M TRAINING DUMMY LOOK", patch_look)
+
+# 必須確認 overlay 已提供假人本體；沒有物件時不能把指令支援誤報為完整功能。
+stake = root / "custom/zhenwu/npc/target_stake.c"
+if not stake.exists() or 'set("training_dummy", 1);' not in stake.read_text():
+    raise SystemExit("ES2M TRAINING DUMMY FAIL：Runtime 缺少 target_stake 訓練假人物件。")
+print("ES2M TRAINING DUMMY APPLY PASS／假人戰鬥、fight/kill/look 與物件檢查已套用。")
+PY
+
+
 # ES2M Headless Dance Routing／Neolith 上游命令索引檔名為 cmd_d.lpc（不是 cmd_d.c）。
 # 刑天 dance 走種族戰舞；其他種族仍使用 Original EMOTED 通用表情。
 COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.lpc"
