@@ -33,9 +33,11 @@ RUN cp -a /opt/es2-king/runtime/mudlib /build/es2m-original-mudlib
 RUN echo "[M30 BUILD 4/5] Apply ES2M Race overlay" \
     && bash scripts/apply_race_phase2_runtime.sh /opt/es2-king/runtime
 
-# Fighter 升級鏈來源契約必須在 KING 戰鬥成長擴充前驗證：
-# ES2M class/score 已套入，但 combatd.c 此時仍不得含 KING generic hit gain。
-RUN python3 scripts/test_es2m_fighter_level_contract.py /opt/es2-king/runtime/mudlib
+# Fighter 升級鏈來源契約必須針對保存的 ES2M 證據快照驗證，不可把 Original Runtime 誤當 ES2M 最新來源。
+RUN python3 scripts/test_es2m_fighter_level_contract.py
+# ES2M 商店批量購買、庫存、店小二延遲交貨及戰鬥成長來源快照契約。
+# 此測試是靜態證據；延遲交貨付款風險仍需 Runtime 修正與實機驗證。
+RUN python3 scripts/test_es2m_update_snapshot.py
 
 RUN echo "[M30 BUILD 4/5] Apply ES2-KING Expansion overlay" \
     && bash scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime
