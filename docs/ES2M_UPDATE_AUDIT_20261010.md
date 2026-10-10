@@ -68,8 +68,8 @@
 | 項目 | 狀態 | 決策 |
 |---|---|---|
 | 上游 HEAD／差異清單 | SOURCE CONFIRMED | 已記錄來源 SHA 與 92 commits 差異範圍 |
-| 冷梅莊武學與梅影風 | SOURCE CONFIRMED / RUNTIME NOT YET VERIFIED | 先保存證據，再核對戰鬥鉤子、裝備、拜師、技能映射與 preload |
-| NPC 強度系統 | SOURCE CONFIRMED / RUNTIME NOT YET VERIFIED | 隔離整合；未驗證前不改寫全體 NPC |
+| 冷梅莊武學與梅影風 | SOURCE PRESERVED / EXPANSION OVERLAY ADDED / RUNTIME NOT YET VERIFIED | 已加入五項技能、新版 martial_art 引擎、梅影風 NPC 與交叉路口生成；修正來源 race 拼字 rainner→KING 正式代碼 rainnar；待 Driver 建置及遊戲內測試 |
+| NPC 強度系統 | SOURCE PRESERVED / EXPANSION OVERLAY ADDED / RUNTIME NOT YET VERIFIED | 已隔離加入 npc_power daemon、NPC 基底 set_power/set_beast 介面與 daemon.h 定義；尚未實機確認強度數值 |
 | disable／abandon／enable 與成長邏輯 | SOURCE CONFIRMED / MERGE REQUIRED | 逐函式合併，保留 KING 屬性成長、技能上限與存檔規則 |
 | 區域 NPC／訓練假人 | SOURCE CONFIRMED / FILE-BY-FILE REVIEW | 不覆蓋同名 Original；只對明確缺漏建立 Expansion patch |
 | WebMUD UI | OUT OF KING RUNTIME SCOPE | 不導入 LPC Runtime |
@@ -77,3 +77,11 @@
 ## 驗證限制
 
 本次來源差異確認不等於 KING 遊戲實測。沒有針對相應程式完成建置與遊戲內測試前，狀態必須維持 `RUNTIME NOT YET VERIFIED` 或 `RUNTIME BLOCKED`，不得標記 Gameplay PASS。
+
+## 2026-10-10 已執行的 KING 變更
+
+- 已更新 `es2m_snapshot/mudlib` 的五項冷梅莊技能、新版 `std/martial_art.c/.h`、NPC 強度 daemon、NPC 基底、daemon.h 與五堂鎮梅影風來源快照；來源內容保留獨立快照。
+- 已新增 Expansion overlay：新版 `std/martial_art.c/.h`、`lunmay`、`hainmay_force`、`advance_lunmay`、`mayin`、`seven`、`npc_power.c`、`std/char/npc.c`、`include/daemon.h`、`d/wutang/npc/may_yin_fong.c`、`d/wutang/crossroad.c`。
+- KING `feature/char/skill.c` 保留既有 300 級 KING 上限、屬性成長與武器技能門檻；僅增加新版武功的自訂入門等級、學成點數門檻與學成訊息處理。
+- 已把五項新技能加入 `scripts/test_es2m_skill_import.py`，並新增 `scripts/test_es2m_cold_plum_overlay.py`，納入 Docker 建置檢查。
+- 目前僅為程式／靜態閘門整合；尚未取得這批最新變更的 Neolith Docker 建置與遊戲內 E2E 結果，狀態仍為 `RUNTIME NOT YET VERIFIED`，不得宣稱 Gameplay PASS。
