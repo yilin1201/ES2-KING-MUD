@@ -268,6 +268,17 @@ int restored_skill_level_threshold(string skill, int level)
     return restored_skill_threshold(level) * pct / 100;
 }
 
+/* 對齊 ES2M 師父傳授介面；只對五項冷梅莊技能套用自訂入門等級／門檻。 */
+int skill_entry_level(string skill)
+{
+    return restored_skill_entry_level(skill);
+}
+
+int skill_threshold(string skill, int level)
+{
+    return restored_skill_level_threshold(skill, level);
+}
+
 void apply_restored_skill_progression(string skill)
 {
     object daemon;
