@@ -243,7 +243,7 @@ int restored_skill_entry_level(string skill)
     return lv > 0 ? lv : 1;
 }
 
-/* 自訂門檻同樣只套用至本次導入的冷梅莊技能，其餘技能沿用 KING 原本公式。 */
+/* 自訂門檻只套用至本次新增技能，其餘技能沿用 KING 原本公式。 */
 int restored_skill_level_threshold(string skill, int level)
 {
     object daemon;
