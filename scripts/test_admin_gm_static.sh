@@ -19,6 +19,12 @@ grep -Fq 'this_player(1) != me' "$COMMAND"
 grep -Fq 'wiz_level(me) < wiz_level("(admin)")' "$COMMAND"
 
 # 數值與物件處理：拒絕負值，HP 不超過最大值，物件路徑需先確認存在。
+grep -Fq 'ATTRVAL_MIN' "$COMMAND"
+grep -Fq 'ATTRVAL_MAX' "$COMMAND"
+grep -Fq 'ADMIN_SKILL_MAX 200' "$COMMAND"
+grep -Fq 'ADMIN_LEVEL_MAX 999' "$COMMAND"
+grep -Fq '膂力（原版 1～50）' "$COMMAND"
+grep -Fq '慧根（原版 1～50）' "$COMMAND"
 grep -Fq 'if (value < 0)' "$COMMAND"
 grep -Fq 'query_stat_maximum("HP")' "$COMMAND"
 grep -Fq 'object_file(value_s)' "$COMMAND"
