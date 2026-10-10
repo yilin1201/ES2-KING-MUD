@@ -46,7 +46,8 @@ if not skill.is_file():
 else:
     text = skill.read_text(encoding="utf-8")
     for token in ("es2_king_skill_cap", "restored_skill_entry_level",
-                  "restored_skill_level_threshold", "skill_completed",
+                  "restored_skill_level_threshold", "skill_entry_level",
+                  "skill_threshold", "skill_completed",
                   '"lunmay"', '"hainmay force"', '"advance_lunmay"', '"mayin"', '"seven"'):
         if token not in text:
             errors.append(f"KING 技能成長整合缺少必要保護或介面：{token}")
@@ -64,6 +65,8 @@ if npc.is_file():
     text = npc.read_text(encoding="utf-8")
     if 'set_power("S")' not in text or '"custom_faction", FACTION' not in text:
         errors.append("梅影風未設定 S 級強度或冷梅莊門派身分")
+    if "skill_entry_level(skill)" not in text or "skill_threshold(skill, entry_level)" not in text:
+        errors.append("梅影風傳授未依技能實際入門等級補足學成點數")
     if '"rainnar"' not in text or '"rainner"' in text:
         errors.append("梅影風拜師種族排除條件未對齊 KING 正式 race 代碼 rainnar")
 if room.is_file() and 'npc/may_yin_fong" : 1' not in room.read_text(encoding="utf-8"):
