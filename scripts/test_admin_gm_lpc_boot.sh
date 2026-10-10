@@ -111,8 +111,7 @@ def text(buf):
 
 def attrs_from(output):
     return dict((k, int(v)) for k, v in re.findall(
-        r'^\s*(str|cor|int|spi|cps|dex|con|wis)\s*:\s*(\d+)\s*
-,
+        r'^\s*(str|cor|int|spi|cps|dex|con|wis)\s*:\s*(\d+)\s*',
         output, re.M))
 
 def require(condition, message, output=''):
