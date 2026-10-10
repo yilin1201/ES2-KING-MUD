@@ -16,6 +16,15 @@ def require(condition: bool, message: str) -> None:
         raise SystemExit("ES2M TRAINING DUMMY FAIL：" + message)
 
 
+def source_file(root: Path, stem: str) -> Path:
+    """兼容 Original／Neolith 使用 .c 或 .lpc 的不同版本。"""
+    for suffix in (".c", ".lpc"):
+        candidate = root / (stem + suffix)
+        if candidate.is_file():
+            return candidate
+    raise SystemExit("ES2M TRAINING DUMMY FAIL：Runtime 缺少 " + stem + "（.c/.lpc）。")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="驗證 ES2M 練武假人 Expansion 整合。")
     parser.add_argument("--runtime", help="已套用 Expansion 的 Runtime 根目錄（包含 mudlib/）。")
@@ -47,10 +56,10 @@ def main() -> None:
     if args.runtime:
         # Dockerfile 傳入 Runtime 根目錄；實際程式都應位於其 mudlib/ 子目錄。
         runtime = Path(args.runtime) / "mudlib"
-        combat = (runtime / "adm" / "daemons" / "combatd.c").read_text(encoding="utf-8")
-        fight = (runtime / "cmds" / "std" / "fight.c").read_text(encoding="utf-8")
-        kill = (runtime / "cmds" / "std" / "kill.c").read_text(encoding="utf-8")
-        look = (runtime / "cmds" / "std" / "look.c").read_text(encoding="utf-8")
+        combat = source_file(runtime, "adm/daemons/combatd").read_text(encoding="utf-8")
+        fight = source_file(runtime, "cmds/std/fight").read_text(encoding="utf-8")
+        kill = source_file(runtime, "cmds/std/kill").read_text(encoding="utf-8")
+        look = source_file(runtime, "cmds/std/look").read_text(encoding="utf-8")
         runtime_stake = runtime / "custom" / "zhenwu" / "npc" / "target_stake.c"
         runtime_teacher = (runtime / "d" / "snow" / "npc" / "teacher.c").read_text(encoding="utf-8")
 
