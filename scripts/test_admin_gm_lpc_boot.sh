@@ -37,7 +37,7 @@ cd "$ROOT"
 "$DRIVER" -f neolith.conf -c >"$LOG" 2>&1 &
 PID=$!
 
-# Wait for the actual TCP listener; a live process alone does not prove boot completed.
+# 等待實際 TCP 監聽；僅確認程序仍存在，不代表 Runtime 已完成啟動。
 python3 - "$PID" "$LOG" <<'PY'
 import os, socket, sys, time
 pid, log = int(sys.argv[1]), sys.argv[2]
@@ -61,7 +61,7 @@ else:
     raise SystemExit("ADMIN GM LPC LOAD FAIL：45 秒內未監聽 TCP 4000。")
 PY
 
-# Neolith may continue boot after a preload compile error, so inspect the boot log explicitly.
+# 即使 preload 編譯錯誤後 Neolith 仍繼續啟動，也要明確檢查啟動日誌。
 if grep -Eiq 'Error in loading object: /cmds/adm/admin|/cmds/adm/admin(\.c)?.*(compile error|syntax error|failed to load)|admin\.c.*(compile error|syntax error)' "$LOG"; then
   cat "$LOG"
   echo "ADMIN GM LPC LOAD FAIL：admin.c 發生 LPC 編譯／載入錯誤。" >&2
@@ -111,7 +111,7 @@ def text(buf):
 
 def attrs_from(output):
     return dict((k, int(v)) for k, v in re.findall(
-        r'^\s*(str|cor|int|spi|cps|dex|con|wis)\s*:\s*(\d+)\s*',
+        r'^\s*(str|cor|int|spi|cps|dex|con|wis)\s*:\s*(\d+)\s*$',
         output, re.M))
 
 def require(condition, message, output=''):
