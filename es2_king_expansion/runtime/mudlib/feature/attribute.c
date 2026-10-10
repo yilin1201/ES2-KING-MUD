@@ -1,6 +1,7 @@
 /*
  * ES2-KING Expansion overlay for Original ES2 attribute handling.
- * 所有角色（包括 KING）均維持 Original／ES2M 的 1..50 正式屬性範圍。
+ * 八大屬性：一般角色沿用 Original／ES2M 的 ATTRVAL_MAX；授權 KING 管理服務可設定 1..99。
+ * 僅修改 Expansion overlay，不修改 Original ES2 原始碼。
  */
 #include <dbase.h>
 #include <attribute.h>
@@ -21,13 +22,24 @@ varargs int query_attr(string what, int raw)
 
 int set_attr(string what, int value)
 {
+    object caller;
+    string caller_name;
+    int king_admin;
+
     if (!mapp(attribute))
         attribute = ([]);
 
-    // Original 規則保留：玩家屬性必須先由 init_attribute() 初始化。
-    // 所有角色使用相同 ATTRVAL_MAX=50；KING 由授權登入配置設為 50。
+    // 保留 Original 初始化要求；只有指定的 KING 管理 daemon 可突破一般屬性上限。
+    caller = previous_object();
+    caller_name = objectp(caller) ? file_name(caller) : "";
+    king_admin = caller_name == "/adm/daemons/kcharadmind"
+              || caller_name == "/adm/daemons/kingd";
+
+    // 八大屬性管理設定上限為 99；一般角色仍受 ATTRVAL_MAX 原始上限限制。
     if (userp(this_object())
-    && (undefinedp(attribute[what]) || value < ATTRVAL_MIN || value > ATTRVAL_MAX && (!objectp(previous_object()) || (file_name(previous_object()) != "/adm/daemons/kcharadmind" && file_name(previous_object()) != "/adm/daemons/kingd"))))
+    && (undefinedp(attribute[what])
+        || value < ATTRVAL_MIN
+        || value > (king_admin ? 99 : ATTRVAL_MAX)))
         return 0;
 
     return (attribute[what] = value);
