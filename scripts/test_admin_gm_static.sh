@@ -55,7 +55,6 @@ if grep -Fq '\\n' "$COMMAND"; then
   exit 1
 fi
 
-echo 'ADMIN GM STATIC PASS／Expansion 路徑、管理員權限、數值保護與載入設定檢查通過。'
 
 
 # Unlearn regression／取消學習須清理用途映射，不可把技能錯誤標記為 disabled。
@@ -74,3 +73,8 @@ if grep -Fq 'map_skill(skill, skill)' "$COMMAND"; then
   echo 'ADMIN GM STATIC FAIL：用途對應錯把技能名稱當成用途。' >&2
   exit 1
 fi
+grep -Fq 'ob->map_skill(skill);' "$COMMAND"
+grep -Fq 'foreach (usage, mapped in skill_map)' "$COMMAND"
+grep -Fq 'if (mapped == skill)' "$COMMAND"
+
+echo 'ADMIN GM STATIC PASS／Expansion 路徑、管理員權限、數值保護與技能解除映射檢查通過。'
