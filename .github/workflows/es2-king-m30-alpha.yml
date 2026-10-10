@@ -4,7 +4,7 @@ on:
     branches: [build/original-es2-races-phase2]
     paths: ['ROADMAP_M0_M30.md', 'original_es2/**', 'es2_king_expansion/**', 'king_library/**', 'scripts/test_m30_*', 'scripts/test_m*', 'scripts/test_admin_gm_*', '.github/workflows/es2-king-m30-alpha.yml']
   pull_request:
-    paths: ['ROADMAP_M0_M30.md', 'original_es2/**', 'es2_king_expansion/**', 'king_library/**', 'scripts/test_m30_*', 'scripts/test_m*', '.github/workflows/es2-king-m30-alpha.yml']
+    paths: ['ROADMAP_M0_M30.md', 'original_es2/**', 'es2_king_expansion/**', 'king_library/**', 'scripts/test_m30_*', 'scripts/test_m*', 'scripts/test_admin_gm_*', '.github/workflows/es2-king-m30-alpha.yml']
   workflow_dispatch:
 jobs:
   m30-alpha:
