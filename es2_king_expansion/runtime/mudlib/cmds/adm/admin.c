@@ -240,6 +240,29 @@ private void show_status(object ob)
     write("================================================\n");
 }
 
+/* 取消學習時移除相關用途映射，但不刪除角色已保存的技能等級。 */
+private void unlearn_skill(object ob, string skill)
+{
+    mapping skill_map;
+    string usage;
+    mixed mapped;
+
+    if (!objectp(ob) || !stringp(skill) || !sizeof(skill))
+        return;
+
+    ob->set_learn(skill, 0);
+    skill_map = ob->query_skill_map();
+
+    /* Original map_skill 的第一參數是「用途」，第二參數是被映射的技能。 */
+    ob->map_skill(skill);
+    if (!mapp(skill_map))
+        return;
+
+    foreach (usage, mapped in skill_map)
+        if (mapped == skill)
+            ob->map_skill(usage);
+}
+
 private int set_stat(object ob, string stat, int value)
 {
     if (!objectp(ob))
@@ -330,15 +353,13 @@ int main(object me, string arg)
     if (sscanf(arg, "unlearn %s %s", skill, target_name) == 2) {
         ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
-        ob->set_learn(skill, 0);
-        ob->map_skill(skill, "none");
+        unlearn_skill(ob, skill);
         printf("ADMIN: %s 已取消學會 %s。\n", ob->query("id"), skill);
         return 1;
     }
 
     if (sscanf(arg, "unlearn %s", skill) == 1) {
-        me->set_learn(skill, 0);
-        me->map_skill(skill, "none");
+        unlearn_skill(me, skill);
         printf("ADMIN: 已取消學會 %s。\n", skill);
         return 1;
     }
