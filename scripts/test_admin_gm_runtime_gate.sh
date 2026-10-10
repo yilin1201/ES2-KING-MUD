@@ -35,6 +35,11 @@ test "$(grep -Fc 'ob = mutable_target(me, target_name);' "$COMMAND")" -ge 16
 grep -Fq 'ob->map_skill(cmd, skill);' "$COMMAND"
 grep -Fq 'query_stat_effective(stat)' "$COMMAND"
 grep -Fq 'present(replace_string(cmd, "_", " "), ob)' "$COMMAND"
+# 物件失敗清理與 setup 裝備回報／生成 Runtime 必須與 Expansion 原始檔一致。
+grep -Fq 'if (!gift->move(ob))' "$COMMAND"
+grep -Fq 'if (!gift->move(me))' "$COMMAND"
+grep -Fq '先預檢虎紋刀來源' "$COMMAND"
+grep -Fq '!weapon->wield()' "$COMMAND"
 
 
 
