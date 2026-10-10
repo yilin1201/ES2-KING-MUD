@@ -56,3 +56,12 @@ if grep -Fq '\\n' "$COMMAND"; then
 fi
 
 echo 'ADMIN GM STATIC PASS／Expansion 路徑、管理員權限、數值保護與載入設定檢查通過。'
+
+
+# Skill mapping regression／用途對應必須以「用途、技能」順序呼叫 Original map_skill。
+grep -Fq 'ob->map_skill(cmd, skill)' "$COMMAND"
+grep -Fq 'me->map_skill(cmd, skill)' "$COMMAND"
+if grep -Fq 'map_skill(skill, skill)' "$COMMAND"; then
+  echo 'ADMIN GM STATIC FAIL：用途對應錯把技能名稱當成用途。' >&2
+  exit 1
+fi
