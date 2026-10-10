@@ -13,6 +13,9 @@ done
 
 grep -Fq 'ES2-KING Expansion／管理員 GM 指令整合層' "$COMMAND"
 grep -Fq 'wiz_level(me) < wiz_level("(admin)")' "$COMMAND"
+grep -Fq 'ATTRVAL_MAX' "$COMMAND"
+grep -Fq 'ADMIN_SKILL_MAX 200' "$COMMAND"
+grep -Fq 'ADMIN_LEVEL_MAX 999' "$COMMAND"
 grep -Fq 'ES2-KING OWNER COMMAND REHASH' "$COMMAND_D"
 grep -Fq '"admin", "kingcreate"' "$COMMAND_D"
 grep -Fqx '/cmds/adm/admin' "$PRELOAD"
