@@ -7,8 +7,13 @@
  */
 #include <command.h>
 #include <ansi.h>
+#include <attribute.h>  /* Original ES2 屬性範圍：ATTRVAL_MIN=1、ATTRVAL_MAX=50。 */
 
 inherit F_CLEAN_UP;
+
+/* Original ES2 source-verified limits／原版原始碼已確認的數值範圍。 */
+#define ADMIN_SKILL_MAX 200  /* mudlib/feature/char/skill.c 的 set_skill/query_skill 上限。 */
+#define ADMIN_LEVEL_MAX 999 /* mudlib/feature/char/score.c 的 set_level 上限。 */
 
 /*
  * Command objects under /cmds/ get UID "Root" but start with EUID 0.
@@ -82,15 +87,15 @@ HELP
   admin stats <數值> [玩家]     同時設定精、氣、神
 
 【三、八大屬性】
-  admin str <數值> [玩家]       力量
-  admin cor <數值> [玩家]       根骨／體質相關屬性
-  admin int <數值> [玩家]       悟性
-  admin spi <數值> [玩家]       精神
-  admin cps <數值> [玩家]       CPS
-  admin dex <數值> [玩家]       身法
-  admin con <數值> [玩家]       耐力
-  admin wis <數值> [玩家]       智慧
-  admin attrs <數值> [玩家]     一次設定八大屬性
+  admin str <數值> [玩家]       膂力（原版 1～50）
+  admin cor <數值> [玩家]       膽識（原版 1～50）
+  admin cps <數值> [玩家]       定力（原版 1～50）
+  admin int <數值> [玩家]       悟性（原版 1～50）
+  admin wis <數值> [玩家]       慧根（原版 1～50）
+  admin spi <數值> [玩家]       靈性（原版 1～50）
+  admin con <數值> [玩家]       根骨（原版 1～50）
+  admin dex <數值> [玩家]       機敏（原版 1～50）
+  admin attrs <數值> [玩家]     一次設定八大屬性（原版 1～50）
 HELP
     );
 
@@ -98,8 +103,8 @@ HELP
 
 【四、技能管理】
   admin skill <技能> <等級> [玩家]
-                                設定指定技能等級
-  admin skills <等級> [玩家]    設定核心技能等級
+                                設定指定技能等級（原版 0～200）
+  admin skills <等級> [玩家]    設定核心技能等級（原版 0～200）
   admin learn <技能> [玩家]     設定為已學會
   admin unlearn <技能> [玩家]   取消學習並解除對應
 
@@ -138,7 +143,7 @@ HELP
                                 設定技能對應（請以實際遊戲結果確認）
 
 【八、角色等級】
-  admin level <等級> [玩家]      設定角色等級
+  admin level <等級> [玩家]      設定角色等級（原版 1～999）
 
 【常用操作範例】
   admin setup                    套用管理員標準設定並保存
@@ -324,14 +329,14 @@ int main(object me, string arg)
     if (sscanf(arg, "skill %s %d %s", skill, value, target_name) == 3) {
         ob = target_player(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
-        if (value < 0) return notify_fail("技能等級不可小於 0。\n");
+        if (value < 0 || value > ADMIN_SKILL_MAX) return notify_fail("技能等級須介於 0～200（Original ES2 原版上限）。\n");
         ob->set_skill(skill, value);
         printf("ADMIN: %s 的 %s = %d\n", ob->query("id"), skill, value);
         return 1;
     }
 
     if (sscanf(arg, "skill %s %d", skill, value) == 2) {
-        if (value < 0) return notify_fail("技能等級不可小於 0。\n");
+        if (value < 0 || value > ADMIN_SKILL_MAX) return notify_fail("技能等級須介於 0～200（Original ES2 原版上限）。\n");
         me->set_skill(skill, value);
         printf("ADMIN: %s = %d\n", skill, value);
         return 1;
@@ -340,7 +345,7 @@ int main(object me, string arg)
     if (sscanf(arg, "skills %d %s", value, target_name) == 2) {
         ob = target_player(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
-        if (value < 0) return notify_fail("技能等級不可小於 0。\n");
+        if (value < 0 || value > ADMIN_SKILL_MAX) return notify_fail("技能等級須介於 0～200（Original ES2 原版上限）。\n");
         foreach (skill in ({ "blade", "force", "parry", "dodge",
                              "tiger-blade", "tiger-force", "tiger-steps" }))
             ob->set_skill(skill, value);
@@ -349,7 +354,7 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "skills %d", value) == 1) {
-        if (value < 0) return notify_fail("技能等級不可小於 0。\n");
+        if (value < 0 || value > ADMIN_SKILL_MAX) return notify_fail("技能等級須介於 0～200（Original ES2 原版上限）。\n");
         foreach (skill in ({ "blade", "force", "parry", "dodge",
                              "tiger-blade", "tiger-force", "tiger-steps" }))
             me->set_skill(skill, value);
@@ -378,7 +383,7 @@ int main(object me, string arg)
     if (sscanf(arg, "attrs %d %s", value, target_name) == 2) {
         ob = target_player(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
-        if (value < 0) return notify_fail("屬性數值不可小於 0。\n");
+        if (value < ATTRVAL_MIN || value > ATTRVAL_MAX) return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\n");
         foreach (cmd in ({ "str", "cor", "int", "spi", "cps", "dex", "con", "wis" }))
             ob->set_attr(cmd, value);
         foreach (cmd in ({ "str", "cor", "int", "spi", "cps", "dex", "con", "wis" }))
@@ -389,7 +394,7 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "attrs %d", value) == 1) {
-        if (value < 0) return notify_fail("屬性數值不可小於 0。\n");
+        if (value < ATTRVAL_MIN || value > ATTRVAL_MAX) return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\n");
         foreach (cmd in ({ "str", "cor", "int", "spi", "cps", "dex", "con", "wis" }))
             me->set_attr(cmd, value);
         foreach (cmd in ({ "str", "cor", "int", "spi", "cps", "dex", "con", "wis" }))
@@ -432,6 +437,8 @@ int main(object me, string arg)
             ob = target_player(me, target_name);
             if (!ob)
                 return notify_fail("找不到玩家。\n");
+            if (value < ATTRVAL_MIN || value > ATTRVAL_MAX)
+                return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\\n");
             ob->set_attr(cmd, value);
             if ((int)ob->query_attr(cmd, 1) != value)
                 return notify_fail("屬性設定失敗；請確認數值範圍。\n");
@@ -443,6 +450,8 @@ int main(object me, string arg)
     if (sscanf(arg, "%s %d", cmd, value) == 2) {
         if (member_array(cmd, ({ "str", "cor", "int", "spi", "cps",
                                  "dex", "con", "wis" })) != -1) {
+            if (value < ATTRVAL_MIN || value > ATTRVAL_MAX)
+                return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\\n");
             me->set_attr(cmd, value);
             if ((int)me->query_attr(cmd, 1) != value)
                 return notify_fail("屬性設定失敗；請確認數值範圍。\n");
@@ -454,14 +463,14 @@ int main(object me, string arg)
     if (sscanf(arg, "level %d %s", value, target_name) == 2) {
         ob = target_player(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
-        if (value < 1) return notify_fail("等級至少為 1。\n");
+        if (value < 1 || value > ADMIN_LEVEL_MAX) return notify_fail("角色等級須介於 1～999（Original ES2 原版範圍）。\n");
         ob->set_level(value);
         printf("ADMIN: %s 等級 = %d\n", ob->query("id"), value);
         return 1;
     }
 
     if (sscanf(arg, "level %d", value) == 1) {
-        if (value < 1) return notify_fail("等級至少為 1。\n");
+        if (value < 1 || value > ADMIN_LEVEL_MAX) return notify_fail("角色等級須介於 1～999（Original ES2 原版範圍）。\n");
         me->set_level(value);
         printf("ADMIN: 等級 = %d\n", value);
         return 1;
