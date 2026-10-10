@@ -70,7 +70,7 @@
 | 上游 HEAD／差異清單 | SOURCE CONFIRMED | 已記錄來源 SHA 與 92 commits 差異範圍 |
 | 冷梅莊武學與梅影風 | SOURCE PRESERVED / EXPANSION OVERLAY ADDED / RUNTIME NOT YET VERIFIED | 已保存五項技能來源；Runtime 只新增 mayin／seven，冷梅劍法、寒梅心法、傲梅暗劍訣保留 KDS/KING 凍結基準來源；梅影風 NPC 與交叉路口已隔離整合，修正 race 拼字 rainner→KING 正式代碼 rainnar；待 Driver 建置及遊戲內測試 |
 | NPC 強度系統 | SOURCE PRESERVED / EXPANSION OVERLAY ADDED / RUNTIME NOT YET VERIFIED | 已隔離加入 npc_power daemon、NPC 基底 set_power/set_beast 介面與 daemon.h 定義；尚未實機確認強度數值 |
-| disable／abandon／enable 與成長邏輯 | SOURCE CONFIRMED / MERGE REQUIRED | 逐函式合併，保留 KING 屬性成長、技能上限與存檔規則 |
+| disable／abandon／enable | SOURCE PRESERVED / EXPANSION OVERLAY ADDED / RUNTIME TEST PENDING | 已整合 ES2M 停用映射、恢復技能使用與中止／恢復學習狀態；等待真實 Neolith E2E 結果 |
 | 區域 NPC／訓練假人 | SOURCE CONFIRMED / FILE-BY-FILE REVIEW | 不覆蓋同名 Original；只對明確缺漏建立 Expansion patch |
 | WebMUD UI | OUT OF KING RUNTIME SCOPE | 不導入 LPC Runtime |
 
@@ -86,4 +86,5 @@
 - 梅影風傳授邏輯已修正為依技能實際入門等級補足學成點數；來源原本以固定 1 級門檻傳授，與部分技能 10／20／25 級入門設定不一致。
 - 已把五項新技能加入 `scripts/test_es2m_skill_import.py`；完整技能清單現為 42 項。新增 `scripts/test_es2m_cold_plum_overlay.py`，並納入 Docker 與 GitHub Actions 靜態閘門。
 - 新增 `scripts/test_es2m_cold_plum_lpc_load.sh`，由 M30 workflow 使用真實 Neolith 預載新版武功、NPC 強度 daemon、五堂鎮交叉路口及梅影風。
+- 已新增 `disable.c`、`enable.c)、`abandon.c) 的 ES2M 來源快照與 Expansion overlay，並新增 `scripts/test_es2m_skill_commands.py`；管理員 E2E 增加三個命令的真實玩家流程檢查。
 - 目前程式與驗收閘門已提交，但本次最新 HEAD 尚未取得對應的完整 Actions PASS 結果；在 Neolith LPC 載入測試完成前，狀態維持 `RUNTIME NOT YET VERIFIED`，不得宣稱 Gameplay PASS。
