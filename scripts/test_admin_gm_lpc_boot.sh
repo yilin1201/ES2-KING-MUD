@@ -169,6 +169,20 @@ require(re.search(r'blade\s*:\s*200', inspect) is not None,
 require(re.search(r'unarmed\s*:\s*100', inspect) is not None,
         '用途 unarmed 未正確映射至 blade（預期有效等級 100）。', inspect)
 
+# ES2M Skill Commands／驗證停用、恢復及中止／恢復學習狀態。
+disable = line(tn, buf, 'disable blade', 0.8)
+require('停止使用所學有關' in disable,
+        'disable blade 未停用技能或未回報結果。', disable)
+enable = line(tn, buf, 'enable blade', 0.8)
+require('恢復使用所學有關' in enable,
+        'enable blade 未恢復技能使用或未回報結果。', enable)
+abandon = line(tn, buf, 'abandon blade', 0.8)
+require('中止學習' in abandon,
+        'abandon blade 未中止學習或未回報結果。', abandon)
+restore_abandon = line(tn, buf, 'abandon -c blade', 0.8)
+require('恢復學習' in restore_abandon,
+        'abandon -c blade 未恢復學習或未回報結果。', restore_abandon)
+
 unlearn = line(tn, buf, 'admin unlearn blade', 0.8)
 require('已取消學會 blade' in unlearn, 'admin unlearn blade 未成功。', unlearn)
 inspect = line(tn, buf, 'admin inspect', 0.8)
