@@ -44,6 +44,10 @@ grep -Fq 'if (value < 0)' "$COMMAND"
 grep -Fq 'query_stat_maximum("HP")' "$COMMAND"
 grep -Fq 'object_file(value_s)' "$COMMAND"
 grep -Fq 'if (!objectp(gift) || !gift->move' "$COMMAND"
+grep -Fq 'if (!gift->move(ob))' "$COMMAND"
+grep -Fq 'if (!gift->move(me))' "$COMMAND"
+grep -Fq '先預檢虎紋刀來源' "$COMMAND"
+grep -Fq '!weapon->wield()' "$COMMAND"
 
 # 載入整合：Runtime 重新索引與預載清單都必須包含 admin。
 grep -Fq 'member_array(verb, ({ "admin", "kingcreate"' "$APPLY"
