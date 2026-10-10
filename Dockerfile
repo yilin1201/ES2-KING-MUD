@@ -183,6 +183,8 @@ RUN python3 scripts/test_es2m_cold_plum_overlay.py
 
 # ES2M skill inventory：任何已恢復技能缺少於生成 Runtime 時即阻止建置。
 RUN python3 scripts/test_es2m_skill_import.py /opt/es2-king/runtime
+# ES2M 最新武學更新／狻猊步法、三門刀法、瘋虎功與高慎需與快照同步，並驗證生成 Runtime。
+RUN python3 scripts/test_es2m_latest_martial_updates.py --runtime /opt/es2-king/runtime
 
 RUN echo "[M30 BUILD 5/5] Assert final playable Runtime" \
     && bash scripts/assert_m30_final_runtime.sh /opt/es2-king/runtime \
