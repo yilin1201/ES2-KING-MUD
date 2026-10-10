@@ -51,6 +51,30 @@ else:
         if token not in text:
             errors.append(f"KING 技能成長整合缺少必要保護或介面：{token}")
 
+# 梅影風 NPC 與強度系統的隔離整合檢查。
+npc = OVERLAY / "d/wutang/npc/may_yin_fong.c"
+room = OVERLAY / "d/wutang/crossroad.c"
+power = OVERLAY / "daemon/misc/npc_power.c"
+npc_base = OVERLAY / "std/char/npc.c"
+daemon_header = OVERLAY / "include/daemon.h"
+for path in (npc, room, power, npc_base, daemon_header):
+    if not path.is_file():
+        errors.append(f"缺少梅影風／NPC 強度 Runtime 檔案：{path.relative_to(OVERLAY)}")
+if npc.is_file():
+    text = npc.read_text(encoding="utf-8")
+    if 'set_power("S")' not in text or '"custom_faction", FACTION' not in text:
+        errors.append("梅影風未設定 S 級強度或冷梅莊門派身分")
+    if '"rainnar"' not in text or '"rainner"' in text:
+        errors.append("梅影風拜師種族排除條件未對齊 KING 正式 race 代碼 rainnar")
+if room.is_file() and 'npc/may_yin_fong" : 1' not in room.read_text(encoding="utf-8"):
+    errors.append("五堂鎮交叉路口尚未生成梅影風")
+if power.is_file() and "void apply_power" not in power.read_text(encoding="utf-8"):
+    errors.append("NPC 強度 daemon 缺少 apply_power 介面")
+if npc_base.is_file() and "void set_power(string tier)" not in npc_base.read_text(encoding="utf-8"):
+    errors.append("NPC 基底缺少 set_power 強度介面")
+if daemon_header.is_file() and "#define NPC_POWER_D" not in daemon_header.read_text(encoding="utf-8"):
+    errors.append("daemon.h 缺少 NPC_POWER_D 定義")
+
 # Docker 既有的技能匯入清單必須包含這五個來源檔案。
 manifest = ROOT / "scripts/test_es2m_skill_import.py"
 if not manifest.is_file():
