@@ -562,9 +562,13 @@ int main(object me, string arg)
         if (!(skill = object_file(value_s)))
             return notify_fail("找不到物件：" + value_s + "\n");
         gift = new(skill);
-        /* move() returns 1 on success and 0 on failure. */
-        if (!objectp(gift) || !gift->move(ob))
-            return notify_fail("物件生成或移動失敗。\n");
+        if (!objectp(gift))
+            return notify_fail("物件生成失敗。\n");
+        /* move() 回傳 1 才算成功；失敗時清除剛建立的孤立物件。 */
+        if (!gift->move(ob)) {
+            destruct(gift);
+            return notify_fail("物件移動失敗，已清除未交付物件。\n");
+        }
         printf("ADMIN: %s 已取得 %s。\n", ob->query("id"), gift->name(1));
         return 1;
     }
@@ -573,9 +577,13 @@ int main(object me, string arg)
         if (!(skill = object_file(value_s)))
             return notify_fail("找不到物件：" + value_s + "\n");
         gift = new(skill);
-        /* move() returns 1 on success and 0 on failure. */
-        if (!objectp(gift) || !gift->move(me))
-            return notify_fail("物件生成或移動失敗。\n");
+        if (!objectp(gift))
+            return notify_fail("物件生成失敗。\n");
+        /* move() 回傳 1 才算成功；失敗時清除剛建立的孤立物件。 */
+        if (!gift->move(me)) {
+            destruct(gift);
+            return notify_fail("物件移動失敗，已清除未交付物件。\n");
+        }
         printf("ADMIN: 已取得 %s。\n", gift->name(1));
         return 1;
     }
@@ -746,9 +754,25 @@ int main(object me, string arg)
      * Uses existing ES2 character APIs and saves after verification.
      */
     if (arg == "setup") {
+        /* 先預檢虎紋刀來源，避免物件不存在時已先修改角色數值。 */
+        weapon = present("tiger blade", me);
+        if (!objectp(weapon))
+            weapon = present("tiger_blade", me);
+        gift = 0;
+        if (!objectp(weapon)) {
+            value_s = object_file("/custom/weapon/blade/tiger_blade");
+            if (!value_s)
+                return notify_fail("ADMIN: 找不到虎紋刀物件；角色數值尚未修改。\n");
+            gift = new(value_s);
+            if (!objectp(gift))
+                return notify_fail("ADMIN: 虎紋刀物件建立失敗；角色數值尚未修改。\n");
+        }
+
         foreach (cmd in ({ "gin", "kee", "sen" })) {
-            if (!set_stat(me, cmd, 999))
-                return notify_fail("ADMIN: 精氣神設定失敗，未完成設定。\n");
+            if (!set_stat(me, cmd, 999)) {
+                if (objectp(gift)) destruct(gift);
+                return notify_fail("ADMIN: 精氣神設定失敗；新建立的虎紋刀已清除。\n");
+            }
         }
 
         foreach (skill in ({ "blade", "force", "parry", "dodge",
@@ -757,29 +781,24 @@ int main(object me, string arg)
             me->set_skill(skill, 200);
         }
 
-        /* Keep the custom tiger blade on the character; create only if absent. */
-        weapon = present("tiger blade", me);
-        if (!objectp(weapon))
-            weapon = present("tiger_blade", me);
-        if (!objectp(weapon)) {
-            value_s = object_file("/custom/weapon/blade/tiger_blade");
-            if (!value_s)
-                return notify_fail("ADMIN: 找不到虎紋刀物件，精氣神與技能已設定；武器未建立。\n");
-            gift = new(value_s);
-            /* move() returns 1 on success and 0 on failure. */
-            if (!objectp(gift) || !gift->move(me))
-                return notify_fail("ADMIN: 虎紋刀生成／放入背包失敗。\n");
+        /* 只有角色數值設定成功後才把新物件交付到背包。 */
+        if (objectp(gift)) {
+            if (!gift->move(me)) {
+                destruct(gift);
+                return notify_fail("ADMIN: 虎紋刀移動失敗；新物件已清除，請核對角色數值。\n");
+            }
             weapon = gift;
         }
 
-        if (objectp(weapon))
-            weapon->wield();
+        /* 不可忽略 wield() 失敗，否則不能宣稱武器已裝備。 */
+        if (!objectp(weapon) || !weapon->wield())
+            return notify_fail("ADMIN: 精氣神與技能已設定，但虎紋刀裝備失敗；請使用 admin inspect 核對。\n");
 
         if (!me->save())
             return notify_fail("ADMIN: 設定已套用，但人物存檔失敗；請使用 admin inspect 核對。\n");
 
         show_status(me);
-        tell_object(me, "ADMIN SETUP OK: 精／氣／神=999；核心技能=200；虎紋刀已確認；人物資料已保存。\n");
+        tell_object(me, "ADMIN SETUP OK: 精／氣／神=999；核心技能=200；虎紋刀已裝備並確認；人物資料已保存。\n");
         return 1;
     }
 
