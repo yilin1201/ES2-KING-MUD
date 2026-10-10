@@ -34,6 +34,10 @@ void apply_growth_to(object me, int level)
     if( old >= level ) return;
 
     for(lv = old + 1; lv <= level; lv++) {
+        // ES2M 2026-10-09：逐級保留武術造詣，31 級起追加武學之道。
+        me->gain_score("martial art", lv * 10);
+        if( lv > 30 ) me->gain_score("martial mastery", (lv - 30) * 10);
+
         if( lv >= 161 ) {
             me->advance_stat("gin", 1);
             me->advance_stat("kee", 1);
