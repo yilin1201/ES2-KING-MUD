@@ -272,7 +272,18 @@ int skill_entry_level(string skill)
 
 int skill_threshold(string skill, int level)
 {
-    return restored_skill_level_threshold(skill, level);
+    object daemon;
+    int pct;
+
+    if( skill == "mayin" || skill == "seven" )
+        return restored_skill_level_threshold(skill, level);
+
+    // 其他技能保留 ES2M query_threshold_percent 契約，避免改變既有武功成長規則。
+    daemon = SKILL_D(skill);
+    if( objectp(daemon) && function_exists("query_threshold_percent", daemon) )
+        pct = call_other(daemon, "query_threshold_percent");
+    if( pct <= 0 ) pct = 100;
+    return restored_skill_threshold(level) * pct / 100;
 }
 
 void apply_restored_skill_progression(string skill)
