@@ -5,7 +5,7 @@
 - ES2M 來源：`wolfer168/es2-webmud`
 - 本次來源 HEAD：`60c12efac447d63730f953ac83ef47fdc62f7368`
 - 上次記錄來源基準：`5f042999e0d884ab35808a1c48a9e70bea46667f`
-- GitHub compare：來源基準至目前 HEAD 共前進 92 個 commits，無落後 commit。
+- GitHub compare：來源基準至目前 HEAD 共前進 92 個 commits，差異共 170 個檔案，其中 140 個 mudlib 檔案。完整逐檔清單見 [ES2M 更新檔案差異清單](ES2M_UPDATE_FILE_MANIFEST_20261010.md)。
 - KING 目標分支：`build/original-es2-races-phase2`
 - 本文件是來源證據與採用狀態紀錄，不代表所有項目已進入 Runtime。
 - 不整包覆蓋、不修改 Original 保存來源；先隔離到 Expansion，再做靜態／Runtime 驗證。
