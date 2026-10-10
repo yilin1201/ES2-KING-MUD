@@ -231,7 +231,7 @@ private void show_status(object ob)
         printf("  %-3s : %d\n", s, (int)ob->query_attr(s, 1));
 
     write("\nKEY SKILLS\n");
-    skills = ({ "blade", "force", "parry", "dodge",
+    skills = ({ "blade", "force", "parry", "dodge", "unarmed",
                 "tiger-blade", "tiger-force", "tiger-steps" });
 
     foreach (s in skills)
