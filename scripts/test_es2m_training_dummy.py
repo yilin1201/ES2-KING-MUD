@@ -34,6 +34,8 @@ def main() -> None:
     stake = OVERLAY / "custom" / "zhenwu" / "npc" / "target_stake.c"
     teacher = OVERLAY / "d" / "snow" / "npc" / "teacher.c"
     apply_text = APPLY.read_text(encoding="utf-8")
+    require('for suffix in (".c", ".lpc")' in apply_text,
+            "套用腳本未兼容 Original／Neolith 的 .c 與 .lpc 檔名差異。")
     require(stake.is_file(), "Expansion 缺少 target_stake.c。")
     require('set("training_dummy", 1);' in stake.read_text(encoding="utf-8"),
             "target_stake 沒有標記 training_dummy。")
