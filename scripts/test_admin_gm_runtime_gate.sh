@@ -37,3 +37,12 @@ grep -Fq 'query_stat_effective(stat)' "$COMMAND"
 grep -Fq 'present(replace_string(cmd, "_", " "), ob)' "$COMMAND"
 
 echo 'ADMIN GM RUNTIME GATE PASS／生成 Runtime 已包含 admin.c、命令索引、預載與目標安全檢查。'
+
+
+# Skill mapping regression／生成 Runtime 不可將技能映射寫反。
+grep -Fq 'ob->map_skill(cmd, skill)' "$COMMAND"
+grep -Fq 'me->map_skill(cmd, skill)' "$COMMAND"
+if grep -Fq 'map_skill(skill, skill)' "$COMMAND"; then
+  echo 'ADMIN GM RUNTIME FAIL：技能用途對應寫反。' >&2
+  exit 1
+fi
