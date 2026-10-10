@@ -53,9 +53,11 @@ Dockerfile 已將以下測試接入生成 Runtime 建置流程：
 - `python3 scripts/test_es2m_training_dummy.py --runtime /opt/es2-king/runtime`
 - `python3 scripts/test_es2m_skill_commands.py --runtime /opt/es2-king/runtime`
 - `python3 scripts/test_es2m_cold_plum_overlay.py --runtime /opt/es2-king/runtime`
+- `python3 scripts/test_es2m_latest_martial_updates.py --runtime /opt/es2-king/runtime`
+- `ES2_DRIVER_BIN=/opt/es2-king/bin/neolith bash scripts/test_es2m_latest_martial_lpc_load.sh /opt/es2-king/runtime`（Driver Build 後真實載入狻猊步法、三門刀法、瘋虎功與高慎）
 
 這些閘門驗證來源／Expansion／生成 Runtime 的檔案一致性與關鍵契約。它們本身不取代 Neolith Driver 的完整遊戲內 E2E；只有取得相應真實 Runtime marker 才能宣稱玩法驗收 PASS。
 
 ## 結論
 
-截至 ES2M 上游 HEAD `60c12ef`，已補齊狻猊步法、三門刀法、瘋虎功、高慎與私塾快照的已確認差異，並加入來源／Runtime 一致性測試。這些修改只作用於 ES2M 快照、King 相容層及生成 Runtime，不整檔覆寫 Original ES2。同步工作流程已執行成功；Docker 生成 Runtime 的新完整建置仍以最新 Build Gate 結果為準。PR #13 保持開啟、不合併。
+截至 ES2M 上游 HEAD `60c12ef`，已補齊狻猊步法、三門刀法、瘋虎功、高慎與私塾快照的已確認差異，並加入來源／Runtime 一致性測試。這些修改只作用於 ES2M 快照、King 相容層及生成 Runtime，不整檔覆寫 Original ES2。同步靜態工作流程已執行成功；Dockerfile 現已加入完整快照匯入後的真實 Neolith LPC Load Gate，該新 Gate 需待完整 Docker/部署建置執行後才可標記 PASS。PR #13 保持開啟、不合併。
