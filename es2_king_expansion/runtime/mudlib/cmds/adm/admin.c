@@ -77,7 +77,7 @@ private void show_help()
 {
     write(@HELP
 ============================================================
-ES2-KDS ADMIN GM 使用教學
+ES2-KING ADMIN GM 使用教學（King 管理角色）
 ============================================================
 
 【如何開啟】
@@ -102,16 +102,29 @@ HELP
   admin sen <數值> [玩家]       設定神
   admin stats <數值> [玩家]     同時設定精、氣、神
 
-【三、八大屬性】
-  admin str <數值> [玩家]       膂力（原版 1～50）
-  admin cor <數值> [玩家]       膽識（原版 1～50）
-  admin cps <數值> [玩家]       定力（原版 1～50）
-  admin int <數值> [玩家]       悟性（原版 1～50）
-  admin wis <數值> [玩家]       慧根（原版 1～50）
-  admin spi <數值> [玩家]       靈性（原版 1～50）
-  admin con <數值> [玩家]       根骨（原版 1～50）
-  admin dex <數值> [玩家]       機敏（原版 1～50）
-  admin attrs <數值> [玩家]     一次設定八大屬性（原版 1～50）
+【三、八大屬性（ES2-KING 正式中文對照）】
+  admin str <數值> [玩家]       膂力（原版範圍 1～50）
+  admin cor <數值> [玩家]       膽識（原版範圍 1～50）
+  admin int <數值> [玩家]       悟性（原版範圍 1～50）
+  admin spi <數值> [玩家]       靈性（原版範圍 1～50）
+  admin cps <數值> [玩家]       定力（原版範圍 1～50）
+  admin dex <數值> [玩家]       機敏（原版範圍 1～50）
+  admin con <數值> [玩家]       根骨（原版範圍 1～50）
+  admin wis <數值> [玩家]       慧根（原版範圍 1～50）
+  admin attrs <數值> [玩家]     一次設定八大屬性（八項均為相同數值）
+
+  【King 管理角色操作範例】
+  admin attrs 50                將八大屬性全部設定為 50
+  admin str 50                  單獨設定自己的膂力為 50
+  admin cor 50                  單獨設定自己的膽識為 50
+  admin int 50                  單獨設定自己的悟性為 50
+  admin spi 50                  單獨設定自己的靈性為 50
+  admin cps 50                  單獨設定自己的定力為 50
+  admin dex 50                  單獨設定自己的機敏為 50
+  admin con 50                  單獨設定自己的根骨為 50
+  admin wis 50                  單獨設定自己的慧根為 50
+  admin inspect                 核對八大屬性是否已更新
+  admin save                    保存 King 角色資料
 HELP
     );
 
