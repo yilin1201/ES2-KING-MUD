@@ -68,15 +68,15 @@
 | 項目 | 狀態 | 決策 |
 |---|---|---|
 | 上游 HEAD／差異清單 | SOURCE CONFIRMED | 已記錄來源 SHA 與 92 commits 差異範圍 |
-| 冷梅莊武學與梅影風 | SOURCE PRESERVED / EXPANSION OVERLAY ADDED / RUNTIME NOT YET VERIFIED | 已保存五項技能來源；Runtime 只新增 mayin／seven，冷梅劍法、寒梅心法、傲梅暗劍訣保留 KDS/KING 凍結基準來源；梅影風 NPC 與交叉路口已隔離整合，修正 race 拼字 rainner→KING 正式代碼 rainnar；待 Driver 建置及遊戲內測試 |
-| NPC 強度系統 | SOURCE PRESERVED / EXPANSION OVERLAY ADDED / RUNTIME NOT YET VERIFIED | 已隔離加入 npc_power daemon、NPC 基底 set_power/set_beast 介面與 daemon.h 定義；尚未實機確認強度數值 |
-| disable／abandon／enable | SOURCE PRESERVED / EXPANSION OVERLAY ADDED / RUNTIME TEST PENDING | 已整合 ES2M 停用映射、恢復技能使用與中止／恢復學習狀態；等待真實 Neolith E2E 結果 |
+| 冷梅莊武學與梅影風 | SOURCE PRESERVED / EXPANSION OVERLAY ADDED / LPC LOAD PASS | 已保存五項技能來源；Runtime 新增 mayin／seven，三項凍結武功採用 KDS/KING 基準；梅影風 NPC 與交叉路口已整合，修正 race 拼字 rainner→rainnar。Neolith Driver 建置與 LPC 載入 PASS；拜師／學武／戰鬥 E2E 仍待測 |
+| NPC 強度系統 | SOURCE PRESERVED / EXPANSION OVERLAY ADDED / RUNTIME NOT YET VERIFIED | 已隔離加入 npc_power daemon、NPC 基底 set_power/set_beast 介面與 daemon.h 定義；Neolith 載入 PASS，強度數值平衡仍待 E2E 驗證 |
+| disable／abandon／enable | SOURCE PRESERVED / EXPANSION OVERLAY ADDED / NEOLITH E2E PASS | 已整合 ES2M 停用映射、恢復技能使用與中止／恢復學習狀態；真實 Neolith E2E PASS |
 | 區域 NPC／訓練假人 | SOURCE CONFIRMED / FILE-BY-FILE REVIEW | 不覆蓋同名 Original；只對明確缺漏建立 Expansion patch |
 | WebMUD UI | OUT OF KING RUNTIME SCOPE | 不導入 LPC Runtime |
 
 ## 驗證限制
 
-本次來源差異確認不等於 KING 遊戲實測。沒有針對相應程式完成建置與遊戲內測試前，狀態必須維持 `RUNTIME NOT YET VERIFIED` 或 `RUNTIME BLOCKED`，不得標記 Gameplay PASS。
+來源差異確認不等於完整 Gameplay PASS。2026-10-10 的 M30 workflow 已完成 Neolith Driver Build、Expansion Runtime Gate、冷梅莊技能／NPC 強度 LPC Load，及管理員技能指令 E2E；但梅影風實際拜師、五項武學升級／出招、NPC 強度數值平衡與區域 NPC 全面驗收仍未完成，不得擴大宣稱為完整遊戲玩法 PASS。
 
 ## 2026-10-10 已執行的 KING 變更
 
@@ -87,4 +87,6 @@
 - 已把五項新技能加入 `scripts/test_es2m_skill_import.py`；完整技能清單現為 42 項。新增 `scripts/test_es2m_cold_plum_overlay.py`，並納入 Docker 與 GitHub Actions 靜態閘門。
 - 新增 `scripts/test_es2m_cold_plum_lpc_load.sh`，由 M30 workflow 使用真實 Neolith 預載新版武功、NPC 強度 daemon、五堂鎮交叉路口及梅影風。
 - 已新增 `disable.c`、`enable.c)、`abandon.c) 的 ES2M 來源快照與 Expansion overlay，並新增 `scripts/test_es2m_skill_commands.py`；管理員 E2E 增加三個命令的真實玩家流程檢查。
-- 目前程式與驗收閘門已提交，但本次最新 HEAD 尚未取得對應的完整 Actions PASS 結果；在 Neolith LPC 載入測試完成前，狀態維持 `RUNTIME NOT YET VERIFIED`，不得宣稱 Gameplay PASS。
+- 最新程式碼對應 M30 Actions：`38024536011`（ES2-KING M30 Alpha）完成 PASS；`38024536045`（ES2M Update Snapshot Gate）完成 PASS。這次驗證包含真實 Neolith Driver Build、13 個本輪 overlay 檔案一致性、冷梅莊／NPC 強度 LPC 載入與 admin 測試中的 disable／enable／abandon 流程。
+- 上述結果屬於 Driver Build／LPC Load／指定指令 E2E，不等於梅影風完整拜師、所有新技能實戰或 NPC 強度平衡通過；這些項目仍保持待驗證。
+- PR #13 仍為 OPEN / NOT MERGED；Original ES2 保存來源未直接覆寫。
