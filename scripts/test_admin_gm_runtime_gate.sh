@@ -4,10 +4,11 @@ set -euo pipefail
 # ADMIN GM Runtime Gate／生成 Runtime 閘門：確認 Expansion 已複製到 Neolith 實際 mudlib。
 ROOT="${1:-.runtime/es2-king}/mudlib"
 COMMAND="$ROOT/cmds/adm/admin.c"
+TIGER_BLADE="$ROOT/custom/weapon/blade/tiger_blade.c"
 COMMAND_D="$ROOT/adm/daemons/cmd_d.lpc"
 PRELOAD="$ROOT/adm/etc/preload"
 
-for file in "$COMMAND" "$COMMAND_D" "$PRELOAD"; do
+for file in "$COMMAND" "$COMMAND_D" "$PRELOAD" "$TIGER_BLADE"; do
   test -f "$file" || { echo "ADMIN GM RUNTIME FAIL：缺少 $file" >&2; exit 1; }
 done
 
