@@ -228,11 +228,16 @@ int restored_skill_cap(string skill)
     return 200;
 }
 
-/* ES2M 新版武功可自訂學成等級；沒有定義時維持 KING 原本的 1 級起始。 */
+/* 只對本次導入的五項冷梅莊技能啟用自訂學成等級，避免改變 KING 既有虎刀門等級規則。 */
 int restored_skill_entry_level(string skill)
 {
     object daemon;
     int lv;
+
+    if( skill != "lunmay" && skill != "hainmay force"
+    &&  skill != "advance_lunmay" && skill != "mayin"
+    &&  skill != "seven" )
+        return 1;
 
     daemon = SKILL_D(skill);
     if( objectp(daemon) && function_exists("query_entry_level", daemon) )
@@ -240,11 +245,16 @@ int restored_skill_entry_level(string skill)
     return lv > 0 ? lv : 1;
 }
 
-/* ES2M 新版武功可自訂學成點數及門檻百分比；其他技能沿用 KING 門檻。 */
+/* 自訂門檻同樣只套用至本次導入的冷梅莊技能，其餘技能沿用 KING 原本公式。 */
 int restored_skill_level_threshold(string skill, int level)
 {
     object daemon;
     int entry, pct;
+
+    if( skill != "lunmay" && skill != "hainmay force"
+    &&  skill != "advance_lunmay" && skill != "mayin"
+    &&  skill != "seven" )
+        return restored_skill_threshold(level);
 
     daemon = SKILL_D(skill);
     if( objectp(daemon) && function_exists("query_entry_threshold", daemon)
