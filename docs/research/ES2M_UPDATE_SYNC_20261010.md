@@ -61,3 +61,20 @@ Dockerfile 已將以下測試接入生成 Runtime 建置流程：
 ## 結論
 
 截至 ES2M 上游 HEAD `60c12ef`，已補齊狻猊步法、三門刀法、瘋虎功、高慎與私塾快照的已確認差異，並加入來源／Runtime 一致性測試。這些修改只作用於 ES2M 快照、King 相容層及生成 Runtime，不整檔覆寫 Original ES2。同步靜態工作流程已執行成功；Dockerfile 現已加入完整快照匯入後的真實 Neolith LPC Load Gate，該新 Gate 需待完整 Docker/部署建置執行後才可標記 PASS。PR #13 保持開啟、不合併。
+
+## 2026-10-10 實際分支／Actions 複核紀錄
+
+本節記錄本次重新連接 GitHub 後的實際查核結果；不將來源保存或 LPC 載入擴大解讀為完整玩法驗收。
+
+- ES2M `main` HEAD：`60c12efac447d63730f953ac83ef47fdc62f7368`（已重新讀取上游 refs/commit）。
+- KING 查核時的分支 HEAD：`f2ac9c6b29919536dd76aa36be6c915992f74c33`；PR #13 查核結果為 OPEN、NOT MERGED。
+- `ES2M Update Sync Regression` Run `38029863328`：SUCCESS；訓練假人／私塾契約、技能狀態指令、冷梅莊相容性、最新武學成長與來源快照等步驟均成功。
+- `ES2M Update Snapshot Gate` Run `38029863329`：SUCCESS；Python 語法、來源快照、戰鬥成長契約、冷梅莊 overlay、技能清單與技能指令檢查均成功。
+- `ES2-KING M30 Alpha` Run `38029863378`：SUCCESS；包含 Expansion Runtime Gate、ES2M 訓練假人／私塾閘門、冷梅莊／技能指令檢查、Driver Build、冷梅莊 LPC Load 與 ADMIN GM LPC Load。
+- 同一查核批次的 `ADMIN GM Regression` Run `38029863416`：SUCCESS。
+
+### 本次確認的剩餘界線
+
+1. 上述成功代表目前分支的指定靜態／Runtime 閘門與 LPC 載入步驟通過，不代表梅影風完整拜師、五項武學實戰、NPC 強度數值平衡或全部區域 NPC 已完成普通玩家 E2E。
+2. ES2M 本輪區域 NPC 差異繼續保存在來源證據層；未經逐檔相容性審查，不批次覆蓋 KING／Original 同名 NPC。
+3. 後續優先處理梅影風拜師與技能傳授的真實玩家流程、NPC 強度數值驗證，以及區域 NPC 變更的分區回歸；每項需有獨立 Runtime 證據才可升級為 PASS。
