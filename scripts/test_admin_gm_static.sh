@@ -4,9 +4,13 @@ set -euo pipefail
 # ADMIN GM Static Gate／管理員指令靜態閘門：確認來源、權限、命令索引與關鍵安全條件。
 ROOT="es2_king_expansion/runtime/mudlib"
 COMMAND="$ROOT/cmds/adm/admin.c"
+TIGER_BLADE="$ROOT/custom/weapon/blade/tiger_blade.c"
 APPLY="scripts/apply_es2_king_expansion.sh"
 
 test -f "$COMMAND" || { echo "ADMIN GM STATIC FAIL：缺少 Expansion 指令檔 $COMMAND" >&2; exit 1; }
+test -f "$TIGER_BLADE" || { echo "ADMIN GM STATIC FAIL：缺少 admin setup 依賴的虎紋刀 Expansion 物件。" >&2; exit 1; }
+grep -Fq 'inherit F_UNIQUE;' "$TIGER_BLADE"
+grep -Fq 'inherit F_BLADE;' "$TIGER_BLADE"
 test -f "$APPLY" || { echo "ADMIN GM STATIC FAIL：缺少 Runtime 套用腳本" >&2; exit 1; }
 
 # 來源與分層：此檔是 ES2-KING Expansion 參考整合，不冒稱 Original ES2。
