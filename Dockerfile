@@ -13,6 +13,9 @@ RUN apt-get update \
 WORKDIR /build/repository
 COPY . .
 
+# ADMIN GM Static Gate／先在建置早期驗證管理員指令的權限、參數與技能映射契約。
+RUN bash scripts/test_admin_gm_static.sh
+
 # WebTelnet Browser Static Gate：Render 建置前先解析瀏覽器 module，避免 HTML 可開啟但 JavaScript 未執行而永久停在「連線中」。
 RUN node scripts/test_m30_webtelnet_display.mjs \
     && bash scripts/test_webtelnet_mobile_nowrap.sh webtelnet/public/index.html
@@ -36,6 +39,9 @@ RUN python3 scripts/test_es2m_fighter_level_contract.py /opt/es2-king/runtime/mu
 
 RUN echo "[M30 BUILD 4/5] Apply ES2-KING Expansion overlay" \
     && bash scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime
+
+# ADMIN GM Runtime Gate／核對實際生成 Runtime，而非只檢查 Expansion 原始檔。
+RUN bash scripts/test_admin_gm_runtime_gate.sh /opt/es2-king/runtime
 RUN python3 scripts/test_king_martial_damage_formula.py --runtime /opt/es2-king/runtime/mudlib
 
 # Combat progression contract：不得在 KING overlay 偽造「每次造成傷害就增加 combat」。
