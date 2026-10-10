@@ -1,2 +1,0 @@
-GitHub connector write-access verification.
-Temporary probe; safe to delete.
