@@ -155,6 +155,11 @@ require(attrs_from(inspect) == dict((k, 50) for k in
 
 set_skill = line(tn, buf, 'admin skill blade 200', 0.8)
 require('blade = 200' in set_skill, '技能等級 200 未成功設定。', set_skill)
+learn_skill = line(tn, buf, 'admin learn blade', 0.8)
+require('已學會 blade' in learn_skill, 'admin learn blade 未成功。', learn_skill)
+mapping = line(tn, buf, 'admin enable unarmed with blade', 0.8)
+require('已將用途 unarmed 對應至技能 blade' in mapping,
+        'admin enable 用途 with 技能 的自用格式未成功。', mapping)
 inspect = line(tn, buf, 'admin inspect', 0.8)
 require(re.search(r'blade\s*:\s*200', inspect) is not None,
         '技能等級 200 讀回不一致。', inspect)
@@ -170,7 +175,7 @@ bad_level = line(tn, buf, 'admin level 1000', 0.8)
 require('角色等級須介於 1～999' in bad_level,
         'admin level 1000 未被原版角色等級上限拒絕。', bad_level)
 
-print('ADMIN GM E2E PASS：admin probe、屬性 50/51、技能 200/201、等級 1000 邊界均通過。')
+print('ADMIN GM E2E PASS：admin probe、用途技能對應、屬性 50/51、技能 200/201、等級 1000 邊界均通過。')
 line(tn, buf, 'quit', 0.4)
 tn.close()
 PY
