@@ -566,7 +566,17 @@ int main(object me, string arg)
             return notify_fail("目標尚未學會此技能；請先使用既有學習系統。\n");
         /* 用途是第一個參數、技能是第二個參數，避免把技能映射到自己。 */
         ob->map_skill(cmd, skill);
-        write("ADMIN: 已設定目標技能對應。\n");
+        printf("ADMIN: %s 已將用途 %s 對應至技能 %s。\n",
+            ob->query("id"), cmd, skill);
+        return 1;
+    }
+
+    /* 不指定玩家時，直接設定自己的用途與技能對應。 */
+    if (sscanf(arg, "enable %s with %s", cmd, skill) == 2) {
+        if (!me->query_learn(skill))
+            return notify_fail("你尚未學會此技能；請先使用既有學習系統。\n");
+        me->map_skill(cmd, skill);
+        printf("ADMIN: 已將用途 %s 對應至技能 %s。\n", cmd, skill);
         return 1;
     }
 
