@@ -438,7 +438,7 @@ int main(object me, string arg)
             if (!ob)
                 return notify_fail("找不到玩家。\n");
             if (value < ATTRVAL_MIN || value > ATTRVAL_MAX)
-                return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\\n");
+                return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\n");
             ob->set_attr(cmd, value);
             if ((int)ob->query_attr(cmd, 1) != value)
                 return notify_fail("屬性設定失敗；請確認數值範圍。\n");
@@ -451,7 +451,7 @@ int main(object me, string arg)
         if (member_array(cmd, ({ "str", "cor", "int", "spi", "cps",
                                  "dex", "con", "wis" })) != -1) {
             if (value < ATTRVAL_MIN || value > ATTRVAL_MAX)
-                return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\\n");
+                return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\n");
             me->set_attr(cmd, value);
             if ((int)me->query_attr(cmd, 1) != value)
                 return notify_fail("屬性設定失敗；請確認數值範圍。\n");
