@@ -44,6 +44,8 @@ RUN echo "[M30 BUILD 4/5] Apply ES2-KING Expansion overlay" \
 
 # ADMIN GM Runtime Gate／核對實際生成 Runtime，而非只檢查 Expansion 原始檔。
 RUN bash scripts/test_admin_gm_runtime_gate.sh /opt/es2-king/runtime
+# ES2M Skill Commands／驗證生成 Runtime 的 disable、enable、abandon 檔案與來源一致。
+RUN python3 scripts/test_es2m_skill_commands.py --runtime /opt/es2-king/runtime
 RUN python3 scripts/test_king_martial_damage_formula.py --runtime /opt/es2-king/runtime/mudlib
 
 # Combat progression contract：不得在 KING overlay 偽造「每次造成傷害就增加 combat」。
