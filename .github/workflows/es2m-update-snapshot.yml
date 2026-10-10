@@ -1,0 +1,46 @@
+name: ES2M Update Snapshot Gate
+
+on:
+  push:
+    branches:
+      - build/original-es2-races-phase2
+    paths:
+      - '.github/workflows/es2m-update-snapshot.yml'
+      - 'es2m_snapshot/mudlib/adm/daemons/combatd.c'
+      - 'es2m_snapshot/mudlib/cmds/std/buy.c'
+      - 'es2m_snapshot/mudlib/feature/npc/vendor.c'
+      - 'es2m_snapshot/mudlib/d/snow/npc/waiter.c'
+      - 'scripts/test_es2m_update_snapshot.py'
+      - 'scripts/test_es2m_fighter_level_contract.py'
+      - 'original_es2/research/es2m_update_20261010.md'
+  pull_request:
+    paths:
+      - '.github/workflows/es2m-update-snapshot.yml'
+      - 'es2m_snapshot/mudlib/adm/daemons/combatd.c'
+      - 'es2m_snapshot/mudlib/cmds/std/buy.c'
+      - 'es2m_snapshot/mudlib/feature/npc/vendor.c'
+      - 'es2m_snapshot/mudlib/d/snow/npc/waiter.c'
+      - 'scripts/test_es2m_update_snapshot.py'
+      - 'scripts/test_es2m_fighter_level_contract.py'
+      - 'original_es2/research/es2m_update_20261010.md'
+
+permissions:
+  contents: read
+
+jobs:
+  es2m-source-contract:
+    name: ES2M 來源快照與規則契約
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout／取得程式：使用目前分支的 ES2M 保存快照。
+      - name: Checkout ES2-KING
+        uses: actions/checkout@v4
+      # Syntax Gate／語法檢查：先確保 Python 測試檔可解析。
+      - name: Python syntax gate／Python 語法檢查
+        run: python3 -m py_compile scripts/test_es2m_update_snapshot.py scripts/test_es2m_fighter_level_contract.py
+      # Snapshot Gate／來源快照：驗證批量購買、庫存、交貨與戰鬥成長證據。
+      - name: ES2M update snapshot／ES2M 更新來源檢查
+        run: python3 scripts/test_es2m_update_snapshot.py
+      # Progression Gate／成長契約：只驗證來源函式規則，不冒充遊戲內實戰 PASS。
+      - name: Fighter progression contract／戰鬥成長來源契約
+        run: python3 scripts/test_es2m_fighter_level_contract.py
