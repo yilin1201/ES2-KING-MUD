@@ -198,6 +198,11 @@ int uses_restored_skill_threshold(string skill)
     if( skill == "tiger-blade" ) return 1;
     if( skill == "sanmeendo" ) return 1;
 
+    // ES2M 冷梅莊技能採用新版 martial_art 門檻／學成等級機制。
+    if( skill == "lunmay" || skill == "hainmay force"
+    ||  skill == "advance_lunmay" || skill == "mayin"
+    ||  skill == "seven" ) return 1;
+
     // Every base weapon-strike skill uses the same threshold progression
     // as blade -- previously only "blade" (and its twohanded/secondhand
     // forms) was listed here, so improve_skill_exact() could pile up
@@ -223,23 +228,64 @@ int restored_skill_cap(string skill)
     return 200;
 }
 
+/* ES2M 新版武功可自訂學成等級；沒有定義時維持 KING 原本的 1 級起始。 */
+int restored_skill_entry_level(string skill)
+{
+    object daemon;
+    int lv;
+
+    daemon = SKILL_D(skill);
+    if( objectp(daemon) && function_exists("query_entry_level", daemon) )
+        lv = call_other(daemon, "query_entry_level");
+    return lv > 0 ? lv : 1;
+}
+
+/* ES2M 新版武功可自訂學成點數及門檻百分比；其他技能沿用 KING 門檻。 */
+int restored_skill_level_threshold(string skill, int level)
+{
+    object daemon;
+    int entry, pct;
+
+    daemon = SKILL_D(skill);
+    if( objectp(daemon) && function_exists("query_entry_threshold", daemon)
+    &&  level == restored_skill_entry_level(skill)
+    &&  (entry = call_other(daemon, "query_entry_threshold")) > 0 )
+        return entry;
+
+    if( objectp(daemon) && function_exists("query_threshold_percent", daemon) )
+        pct = call_other(daemon, "query_threshold_percent");
+    if( pct <= 0 ) pct = 100;
+    return restored_skill_threshold(level) * pct / 100;
+}
+
 void apply_restored_skill_progression(string skill)
 {
+    object daemon;
     int level;
     int next_level;
     int cap;
+    int entry_level;
 
     if( !uses_restored_skill_threshold(skill) ) return;
 
     level = query_skill(skill, 1);
     cap = restored_skill_cap(skill);
+    entry_level = restored_skill_entry_level(skill);
 
     while( level < cap )
     {
-        next_level = level + 1;
-        if( query_learn(skill) < restored_skill_threshold(next_level) ) break;
-        advance_skill(skill, 1);
-        level = level + 1;
+        // 從 0 級學成時，直接跳到技能檔定義的入門等級。
+        next_level = level ? level + 1 : entry_level;
+        if( query_learn(skill) < restored_skill_level_threshold(skill, next_level) ) break;
+
+        if( !level && next_level > 1 ) {
+            daemon = SKILL_D(skill);
+            if( objectp(daemon) && function_exists("skill_completed", daemon) )
+                call_other(daemon, "skill_completed", this_object(), skill);
+        }
+
+        advance_skill(skill, next_level - level);
+        level = next_level;
     }
 }
 
