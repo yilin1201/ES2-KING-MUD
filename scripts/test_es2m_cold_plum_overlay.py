@@ -12,13 +12,9 @@ ARGS = parser.parse_args()
 SNAPSHOT = ROOT / "es2m_snapshot/mudlib"
 OVERLAY = ROOT / "es2_king_expansion/runtime/mudlib"
 RUNTIME = ARGS.runtime / "mudlib" if ARGS.runtime else None
-SKILL_FILES = (
-    "lunmay.c",
-    "hainmay_force.c",
-    "advance_lunmay.c",
-    "mayin.c",
-    "seven.c",
-)
+# 僅覆蓋本次新增的技能；既有凍結武功保留 KDS／KING 原始檔，不以 ES2M 最新版整檔覆寫。
+SKILL_FILES = ("mayin.c", "seven.c")
+FROZEN_SKILLS = ("lunmay.c", "hainmay_force.c", "advance_lunmay.c")
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
@@ -32,6 +28,13 @@ for name in SKILL_FILES:
         errors.append(f"缺少來源或 Expansion 技能檔：{name}")
     elif digest(source) != digest(overlay):
         errors.append(f"來源快照與 Expansion 技能檔 SHA-256 不一致：{name}")
+
+# 冷梅劍法、寒梅心法、傲梅暗劍訣屬既有凍結武功；保留底層原始檔，不建立覆蓋副本。
+for name in FROZEN_SKILLS:
+    if not (SNAPSHOT / "daemon/skill" / name).is_file():
+        errors.append(f"缺少凍結武功的 ES2M 證據快照：{name}")
+    if (OVERLAY / "daemon/skill" / name).exists():
+        errors.append(f"不允許 Expansion 整檔覆蓋凍結武功：{name}")
 
 # 新版武功共用引擎需支援學成點數、學成等級及學成當級獎勵。
 martial = OVERLAY / "std/martial_art.c"
@@ -104,7 +107,7 @@ if RUNTIME is not None:
         "include/daemon.h",
         "d/wutang/npc/may_yin_fong.c",
         "d/wutang/crossroad.c",
-    ] + [f"daemon/skill/{name}" for name in SKILL_FILES]
+    ] + [f"daemon/skill/{name}" for name in SKILL_FILES + FROZEN_SKILLS]
     for rel in runtime_paths:
         expected = OVERLAY / rel
         actual = RUNTIME / rel
@@ -118,7 +121,7 @@ if errors:
     print("\n".join(errors))
     raise SystemExit(1)
 
-print("ES2M_COLD_PLUM_STATIC_PASS source_overlay_sha_match=5 custom_entry_progression=present")
+print("ES2M_COLD_PLUM_STATIC_PASS source_overlay_sha_match=2 frozen_skill_overlays=absent custom_entry_progression=present")
 if RUNTIME is not None:
-    print(f"ES2M_COLD_PLUM_RUNTIME_OVERLAY_PASS files_checked={8 + len(SKILL_FILES)}")
+    print(f"ES2M_COLD_PLUM_RUNTIME_OVERLAY_PASS files_checked={8 + len(SKILL_FILES) + len(FROZEN_SKILLS)}")
 print("STATUS=STATIC_AND_OPTIONAL_RUNTIME_FILE_INTEGRITY_ONLY; LPC_LOAD_AND_GAMEPLAY_REQUIRE_SEPARATE_GATES")
