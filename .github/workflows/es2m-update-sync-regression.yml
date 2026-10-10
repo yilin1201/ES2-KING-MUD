@@ -24,6 +24,8 @@ on:
       - 'scripts/test_es2m_skill_commands.py'
       - 'scripts/test_es2m_cold_plum_overlay.py'
       - 'scripts/test_es2m_update_snapshot.py'
+      - 'scripts/test_es2m_latest_martial_updates.py'
+      - 'Dockerfile'
   pull_request:
     paths:
       - '.github/workflows/es2m-update-sync-regression.yml'
@@ -45,6 +47,8 @@ on:
       - 'scripts/test_es2m_skill_commands.py'
       - 'scripts/test_es2m_cold_plum_overlay.py'
       - 'scripts/test_es2m_update_snapshot.py'
+      - 'scripts/test_es2m_latest_martial_updates.py'
+      - 'Dockerfile'
 
 permissions:
   contents: read
@@ -62,5 +66,7 @@ jobs:
         run: python3 scripts/test_es2m_skill_commands.py
       - name: Verify cold-plum skills and King-specific NPC guards
         run: python3 scripts/test_es2m_cold_plum_overlay.py
+      - name: Verify latest ES2M martial progression and NPC update
+        run: python3 scripts/test_es2m_latest_martial_updates.py
       - name: Verify pinned ES2M snapshot contracts
         run: python3 scripts/test_es2m_update_snapshot.py
