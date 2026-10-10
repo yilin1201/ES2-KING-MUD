@@ -122,7 +122,7 @@ def patch_look(s):
     matches = list(pattern.finditer(s))
     if len(matches) != 1:
         raise SystemExit("ES2M TRAINING DUMMY FAIL：look 外貌／年齡條件數量不符。")
-    replacement = 'if ((string)obj->query("humanoid") && intp(age = obj->query("age")) && !obj->query("training_dummy")) {'
+    replacement = '// ES2M TRAINING DUMMY LOOK／假人不顯示外貌與年齡。\\nif ((string)obj->query("humanoid") && intp(age = obj->query("age")) && !obj->query("training_dummy")) {'
     return s[:matches[0].start()] + replacement + s[matches[0].end():]
 patch_once(look, "ES2M TRAINING DUMMY LOOK", patch_look)
 
