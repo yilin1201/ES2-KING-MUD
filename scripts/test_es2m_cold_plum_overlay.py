@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 """ES2M 冷梅莊武學隔離整合的靜態完整性閘門；不代表 LPC 編譯或實機玩法通過。"""
 from pathlib import Path
+import argparse
 import hashlib
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+parser = argparse.ArgumentParser()
+parser.add_argument("--runtime", type=Path, help="可選：檢查已套用 Expansion 的 Runtime 根目錄")
+ARGS = parser.parse_args()
 SNAPSHOT = ROOT / "es2m_snapshot/mudlib"
 OVERLAY = ROOT / "es2_king_expansion/runtime/mudlib"
+RUNTIME = ARGS.runtime / "mudlib" if ARGS.runtime else None
 SKILL_FILES = (
     "lunmay.c",
     "hainmay_force.c",
@@ -88,10 +93,32 @@ else:
         if name not in text:
             errors.append(f"ES2M 技能匯入清單未納入：{name}")
 
+# 可選 Runtime Gate：只檢查本次 Expansion overlay，不要求 M30 最小 Runtime 匯入全部 42 項技能快照。
+if RUNTIME is not None:
+    runtime_paths = [
+        "std/martial_art.c",
+        "std/martial_art.h",
+        "feature/char/skill.c",
+        "daemon/misc/npc_power.c",
+        "std/char/npc.c",
+        "include/daemon.h",
+        "d/wutang/npc/may_yin_fong.c",
+        "d/wutang/crossroad.c",
+    ] + [f"daemon/skill/{name}" for name in SKILL_FILES]
+    for rel in runtime_paths:
+        expected = OVERLAY / rel
+        actual = RUNTIME / rel
+        if not actual.is_file():
+            errors.append(f"生成 Runtime 缺少本輪 Expansion 檔案：{rel}")
+        elif expected.is_file() and digest(expected) != digest(actual):
+            errors.append(f"生成 Runtime 與 Expansion overlay 不一致：{rel}")
+
 if errors:
     print("ES2M_COLD_PLUM_STATIC_FAIL")
     print("\n".join(errors))
     raise SystemExit(1)
 
 print("ES2M_COLD_PLUM_STATIC_PASS source_overlay_sha_match=5 custom_entry_progression=present")
-print("STATUS=STATIC_ONLY; LPC_COMPILE_AND_GAMEPLAY_NOT_CLAIMED")
+if RUNTIME is not None:
+    print(f"ES2M_COLD_PLUM_RUNTIME_OVERLAY_PASS files_checked={8 + len(SKILL_FILES)}")
+print("STATUS=STATIC_AND_OPTIONAL_RUNTIME_FILE_INTEGRITY_ONLY; LPC_LOAD_AND_GAMEPLAY_REQUIRE_SEPARATE_GATES")
