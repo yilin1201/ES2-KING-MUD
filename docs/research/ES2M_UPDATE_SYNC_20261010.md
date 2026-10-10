@@ -24,6 +24,20 @@
 | 冷梅莊莊主梅影風與五堂鎮生成點 | `es2_king_expansion/runtime/mudlib/d/wutang/npc/may_yin_fong.c`、`crossroad.c` | NPC 已同步並保留 King 必要差異；生成點 `crossroad.c` 與 ES2M 同 blob：`d4d3269d42f83d0b219cc42c605361a20bbf7ca9` |
 | 練武假人：必定命中、不閃躲／格擋、不顯示部位與傷勢，並調整 fight／kill／look | `scripts/apply_es2_king_expansion.sh` 於生成 Runtime 套用 | 已有冪等補丁及 `scripts/test_es2m_training_dummy.py` Runtime Gate；不改寫 Original 保存來源 |
 
+## 本輪補齊的快照落差
+
+第一次比對發現：ES2M 原始快照內的虎刀門相關檔案落後於上游最新更新，單靠既有「檔案存在」檢查不足以攔截。已於本輪補齊：
+
+| 更新 | King 實作 |
+|---|---|
+| 狻猊步法 `tiger-steps.c` | 將快照更新至 ES2M 最新來源 blob `cae9e59ba2e14b40cd4cb14bc6eefa372ce6cb11`；五句敘述交由 `defend_message` 在實際閃避成功後顯示，並保留學成 10 級、11 級起武術造詣及 41 級起武學之道。 |
+| 三門刀法 `sanmeendo.c` | 保留 King 既有招式資料，只補入每級武術造詣與 30 級起 `(lv - 29) × 10` 武學之道。 |
+| 瘋虎功 `tiger-force.c` | 保留 King 自訂精氣上限、90 級分歧及練功公式；在既有逐級成長迴圈中補入武術造詣，以及 31 級起 `(lv - 30) × 10` 武學之道。 |
+| 高慎 `kao_shen.c` | 只更新瘋虎刀法門檻提示，保留 King 的拜師與授技重建邏輯。 |
+| 私塾快照 | 更新為 ES2M 最新來源 blob `3418099cb14f82665b261634d189551244859a10`；King Runtime overlay 保留正式種族代碼 `rainnar`，生成 Runtime 另修復 UTF-8 回答。 |
+
+新增 `scripts/test_es2m_latest_martial_updates.py`，同時檢查來源快照與生成 Runtime；Dockerfile 已納入此 Gate。同步工作流程 `.github/workflows/es2m-update-sync-regression.yml` 也會執行這項檢查，避免未來只更新文件或只確認檔案存在。
+
 ## King 保留的必要差異
 
 梅影風 NPC 檔案不與 ES2M 逐位元相同，這是刻意保留的 King 相容修正，不能用上游整檔覆蓋：
@@ -44,4 +58,4 @@ Dockerfile 已將以下測試接入生成 Runtime 建置流程：
 
 ## 結論
 
-截至 ES2M 上游 HEAD `60c12ef`，本次核對的 2026-10-09 更新已在 King 具備相應來源或生成 Runtime 補丁。未發現需要直接將上游檔案整份覆寫到 Original ES2 的缺口。下一步以專用靜態同步工作流程重跑現有測試閘門，並保持 PR #13 開啟、不合併。
+截至 ES2M 上游 HEAD `60c12ef`，已補齊狻猊步法、三門刀法、瘋虎功、高慎與私塾快照的已確認差異，並加入來源／Runtime 一致性測試。這些修改只作用於 ES2M 快照、King 相容層及生成 Runtime，不整檔覆寫 Original ES2。同步工作流程已執行成功；Docker 生成 Runtime 的新完整建置仍以最新 Build Gate 結果為準。PR #13 保持開啟、不合併。
