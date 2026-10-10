@@ -648,7 +648,7 @@ text = path.read_text()
 marker = '    p = path - cached_path;'
 patch = '''    // ES2-KING OWNER COMMAND REHASH／不擴張一般玩家搜尋路徑。
     if (member_array("/cmds/adm/", path) >= 0
-    &&  member_array(verb, ({ "kingcreate", "kinghome", "kingmartial", "kingcanon" })) >= 0
+    &&  member_array(verb, ({ "admin", "kingcreate", "kinghome", "kingmartial", "kingcanon" })) >= 0
     &&  file_size("/cmds/adm/" + verb + ".c") >= 0)
         cache[verb + ".c"] = ({ "/cmds/adm/" });
 
@@ -697,7 +697,7 @@ done
 for arena_preload in /d/arena/skill/lunmay /d/arena/npc/mei_hanshuang; do
   grep -Fqx "$arena_preload" "$PRELOAD_FILE" || printf '%s\n' "$arena_preload" >> "$PRELOAD_FILE"
 done
-for owner_command in kingcreate kinghome kingmartial kingcanon kadmin kcreate khome kmartial kcanon kinfo kset kskill kclass kexp kmoney kitem klocate ksave khelp; do
+for owner_command in admin kingcreate kinghome kingmartial kingcanon kadmin kcreate khome kmartial kcanon kinfo kset kskill kclass kexp kmoney kitem klocate ksave khelp; do
   grep -Fqx "/cmds/adm/$owner_command" "$PRELOAD_FILE" \
     || printf '%s\n' "/cmds/adm/$owner_command" >> "$PRELOAD_FILE"
 done
