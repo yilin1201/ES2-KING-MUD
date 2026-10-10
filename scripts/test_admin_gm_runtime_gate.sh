@@ -31,7 +31,7 @@ if grep -Fq 'ob = find_living(name);' "$COMMAND"; then
 fi
 grep -Fq 'private object mutable_target' "$COMMAND"
 grep -Fq 'wiz_level(ob) >= wiz_level("(admin)")' "$COMMAND"
-test "$(grep -Fc 'ob = mutable_target(me, target_name);' "$COMMAND")" -ge 14
+test "$(grep -Fc 'ob = mutable_target(me, target_name);' "$COMMAND")" -ge 16
 grep -Fq 'ob->map_skill(cmd, skill);' "$COMMAND"
 grep -Fq 'query_stat_effective(stat)' "$COMMAND"
 grep -Fq 'present(replace_string(cmd, "_", " "), ob)' "$COMMAND"
