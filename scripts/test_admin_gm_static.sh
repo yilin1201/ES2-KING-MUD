@@ -18,6 +18,21 @@ grep -Fq 'previous_object() != me' "$COMMAND"
 grep -Fq 'this_player(1) != me' "$COMMAND"
 grep -Fq 'wiz_level(me) < wiz_level("(admin)")' "$COMMAND"
 
+# 目標安全／只能操作在線玩家，且不能藉由 GM 指令修改其他最高管理員。
+grep -Fq '!interactive(ob)' "$COMMAND"
+if grep -Fq 'ob = find_living(name);' "$COMMAND"; then
+  echo 'ADMIN GM STATIC FAIL：目標查找仍允許 NPC 或非玩家物件。' >&2
+  exit 1
+fi
+grep -Fq 'private object mutable_target' "$COMMAND"
+grep -Fq 'wiz_level(ob) >= wiz_level("(admin)")' "$COMMAND"
+test "$(grep -Fc 'ob = mutable_target(me, target_name);' "$COMMAND")" -ge 14
+
+# 指令語意／技能用途映射、狀態驗證及武器名稱相容。
+grep -Fq 'ob->map_skill(cmd, skill);' "$COMMAND"
+grep -Fq 'query_stat_effective(stat)' "$COMMAND"
+grep -Fq 'present(replace_string(cmd, "_", " "), ob)' "$COMMAND"
+
 # 數值與物件處理：拒絕負值，HP 不超過最大值，物件路徑需先確認存在。
 grep -Fq 'ATTRVAL_MIN' "$COMMAND"
 grep -Fq 'ATTRVAL_MAX' "$COMMAND"
