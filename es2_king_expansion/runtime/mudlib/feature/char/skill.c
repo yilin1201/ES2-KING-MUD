@@ -234,9 +234,7 @@ int restored_skill_entry_level(string skill)
     object daemon;
     int lv;
 
-    if( skill != "lunmay" && skill != "hainmay force"
-    &&  skill != "advance_lunmay" && skill != "mayin"
-    &&  skill != "seven" )
+    if( skill != "mayin" && skill != "seven" )
         return 1;
 
     daemon = SKILL_D(skill);
@@ -251,9 +249,7 @@ int restored_skill_level_threshold(string skill, int level)
     object daemon;
     int entry, pct;
 
-    if( skill != "lunmay" && skill != "hainmay force"
-    &&  skill != "advance_lunmay" && skill != "mayin"
-    &&  skill != "seven" )
+    if( skill != "mayin" && skill != "seven" )
         return restored_skill_threshold(level);
 
     daemon = SKILL_D(skill);
