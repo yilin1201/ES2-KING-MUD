@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/admin-gm-regression.yml'
       - 'es2_king_expansion/runtime/mudlib/cmds/adm/admin.c'
+      - 'es2_king_expansion/runtime/mudlib/custom/weapon/blade/tiger_blade.c'
       - 'scripts/test_admin_gm_static.sh'
       - 'scripts/test_admin_gm_runtime_gate.sh'
       - 'scripts/apply_es2_king_expansion.sh'
@@ -15,6 +16,7 @@ on:
     paths:
       - '.github/workflows/admin-gm-regression.yml'
       - 'es2_king_expansion/runtime/mudlib/cmds/adm/admin.c'
+      - 'es2_king_expansion/runtime/mudlib/custom/weapon/blade/tiger_blade.c'
       - 'scripts/test_admin_gm_static.sh'
       - 'scripts/test_admin_gm_runtime_gate.sh'
       - 'scripts/apply_es2_king_expansion.sh'
