@@ -15,6 +15,14 @@ import sys
 
 root = Path(sys.argv[1])
 
+def source_file(stem):
+    # ES2／Neolith 不同基準可能使用 .c 或 .lpc；選擇實際存在的來源檔。
+    for suffix in (".c", ".lpc"):
+        candidate = root / (stem + suffix)
+        if candidate.is_file():
+            return candidate
+    raise SystemExit("ES2M TRAINING DUMMY FAIL：找不到來源檔 " + stem + "（.c/.lpc）。")
+
 def patch_once(path, marker, transform):
     text = path.read_text()
     if marker in text:
@@ -26,7 +34,7 @@ def patch_once(path, marker, transform):
 
 # Combat daemon／戰鬥精靈：假人必定命中、不閃避、不格擋、不報體力傷勢，
 # 但攻擊者仍消耗正常精力，假人仍回報命中供練功系統使用。
-combat = root / "adm/daemons/combatd.c"
+combat = source_file("adm/daemons/combatd")
 def patch_combat(s):
     anchor = "string *dead_msg = ({"
     if s.count(anchor) != 1:
@@ -83,7 +91,7 @@ string *dummy_hit_msg = ({
 patch_once(combat, "ES2M TRAINING DUMMY COMBAT", patch_combat)
 
 # Fight command／切磋指令：假人不需說話或接受挑戰，直接進入練招流程。
-fight = root / "cmds/std/fight.c"
+fight = source_file("cmds/std/fight")
 def patch_fight(s):
     anchor = '    if( obj->query("civilized") ) {'
     if s.count(anchor) != 1:
@@ -100,7 +108,7 @@ def patch_fight(s):
 patch_once(fight, "ES2M TRAINING DUMMY FIGHT", patch_fight)
 
 # Kill command／正式攻擊指令：假人不喊救命，避免把訓練訊息當成真實敵對 NPC。
-kill = root / "cmds/std/kill.c"
+kill = source_file("cmds/std/kill")
 def patch_kill(s):
     pattern = re.compile(r'(?m)^    if\(\s*! ?me->is_fighting\(obj\)\s*\|\|\s*! ?me->is_killing\(obj\)\s*\)\s*\{')
     matches = list(pattern.finditer(s))
@@ -116,7 +124,7 @@ def patch_kill(s):
 patch_once(kill, "ES2M TRAINING DUMMY KILL", patch_kill)
 
 # Look command／查看指令：訓練假人不顯示人物外貌與年齡，保留物件說明。
-look = root / "cmds/std/look.c"
+look = source_file("cmds/std/look")
 def patch_look(s):
     pattern = re.compile(r'if\s*\(\s*\(string\)obj->query\("humanoid"\)\s*&&\s*intp\(age\s*=\s*obj->query\("age"\)\)\s*\)\s*\{')
     matches = list(pattern.finditer(s))
@@ -839,10 +847,21 @@ grep -Fqx 'king (admin)' "$WIZLIST" || printf '%s\n' 'king (admin)' >> "$WIZLIST
 
 # KING Omega Display Order／僅針對 KING 的 inventory(i) 與 look 身上裝備。
 # 使用獨立 helper，原始 ES2 檔案只在生成 Runtime 套用相容補丁，不改原始碼。
-python3 - "$TARGET/mudlib/cmds/usr/inventory.lpc" "$TARGET/mudlib/cmds/std/look.lpc" <<'PY'
+python3 - "$TARGET/mudlib" <<'PY'
 from pathlib import Path
 import sys
-inventory, look = (Path(p) for p in sys.argv[1:])
+root = Path(sys.argv[1])
+
+# ES2／Neolith 不同版本的檔案副檔名可能不同；選擇 Runtime 實際存在的版本。
+def source_file(stem):
+    for suffix in (".c", ".lpc"):
+        candidate = root / (stem + suffix)
+        if candidate.is_file():
+            return candidate
+    raise SystemExit("OMEGA ORDER FAIL：找不到 Runtime 來源檔 " + stem + "（.c/.lpc）。")
+
+inventory = source_file("cmds/usr/inventory")
+look = source_file("cmds/std/look")
 marker = "ES2-KING OMEGA CANONICAL DISPLAY ORDER"
 needle = "    inv = all_inventory(ob);"
 replacement = """    inv = all_inventory(ob);
