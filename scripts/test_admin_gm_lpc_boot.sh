@@ -26,6 +26,8 @@ grep -Fqx '/cmds/adm/admin' "$ROOT/mudlib/adm/etc/preload" || {
 
 DRIVER="$(find "$ROOT/neolith/out" -type f -name neolith -perm -111 | head -n 1)"
 test -n "$DRIVER" || { echo "ADMIN GM LPC LOAD FAIL：找不到已建置的 Neolith Driver" >&2; exit 1; }
+# 轉成絕對路徑，再切換到 Runtime 根目錄，避免相對路徑被重複拼接。
+DRIVER="$(realpath "$DRIVER")"
 
 cd "$ROOT"
 "$DRIVER" -f neolith.conf -c >"$LOG" 2>&1 &
