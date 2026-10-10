@@ -68,7 +68,7 @@
 | 項目 | 狀態 | 決策 |
 |---|---|---|
 | 上游 HEAD／差異清單 | SOURCE CONFIRMED | 已記錄來源 SHA 與 92 commits 差異範圍 |
-| 冷梅莊武學與梅影風 | SOURCE PRESERVED / EXPANSION OVERLAY ADDED / RUNTIME NOT YET VERIFIED | 已保存五項技能來源；Runtime 只新增 mayin／seven，冷梅劍法、寒梅心法、傲梅暗劍訣保持凍結來源；梅影風 NPC 與交叉路口已隔離整合，修正 race 拼字 rainner→KING 正式代碼 rainnar；待 Driver 建置及遊戲內測試 |
+| 冷梅莊武學與梅影風 | SOURCE PRESERVED / EXPANSION OVERLAY ADDED / RUNTIME NOT YET VERIFIED | 已保存五項技能來源；Runtime 只新增 mayin／seven，冷梅劍法、寒梅心法、傲梅暗劍訣保留 KDS/KING 凍結基準來源；梅影風 NPC 與交叉路口已隔離整合，修正 race 拼字 rainner→KING 正式代碼 rainnar；待 Driver 建置及遊戲內測試 |
 | NPC 強度系統 | SOURCE PRESERVED / EXPANSION OVERLAY ADDED / RUNTIME NOT YET VERIFIED | 已隔離加入 npc_power daemon、NPC 基底 set_power/set_beast 介面與 daemon.h 定義；尚未實機確認強度數值 |
 | disable／abandon／enable 與成長邏輯 | SOURCE CONFIRMED / MERGE REQUIRED | 逐函式合併，保留 KING 屬性成長、技能上限與存檔規則 |
 | 區域 NPC／訓練假人 | SOURCE CONFIRMED / FILE-BY-FILE REVIEW | 不覆蓋同名 Original；只對明確缺漏建立 Expansion patch |
@@ -81,7 +81,7 @@
 ## 2026-10-10 已執行的 KING 變更
 
 - 已更新 `es2m_snapshot/mudlib` 的五項冷梅莊技能、新版 `std/martial_art.c/.h`、NPC 強度 daemon、NPC 基底、daemon.h 與五堂鎮梅影風來源快照；來源內容保留獨立快照。
-- 已新增 Expansion overlay：新版 `std/martial_art.c/.h`、新增技能 `mayin`／`seven`、`npc_power.c`、`std/char/npc.c`、`include/daemon.h`、`d/wutang/npc/may_yin_fong.c`、`d/wutang/crossroad.c`。冷梅劍法、寒梅心法、傲梅暗劍訣三項既有凍結武功不建立覆蓋副本，保留底層原始檔。
+- 已新增 Expansion overlay：新版 `std/martial_art.c/.h`、新增技能 `mayin`／`seven`、`npc_power.c`、`std/char/npc.c`、`include/daemon.h`、`d/wutang/npc/may_yin_fong.c`、`d/wutang/crossroad.c`。冷梅劍法、寒梅心法、傲梅暗劍訣三項既有凍結武功只採用 KDS/KING 基準版本補足 pinned Original 缺檔，不採用 ES2M 最新改版覆蓋。
 - KING `feature/char/skill.c` 保留既有 300 級 KING 上限、屬性成長與武器技能門檻；只對新增技能 `mayin`／`seven` 啟用自訂入門等級與點數門檻；其他既有武功沿用 KING 原本門檻。
 - 梅影風傳授邏輯已修正為依技能實際入門等級補足學成點數；來源原本以固定 1 級門檻傳授，與部分技能 10／20／25 級入門設定不一致。
 - 已把五項新技能加入 `scripts/test_es2m_skill_import.py`；完整技能清單現為 42 項。新增 `scripts/test_es2m_cold_plum_overlay.py`，並納入 Docker 與 GitHub Actions 靜態閘門。
