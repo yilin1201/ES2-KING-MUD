@@ -30,6 +30,9 @@ on:
       - 'es2_king_expansion/runtime/mudlib/d/wutang/**'
       - 'scripts/test_es2m_skill_import.py'
       - 'scripts/test_es2m_cold_plum_overlay.py'
+      - 'scripts/test_es2m_skill_commands.py'
+      - 'es2m_snapshot/mudlib/cmds/usr/**'
+      - 'es2_king_expansion/runtime/mudlib/cmds/usr/**'
   pull_request:
     paths:
       - '.github/workflows/es2m-update-snapshot.yml'
@@ -57,6 +60,9 @@ on:
       - 'es2_king_expansion/runtime/mudlib/d/wutang/**'
       - 'scripts/test_es2m_skill_import.py'
       - 'scripts/test_es2m_cold_plum_overlay.py'
+      - 'scripts/test_es2m_skill_commands.py'
+      - 'es2m_snapshot/mudlib/cmds/usr/**'
+      - 'es2_king_expansion/runtime/mudlib/cmds/usr/**'
 
 permissions:
   contents: read
@@ -71,7 +77,7 @@ jobs:
         uses: actions/checkout@v4
       # Syntax Gate／語法檢查：先確保 Python 測試檔可解析。
       - name: Python syntax gate／Python 語法檢查
-        run: python3 -m py_compile scripts/test_es2m_update_snapshot.py scripts/test_es2m_fighter_level_contract.py scripts/test_es2m_skill_import.py scripts/test_es2m_cold_plum_overlay.py
+        run: python3 -m py_compile scripts/test_es2m_update_snapshot.py scripts/test_es2m_fighter_level_contract.py scripts/test_es2m_skill_import.py scripts/test_es2m_cold_plum_overlay.py scripts/test_es2m_skill_commands.py
       # Snapshot Gate／來源快照：驗證批量購買、庫存、交貨與戰鬥成長證據。
       - name: ES2M update snapshot／ES2M 更新來源檢查
         run: python3 scripts/test_es2m_update_snapshot.py
@@ -84,3 +90,6 @@ jobs:
       # Skill Snapshot Gate／技能快照清單與來源檔案完整性。
       - name: Skill inventory／技能來源快照
         run: python3 scripts/test_es2m_skill_import.py
+      # Skill Commands Gate／技能狀態指令來源與 Expansion 檢查。
+      - name: Skill commands／停用與學習狀態指令
+        run: python3 scripts/test_es2m_skill_commands.py
