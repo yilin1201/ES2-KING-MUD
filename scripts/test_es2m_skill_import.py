@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""ES2M skill snapshot and generated Runtime static integrity check; not gameplay proof."""
+"""ES2M 技能快照與生成 Runtime 靜態完整性檢查；不代表實機玩法通過。"""
 from pathlib import Path
 import sys
 
 snapshot = Path("es2m_snapshot/mudlib/daemon/skill")
 runtime = Path(sys.argv[1]) / "mudlib/daemon/skill" if len(sys.argv) > 1 else None
 expected = (
-    "archaic_attainment axe beast blade blunt dagger literate mysticism needle pike sanmeendo "
+    "advance_lunmay archaic_attainment axe beast blade blunt dagger hainmay_force literate "
+    "lunmay mayin mysticism needle pike sanmeendo seven "
     "secondhand_axe secondhand_blade secondhand_blunt secondhand_dagger secondhand_needle "
     "secondhand_pike secondhand_staff secondhand_sword staff sword taoism-fire taoism-freeze "
     "taoism-spells taoism-storm taoism-thunder tiger-blade tiger-force tiger-steps "
