@@ -58,6 +58,15 @@ fi
 echo 'ADMIN GM STATIC PASS／Expansion 路徑、管理員權限、數值保護與載入設定檢查通過。'
 
 
+# Unlearn regression／取消學習須清理用途映射，不可把技能錯誤標記為 disabled。
+grep -Fq 'private void unlearn_skill(object ob, string skill)' "$COMMAND"
+grep -Fq 'unlearn_skill(ob, skill);' "$COMMAND"
+grep -Fq 'unlearn_skill(me, skill);' "$COMMAND"
+if grep -Fq 'map_skill(skill, "none")' "$COMMAND"; then
+  echo 'ADMIN GM STATIC FAIL：unlearn 將技能設為 disabled，而非清理用途映射。' >&2
+  exit 1
+fi
+
 # Skill mapping regression／用途對應必須以「用途、技能」順序呼叫 Original map_skill。
 grep -Fq 'ob->map_skill(cmd, skill)' "$COMMAND"
 grep -Fq 'me->map_skill(cmd, skill)' "$COMMAND"
