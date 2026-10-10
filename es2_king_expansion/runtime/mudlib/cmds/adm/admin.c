@@ -137,6 +137,15 @@ HELP
   admin learn <技能> [玩家]     設定為已學會
   admin unlearn <技能> [玩家]   取消學習並解除對應
 
+  【參考核心技能（固定排列順序）】
+  blade
+  force
+  dodge
+  parry
+  tiger-blade
+  tiger-force
+  tiger-steps
+
 【五、HP 與恢復】
   admin hp <數值> [玩家]        設定目前 HP
   admin maxhp <數值> [玩家]     設定最大 HP，並補滿 HP
@@ -244,7 +253,7 @@ private void show_status(object ob)
         printf("  %-3s : %d\n", s, (int)ob->query_attr(s, 1));
 
     write("\nKEY SKILLS\n");
-    skills = ({ "blade", "force", "parry", "dodge", "unarmed",
+    skills = ({ "blade", "force", "dodge", "parry", "unarmed",
                 "tiger-blade", "tiger-force", "tiger-steps" });
 
     foreach (s in skills)
@@ -397,7 +406,7 @@ int main(object me, string arg)
         ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
         if (value < 0 || value > ADMIN_SKILL_MAX) return notify_fail("技能等級須介於 0～200（Original ES2 原版上限）。\n");
-        foreach (skill in ({ "blade", "force", "parry", "dodge",
+        foreach (skill in ({ "blade", "force", "dodge", "parry",
                              "tiger-blade", "tiger-force", "tiger-steps" }))
             ob->set_skill(skill, value);
         printf("ADMIN: %s 核心技能全部設定為 %d。\n", ob->query("id"), value);
@@ -406,7 +415,7 @@ int main(object me, string arg)
 
     if (sscanf(arg, "skills %d", value) == 1) {
         if (value < 0 || value > ADMIN_SKILL_MAX) return notify_fail("技能等級須介於 0～200（Original ES2 原版上限）。\n");
-        foreach (skill in ({ "blade", "force", "parry", "dodge",
+        foreach (skill in ({ "blade", "force", "dodge", "parry",
                              "tiger-blade", "tiger-force", "tiger-steps" }))
             me->set_skill(skill, value);
         printf("ADMIN: 核心技能全部設定為 %d。\n", value);
@@ -788,7 +797,7 @@ int main(object me, string arg)
             }
         }
 
-        foreach (skill in ({ "blade", "force", "parry", "dodge",
+        foreach (skill in ({ "blade", "force", "dodge", "parry",
                              "tiger-blade", "tiger-force", "tiger-steps" })) {
             me->set_learn(skill, 1);
             me->set_skill(skill, 200);
