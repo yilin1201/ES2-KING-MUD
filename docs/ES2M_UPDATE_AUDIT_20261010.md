@@ -82,6 +82,8 @@
 
 - 已更新 `es2m_snapshot/mudlib` 的五項冷梅莊技能、新版 `std/martial_art.c/.h`、NPC 強度 daemon、NPC 基底、daemon.h 與五堂鎮梅影風來源快照；來源內容保留獨立快照。
 - 已新增 Expansion overlay：新版 `std/martial_art.c/.h`、`lunmay`、`hainmay_force`、`advance_lunmay`、`mayin`、`seven`、`npc_power.c`、`std/char/npc.c`、`include/daemon.h`、`d/wutang/npc/may_yin_fong.c`、`d/wutang/crossroad.c`。
-- KING `feature/char/skill.c` 保留既有 300 級 KING 上限、屬性成長與武器技能門檻；僅增加新版武功的自訂入門等級、學成點數門檻與學成訊息處理。
-- 已把五項新技能加入 `scripts/test_es2m_skill_import.py`，並新增 `scripts/test_es2m_cold_plum_overlay.py`，納入 Docker 建置檢查。
-- 目前僅為程式／靜態閘門整合；尚未取得這批最新變更的 Neolith Docker 建置與遊戲內 E2E 結果，狀態仍為 `RUNTIME NOT YET VERIFIED`，不得宣稱 Gameplay PASS。
+- KING `feature/char/skill.c` 保留既有 300 級 KING 上限、屬性成長與武器技能門檻；僅對五項冷梅莊技能增加自訂入門等級、學成點數門檻與學成訊息處理，避免改變既有虎刀門等技能規則。
+- 梅影風傳授邏輯已修正為依技能實際入門等級補足學成點數；來源原本以固定 1 級門檻傳授，與部分技能 10／20／25 級入門設定不一致。
+- 已把五項新技能加入 `scripts/test_es2m_skill_import.py`；完整技能清單現為 42 項。新增 `scripts/test_es2m_cold_plum_overlay.py`，並納入 Docker 與 GitHub Actions 靜態閘門。
+- 新增 `scripts/test_es2m_cold_plum_lpc_load.sh`，由 M30 workflow 使用真實 Neolith 預載新版武功、NPC 強度 daemon、五堂鎮交叉路口及梅影風。
+- 目前程式與驗收閘門已提交，但本次最新 HEAD 尚未取得對應的完整 Actions PASS 結果；在 Neolith LPC 載入測試完成前，狀態維持 `RUNTIME NOT YET VERIFIED`，不得宣稱 Gameplay PASS。
