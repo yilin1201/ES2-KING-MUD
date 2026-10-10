@@ -205,6 +205,10 @@ RUN cmake -S /opt/es2-king/runtime/neolith -B /build/neolith -G Ninja \
     && cmake --build /build/neolith --parallel \
     && install -D /build/neolith/src/neolith /opt/es2-king/bin/neolith
 
+# ES2M Latest Martial LPC Load／在完整 ES2M 快照匯入後，使用真實 Driver 載入最新虎刀門技能與高慎。
+RUN ES2_DRIVER_BIN=/opt/es2-king/bin/neolith \\
+    bash scripts/test_es2m_latest_martial_lpc_load.sh /opt/es2-king/runtime
+
 RUN cd webtelnet && npm ci --omit=dev
 
 # Release Candidate Gameplay Gates／候選版本實際玩法閘門：
