@@ -27,9 +27,9 @@ jobs:
       # Skill Commands Gate／驗證 ES2M 停用、恢復及中止學習指令。
       - name: ES2M Skill Commands／技能指令 Runtime 閘門
         run: python3 scripts/test_es2m_skill_commands.py --runtime .runtime/es2-king
-      # ES2M 最新武學更新／驗證狻猊步法、三門刀法、瘋虎功與高慎來源在生成 Runtime 同步。
-      - name: ES2M Latest Martial Updates／最新武學更新 Runtime 閘門
-        run: python3 scripts/test_es2m_latest_martial_updates.py --runtime .runtime/es2-king
+      # M30 overlay-only pipeline 不匯入 ES2M snapshot-only skill；完整生成 Runtime 檢查由 Dockerfile 的 apply_race_phase2_runtime 後 Gate 負責。
+      - name: ES2M Latest Martial Updates／最新武學來源契約
+        run: python3 scripts/test_es2m_latest_martial_updates.py
       - name: Damage Formula Runtime Gate／生成 Runtime 傷害參數核對
         run: python3 scripts/test_king_martial_damage_formula.py --runtime .runtime/es2-king/mudlib
       - name: Runtime Gate／Original 與 Expansion 相容性
