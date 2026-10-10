@@ -26,7 +26,7 @@ if grep -Fq 'ob = find_living(name);' "$COMMAND"; then
 fi
 grep -Fq 'private object mutable_target' "$COMMAND"
 grep -Fq 'wiz_level(ob) >= wiz_level("(admin)")' "$COMMAND"
-test "$(grep -Fc 'ob = mutable_target(me, target_name);' "$COMMAND")" -ge 14
+test "$(grep -Fc 'ob = mutable_target(me, target_name);' "$COMMAND")" -ge 16
 
 # 指令語意／技能用途映射、狀態驗證及武器名稱相容。
 grep -Fq 'ob->map_skill(cmd, skill);' "$COMMAND"
