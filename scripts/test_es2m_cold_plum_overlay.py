@@ -130,7 +130,7 @@ if errors:
     print("\n".join(errors))
     raise SystemExit(1)
 
-print("ES2M_COLD_PLUM_STATIC_PASS source_overlay_sha_match=2 frozen_skill_overlays=absent custom_entry_progression=present")
+print("ES2M_COLD_PLUM_STATIC_PASS new_skill_source_overlay_sha_match=2 frozen_KING_baseline_match=3 custom_entry_progression=present")
 if RUNTIME is not None:
     print(f"ES2M_COLD_PLUM_RUNTIME_OVERLAY_PASS files_checked={8 + len(SKILL_FILES) + len(FROZEN_SKILLS)}")
 print("STATUS=STATIC_AND_OPTIONAL_RUNTIME_FILE_INTEGRITY_ONLY; LPC_LOAD_AND_GAMEPLAY_REQUIRE_SEPARATE_GATES")
