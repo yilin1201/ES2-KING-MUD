@@ -43,6 +43,8 @@ def main() -> None:
             "私塾未採用 ES2M 精確讀書識字點數。")
     require('set_power("B");' in teacher_text,
             "私塾未保留 ES2M NPC 強度設定。")
+    require('"avatar", "human", "rainnar", "malik"' in teacher_text,
+            "私塾種族名未使用 Original ES2 的 rainnar 代碼。")
 
     # Apply script 必須逐項修補生成 Runtime，且每項都有冪等標記。
     for marker in (
