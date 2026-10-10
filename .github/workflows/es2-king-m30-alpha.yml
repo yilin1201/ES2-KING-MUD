@@ -2,9 +2,9 @@ name: ES2-KING M30 Alpha
 on:
   push:
     branches: [build/original-es2-races-phase2]
-    paths: ['ROADMAP_M0_M30.md', 'original_es2/**', 'es2_king_expansion/**', 'king_library/**', 'scripts/test_m30_*', 'scripts/test_m*', 'scripts/test_admin_gm_*', 'scripts/test_es2m_cold_plum_*', 'scripts/test_es2m_skill_import.py', '.github/workflows/es2-king-m30-alpha.yml']
+    paths: ['ROADMAP_M0_M30.md', 'original_es2/**', 'es2_king_expansion/**', 'king_library/**', 'scripts/test_m30_*', 'scripts/test_m*', 'scripts/test_admin_gm_*', 'scripts/test_es2m_cold_plum_*', 'scripts/test_es2m_skill_import.py', 'scripts/test_es2m_skill_commands.py', '.github/workflows/es2-king-m30-alpha.yml']
   pull_request:
-    paths: ['ROADMAP_M0_M30.md', 'original_es2/**', 'es2_king_expansion/**', 'king_library/**', 'scripts/test_m30_*', 'scripts/test_m*', 'scripts/test_admin_gm_*', 'scripts/test_es2m_cold_plum_*', 'scripts/test_es2m_skill_import.py', '.github/workflows/es2-king-m30-alpha.yml']
+    paths: ['ROADMAP_M0_M30.md', 'original_es2/**', 'es2_king_expansion/**', 'king_library/**', 'scripts/test_m30_*', 'scripts/test_m*', 'scripts/test_admin_gm_*', 'scripts/test_es2m_cold_plum_*', 'scripts/test_es2m_skill_import.py', 'scripts/test_es2m_skill_commands.py', '.github/workflows/es2-king-m30-alpha.yml']
   workflow_dispatch:
 jobs:
   m30-alpha:
@@ -21,6 +21,9 @@ jobs:
       # ES2M Snapshot／Expansion consistency gates；只驗來源／生成檔案完整性。
       - name: ES2M Cold Plum Static + Runtime Overlay Gate／冷梅莊靜態與 Runtime 檔案閘門
         run: python3 scripts/test_es2m_cold_plum_overlay.py --runtime .runtime/es2-king
+      # Skill Commands Gate／驗證 ES2M 停用、恢復及中止學習指令。
+      - name: ES2M Skill Commands／技能指令 Runtime 閘門
+        run: python3 scripts/test_es2m_skill_commands.py --runtime .runtime/es2-king
       - name: Damage Formula Runtime Gate／生成 Runtime 傷害參數核對
         run: python3 scripts/test_king_martial_damage_formula.py --runtime .runtime/es2-king/mudlib
       - name: Runtime Gate／Original 與 Expansion 相容性
