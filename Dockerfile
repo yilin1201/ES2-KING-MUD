@@ -174,7 +174,10 @@ RUN python3 scripts/audit_es2m_skill_three_way.py \
     --runtime /opt/es2-king/runtime/mudlib \
     --output /build/es2m-skill-three-way.json
 
-# ES2M skill inventory: fail build if any of the 36 recovered daemons is absent from generated Runtime.
+# ES2M 冷梅莊武學：先確認來源快照、Expansion 覆蓋與 KING 學成門檻介面一致。
+RUN python3 scripts/test_es2m_cold_plum_overlay.py
+
+# ES2M skill inventory：任何已恢復技能缺少於生成 Runtime 時即阻止建置。
 RUN python3 scripts/test_es2m_skill_import.py /opt/es2-king/runtime
 
 RUN echo "[M30 BUILD 5/5] Assert final playable Runtime" \
