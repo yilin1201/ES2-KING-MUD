@@ -109,7 +109,7 @@ int acquire_skill(object me, string skill)
         break;
     case "tiger-blade":
         if( me->query_skill("tiger-force", 1) < 30 )
-            return notify_fail("高慎喝道：瘋虎功不到三十級，也敢妄學瘋虎刀法？\n");
+            return notify_fail("高慎喝道：你的瘋虎功火候未到，也敢妄學瘋虎刀法？\n");
         cap = 140;
         break;
     default:
