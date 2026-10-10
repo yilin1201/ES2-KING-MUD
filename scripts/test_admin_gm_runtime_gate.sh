@@ -36,7 +36,6 @@ grep -Fq 'ob->map_skill(cmd, skill);' "$COMMAND"
 grep -Fq 'query_stat_effective(stat)' "$COMMAND"
 grep -Fq 'present(replace_string(cmd, "_", " "), ob)' "$COMMAND"
 
-echo 'ADMIN GM RUNTIME GATE PASS／生成 Runtime 已包含 admin.c、命令索引、預載與目標安全檢查。'
 
 
 # Unlearn regression／實際生成 Runtime 必須採用同一個安全映射清理 helper。
@@ -55,3 +54,8 @@ if grep -Fq 'map_skill(skill, skill)' "$COMMAND"; then
   echo 'ADMIN GM RUNTIME FAIL：技能用途對應寫反。' >&2
   exit 1
 fi
+grep -Fq 'ob->map_skill(skill);' "$COMMAND"
+grep -Fq 'foreach (usage, mapped in skill_map)' "$COMMAND"
+grep -Fq 'if (mapped == skill)' "$COMMAND"
+
+echo 'ADMIN GM RUNTIME GATE PASS／生成 Runtime 已包含 admin.c、命令索引、預載與技能解除映射檢查。'
