@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ES2M 2026-10-09 最新武學更新的快照／King 相容層／生成 Runtime 稽核。"""
+"""ES2M 2026-10-11 最新更新的快照／KING 相容層／Runtime 稽核。"""
 
 from pathlib import Path
 import argparse
@@ -65,13 +65,13 @@ def main() -> None:
     require('"avatar", "human", "rainnar"' in teacher, "King 私塾未使用正式 race 代碼 rainnar。")
     require('"avatar", "human", "rainner"' not in teacher, "King 私塾仍使用錯誤的 rainner 代碼。")
 
-    # 2026-10-11 ES2M updates: merge compatible fixes while preserving KING-only rules.
-    hainmay = read(OVERLAY / "daemon/skill/hainmay_force.c")
-    require('mm_minus = 29;' in hainmay, "寒梅心法武學之道應從 30 級按 (lv - 29) 計算。")
-    require('int valid_learn(object me)' in hainmay and 'is_faction(me, "fighter.lunmay")' in hainmay,
-            "寒梅心法缺少冷梅莊門派學習限制。")
-    require('COMBAT_D->int_formula_exp(me)' in hainmay,
-            "寒梅心法未同步 ES2M 標準內功修習點數公式。")
+    # ES2M 最新寒梅心法保留於來源快照；既有 KING 凍結武功不得被上游覆蓋。
+    hainmay_snapshot = read(SNAPSHOT / "daemon/skill/hainmay_force.c")
+    require('mm_minus = 29;' in hainmay_snapshot,
+            "ES2M 最新寒梅心法快照未保存 30 級起的武學之道規則。")
+    require(digest(OVERLAY / "daemon/skill/hainmay_force.c") ==
+            digest(ROOT / "es2m_snapshot/king_frozen_baseline/daemon/skill/hainmay_force.c"),
+            "既有凍結的 KING 寒梅心法不得被 ES2M 上游直接覆蓋。")
 
     skill = read(OVERLAY / "feature/char/skill.c")
     require('if( value <= 10 ) return 100;' in skill and 'if( value <= 25 ) return 60;' in skill,
