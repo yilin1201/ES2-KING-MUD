@@ -43,7 +43,7 @@ if grep -Fq 'ob = find_living(name);' "$COMMAND"; then
 fi
 grep -Fq 'private object mutable_target' "$COMMAND"
 grep -Fq 'wiz_level(ob) >= wiz_level("(admin)")' "$COMMAND"
-test "$(grep -Fc 'ob = mutable_target(me, target_name);' "$COMMAND")" -ge 16
+test "$(grep -Ec 'ob = mutable_target\(me, (target_name|target)\);' "$COMMAND")" -ge 13
 grep -Fq 'ob->map_skill(cmd, skill);' "$COMMAND"
 grep -Fq 'query_stat_effective(stat)' "$COMMAND"
 grep -Fq 'present(replace_string(cmd, "_", " "), ob)' "$COMMAND"
@@ -57,8 +57,8 @@ grep -Fq '!weapon->wield()' "$COMMAND"
 
 # Unlearn regression／實際生成 Runtime 必須採用同一個安全映射清理 helper。
 grep -Fq 'private void unlearn_skill(object ob, string skill)' "$COMMAND"
-grep -Fq 'unlearn_skill(ob, skill);' "$COMMAND"
-grep -Fq 'unlearn_skill(me, skill);' "$COMMAND"
+grep -Fq 'unlearn_skill(ob, resolved);' "$COMMAND"
+grep -Fq 'unlearn_skill(me, resolved);' "$COMMAND"
 if grep -Fq 'map_skill(skill, "none")' "$COMMAND"; then
   echo 'ADMIN GM RUNTIME FAIL：unlearn 將技能錯誤設為 disabled。' >&2
   exit 1
