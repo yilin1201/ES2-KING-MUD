@@ -52,7 +52,7 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   s.close();
   console.log(`ORIGINAL_PLAYER_CREATION_${raceId.toUpperCase()}_E2E_PASS`);
   // 數字開頭帳號需走同一套建立、存檔、登出及重新登入流程，驗證資料分片目錄可用。
-  if (/^\\d/.test(id)) console.log("ORIGINAL_PLAYER_CREATION_NUMERIC_ID_E2E_PASS");
+  if (/^\d/.test(id)) console.log("ORIGINAL_PLAYER_CREATION_NUMERIC_ID_E2E_PASS");
 }
 const races = [
   ["humanprobe","human","Human（人類）","人類測試","human"],
