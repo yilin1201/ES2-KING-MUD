@@ -23,7 +23,10 @@ on:
       - 'scripts/test_original_player_creation_e2e.sh'
       - 'scripts/test_original_player_creation_e2e.mjs'
       - 'scripts/test_race_source_difference_review.sh'
-      - 'scripts/test_race_phase2_static.sh'
+      - 'scripts/prepare_es2_persistence.sh'
+      - 'scripts/test_m30_persistence_paths.sh'
+      - 'deploy/oracle/backup.sh'
+      - 'deploy/oracle/README.md'
       - 'docs/research/RACE_SOURCE_DIFFERENCE_REVIEW_20261011.md'
       - 'es2_king_expansion/races/headless.md'
       - 'original_es2/runtime/m5_race_framework_result.md'
@@ -42,7 +45,6 @@ jobs:
           bash -n scripts/prepare_es2_persistence.sh
           bash -n scripts/test_m30_persistence_paths.sh
           bash -n deploy/oracle/backup.sh
-          bash -n scripts/test_race_phase2_static.sh
       - name: JavaScript syntax／JavaScript 語法檢查
         run: node --check scripts/test_original_player_creation_e2e.mjs
       - name: Source difference contract／來源差異契約
