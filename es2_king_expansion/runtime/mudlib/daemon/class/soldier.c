@@ -2,7 +2,6 @@
 
 inherit F_DBASE;
 
-// ES2M source of truth／以保存的 ES2M soldier.c 為主，不採用 KDS 覆蓋版本。
 // commoner.c/fighter.c leave this empty since query_rank() is read-only and
 // never needs to write back to a player. advance_level() below calls
 // ob->set_stat_maximum(), which is a nomask/USER_PROTECT()'d function on the
