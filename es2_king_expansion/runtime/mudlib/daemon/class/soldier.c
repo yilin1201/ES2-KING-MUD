@@ -2,9 +2,17 @@
 
 inherit F_DBASE;
 
-/* ES2-KDS reference fix／軍人升級 daemon 的有效 UID 與升級目標修正。
- * 只放在 ES2-KING Expansion Runtime overlay，不覆寫 Original ES2 保存來源。
- */
+// ES2M source of truth／以保存的 ES2M soldier.c 為主，不採用 KDS 覆蓋版本。
+// commoner.c/fighter.c leave this empty since query_rank() is read-only and
+// never needs to write back to a player. advance_level() below calls
+// ob->set_stat_maximum(), which is a nomask/USER_PROTECT()'d function on the
+// player object -- it only accepts callers whose euid matches the player's
+// own (or ROOT/DOMAIN/MUDLIB). Without this seteuid(), this daemon's euid
+// stays unset ("NONAME"), the protection check fails, an error is thrown,
+// and everything after that call in advance_level() -- and in gain_score()
+// itself, which is what actually increments the player's level -- silently
+// never runs. That was the root cause of "level-up message fires but the
+// level never advances."
 static void create() { seteuid(getuid()); }
 
 string query_rank(object obj, string politeness)
@@ -22,7 +30,10 @@ string query_rank(object obj, string politeness)
     }
 }
 
-/* 每個種族可用 commoner_score_base 調整升級門檻；預設 100%。 */
+// Per-race multiplier on the leveling thresholds below, as a percentage
+// (100 = human baseline). This is the race's 基數, stored on the race daemon
+// as "commoner_score_base"; races that don't set it count as 100. It only
+// scales character level-up thresholds, never skill experience.
 private int race_coef(object ob)
 {
     int coef;
@@ -30,7 +41,13 @@ private int race_coef(object ob)
     return coef > 0 ? coef : 100;
 }
 
-/* 武器精熟與實戰經驗依目前等級設定下一級門檻；30 級後才需要軍功。 */
+// Leveling thresholds: 兵刃精熟(weapon mastery) and 實戰經驗(combat) both need
+// (LV-1)^2*2*100 accumulated score to REACH level LV; 戰場功勳(military
+// service, earned by killing bandit-type NPCs) needs (LV-30)^2*100 once LV
+// is past 30, nothing before that. Both are then scaled by the character's
+// race coefficient. cur_lv is the character's CURRENT level -- the
+// threshold set here is always for cur_lv+1, the level they're working
+// toward next.
 void set_next_target(object ob, int cur_lv)
 {
     int lv, coef;
@@ -49,7 +66,10 @@ void initialize(object ob)
     set_next_target(ob, ob->query_level());
 }
 
-/* advance_level 在角色 level 遞增前呼叫；先更新精氣神，再設定下一級門檻。 */
+// advance_level() runs *before* gain_score() increments the player's level,
+// so query_level() here is still the level the character is leaving. The
+// new level is query_level() + 1, and set_next_target() turns that into the
+// threshold for the level after it.
 void advance_level(object ob)
 {
     int gin_gain, kee_gain, sen_gain;
@@ -66,5 +86,6 @@ void advance_level(object ob)
     ob->set_stat_maximum("sen", (int)ob->query_stat_maximum("sen") + sen_gain);
 
     tell_object(ob, HIY "常年的軍旅操練讓你的精氣神更加充沛！\n" NOR);
+
     set_next_target(ob, ob->query_level() + 1);
 }
