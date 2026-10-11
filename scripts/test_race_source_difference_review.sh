@@ -69,4 +69,18 @@ grep -Fq 'Third-party reconstruction' "$INVENTORY"
 grep -Fq '不得自動套用到 Original ES2' "$INVENTORY"
 grep -Fq '老松林' "$INVENTORY"
 
-echo 'RACE_SOURCE_DIFFERENCE_REVIEW_PASS／來源分層、M5 基準、數字帳號、AntiSpam、Port 與第三方索引靜態檢查通過。'
+# Oracle backup contract／Oracle 備份契約：確認有獨立腳本與隔離還原冒煙測試。
+# 這只驗證備份政策與測試存在；不把靜態檢查冒充成真實異地備份／還原。
+BACKUP="deploy/oracle/backup.sh"
+BACKUP_TEST="scripts/test_oracle_backup_smoke.sh"
+test -f "$BACKUP"
+test -f "$BACKUP_TEST"
+grep -Fq 'BACKUP_DIR' "$BACKUP"
+grep -Fq 'RETENTION_DAYS' "$BACKUP"
+grep -Fq 'sha256sum' "$BACKUP"
+grep -Fq '同一檔案系統' "$BACKUP"
+grep -Fq 'tar -xzf "$ARCHIVE" -C "$RESTORE_DIR"' "$BACKUP_TEST"
+grep -Fq 'cmp "$DATA_DIR/user/7/7probe.o" "$RESTORE_DIR/user/7/7probe.o"' "$BACKUP_TEST"
+grep -Fq 'ALLOW_SAME_DEVICE_BACKUP=1' "$BACKUP_TEST"
+
+echo 'RACE_SOURCE_DIFFERENCE_REVIEW_PASS／來源分層、M5 基準、數字帳號、AntiSpam、Port、第三方索引與備份契約靜態檢查通過。'
