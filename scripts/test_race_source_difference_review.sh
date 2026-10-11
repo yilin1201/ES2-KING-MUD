@@ -33,7 +33,7 @@ grep -Fq 'GIN=30/30 KEE=30/30 SEN=30/30' "$M5"
 
 # 第三方資料只能作差異參考，不可冒充 Original ES2 或自動套用 KING Runtime。
 grep -Fq '第三方重建差異' "$DOC"
-grep -Fq '第三方重建資料與目前 Runtime 採用值對照' "$HEADLESS"
+grep -Fq '第三方重建資料與已採用狀態' "$HEADLESS"
 grep -Fq '第三方資料索引（不在本原版考證檔保存數值）' original_es2/races/headless.md
 if grep -Fq '自然護甲 | +50' original_es2/races/headless.md; then
   echo 'FAIL／Original ES2 刑天考證檔不應內嵌第三方數值。' >&2
