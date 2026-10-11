@@ -68,11 +68,12 @@ A–H 種族、家園、老松林等第三方內容應登記於 Expansion／來�
 ## 7. 驗證狀態
 
 - [x] 重新讀取目前分支 M5 證據與種族文件。
-- [x] 保留 Original Human／Avatar M5 的已驗證契約。
+- [x] 保留 `original_es2/` 中 Original Human／Avatar M5 的證據與原版基準。
+- [x] 依使用者明確指示，將 Runtime Human／Avatar／Headless 改為指定 ES2M race daemon。
 - [x] 更新 bootstrap 與玩家創角 E2E 測試，使其覆蓋數字分片目錄與 `7probe`。
 - [x] 補充 Headless 第三方差異表，未將其自動採用為 KING 設定。
 - [x] 新增第三方內容來源索引，並將 Original 刑天考證檔與第三方數值表分開保存。
-- [ ] 本輪尚未執行 Neolith Driver／LPC Runtime E2E。
+- [ ] 本輪尚未執行 Neolith Driver／LPC Runtime E2E；本次只建立來源檔、Runtime overlay 與靜態契約。
 - [ ] 尚未驗證數字開頭帳號是否被上游合法性規則接受。
 - [x] 新增 Oracle 玩家檔案備份腳本與操作文件（尚未執行實際備份）。
 - [ ] 尚未完成 Oracle 異地備份及還原演練。

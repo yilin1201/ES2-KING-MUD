@@ -11,11 +11,11 @@ LOGIN="$ROOT/mudlib/adm/daemons/logind.c"
 
 # ES2M Recovery／ES2M 種族恢復
 # Evidence priority: Original ES2 > ES2M > Archived/Historical > Reconstruction.
-# Human/avatar retain the existing Original runtime daemons.
-# Ten missing races are restored from the vendored ES2M snapshot instead of fabricated fixed attributes.
+# Owner decision 2026-10-11／使用者明確決定：人類、化身、刑天採用 wolfer168 ES2M race daemon；此為 KING Runtime 採用決策，不代表 Original ES2 已確認。
+# Other historical races are restored from the vendored ES2M snapshot.
 REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 ES2M_RACE_DIR="$REPO_ROOT/es2m_snapshot/mudlib/daemon/race"
-es2m_races=(blackteeth yenhold woochan dingling jiaojao rainner ashura headless yaksa malik)
+es2m_races=(human avatar blackteeth yenhold woochan dingling jiaojao rainner ashura headless yaksa malik)
 [[ -d "$ES2M_RACE_DIR" ]] || { echo "ES2M race snapshot missing: $ES2M_RACE_DIR" >&2; exit 1; }
 for race in "${es2m_races[@]}"; do
   [[ -f "$ES2M_RACE_DIR/$race.c" ]] || { echo "Missing ES2M race daemon: $race" >&2; exit 1; }
@@ -298,5 +298,5 @@ python3 "$REPO_ROOT/scripts/apply_combined_item_autoload_runtime.py" \
 python3 "$REPO_ROOT/scripts/apply_shop_item_autoload_runtime.py" \
   --runtime "$ROOT/mudlib"
 
-echo 'ES2M RACE RUNTIME OVERLAY PASS／10 個缺失種族改由 ES2M daemon 恢復；保留 Original Human/Avatar；登入流程接受 12 種族。'
+echo 'ES2M RACE RUNTIME OVERLAY PASS／人類、化身、刑天及其他歷史種族使用指定 ES2M daemon；登入流程接受 12 種族。'
 

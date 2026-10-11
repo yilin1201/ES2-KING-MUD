@@ -17,7 +17,9 @@
 
 | 內容 | 可追溯位置 | 來源狀態 | KING 採用狀態 | 待辦 |
 |---|---|---|---|---|
-| 刑天 `headless` | `source/es2m_updates/20261011_latest/source/upstream/mudlib/daemon/race/headless.c`；`es2m_snapshot/mudlib/daemon/race/headless.c` | Third-party reconstruction；來源註記為自訂 A–H 種族 | Reference only；KING 另有正式 Expansion 設計 | 不把護甲 +50、攻擊 +30、防禦 +20 或裝備限制直接套用 |
+| 刑天 `headless` | `es2m_snapshot/mudlib/daemon/race/headless.c`；wolfer168 `source/upstream/mudlib/daemon/race/headless.c` | Third-party reconstruction；來源註記為自訂 A–H 種族 | **Adopted by owner decision 2026-10-11**：Runtime 採用屬性、精氣神、護甲 +50、攻擊 +30、防禦 +20、裝備限制與 dance 指令；LPC/Runtime 尚待驗證 | 不回寫 Original ES2；執行對應靜態、編譯及 Runtime 測試 |
+| 人類 `human` | `es2m_snapshot/mudlib/daemon/race/human.c`；wolfer168 `source/upstream/mudlib/daemon/race/human.c` | Third-party reconstruction；檔頭標示自訂 A–H 種族 | **Adopted by owner decision 2026-10-11**：Runtime 採用 13–18 屬性、精氣神 35、自然護甲 +10、0.01% 化身轉換機制；LPC/Runtime 尚待驗證 | 保留 Original ES2 M5 證據；不得將第三方數值改標原版事實 |
+| 化身 `avatar` | `es2m_snapshot/mudlib/daemon/race/avatar.c`；wolfer168 `source/upstream/mudlib/daemon/race/avatar.c` | Third-party reconstruction；檔頭標示自訂 A–H 種族 | **Adopted by owner decision 2026-10-11**：Runtime 採用 15–20 屬性、精氣神 30、自然護甲 +10；LPC/Runtime 尚待驗證 | 與 Original ES2 Avatar 16–18、護甲 +5 的證據分開記錄 |
 | 夜叉 `yaksa` | `es2m_snapshot/mudlib/daemon/race/yaksa.c` | Third-party reconstruction／版本待交叉比對 | Reference only，除非另有 KING 決策 | 比對屬性、精氣神、特殊能力及 Original 證據 |
 | 阿修羅 `ashura` | `es2m_snapshot/mudlib/daemon/race/ashura.c` | Third-party reconstruction／版本待交叉比對 | Reference only，除非另有 KING 決策 | 比對屬性與創角條件 |
 | 黑齒 `blackteeth` | `es2m_snapshot/mudlib/daemon/race/blackteeth.c` | Third-party reconstruction／版本待交叉比對 | Reference only，除非另有 KING 決策 | 比對種族能力、物品及 NPC 依賴 |
@@ -50,7 +52,7 @@
 | 攻擊／防禦 | +30／+20 | Reference only；KING 未採用 |
 | 裝備限制 | 不可穿 `armor`、`cloth`、`head_eq`、`neck_eq` | Reference only；KING 未採用 |
 
-此表只保存可追溯的第三方差異，不代表 KING 已採用這些數值。LPC 的 `random(6)` 在常見語義下回傳 0–5，因此表列範圍按起始值至起始值加 5 計算；最終仍應以來源版本的實際執行結果核對。
+此表保存可追溯的第三方差異。刑天、人類與化身已由使用者明確決定採用於 KING Runtime，但不因此成為 Original ES2 設定。LPC 的 `random(6)` 在常見語義下回傳 0–5，因此表列範圍按起始值至起始值加 5 計算；最終仍應以來源版本的實際執行結果核對。
 
 > 上表是目前可在 Repository 內定位的種族候選清單，不宣稱它們全部都屬於同一個歷史版本，也不把它們推定為 Original ES2 已確認種族。
 

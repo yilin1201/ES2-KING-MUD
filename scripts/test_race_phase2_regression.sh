@@ -53,4 +53,4 @@ for race in blackteeth yenhold woochan dingling jiaojao malik; do
   done
 done
 
-echo 'M2/M5/M6-M9 REGRESSION PASS／回歸驗證通過：Original Human/Avatar 保留，全部歷史種族登入接受邏輯與 50/25 設定正確。'
+echo 'RACE ES2M REGRESSION PASS／靜態回歸契約通過：Human/Avatar/Headless ES2M 設定與登入接受邏輯正確；不代表 LPC Runtime 已通過。'

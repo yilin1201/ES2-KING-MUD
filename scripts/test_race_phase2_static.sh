@@ -25,4 +25,6 @@ for race in blackteeth human yenhold woochan dingling jiaojao rainnar ashura hea
   grep -q "$race" "$RUNTIME_SCRIPT"
 done
 
-echo 'M6-M9 STATIC PASS／靜態驗證通過：50/25 基礎值、八屬性欄位、11 歷史種族設定均存在。'
+grep -Fq 'es2m_races=(human avatar' "$RUNTIME_SCRIPT"
+grep -Fq 'headless' "$RUNTIME_SCRIPT"
+echo 'M6-M9 STATIC PASS／靜態驗證通過：50/25 基礎值、ES2M Human/Avatar/Headless overlay 與歷史種族設定存在。'
