@@ -10,8 +10,10 @@ HEADLESS="es2_king_expansion/races/headless.md"
 BOOTSTRAP="scripts/bootstrap_original_es2.sh"
 E2E_SH="scripts/test_original_player_creation_e2e.sh"
 E2E_JS="scripts/test_original_player_creation_e2e.mjs"
+PERSIST="scripts/prepare_es2_persistence.sh"
+PERSIST_TEST="scripts/test_m30_persistence_paths.sh"
 
-for file in "$DOC" "$M5" "$HEADLESS" "$BOOTSTRAP" "$E2E_SH" "$E2E_JS"; do
+for file in "$DOC" "$M5" "$HEADLESS" "$BOOTSTRAP" "$E2E_SH" "$E2E_JS" "$PERSIST" "$PERSIST_TEST"; do
   test -f "$file" || { echo "FAIL／缺少必要檔案：$file" >&2; exit 1; }
 done
 
@@ -38,6 +40,8 @@ grep -Fq 'login"/{a..z}' "$E2E_SH"
 grep -Fq 'login"/{0..9}' "$E2E_SH"
 grep -Fq 'user"/{a..z}' "$E2E_SH"
 grep -Fq 'user"/{0..9}' "$E2E_SH"
+grep -Fq 'for digit in {0..9}' "$PERSIST"
+grep -Fq 'data/login/7' "$PERSIST_TEST"
 grep -Fq '["7probe"' "$E2E_JS"
 grep -Fq 'ORIGINAL_PLAYER_CREATION_NUMERIC_ID_E2E_PASS' "$E2E_JS"
 grep -Fq 'ORIGINAL_PLAYER_CREATION_NUMERIC_ID_E2E_PASS' "$E2E_SH"
