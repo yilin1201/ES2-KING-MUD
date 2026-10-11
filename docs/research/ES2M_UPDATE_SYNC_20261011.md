@@ -41,14 +41,14 @@
 
 - 上游 HEAD／差異核對：**PASS**（13 commits／21 files）。
 - 原始來源與測試／文件／Web 檔案封存：已建立。
-- Runtime 靜態契約測試：已更新 `scripts/test_es2m_latest_martial_updates.py`。
-- GitHub Actions：本次相關的 `ES2M Update Sync Regression` 與 `ES2M Update Snapshot Gate` 執行結果為 **FAIL**；目前工具未能取回工作日誌，因此失敗原因尚未確認。不得宣稱測試 PASS。
+- Runtime 靜態契約測試：修正 `scripts/test_es2m_latest_martial_updates.py` 中瘋虎功的來源判定。ES2M 武術造詣／武學之道規則改由上游原始碼封存檢查；KING snapshot 獨立檢查使用者定案的自訂成長表，避免把兩種版本的正確差異誤判成 FAIL。
+- GitHub Actions：最新 `ES2M Update Sync Regression` 與 `ES2M Update Snapshot Gate` 仍顯示 **FAIL**，但最新執行的 job 均為 `runner_id=0`、`steps=[]`、`logs_url=null`，且約 2～3 秒內結束；證據顯示 GitHub 尚未指派 Runner，無法從這些執行結果判定測試程式是否通過。已將最新武學契約測試加入 Snapshot Gate，並修正 Sync Regression 的報告路徑。不得宣稱 Actions PASS。
 - LPC 編譯、Neolith 實機與玩家端到端測試：尚未執行，不宣稱 PASS。
 - Original ES2 原始保存：未修改。
 - PR #13：不合併。
 
 ## 後續優先項目
 
-1. 先確認並修復 GitHub Actions 失敗原因，再重新執行相關閘門。
+1. 先恢復／確認 GitHub Actions Runner 可用性；目前 job 沒有執行步驟與日誌，不能把 Runner 未啟動當成程式測試失敗。Runner 可用後重新執行兩個 ES2M 閘門，取得真正的測試輸出。
 2. 若靜態測試通過，再針對 gain／人物升級機制做獨立相容性設計與測試；不可直接套用 ES2M 的整套角色升級程式。
 3. 對 combatd 進行逐段差異審查，確認可安全移植的最小變更後再另行整合。
