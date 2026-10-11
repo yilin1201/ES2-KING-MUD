@@ -64,25 +64,23 @@ ES2-KING 統一使用：**刑天**。
 
 ## 4. 八大基本屬性
 
-[ES2-KING Design]
+[ES2-KING Runtime：採用 wolfer168 ES2M 第三方設定；非 Original ES2 Confirmed]
 
-| Attribute | 中文 | 傾向 |
+| Attribute | 中文 | ES2M 設定 |
 |---|---|---|
-| `str` | 臂力 | 高 |
-| `cor` | 膽識 | 一般 |
-| `int` | 悟性 | 低 |
-| `spi` | 靈性 | 一般 |
-| `cps` | 定力 | 高 |
-| `dex` | 機敏 | 一般 |
-| `con` | 根骨 | 高 |
-| `wis` | 慧根 | 一般 |
+| `str` | 臂力 | `25 + random(6)`（25–30） |
+| `cor` | 膽識 | `15 + random(6)`（15–20） |
+| `int` | 悟性 | `8 + random(6)`（8–13） |
+| `spi` | 靈性 | `5 + random(6)`（5–10） |
+| `cps` | 定力 | `11 + random(6)`（11–16） |
+| `dex` | 機敏 | `19 + random(6)`（19–24） |
+| `con` | 根骨 | `23 + random(6)`（23–28） |
+| `wis` | 慧根 | `13 + random(6)`（13–18） |
 
-正式確認：刑天的「意志堅定」對應 `cps`（定力）並設定為高；`cor`（膽識）維持一般，不因本次修正調高。
-
-實際 Bonus / Penalty 數值留待全種族平衡階段統一決定。
-
+使用者已明確決定以這組第三方 ES2M 數值作為 KING Runtime 基準；不再另外套用原先的高 `cps`、一般 `cor` 或 60% 學習速度自訂覆蓋。
+ 
 ---
-
+ 
 ## 5. Health / Resource
 
 [ES2-KING Design]
@@ -100,39 +98,19 @@ ES2-KING 統一使用：**刑天**。
 
 ## 6. 核心優勢
 
-[ES2-KING Design]
+[ES2-KING Runtime：ES2M 設定]
 
-### 強健體魄
-
-方向：`Str 25–30 / Con 23–28 / Kee 100`
-
-適合正面物理戰鬥與長時間承受傷害。
-
-### 堅定意志
-
-方向：`cps ↑`
-
-代表刑天強烈的戰鬥意志；實際戰鬥公式待後續平衡階段決定。
+- 氣血 Kee：100；精力 Gin：80；神識 Sen：30。
+- 自然護甲 +50、攻擊 +30、防禦 +20。
+- 屬性與資源數值依前述 ES2M daemon，不另疊加未經決策的額外修正。
 
 ---
 
 ## 7. 核心弱點
 
-[ES2-KING Design]
+[ES2-KING Runtime：ES2M 設定]
 
-### 悟性低下
-
-方向：`Int ↓`
-
-第一版學習速度設定：
-
-```text
-Headless Learning Rate = Normal Learning Rate × 0.60
-```
-
-也就是一般角色學習速度為 100% 時，刑天為 60%。
-
-此數值是 ES2-KING 第一版平衡參數，不是 Original ES2 數值；待其他主要種族完成後再統一平衡。
+ES2M `headless.c` 沒有定義 60% 學習速度修正，因此目前 Runtime 不套用 60% Learning Rate。若日後要新增該 Expansion 機制，須另行明確決策並增加測試。
 
 ---
 
@@ -172,31 +150,28 @@ ES2M 來源包含刑天 `dance` 種族指令；Runtime overlay 會沿用該來�
 
 ## 11. 第三方重建資料與已採用狀態
 
-[Archived／第三方重建；來源：wolfer168/es2-webmud 的 `source/upstream/mudlib/daemon/race/headless.c`]
+[Third-party reconstruction：wolfer168/es2-webmud 的 `source/upstream/mudlib/daemon/race/headless.c`]
 
-下列內容來自第三方重建版本，檔頭註明為使用者提供的自訂 A–H 種族資料。使用者已明確決定：刑天 Runtime 採用這份 ES2M 設定；**此採用決策不會把它變成 Original ES2 原始設定**。
+來源檔頭註明此為使用者提供的自訂 A–H 種族資料。使用者已明確決定將其用於 ES2-KING Runtime；這不代表 Original ES2 已確認。
 
-| 項目 | 第三方重建值 | KING 採用狀態 |
+| 項目 | 第三方設定 | KING Runtime 採用狀態 |
 |---|---|---|
-| `str` 臂力 | 25 + random(6)，25–30 | ES2-KING Runtime 採用（第三方來源） |
-| `cor` 膽識 | 15 + random(6)，15–20 | ES2-KING Runtime 採用（第三方來源） |
-| `int` 悟性 | 8 + random(6)，8–13 | ES2-KING Runtime 採用（第三方來源） |
-| `spi` 靈性 | 5 + random(6)，5–10 | ES2-KING Runtime 採用（第三方來源） |
-| `cps` 定力 | 11 + random(6)，11–16 | ES2-KING Runtime 採用（第三方來源） |
-| `dex` 機敏 | 19 + random(6)，19–24 | ES2-KING Runtime 採用（第三方來源） |
-| `con` 根骨 | 23 + random(6)，23–28 | ES2-KING Runtime 採用（第三方來源） |
-| `wis` 慧根 | 13 + random(6)，13–18 | ES2-KING Runtime 採用（第三方來源） |
-| 精／氣／神 | 80／100／30 | ES2-KING Runtime 採用（第三方來源） |
-| 自然護甲 | +50 | ES2-KING Runtime 採用（第三方來源） |
-| 攻擊／防禦 | +30／+20 | ES2-KING Runtime 採用（第三方來源） |
-| 裝備限制 | 不可穿 `armor`、`cloth`、`head_eq`、`neck_eq` | ES2-KING Runtime 採用（第三方來源） |
+| 八項屬性 | `str 25–30 / cor 15–20 / int 8–13 / spi 5–10 / cps 11–16 / dex 19–24 / con 23–28 / wis 13–18` | 採用 |
+| 精／氣／神 | 80／100／30 | 採用 |
+| 自然護甲 | +50 | 採用 |
+| 攻擊／防禦 | +30／+20 | 採用 |
+| 職業等級上限 | commoner 1、fighter 65、taoist 40、alchemist 40、soldier 60、scholar 50、thief 50、monk -1 | 採用；`monk: -1` 語義待 Runtime 驗證 |
+| 裝備限制 | 不可穿 `armor`、`cloth`、`head_eq`、`neck_eq` | 採用 |
+| 種族指令 | `dance` | 採用；指令路由與實際可用性待 Runtime 驗證 |
 
-### 採用原則
+### 採用與驗收規則
 
 1. 不將第三方數值回寫成 Original ES2 Confirmed。
-2. 使用者已明確決定此版 Runtime 採用 ES2M 刑天屬性、精氣神、護甲、攻防、裝備限制與種族指令。
+2. 使用者已明確決定 Runtime 採用 ES2M 刑天屬性、精氣神、護甲、攻防、職業限制、裝備限制與種族指令。
 3. 這次採用不代表 LPC 編譯、Runtime、裝備實測或平衡測試已通過。
-4. 第三方檔案中的 `random(6)` 範圍依 LPC 慣例記為 0–5，因此表格範圍為起始值至起始值加 5；最終仍以對應版本原始碼為準。
+4. LPC 的 `random(6)` 常見語義為回傳 0–5；最終行為仍以實際 Driver 測試為準。
+
+---
 
 ## 12. Design Rule
 
