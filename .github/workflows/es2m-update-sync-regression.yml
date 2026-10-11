@@ -6,7 +6,7 @@ on:
       - build/original-es2-races-phase2
     paths:
       - '.github/workflows/es2m-update-sync-regression.yml'
-      - 'docs/research/ES2M_UPDATE_SYNC_20261010.md'
+      - 'docs/research/ES2M_UPDATE_SYNC_20261011.md'
       - 'es2m_snapshot/mudlib/**'
       - 'es2m_snapshot/king_frozen_baseline/**'
       - 'es2_king_expansion/runtime/mudlib/cmds/usr/disable.c'
@@ -30,7 +30,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/es2m-update-sync-regression.yml'
-      - 'docs/research/ES2M_UPDATE_SYNC_20261010.md'
+      - 'docs/research/ES2M_UPDATE_SYNC_20261011.md'
       - 'es2m_snapshot/mudlib/**'
       - 'es2m_snapshot/king_frozen_baseline/**'
       - 'es2_king_expansion/runtime/mudlib/cmds/usr/disable.c'

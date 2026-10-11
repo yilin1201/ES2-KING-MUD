@@ -45,11 +45,19 @@ def main() -> None:
     require('gain_score("martial art", lv * 10)' in sanmeendo, "三門刀法缺少每級武術造詣獎勵。")
     require('gain_score("martial mastery", (lv - 29) * 10)' in sanmeendo, "三門刀法缺少 30 級起武學之道獎勵。")
 
+    # ES2M 原始瘋虎功在來源封存驗證；KING snapshot 則保留使用者定案的自訂成長表。
     tiger_force = read(SNAPSHOT / "daemon/skill/tiger-force.c")
-    require('me->gain_score("martial art", lv * 10)' in tiger_force, "瘋虎功缺少逐級武術造詣獎勵。")
-    require('me->gain_score("martial mastery", (lv - 30) * 10)' in tiger_force, "瘋虎功缺少 31 級起武學之道獎勵。")
+    tiger_force_upstream = read(
+        ROOT / "source/es2m_updates/20261011_latest/source/upstream/mudlib/daemon/skill/tiger-force.c"
+    )
+    require('me->gain_score("martial art", lv * 10)' in tiger_force_upstream,
+            "ES2M 原始瘋虎功封存缺少逐級武術造詣獎勵。")
+    require('me->gain_score("martial mastery", (lv - 30) * 10)' in tiger_force_upstream,
+            "ES2M 原始瘋虎功封存缺少 31 級起武學之道獎勵。")
     require("User-provided Tiger Force growth table" in tiger_force,
-            "瘋虎功 King 自訂精氣上限與屬性成長表遭到覆蓋。")
+            "KING 瘋虎功 snapshot 未保留既定自訂成長設計。")
+    require("瘋虎功成長（使用者定案" in tiger_force_upstream,
+            "ES2M 原始瘋虎功封存缺少原先使用者定案成長規格。")
 
     # 高慎只修正訊息，不替換 King 的歷史重建拜師／授技邏輯。
     kao = read(SNAPSHOT / "d/oldpine/npc/kao_shen.c")

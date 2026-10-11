@@ -30,6 +30,7 @@ on:
       - 'es2_king_expansion/runtime/mudlib/d/wutang/**'
       - 'scripts/test_es2m_skill_import.py'
       - 'scripts/test_es2m_cold_plum_overlay.py'
+      - 'scripts/test_es2m_latest_martial_updates.py'
       - 'scripts/test_es2m_skill_commands.py'
       - 'es2m_snapshot/mudlib/cmds/usr/**'
       - 'es2_king_expansion/runtime/mudlib/cmds/usr/**'
@@ -60,6 +61,7 @@ on:
       - 'es2_king_expansion/runtime/mudlib/d/wutang/**'
       - 'scripts/test_es2m_skill_import.py'
       - 'scripts/test_es2m_cold_plum_overlay.py'
+      - 'scripts/test_es2m_latest_martial_updates.py'
       - 'scripts/test_es2m_skill_commands.py'
       - 'es2m_snapshot/mudlib/cmds/usr/**'
       - 'es2_king_expansion/runtime/mudlib/cmds/usr/**'
@@ -93,3 +95,6 @@ jobs:
       # Skill Commands Gate／技能狀態指令來源與 Expansion 檢查。
       - name: Skill commands／停用與學習狀態指令
         run: python3 scripts/test_es2m_skill_commands.py
+      # Latest ES2M Gate／驗證上游封存與 KING 自訂武功各自完整，避免互相覆蓋。
+      - name: Latest ES2M martial update contract／最新武學同步契約
+        run: python3 scripts/test_es2m_latest_martial_updates.py
