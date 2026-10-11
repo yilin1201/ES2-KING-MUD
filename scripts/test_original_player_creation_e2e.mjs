@@ -51,6 +51,8 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   }
   s.close();
   console.log(`ORIGINAL_PLAYER_CREATION_${raceId.toUpperCase()}_E2E_PASS`);
+  // 數字開頭帳號需走同一套建立、存檔、登出及重新登入流程，驗證資料分片目錄可用。
+  if (/^\\d/.test(id)) console.log("ORIGINAL_PLAYER_CREATION_NUMERIC_ID_E2E_PASS");
 }
 const races = [
   ["humanprobe","human","Human（人類）","人類測試","human"],
@@ -64,7 +66,8 @@ const races = [
   ["ashprobe","ashura","阿修羅","阿修羅測試","ashura"],
   ["headprobe","headless","刑天","刑天測試","headless"],
   ["yaksaprobe","yaksa","夜叉","夜叉測試","yaksa"],
-  ["malikprobe","malik","巫首","巫首測試","malik"]
+  ["malikprobe","malik","巫首","巫首測試","malik"],
+  ["7probe","human","Human（人類）","數字帳號測試","human"]
 ];
 for (const [id,raceChoice,raceLabel,name,raceId] of races)
   await runPlayer({id,raceChoice,raceLabel,name,raceId});
