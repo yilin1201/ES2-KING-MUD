@@ -61,7 +61,7 @@ KING 已有 `deploy/oracle/setup.sh`、`update.sh`、`https.sh` 及 README。現
 
 ## 6. 備份與 Expansion 索引
 
-Oracle VM 的 Docker Volume 是持久化，不等於已有異地備份或還原證據。本輪未宣稱已建立完整備份機制。後續需先盤點檔案資料與 Neon 資料的實際責任範圍，再實作備份、保留期限、失敗通知及隔離還原測試。
+Oracle VM 的 Docker Volume 是持久化，不等於已有異地備份或還原證據。本次新增 `deploy/oracle/backup.sh`，可對玩家檔案資料建立 tar.gz、SHA-256 校驗碼與保留期限；預設拒絕把備份寫到同一檔案系統。但此腳本尚未完成實際異地備份與還原演練，也不取代 Neon/Postgres 供應商端備份。後續仍需盤點檔案資料與 Neon 資料的實際責任範圍，補上排程、失敗通知與隔離環境還原驗證。
 
 A–H 種族、家園、老松林等第三方內容應登記於 Expansion／來源索引，逐筆記錄來源、可信度、是否採用與驗證狀態；不得自動寫回 Original ES2。
 
@@ -73,6 +73,7 @@ A–H 種族、家園、老松林等第三方內容應登記於 Expansion／來�
 - [x] 補充 Headless 第三方差異表，未將其自動採用為 KING 設定。
 - [ ] 本輪尚未執行 Neolith Driver／LPC Runtime E2E。
 - [ ] 尚未驗證數字開頭帳號是否被上游合法性規則接受。
+- [x] 新增 Oracle 玩家檔案備份腳本與操作文件（尚未執行實際備份）。
 - [ ] 尚未完成 Oracle 異地備份及還原演練。
 - [ ] GitHub Actions Runner 先前出現無 Runner／無 steps／無 logs 的 INFRA 問題；需以實際執行結果驗收。
 
