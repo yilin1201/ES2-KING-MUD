@@ -19,8 +19,10 @@ git clone --recurse-submodules "$UPSTREAM_REPO" "$WORKDIR"
 # Original ES2 keeps account/login data and character/body data separately.
 # Prepare both persistent directory trees so a newly created account can be
 # saved and then recognized on the next login.
-mkdir -p "$WORKDIR/mudlib/data/login"/{a..z,0..9}
-mkdir -p "$WORKDIR/mudlib/data/user"/{a..z,0..9}
+mkdir -p "$WORKDIR/mudlib/data/login"/{a..z}
+mkdir -p "$WORKDIR/mudlib/data/login"/{0..9}
+mkdir -p "$WORKDIR/mudlib/data/user"/{a..z}
+mkdir -p "$WORKDIR/mudlib/data/user"/{0..9}
 
 # ES2-KING design decision: keep the Original source checkout intact as the
 # research baseline, but disable the historical anti-spam attribute penalty in
