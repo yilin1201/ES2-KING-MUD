@@ -30,29 +30,49 @@
 | 釘靈 `dingling` | `es2m_snapshot/mudlib/daemon/race/dingling.c` | Third-party reconstruction／版本待交叉比對 | Reference only，除非另有 KING 決策 | 查明其是否屬目標 Original 版本 |
 | 巫首 `malik` | `es2m_snapshot/mudlib/daemon/race/malik.c` | Third-party reconstruction／版本待交叉比對 | Reference only，除非另有 KING 決策 | 查明其版本年代與 Original 身分 |
 
+### 人類與化身 `human / avatar`：第三方完整數值快照
+
+來源：
+- `wolfer168/es2-webmud/source/upstream/mudlib/daemon/race/human.c`
+- `wolfer168/es2-webmud/source/upstream/mudlib/daemon/race/avatar.c`
+
+兩份來源檔均註記為自訂 A–H 種族資料。以下為 ES2-KING 已決定採用的第三方 Runtime 契約，不是 Original ES2 Confirmed。
+
+| 項目 | Human／人類 | Avatar／化身 | KING Runtime 狀態 |
+|---|---|---|---|
+| 八大屬性 | 八項均為 `13 + random(6)`（13–18） | 八項均為 `15 + random(6)`（15–20） | Adopted；來源快照由 overlay 套用 |
+| 精／氣／神 | gin/kee/sen = 35/35/35 | gin/kee/sen = 30/30/30 | Adopted |
+| 自然護甲 | +10 | +10 | Adopted |
+| karma | 5 | 5 | Adopted |
+| commoner_score_base | 100 | 100 | Adopted |
+| 職業等級上限 | commoner 1、fighter 50、taoist 50、alchemist 55、soldier 50、scholar 60、monk 65、thief 50 | commoner 1、fighter 70、taoist 70、alchemist 70、soldier 70、scholar 70、monk 65、thief 70 | Adopted；實際升級流程仍待 Runtime 驗證 |
+| 體重初始化 | `40000 + (str - 13) * 5000` | `40000 + (str - 13) * 5000` | Adopted |
+| 年齡初始化 | `14 + random(4)` | `14 + random(4)` | Adopted |
+| 特殊規則 | 新建 USER body 初始化時，`random(10000) == 9999` 會轉為 avatar | 不適用 | Adopted；機率路徑仍待 Runtime 驗證 |
+
 ### 刑天 `headless`：第三方完整數值快照
 
 來源：`wolfer168/es2-webmud/source/upstream/mudlib/daemon/race/headless.c`。該檔案註記為使用者提供的自訂 A–H 種族資料，不能直接當成 Original ES2 Confirmed。
 
 | 項目 | 第三方重建資料 | 狀態 |
 |---|---|---|
-| `str` 臂力 | `25 + random(6)`，25–30 | Reference only |
-| `cor` 膽識 | `15 + random(6)`，15–20 | Reference only |
-| `int` 悟性 | `8 + random(6)`，8–13 | Reference only |
-| `spi` 靈性 | `5 + random(6)`，5–10 | Reference only |
-| `cps` 定力 | `11 + random(6)`，11–16 | Reference only |
-| `dex` 機敏 | `19 + random(6)`，19–24 | Reference only |
-| `con` 根骨 | `23 + random(6)`，23–28 | Reference only |
-| `wis` 慧根 | `13 + random(6)`，13–18 | Reference only |
-| 精／氣／神 | 80／100／30 | Reference only |
+| `str` 臂力 | `25 + random(6)`，25–30 | Adopted by KING Runtime；第三方來源，非 Original ES2 |
+| `cor` 膽識 | `15 + random(6)`，15–20 | Adopted by KING Runtime；第三方來源，非 Original ES2 |
+| `int` 悟性 | `8 + random(6)`，8–13 | Adopted by KING Runtime；第三方來源，非 Original ES2 |
+| `spi` 靈性 | `5 + random(6)`，5–10 | Adopted by KING Runtime；第三方來源，非 Original ES2 |
+| `cps` 定力 | `11 + random(6)`，11–16 | Adopted by KING Runtime；第三方來源，非 Original ES2 |
+| `dex` 機敏 | `19 + random(6)`，19–24 | Adopted by KING Runtime；第三方來源，非 Original ES2 |
+| `con` 根骨 | `23 + random(6)`，23–28 | Adopted by KING Runtime；第三方來源，非 Original ES2 |
+| `wis` 慧根 | `13 + random(6)`，13–18 | Adopted by KING Runtime；第三方來源，非 Original ES2 |
+| 精／氣／神 | 80／100／30 | Adopted by KING Runtime；第三方來源，非 Original ES2 |
 | karma | 25 | 歷史版本待交叉驗證 |
-| `commoner_score_base` | 160 | 第三方重建 |
-| 職業等級上限 | commoner 1、fighter 65、taoist 40、alchemist 40、soldier 60、scholar 50、thief 50、monk -1 | monk -1 的意義待確認 |
-| 自然護甲 | +50 | Reference only；KING 未採用 |
-| 攻擊／防禦 | +30／+20 | Reference only；KING 未採用 |
-| 裝備限制 | 不可穿 `armor`、`cloth`、`head_eq`、`neck_eq` | Reference only；KING 未採用 |
+| `commoner_score_base` | 160 | Adopted by KING Runtime；第三方來源，非 Original ES2 |
+| 職業等級上限 | commoner 1、fighter 65、taoist 40、alchemist 40、soldier 60、scholar 50、thief 50、monk -1 | Adopted by KING Runtime；monk -1 的語義仍待 Runtime 驗證 |
+| 自然護甲 | +50 | Adopted by KING Runtime；第三方來源，非 Original ES2 |
+| 攻擊／防禦 | +30／+20 | Adopted by KING Runtime；第三方來源，非 Original ES2 |
+| 裝備限制 | 不可穿 `armor`、`cloth`、`head_eq`、`neck_eq` | Adopted by KING Runtime；第三方來源，非 Original ES2 |
 
-此表保存可追溯的第三方差異。刑天、人類與化身已由使用者明確決定採用於 KING Runtime，但不因此成為 Original ES2 設定。LPC 的 `random(6)` 在常見語義下回傳 0–5，因此表列範圍按起始值至起始值加 5 計算；最終仍應以來源版本的實際執行結果核對。
+本節與前節記錄的是 KING 已明確採用的 ES2M 第三方 Runtime 基準；「Adopted」只代表已納入採用決策與 overlay，不代表 LPC 編譯、Runtime、存檔或遊戲平衡已驗收，也不代表 Original ES2 設定。LPC 的 `random(6)` 在常見語義下回傳 0–5，因此表列範圍按起始值至起始值加 5 計算；最終仍應以來源版本的實際執行結果核對。
 
 > 上表是目前可在 Repository 內定位的種族候選清單，不宣稱它們全部都屬於同一個歷史版本，也不把它們推定為 Original ES2 已確認種族。
 

@@ -86,6 +86,14 @@ grep -Fq 'Neolith TCP 4000 remains internal only' "$ORACLE_README"
 grep -Fq 'Do not expose 4000' "$ORACLE_README"
 grep -Fq '127.0.0.1' "$ORACLE_README"
 
+# ES2M race adoption／人類、化身、刑天的第三方數值已由專案擁有者指定採用，清單狀態不可與採用決策矛盾。
+grep -Fq '人類與化身 `human / avatar`：第三方完整數值快照' "$INVENTORY"
+grep -Fq 'Adopted by KING Runtime；第三方來源，非 Original ES2' "$INVENTORY"
+if grep -Fq 'KING 未採用' "$INVENTORY"; then
+  echo 'FAIL／種族採用狀態仍有與 owner decision 衝突的 KING 未採用標記。' >&2
+  exit 1
+fi
+
 # Third-party provenance／第三方來源必須明確標記且有獨立清單。
 grep -Fq 'wolfer168/es2-webmud' "$SOURCES"
 grep -Fq 'Third-party reconstruction' "$INVENTORY"
