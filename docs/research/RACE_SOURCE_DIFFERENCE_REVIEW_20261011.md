@@ -34,7 +34,7 @@ wolfer168 第三方重建差異：
 
 wolfer168 `headless.c` 記錄的屬性、精氣神、自然護甲、攻防、職業等級與裝備限制，已列入 `es2_king_expansion/races/headless.md` 的「第三方重建資料對照」段落，以及 `docs/research/THIRD_PARTY_CONTENT_INVENTORY_20261011.md` 的獨立來源登記。為維持 Original／第三方分層，`original_es2/races/headless.md` 只保留指向第三方索引的連結，不再內嵌第三方數值。
 
-**處理決策：** 不將自然護甲 +50、攻擊 +30、防禦 +20 或裝備限制直接套入 KING Runtime。KING 保留已確認的高定力（`cps`）、一般膽識（`cor`）、學習速度 60% 等設計，數值待全種族平衡階段統一決定。
+**採用決策（2026-10-11）：** 依專案擁有者明確指示，目前 KING Runtime 的 `headless` 採用 ES2M 快照中的屬性、精氣神、自然護甲 +50、攻擊 +30、防禦 +20、職業等級上限與裝備限制。這是 ES2-KING Runtime 對第三方重建版本的明確採用，不代表 Original ES2 Canon。原先 KING 高定力（`cps`）、一般膽識（`cor`）、學習速度 60% 是舊設計構想，不是目前 Runtime 的生效值。
 
 ## 3. 帳號分片目錄
 
@@ -70,6 +70,8 @@ A–H 種族、家園、老松林等第三方內容應登記於 Expansion／來�
 - [x] 重新讀取目前分支 M5 證據與種族文件。
 - [x] 保留 `original_es2/` 中 Original Human／Avatar M5 的證據與原版基準。
 - [x] 依使用者明確指示，將 Runtime Human／Avatar／Headless 改為指定 ES2M race daemon。
+- [x] 新增人類／化身採用規格，並更新刑天文件，明確區分目前 ES2M Runtime 值與舊 KING 設計構想。
+- [x] 更新來源差異靜態測試，鎖定 human/avatar/headless 的 ES2M 主要數值及 Runtime 複製路徑。
 - [x] 更新 bootstrap 與玩家創角 E2E 測試，使其覆蓋數字分片目錄與 `7probe`。
 - [x] 補充 Headless 第三方差異表，未將其自動採用為 KING 設定。
 - [x] 新增第三方內容來源索引，並將 Original 刑天考證檔與第三方數值表分開保存。
