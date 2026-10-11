@@ -19,6 +19,7 @@ on:
       - 'docs/SOURCES.md'
       - 'es2_king_expansion/races/README.md'
       - 'es2_king_expansion/races/headless.md'
+      - 'es2_king_expansion/races/human.md'
       - 'original_es2/runtime/m5_race_framework_result.md'
   pull_request:
     paths:
