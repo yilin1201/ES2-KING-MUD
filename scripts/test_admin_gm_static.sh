@@ -65,6 +65,18 @@ grep -Fq 'if (!gift->move(me))' "$COMMAND"
 grep -Fq '先預檢虎紋刀來源' "$COMMAND"
 grep -Fq '!weapon->wield()' "$COMMAND"
 
+# ES2-KDS admin improvements／技能名稱可含空格，學習與等級修改都必須解析並回讀驗證。
+grep -Fq 'private string resolve_skill_name(string name)' "$COMMAND"
+grep -Fq 'replace_string(name, " ", "_")' "$COMMAND"
+grep -Fq 'if (!(int)ob->query_learn(resolved)' "$COMMAND"
+grep -Fq 'if (value != level)' "$COMMAND"
+
+# ES2-KDS soldier level-up fix／Expansion 必須保存軍人升級 daemon，原始來源不直接覆寫。
+SOLDIER="$ROOT/daemon/class/soldier.c"
+test -f "$SOLDIER" || { echo "ADMIN GM STATIC FAIL：缺少軍人升級修正 $SOLDIER" >&2; exit 1; }
+grep -Fq 'static void create() { seteuid(getuid()); }' "$SOLDIER"
+grep -Fq 'set_next_target(ob, ob->query_level() + 1);' "$SOLDIER"
+
 # 載入整合：Runtime 重新索引與預載清單都必須包含 admin。
 grep -Fq 'member_array(verb, ({ "admin", "kingcreate"' "$APPLY"
 grep -Fq 'for owner_command in admin kingcreate' "$APPLY"
