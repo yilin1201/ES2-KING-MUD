@@ -211,7 +211,7 @@ if [[ -d "$ES2M_WUTANG_DIR" ]]; then
   fi
   python3 "$REPO_ROOT/scripts/test_es2m_wutang_topology.py" \
     --source "$REPO_ROOT/es2m_snapshot/mudlib" --runtime "$ROOT/mudlib"
-  echo 'ES2M WUTANG CONNECTED: 56 rooms, 31 NPCs and 2 local objects; Zhenwu gate south <-> entrance north.'
+  echo 'ES2M WUTANG CONNECTED: 56 rooms, 32 NPCs (including may_yin_fong) and 2 local objects; Zhenwu gate south <-> entrance north.'
 fi
 
 # Race Command Collision／種族指令同名衝突：Original EMOTED 也註冊 dance 表情。
