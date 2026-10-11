@@ -12,6 +12,7 @@ on:
       - 'scripts/prepare_es2_persistence.sh'
       - 'scripts/test_m30_persistence_paths.sh'
       - 'deploy/oracle/backup.sh'
+      - 'scripts/test_oracle_backup_smoke.sh'
       - 'deploy/oracle/README.md'
       - 'docs/research/RACE_SOURCE_DIFFERENCE_REVIEW_20261011.md'
       - 'es2_king_expansion/races/headless.md'
@@ -26,6 +27,7 @@ on:
       - 'scripts/prepare_es2_persistence.sh'
       - 'scripts/test_m30_persistence_paths.sh'
       - 'deploy/oracle/backup.sh'
+      - 'scripts/test_oracle_backup_smoke.sh'
       - 'deploy/oracle/README.md'
       - 'docs/research/RACE_SOURCE_DIFFERENCE_REVIEW_20261011.md'
       - 'es2_king_expansion/races/headless.md'
@@ -45,7 +47,10 @@ jobs:
           bash -n scripts/prepare_es2_persistence.sh
           bash -n scripts/test_m30_persistence_paths.sh
           bash -n deploy/oracle/backup.sh
+          bash -n scripts/test_oracle_backup_smoke.sh
       - name: JavaScript syntax／JavaScript 語法檢查
         run: node --check scripts/test_original_player_creation_e2e.mjs
       - name: Source difference contract／來源差異契約
         run: bash scripts/test_race_source_difference_review.sh
+      - name: Oracle backup smoke test／Oracle 備份冒煙測試
+        run: bash scripts/test_oracle_backup_smoke.sh
