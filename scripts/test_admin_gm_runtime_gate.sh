@@ -5,10 +5,11 @@ set -euo pipefail
 ROOT="${1:-.runtime/es2-king}/mudlib"
 COMMAND="$ROOT/cmds/adm/admin.c"
 TIGER_BLADE="$ROOT/custom/weapon/blade/tiger_blade.c"
+SOLDIER="$ROOT/daemon/class/soldier.c"
 COMMAND_D="$ROOT/adm/daemons/cmd_d.lpc"
 PRELOAD="$ROOT/adm/etc/preload"
 
-for file in "$COMMAND" "$COMMAND_D" "$PRELOAD" "$TIGER_BLADE"; do
+for file in "$COMMAND" "$COMMAND_D" "$PRELOAD" "$TIGER_BLADE" "$SOLDIER"; do
   test -f "$file" || { echo "ADMIN GM RUNTIME FAIL：缺少 $file" >&2; exit 1; }
 done
 
@@ -20,6 +21,16 @@ grep -Fq 'ADMIN_LEVEL_MAX 999' "$COMMAND"
 grep -Fq 'ES2-KING OWNER COMMAND REHASH' "$COMMAND_D"
 grep -Fq '"admin", "kingcreate"' "$COMMAND_D"
 grep -Fqx '/cmds/adm/admin' "$PRELOAD"
+
+# ES2-KDS admin improvements／生成 Runtime 必須包含技能名稱解析與修改回讀驗證。
+grep -Fq 'private string resolve_skill_name(string name)' "$COMMAND"
+grep -Fq 'if (!(int)ob->query_learn(resolved)' "$COMMAND"
+grep -Fq 'if (value != level)' "$COMMAND"
+
+# ES2-KDS soldier fix／確認軍人職業實際套用修正後的升級 daemon。
+grep -Fq 'static void create() { seteuid(getuid()); }' "$SOLDIER"
+grep -Fq 'void set_next_target(object ob, int cur_lv)' "$SOLDIER"
+grep -Fq 'ob->set_target_score("military service"' "$SOLDIER"
 
 # 檢查權限不足時明確回覆，避免管理員指令無聲失敗。
 grep -Fq 'ADMIN: 你沒有管理員權限。' "$COMMAND"
