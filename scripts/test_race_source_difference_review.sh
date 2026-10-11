@@ -7,6 +7,9 @@ set -euo pipefail
 DOC="docs/research/RACE_SOURCE_DIFFERENCE_REVIEW_20261011.md"
 M5="original_es2/runtime/m5_race_framework_result.md"
 HEADLESS="es2_king_expansion/races/headless.md"
+HUMAN_AVATAR="es2_king_expansion/races/human.md"
+ES2M_RACES="es2m_snapshot/mudlib/daemon/race"
+RACE_OVERLAY="scripts/apply_race_phase2_runtime.sh"
 BOOTSTRAP="scripts/bootstrap_original_es2.sh"
 E2E_SH="scripts/test_original_player_creation_e2e.sh"
 E2E_JS="scripts/test_original_player_creation_e2e.mjs"
@@ -16,7 +19,7 @@ SOURCES="docs/SOURCES.md"
 INVENTORY="docs/research/THIRD_PARTY_CONTENT_INVENTORY_20261011.md"
 ORACLE_README="deploy/oracle/README.md"
 
-for file in "$DOC" "$M5" "$HEADLESS" "$BOOTSTRAP" "$E2E_SH" "$E2E_JS" "$PERSIST" "$PERSIST_TEST" "$SOURCES" "$INVENTORY" "$ORACLE_README"; do
+for file in "$DOC" "$M5" "$HEADLESS" "$HUMAN_AVATAR" "$ES2M_RACES/human.c" "$ES2M_RACES/avatar.c" "$ES2M_RACES/headless.c" "$RACE_OVERLAY" "$BOOTSTRAP" "$E2E_SH" "$E2E_JS" "$PERSIST" "$PERSIST_TEST" "$SOURCES" "$INVENTORY" "$ORACLE_README"; do
   test -f "$file" || { echo "FAIL／缺少必要檔案：$file" >&2; exit 1; }
 done
 
@@ -38,6 +41,26 @@ if grep -Fq '自然護甲 | +50' original_es2/races/headless.md; then
 fi
 grep -Fq '自然護甲 | +50' "$INVENTORY"
 grep -Fq '攻擊／防禦 | +30／+20' "$INVENTORY"
+
+# ES2M Human / Avatar / Headless runtime contract／人類、化身、刑天採用 ES2M 快照。
+# 此處驗證 KING 的明確採用決策，不代表這些第三方數值是 Original ES2 Canon。
+grep -Fq 'ES2M Runtime 採用基準' "$HUMAN_AVATAR"
+grep -Fq '13 + random(6)' "$ES2M_RACES/human.c"
+grep -Fq '"gin":35, "kee":35, "sen":35' "$ES2M_RACES/human.c"
+grep -Fq '"apply/armor", 10' "$ES2M_RACES/human.c"
+grep -Fq 'random(10000) == 9999' "$ES2M_RACES/human.c"
+grep -Fq '15 + random(6)' "$ES2M_RACES/avatar.c"
+grep -Fq '"gin":30, "kee":30, "sen":30' "$ES2M_RACES/avatar.c"
+grep -Fq '"apply/armor", 10' "$ES2M_RACES/avatar.c"
+grep -Fq '25+random(6)' "$ES2M_RACES/headless.c"
+grep -Fq '"gin":80, "kee":100, "sen":30' "$ES2M_RACES/headless.c"
+grep -Fq '"apply/armor", 50' "$ES2M_RACES/headless.c"
+grep -Fq '"apply/attack", 30' "$ES2M_RACES/headless.c"
+grep -Fq '"apply/defense", 20' "$ES2M_RACES/headless.c"
+grep -Fq 'member_array(part, ({ "armor", "cloth", "head_eq", "neck_eq" }))' "$ES2M_RACES/headless.c"
+grep -Fq 'es2m_races=(human avatar' "$RACE_OVERLAY"
+grep -Fq 'cp "$ES2M_RACE_DIR/$race.c" "$RACE_DIR/$race.c"' "$RACE_OVERLAY"
+grep -Fq '目前 Runtime 採用' "$HEADLESS"
 
 # Numeric account shard／數字帳號分片：bootstrap 和獨立 E2E 都必須建立 0–9 目錄。
 grep -Fq 'login"/{a..z}' "$BOOTSTRAP"
