@@ -16,7 +16,7 @@ done
 grep -q 'write_race "$r" 50' "$RUNTIME_SCRIPT"
 grep -q 'write_race "$r" 25' "$RUNTIME_SCRIPT"
 
-# Attribute mapping／屬性對應：cps=膽識、cor=定力；程式欄位必須存在。
+# Attribute mapping／屬性對應：cps=定力、cor=膽識；程式欄位必須存在，避免中文說明與 ES2 屬性代碼對調。
 grep -q '"cps":$value' "$RUNTIME_SCRIPT"
 grep -q '"cor":$value' "$RUNTIME_SCRIPT"
 
