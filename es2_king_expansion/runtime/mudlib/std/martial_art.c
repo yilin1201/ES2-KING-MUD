@@ -153,6 +153,7 @@ void attack_using(object me, object opponent, object weapon)
     int damage;
 
     if( !opponent ) return;
+    /* 空手出招時，系統傳來的第三個參數是技能名稱而不是武器，當成沒有武器。 */
     if( !objectp(weapon) ) weapon = 0;
     m = pick_move(me);
     damage = COMBAT_D->fight(me, opponent, art_id, make_action(m, 100), weapon);
