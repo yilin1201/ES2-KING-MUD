@@ -38,7 +38,7 @@ if grep -R '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' \
   echo 'ORIGINAL PLAYER CREATION E2E BLOCKED：測試 Runtime 仍啟用 localhost 創角限流。' >&2
   exit 1
 fi
-mkdir -p "$TEMP_ROOT/mudlib/data/login"/{a..z,0..9} "$TEMP_ROOT/mudlib/data/user"/{a..z,0..9} "$TEMP_ROOT/mudlib/log"
+mkdir -p "$TEMP_ROOT/mudlib/data/login"/{a..z} "$TEMP_ROOT/mudlib/data/login"/{0..9} "$TEMP_ROOT/mudlib/data/user"/{a..z} "$TEMP_ROOT/mudlib/data/user"/{0..9} "$TEMP_ROOT/mudlib/log}
 for id in humanprobe avatarprobe blackprobe yenprobe wooprobe dingprobe jiaoprobe rainprobe ashprobe headprobe yaksaprobe malikprobe; do
   initial="${id:0:1}"
   rm -f "$TEMP_ROOT/mudlib/data/login/$initial/$id.o" "$TEMP_ROOT/mudlib/data/user/$initial/$id.o"
