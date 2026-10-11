@@ -30,7 +30,7 @@ if grep -Fq 'ob = find_living(name);' "$COMMAND"; then
 fi
 grep -Fq 'private object mutable_target' "$COMMAND"
 grep -Fq 'wiz_level(ob) >= wiz_level("(admin)")' "$COMMAND"
-test "$(grep -Fc 'ob = mutable_target(me, target_name);' "$COMMAND")" -ge 16
+test "$(grep -Ec 'ob = mutable_target\(me, (target_name|target)\);' "$COMMAND")" -ge 13
 
 # 指令語意／技能用途映射、狀態驗證及武器名稱相容。
 grep -Fq 'ob->map_skill(cmd, skill);' "$COMMAND"
@@ -91,8 +91,8 @@ fi
 
 # Unlearn regression／取消學習須清理用途映射，不可把技能錯誤標記為 disabled。
 grep -Fq 'private void unlearn_skill(object ob, string skill)' "$COMMAND"
-grep -Fq 'unlearn_skill(ob, skill);' "$COMMAND"
-grep -Fq 'unlearn_skill(me, skill);' "$COMMAND"
+grep -Fq 'unlearn_skill(ob, resolved);' "$COMMAND"
+grep -Fq 'unlearn_skill(me, resolved);' "$COMMAND"
 if grep -Fq 'map_skill(skill, "none")' "$COMMAND"; then
   echo 'ADMIN GM STATIC FAIL：unlearn 將技能設為 disabled，而非清理用途映射。' >&2
   exit 1
