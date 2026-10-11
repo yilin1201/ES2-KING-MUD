@@ -61,6 +61,10 @@ mkdir -p "$RUNTIME_DATA/login" "$RUNTIME_DATA/user" "$RUNTIME_DATA/mail"
 for letter in {a..z}; do
   mkdir -p "$RUNTIME_DATA/login/$letter" "$RUNTIME_DATA/user/$letter" "$RUNTIME_DATA/mail/$letter"
 done
+# Numeric account shards／數字開頭帳號分片：與 Original bootstrap 一致，避免合法帳號存檔／重登時找不到目錄。
+for digit in {0..9}; do
+  mkdir -p "$RUNTIME_DATA/login/$digit" "$RUNTIME_DATA/user/$digit" "$RUNTIME_DATA/mail/$digit"
+done
 
 bash "$SCRIPT_DIR/sync_es2_persistence.sh"
 echo "ES2 PERSISTENCE READY：Runtime=$RUNTIME_DATA；Backing=$SAVE_DIR"
