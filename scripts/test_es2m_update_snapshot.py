@@ -52,6 +52,41 @@ class TestES2MUpdateSnapshot(unittest.TestCase):
         self.assertIn('member_array(skill, basic_attack_skills) < 0', combat)
         self.assertIn('if( damage > 0 ) restored_hit_gain(me, victim, skill, weapon);', combat)
 
+    def test_gain_triggered_level_up_is_installed_in_king_runtime_overlay(self):
+        # 來源快照不等於 Runtime：明確確認兩個必要檔案已納入 Expansion overlay。
+        gain_path = ROOT / "es2_king_expansion/runtime/mudlib/cmds/usr/gain.c"
+        score_path = ROOT / "es2_king_expansion/runtime/mudlib/feature/char/score.c"
+        self.assertTrue(gain_path.is_file(), "KING Runtime overlay 缺少 gain.c")
+        self.assertTrue(score_path.is_file(), "KING Runtime overlay 缺少 score.c")
+        gain = gain_path.read_text(encoding="utf-8")
+        score = score_path.read_text(encoding="utf-8")
+
+        # 玩家技能成長與人物升級均在 gain 指令觸發；經驗累積本身不會立即升級。
+        self.assertIn("me->apply_gain_progression(skill_g)", gain)
+        self.assertIn("me->try_level_up();", gain)
+        gain_score_body = score.split("gain_score(string course, int xp)", 1)[1].split("int try_level_up()", 1)[0]
+        self.assertNotIn("advance_level(this_object())", gain_score_body)
+        self.assertIn("int try_level_up()", score)
+        self.assertIn('query("target_score")', score)
+        self.assertIn('query("class_level_cap/" + query_class())', score)
+        self.assertIn("this_object()->save();", score)
+
+    def test_king_skill_growth_table_matches_es2m_20261011(self):
+        # KING 的技能上限與升級機制維持自訂；僅核對使用者已確認的屬性成長分段。
+        skill = (ROOT / "es2_king_expansion/runtime/mudlib/feature/char/skill.c").read_text(encoding="utf-8")
+        for line in [
+            "if( value <= 10 ) return 100;",
+            "if( value <= 15 ) return 90;",
+            "if( value <= 20 ) return 80;",
+            "if( value <= 25 ) return 60;",
+            "if( value <= 30 ) return 40;",
+            "if( value <= 40 ) return 30;",
+            "if( value <= 45 ) return 15;",
+            "return 10;",
+        ]:
+            self.assertIn(line, skill)
+        self.assertIn("es2_king_skill_cap()", skill)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
