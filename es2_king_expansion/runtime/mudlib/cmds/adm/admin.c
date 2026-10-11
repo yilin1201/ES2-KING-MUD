@@ -73,6 +73,27 @@ private object mutable_target(object me, string name)
     return ob;
 }
 
+
+/* 將玩家輸入的技能名稱解析成實際 daemon 檔名；角色資料仍使用註冊技能 ID。 */
+private string resolve_skill_name(string name)
+{
+    string *candidates;
+    string candidate;
+    int i;
+
+    if (!stringp(name) || !sizeof(name))
+        return 0;
+
+    candidates = ({ name, replace_string(name, " ", "-"),
+                    replace_string(name, " ", "_") });
+    for (i = 0; i < sizeof(candidates); i++) {
+        candidate = candidates[i];
+        if (file_size("/daemon/skill/" + candidate + ".c") >= 0)
+            return name;
+    }
+    return 0;
+}
+
 private void show_help()
 {
     write(@HELP
@@ -358,47 +379,132 @@ int main(object me, string arg)
      *   admin skill blade 200
      */
 
-    if (sscanf(arg, "learn %s %s", skill, target_name) == 2) {
-        ob = mutable_target(me, target_name);
-        if (!ob) return notify_fail("找不到玩家。\n");
-        ob->set_learn(skill, 1);
-        printf("ADMIN: %s 已學會 %s。\n", ob->query("id"), skill);
+    /*
+     * ES2-KDS admin improvements：技能名稱允許空格；只有完整技能名稱找不到時，
+     * 才把最後一個 token 視為在線目標。保留 KING 的管理員保護與技能排列。
+     */
+    if (sscanf(arg, "learn %s", value_s) == 1) {
+        string *parts;
+        string skill_name;
+        string resolved;
+        string target;
+
+        parts = explode(value_s, " ") - ({ "" });
+        skill_name = implode(parts, " ");
+        resolved = resolve_skill_name(skill_name);
+
+        if (!resolved && sizeof(parts) >= 2) {
+            target = parts[<1];
+            ob = mutable_target(me, target);
+            if (ob) {
+                skill_name = implode(parts[0..<2], " ");
+                resolved = resolve_skill_name(skill_name);
+                if (!resolved)
+                    return notify_fail("沒有這個技能：" + skill_name + "\n");
+                ob->set_learn(resolved, 1);
+                if ((int)ob->query_skill(resolved, 1) <= 0)
+                    ob->set_skill(resolved, 1);
+                if (!(int)ob->query_learn(resolved) || (int)ob->query_skill(resolved, 1) <= 0)
+                    return notify_fail("學習技能未通過驗證：" + resolved + "\n");
+                printf("ADMIN: %s 已學會 %s；技能等級=%d。\n",
+                    ob->query("id"), resolved, (int)ob->query_skill(resolved, 1));
+                return 1;
+            }
+        }
+        if (!resolved)
+            return notify_fail("沒有這個技能：" + skill_name + "\n");
+        me->set_learn(resolved, 1);
+        if ((int)me->query_skill(resolved, 1) <= 0)
+            me->set_skill(resolved, 1);
+        if (!(int)me->query_learn(resolved) || (int)me->query_skill(resolved, 1) <= 0)
+            return notify_fail("學習技能未通過驗證：" + resolved + "\n");
+        printf("ADMIN: 已學會 %s；技能等級=%d。\n",
+            resolved, (int)me->query_skill(resolved, 1));
         return 1;
     }
 
-    if (sscanf(arg, "learn %s", skill) == 1) {
-        me->set_learn(skill, 1);
-        printf("ADMIN: 已學會 %s。\n", skill);
+    if (sscanf(arg, "unlearn %s", value_s) == 1) {
+        string *parts;
+        string skill_name;
+        string resolved;
+        string target;
+
+        parts = explode(value_s, " ") - ({ "" });
+        skill_name = implode(parts, " ");
+        resolved = resolve_skill_name(skill_name);
+
+        if (!resolved && sizeof(parts) >= 2) {
+            target = parts[<1];
+            ob = mutable_target(me, target);
+            if (ob) {
+                skill_name = implode(parts[0..<2], " ");
+                resolved = resolve_skill_name(skill_name);
+                if (!resolved)
+                    return notify_fail("沒有這個技能：" + skill_name + "\n");
+                unlearn_skill(ob, resolved);
+                if ((int)ob->query_learn(resolved) != 0)
+                    return notify_fail("取消學習未通過驗證：" + resolved + "\n");
+                printf("ADMIN: %s 已取消學會 %s，並解除技能映射。\n",
+                    ob->query("id"), resolved);
+                return 1;
+            }
+        }
+        if (!resolved)
+            return notify_fail("沒有這個技能：" + skill_name + "\n");
+        unlearn_skill(me, resolved);
+        if ((int)me->query_learn(resolved) != 0)
+            return notify_fail("取消學習未通過驗證：" + resolved + "\n");
+        printf("ADMIN: 已取消學會 %s，並解除技能映射。\n", resolved);
         return 1;
     }
 
-    if (sscanf(arg, "unlearn %s %s", skill, target_name) == 2) {
-        ob = mutable_target(me, target_name);
-        if (!ob) return notify_fail("找不到玩家。\n");
-        unlearn_skill(ob, skill);
-        printf("ADMIN: %s 已取消學會 %s。\n", ob->query("id"), skill);
-        return 1;
-    }
+    /* skill <技能名稱含空格> <等級> [在線玩家] */
+    if (sscanf(arg, "skill %s", value_s) == 1) {
+        string *parts;
+        string skill_name;
+        string resolved;
+        string target;
+        int level_index;
 
-    if (sscanf(arg, "unlearn %s", skill) == 1) {
-        unlearn_skill(me, skill);
-        printf("ADMIN: 已取消學會 %s。\n", skill);
-        return 1;
-    }
+        parts = explode(value_s, " ") - ({ "" });
+        level = -1;
+        level_index = -1;
+        for (i = 0; i < sizeof(parts); i++) {
+            if (sscanf(parts[i], "%d", value) == 1) {
+                level = value;
+                level_index = i;
+                break;
+            }
+        }
+        if (level_index < 1)
+            return notify_fail("用法：admin skill <技能> <等級> [玩家]。\n");
+        skill_name = implode(parts[0..level_index - 1], " ");
+        resolved = resolve_skill_name(skill_name);
+        if (!resolved)
+            return notify_fail("沒有這個技能：" + skill_name + "\n");
+        if (level < 0 || level > ADMIN_SKILL_MAX)
+            return notify_fail("技能等級須介於 0～200；未修改任何資料。\n");
 
-    if (sscanf(arg, "skill %s %d %s", skill, value, target_name) == 3) {
-        ob = mutable_target(me, target_name);
-        if (!ob) return notify_fail("找不到玩家。\n");
-        if (value < 0 || value > ADMIN_SKILL_MAX) return notify_fail("技能等級須介於 0～200（Original ES2 原版上限）。\n");
-        ob->set_skill(skill, value);
-        printf("ADMIN: %s 的 %s = %d\n", ob->query("id"), skill, value);
-        return 1;
-    }
+        if (sizeof(parts) > level_index + 1) {
+            if (sizeof(parts) != level_index + 2)
+                return notify_fail("玩家名稱只能放在技能等級後面。\n");
+            target = parts[level_index + 1];
+            ob = mutable_target(me, target);
+            if (!ob)
+                return notify_fail("找不到可修改的在線玩家：" + target + "\n");
+            ob->set_skill(resolved, level);
+            value = (int)ob->query_skill(resolved, 1);
+            if (value != level)
+                return notify_fail(sprintf("技能設定未通過驗證：要求 %d，實際 %d。\n", level, value));
+            printf("ADMIN: %s 的 %s = %d [OK]\n", ob->query("id"), resolved, value);
+            return 1;
+        }
 
-    if (sscanf(arg, "skill %s %d", skill, value) == 2) {
-        if (value < 0 || value > ADMIN_SKILL_MAX) return notify_fail("技能等級須介於 0～200（Original ES2 原版上限）。\n");
-        me->set_skill(skill, value);
-        printf("ADMIN: %s = %d\n", skill, value);
+        me->set_skill(resolved, level);
+        value = (int)me->query_skill(resolved, 1);
+        if (value != level)
+            return notify_fail(sprintf("技能設定未通過驗證：要求 %d，實際 %d。\n", level, value));
+        printf("ADMIN: %s = %d [OK]\n", resolved, value);
         return 1;
     }
 
