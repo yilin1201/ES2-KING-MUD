@@ -790,3 +790,24 @@ ES2-KING 的目的不是取代 Original ES2，
 而是在尊重 Original ES2 的基礎上，
 
 讓這個世界繼續發展。
+
+
+---
+
+# 11. Third-party reconstruction — wolfer168/es2-webmud
+
+來源：`wolfer168/es2-webmud`
+
+來源類型：**[Third-party reconstruction / Unverified for Original ES2]**
+
+用途：
+- 對照種族、家園／區域、NPC、物品、武功與遊戲流程的重建差異。
+- 保存第三方程式實作與自訂種族資料線索。
+- 協助定位 KING 尚缺少的內容與測試案例。
+
+使用原則：
+1. 此來源不是 Annihilator Original ES2 的權威原始碼。
+2. 若來源檔案標註為使用者提供的自訂 A–H 種族資料，必須保留該註記。
+3. 不將第三方數值自動提升為 [Confirmed]。
+4. 若考慮採用，必須另行登記為 [ES2-KING Expansion]，並完成相容性、平衡與 Runtime 驗證。
+5. 差異與採用狀態見 `docs/research/THIRD_PARTY_CONTENT_INVENTORY_20261011.md`。

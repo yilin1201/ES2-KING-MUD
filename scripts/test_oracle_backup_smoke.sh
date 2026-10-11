@@ -21,6 +21,13 @@ test -f "$ARCHIVE.sha256"
 tar -tzf "$ARCHIVE" | grep -Fq 'user/7/7probe.o'
 tar -tzf "$ARCHIVE" | grep -Fq 'login/7/7probe.o'
 
+# Restore smoke test／隔離還原測試：解壓到臨時目錄並比對兩份合成玩家資料。
+RESTORE_DIR="$TEMP_ROOT/restore"
+mkdir -p "$RESTORE_DIR"
+tar -xzf "$ARCHIVE" -C "$RESTORE_DIR"
+cmp "$DATA_DIR/user/7/7probe.o" "$RESTORE_DIR/user/7/7probe.o"
+cmp "$DATA_DIR/login/7/7probe.o" "$RESTORE_DIR/login/7/7probe.o"
+
 # 預設策略必須拒絕同一檔案系統，避免誤把同磁碟資料當成異地備份。
 if BACKUP_DIR="$TEMP_ROOT/same-device-backup" DATA_DIR="$DATA_DIR" \
   bash "$ROOT/deploy/oracle/backup.sh" >"$TEMP_ROOT/refusal.log" 2>&1; then

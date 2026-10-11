@@ -51,3 +51,12 @@ Original ES2 的考證資料統一保存在：
 - 尚未決定項目
 
 數值尚未完成平衡時，應明確標示為待定，不得假裝為 Original ES2 數值。
+
+
+## Third-party source inventory／第三方來源索引
+
+第三方重建種族、家園與區域資料的來源、可信度、採用狀態及待驗證事項，統一追蹤於：
+
+`docs/research/THIRD_PARTY_CONTENT_INVENTORY_20261011.md`
+
+收錄於來源索引只代表「已登記可追溯」，不代表已採用到 KING Runtime，也不代表 Original ES2 已確認。
