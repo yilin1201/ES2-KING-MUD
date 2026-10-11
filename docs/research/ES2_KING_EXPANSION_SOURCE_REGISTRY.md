@@ -28,7 +28,7 @@
 | 振武軍營 Zhenwu | `es2m_snapshot/mudlib/custom/zhenwu/`、相關 topology／recruitment tests | ES2M 第三方重建 | `RUNTIME-PARTIAL`（以最新測試結果更新） | 保留徵兵規則來源；驗證雙向地圖接線與玩家端旅程。 |
 | 五堂鎮 Wutang | `es2m_snapshot/mudlib/d/wutang/`、`scripts/test_es2m_wutang_topology.py` | ES2M 第三方重建 | `RUNTIME-PARTIAL`（以最新測試結果更新） | 需確認區域拓樸、入口與軍營連接，不能僅因檔案存在就宣稱完整可玩。 |
 | ES2M 武學／裝備／NPC 更新 | `source/es2m_updates/20261011_latest/`、`es2m_snapshot/mudlib/` | 第三方上游快照 | `SOURCE-ARCHIVED` | Hainmay、瘋虎功及其他 KING 凍結／自訂項目依專案保護規則，不可整檔覆蓋。 |
-| Oracle VM 部署 | `deploy/oracle/` | KING 部署工具 | `EXPANSION-ADOPTED` | 4000 只作內部 Neolith TCP、8080 僅綁 loopback；Port 不因第三方不同而單獨更改。 |
+| Oracle VM 部署 | `deploy/oracle/`（含 `backup.sh`） | KING 部署工具 | `EXPANSION-ADOPTED` | 4000 只作內部 Neolith TCP、8080 僅綁 loopback；已新增檔案備份腳本，但異地備份與還原尚未驗證。Port 不因第三方不同而單獨更改。 |
 
 ## 登錄維護規則
 
