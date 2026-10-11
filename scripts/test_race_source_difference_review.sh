@@ -44,7 +44,7 @@ grep -Fq '攻擊／防禦 | +30／+20' "$INVENTORY"
 
 # ES2M Human / Avatar / Headless runtime contract／人類、化身、刑天採用 ES2M 快照。
 # 此處驗證 KING 的明確採用決策，不代表這些第三方數值是 Original ES2 Canon。
-grep -Fq 'ES2M Runtime 採用基準' "$HUMAN_AVATAR"
+grep -Fq 'ES2-KING Runtime 採用基準' "$HUMAN_AVATAR"
 grep -Fq '13 + random(6)' "$ES2M_RACES/human.c"
 grep -Fq '"gin":35, "kee":35, "sen":35' "$ES2M_RACES/human.c"
 grep -Fq '"apply/armor", 10' "$ES2M_RACES/human.c"
