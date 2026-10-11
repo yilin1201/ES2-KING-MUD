@@ -39,6 +39,11 @@ RUN python3 scripts/test_es2m_fighter_level_contract.py
 # 此測試是靜態證據；延遲交貨付款風險仍需 Runtime 修正與實機驗證。
 RUN python3 scripts/test_es2m_update_snapshot.py
 
+# ES2M Human/Avatar/Headless Runtime Gate／確認人類、化身、刑天已實際複製到生成 Runtime，且登入種族契約完整。
+# 這是建置期來源與 Runtime 檔案檢查；不冒充真正玩家創角／存檔／重新登入測試。
+RUN bash scripts/test_race_phase2_static.sh \
+    && bash scripts/test_race_phase2_regression.sh /opt/es2-king/runtime
+
 RUN echo "[M30 BUILD 4/5] Apply ES2-KING Expansion overlay" \
     && bash scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime
 # ES2M Training Dummy／驗證假人命中、fight/kill/look 與私塾更新已實際套用到生成 Runtime。
