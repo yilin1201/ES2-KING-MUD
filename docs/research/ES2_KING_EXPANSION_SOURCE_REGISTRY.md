@@ -21,7 +21,7 @@
 |---|---|---|---|---|
 | Human／Avatar M5 | `original_es2/runtime/m5_race_framework_result.md` | Original ES2 Runtime 證據 | `SOURCE-CONFIRMED` | Human 13–18、護甲 +3；Avatar 16–18、護甲 +5；精氣神 30／30／30。不可用第三方數值覆蓋。 |
 | 刑天／Headless | `original_es2/races/headless.md`、`es2_king_expansion/races/headless.md` | Original 考證＋KING Expansion＋第三方對照 | `REVIEWED` | 第三方數值、自然護甲 +50、攻擊 +30、防禦 +20、裝備限制只供比對；KING 既有高定力／一般膽識／60% 學習速度不自動變更。 |
-| wolfer168 自訂 A–H 種族資料 | `source/upstream/mudlib/daemon/race/*.c`（來源封存版本依實際存在路徑確認） | 第三方自訂資料 | `SOURCE-ARCHIVED`／逐種族待核 | 來源檔頭若標註使用者提供的自訂種族資料，不能標成 Original ES2 Confirmed；每個種族分別記錄差異與 KING 採用狀態。 |
+| wolfer168 自訂 A–H 種族資料 | `wolfer168/es2-webmud` 的 race daemon；KING 僅引用已封存至 `source/es2m_updates/20261011_latest/` 的對應檔案（逐檔核對存在性） | 第三方自訂資料 | `SOURCE-ARCHIVED`／逐種族待核 | 來源檔頭若標註使用者提供的自訂種族資料，不能標成 Original ES2 Confirmed；每個種族分別記錄差異與 KING 採用狀態。 |
 | 雪亭以外的家園／家園房間 | wolfer168／ES2M 上游來源與封存快照 | 第三方重建 | `UNKNOWN`（逐項審查） | 必須先登記房間檔案、出口、NPC、物品、任務與依賴；沒有完整拓樸證據不得直接部署。 |
 | 老松林 Old Pine Forest | `es2m_snapshot/mudlib/d/oldpine/`、`scripts/test_es2m_oldpine_topology.py` | ES2M 第三方重建 | `RUNTIME-PARTIAL`（以最新測試結果更新） | 保留 ES2M 來源註記；先通過來源／Runtime 拓樸檢查，再確認入口、出口、NPC 與物件依賴。 |
 | 李家村 Lee Village | `es2m_snapshot/mudlib/d/lee/`、`scripts/test_es2m_lee_topology.py` | ES2M 第三方重建 | `RUNTIME-PARTIAL`（以最新測試結果更新） | 需持續驗證雪亭東門接線、雙向出口、房間與任務相容性；不可改標 Original ES2。 |
