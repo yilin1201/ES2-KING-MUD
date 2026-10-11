@@ -5,7 +5,7 @@ set -euo pipefail
 RUNTIME_SCRIPT="scripts/apply_race_phase2_runtime.sh"
 
 # Priority races／優先種族：刑天已改採 ES2M 隨機值；其餘三族仍保留暫定 50。
-priority=(yaksa ashura rainnar)
+priority=(yaksa ashura rainner)
 for race in "${priority[@]}"; do
   grep -q "$race" "$RUNTIME_SCRIPT"
 done
@@ -21,7 +21,7 @@ grep -q '"cps":$value' "$RUNTIME_SCRIPT"
 grep -q '"cor":$value' "$RUNTIME_SCRIPT"
 
 # All 12 race daemons／12 個登入種族均應納入 Runtime overlay。
-for race in human avatar blackteeth yenhold woochan dingling jiaojao rainnar ashura headless yaksa malik; do
+for race in human avatar blackteeth yenhold woochan dingling jiaojao rainner ashura headless yaksa malik; do
   grep -q "$race" "$RUNTIME_SCRIPT"
 done
 
