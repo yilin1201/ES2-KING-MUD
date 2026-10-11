@@ -10,6 +10,20 @@ RUN apt-get update \
        ninja-build nodejs npm python3 \
     && rm -rf /var/lib/apt/lists/*
 
+# Stable upstream build cache／先建置固定版本的 Original ES2 與 Neolith。
+# 將不依賴本 Repository 內容的 clone、checkout、submodule 與 Driver 編譯放在 COPY . . 之前；
+# 後續只修改 KING 程式、快照或測試時，可重用昂貴的上游建置快取。
+RUN echo "[M30 BUILD 1/5] Clone Original ES2" \
+    && git clone --recurse-submodules https://github.com/taedlar/es2_mudlib.git /opt/es2-king/runtime
+RUN echo "[M30 BUILD 2/5] Checkout verified Original commit" \
+    && git -C /opt/es2-king/runtime checkout "$ORIGINAL_ES2_COMMIT"
+RUN echo "[M30 BUILD 3/5] Update Original submodules" \
+    && git -C /opt/es2-king/runtime submodule update --init --recursive
+RUN cmake -S /opt/es2-king/runtime/neolith -B /build/neolith -G Ninja \
+      -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release \
+    && cmake --build /build/neolith --parallel \
+    && install -D /build/neolith/src/neolith /opt/es2-king/bin/neolith
+
 WORKDIR /build/repository
 COPY . .
 
@@ -20,14 +34,7 @@ RUN bash scripts/test_admin_gm_static.sh
 RUN node scripts/test_m30_webtelnet_display.mjs \
     && bash scripts/test_webtelnet_mobile_nowrap.sh webtelnet/public/index.html
 
-# Original ES2（原版天朝帝國）固定到已考證 commit；Expansion 只套入獨立 Runtime。
-# 分段建置讓 Render Build Log 能直接指出失敗階段，避免單一長鏈只回報 exit code 1。
-RUN echo "[M30 BUILD 1/5] Clone Original ES2" \
-    && git clone --recurse-submodules https://github.com/taedlar/es2_mudlib.git /opt/es2-king/runtime
-RUN echo "[M30 BUILD 2/5] Checkout verified Original commit" \
-    && git -C /opt/es2-king/runtime checkout "$ORIGINAL_ES2_COMMIT"
-RUN echo "[M30 BUILD 3/5] Update Original submodules" \
-    && git -C /opt/es2-king/runtime submodule update --init --recursive
+# Original ES2／Neolith 已在 COPY . . 前完成固定版本建置；此處開始套用專案 overlay。
 # ES2M 主體基準：套用 KING 前先封存原始 mudlib，供三方差異盤點。
 RUN cp -a /opt/es2-king/runtime/mudlib /build/es2m-original-mudlib
 RUN echo "[M30 BUILD 4/5] Apply ES2M Race overlay" \
@@ -204,11 +211,6 @@ RUN bash -euo pipefail -c '\
     /opt/es2-king/runtime/mudlib/include /opt/es2-king/runtime/mudlib/adm 2>/dev/null || true); \
   ! grep -R "^[[:space:]]*#define[[:space:]]\\+ENABLE_ANTISPAM" \
     /opt/es2-king/runtime/mudlib/include /opt/es2-king/runtime/mudlib/adm 2>/dev/null'
-
-RUN cmake -S /opt/es2-king/runtime/neolith -B /build/neolith -G Ninja \
-      -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release \
-    && cmake --build /build/neolith --parallel \
-    && install -D /build/neolith/src/neolith /opt/es2-king/bin/neolith
 
 # ES2M Latest Martial LPC Load／在完整 ES2M 快照匯入後，使用真實 Driver 載入最新虎刀門技能與高慎。
 RUN ES2_DRIVER_BIN=/opt/es2-king/bin/neolith \
