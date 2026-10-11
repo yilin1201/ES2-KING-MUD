@@ -156,21 +156,17 @@ Headless Learning Rate = Normal Learning Rate × 0.60
 
 ES2M 來源包含刑天 `dance` 種族指令；Runtime overlay 會沿用該來源並由既有指令接線提供。
 
-先以 Attribute、Kee 與 Learning Rate 建立種族差異，避免第一版機制過度複雜。
+種族差異依已採用的 ES2M daemon 為準，不額外引入未由來源支持的學習速度修正。
 
 ---
 
 ## 10. 待平衡項目
 
-- Str 實際加成
-- Con 實際加成
-- `cor`（膽識）實際加成
-- `cps`（定力）實際加成
-- Int 實際減益
-- Kee 實際修正公式
-- 60% Learning Rate 是否維持
-- 是否需要體型／負重／物理傷害修正
-- 與夜叉、修羅、人類的戰鬥定位差異
+- `monk: -1` 的職業等級上限語義
+- LPC 編譯與 Runtime 載入驗證
+- 無頭、無頸部裝備限制的實際裝備測試
+- `dance` 種族指令與通用表情指令的路由驗證
+- 與夜叉、修羅、人類的戰鬥平衡比較
 
 ---
 
@@ -184,15 +180,15 @@ ES2M 來源包含刑天 `dance` 種族指令；Runtime overlay 會沿用該來�
 |---|---|---|
 | `str` 臂力 | 25 + random(6)，25–30 | ES2-KING Runtime 採用（第三方來源） |
 | `cor` 膽識 | 15 + random(6)，15–20 | ES2-KING Runtime 採用（第三方來源） |
-| `int` 悟性 | 8 + random(6)，8–13 | 僅供比對 |
-| `spi` 靈性 | 5 + random(6)，5–10 | 僅供比對 |
+| `int` 悟性 | 8 + random(6)，8–13 | ES2-KING Runtime 採用（第三方來源） |
+| `spi` 靈性 | 5 + random(6)，5–10 | ES2-KING Runtime 採用（第三方來源） |
 | `cps` 定力 | 11 + random(6)，11–16 | ES2-KING Runtime 採用（第三方來源） |
-| `dex` 機敏 | 19 + random(6)，19–24 | 僅供比對 |
-| `con` 根骨 | 23 + random(6)，23–28 | 僅供比對 |
-| `wis` 慧根 | 13 + random(6)，13–18 | 僅供比對 |
-| 精／氣／神 | 80／100／30 | 僅供比對 |
+| `dex` 機敏 | 19 + random(6)，19–24 | ES2-KING Runtime 採用（第三方來源） |
+| `con` 根骨 | 23 + random(6)，23–28 | ES2-KING Runtime 採用（第三方來源） |
+| `wis` 慧根 | 13 + random(6)，13–18 | ES2-KING Runtime 採用（第三方來源） |
+| 精／氣／神 | 80／100／30 | ES2-KING Runtime 採用（第三方來源） |
 | 自然護甲 | +50 | ES2-KING Runtime 採用（第三方來源） |
-| 攻擊／防禦 | +30／+20 | 僅供比對；KING 未採用 |
+| 攻擊／防禦 | +30／+20 | ES2-KING Runtime 採用（第三方來源） |
 | 裝備限制 | 不可穿 `armor`、`cloth`、`head_eq`、`neck_eq` | ES2-KING Runtime 採用（第三方來源） |
 
 ### 採用原則
