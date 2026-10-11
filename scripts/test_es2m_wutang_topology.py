@@ -32,7 +32,11 @@ def literal_dependencies(path: Path, mudlib: Path) -> set[str]:
         if not candidate.suffix:
             candidate = candidate.with_suffix(".c")
         dependencies.add(candidate.relative_to(mudlib).as_posix())
-    for item in re.findall(r'"(/(?:d|obj|custom)/[^"\s]+)"', code):
+    for item in re.findall(r'"(/(?:d|obj|custom)/[^"\\s]+)"', code):
+        # 目錄前綴（例如 /d/wutang/）是區域常數，不是 LPC 檔案相依；
+        # 不可把它錯誤補成 d/wutang/.c。只驗證實際檔案路徑。
+        if item.endswith("/"):
+            continue
         candidate = item.lstrip("/")
         if not Path(candidate).suffix:
             candidate += ".c"
