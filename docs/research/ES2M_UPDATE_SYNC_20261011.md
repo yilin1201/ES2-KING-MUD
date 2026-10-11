@@ -21,7 +21,7 @@
 
 ## 已更新 ES2M 來源快照
 
-`es2m_snapshot/mudlib/` 已將上游本次修改的 12 個 mudlib 檔案同步至 HEAD `a1d4f08`，包括 combatd、gain、score、井、水缸、酒缸、寒梅心法、瘋虎功、人物 score/skill、martial_art 與 room。新增的 gain／score／room 檔案只作來源快照，不自動成為 Runtime Overlay。
+`es2m_snapshot/mudlib/` 已同步本次上游變更中 11 個 mudlib 檔案；瘋虎功快照刻意保留 KING 使用者指定的成長表。ES2M 最新瘋虎功原始檔另完整保存在 `source/es2m_updates/20261011_latest/source/upstream/mudlib/daemon/skill/tiger-force.c`。新增的 gain／score／room 檔案只作來源快照，不自動成為 Runtime Overlay。
 
 完整 21 個變更檔案（含設計文件、測試與 Web UI）已保存於 `source/es2m_updates/20261011_latest/`，另保留前次新增的 `custom/wizroom/w/windstory/room/home.c`。
 

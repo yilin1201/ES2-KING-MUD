@@ -7,7 +7,7 @@
 - Upstream delta: 13 commits, 21 changed paths.
 - Classification: ES2M-derived WebMUD custom variant; not Original ES2 canonical content.
 - All changed paths are preserved with upstream relative paths under this folder.
-- The mudlib source subset is also synced to `es2m_snapshot/mudlib/`; only explicitly reviewed files are copied to KING Runtime Overlay.
+- 11 of the 12 changed mudlib paths are synced to `es2m_snapshot/mudlib/`. The snapshot deliberately retains KING’s custom Tiger Force growth table; the exact ES2M Tiger Force source is archived here but not used to replace the KING snapshot. Only explicitly reviewed files are copied to KING Runtime Overlay.
 
 ## Changed source files
 
