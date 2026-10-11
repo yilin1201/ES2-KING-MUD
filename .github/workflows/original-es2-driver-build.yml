@@ -24,9 +24,11 @@ jobs:
       - name: Verify ES2-KING persistence and runtime policy
         run: |
           test -d .runtime/original-es2/mudlib/data/login/m
+          test -d .runtime/original-es2/mudlib/data/login/7
           test -d .runtime/original-es2/mudlib/data/user/m
+          test -d .runtime/original-es2/mudlib/data/user/7
           if grep -R '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' .runtime/original-es2/mudlib/include .runtime/original-es2/mudlib/adm 2>/dev/null; then exit 1; fi
-          echo 'M3 persistence storage ready: /data/login/a..z + /data/user/a..z'
+          echo 'M3 persistence storage ready: /data/login/a..z,0..9 + /data/user/a..z,0..9'
       - name: Install M2 runtime-only attribute probe
         run: |
           cat > .runtime/original-es2/mudlib/cmds/usr/m2probe.c <<'LPC'
