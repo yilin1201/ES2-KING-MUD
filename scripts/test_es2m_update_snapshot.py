@@ -42,6 +42,38 @@ class TestES2MUpdateSnapshot(unittest.TestCase):
         self.assertIn("catch(owner->deliver_merchandise(me, handle, amount))", 
                       (SNAPSHOT / "cmds/std/buy.c").read_text(encoding="utf-8"))
 
+    def test_compatible_martial_engine_and_soldier_runtime_match_es2m(self):
+        # ES2M-first policy：這兩個已確認相容的 Runtime 檔案須與保存的 ES2M 來源逐字一致。
+        pairs = [
+            ("std/martial_art.c",
+             ROOT / "es2_king_expansion/runtime/mudlib/std/martial_art.c"),
+            ("std/martial_art.h",
+             ROOT / "es2_king_expansion/runtime/mudlib/std/martial_art.h"),
+            ("daemon/class/soldier.c",
+             ROOT / "es2_king_expansion/runtime/mudlib/daemon/class/soldier.c"),
+        ]
+        for relative, runtime_path in pairs:
+            with self.subTest(path=relative):
+                snapshot_path = SNAPSHOT / relative
+                self.assertTrue(snapshot_path.is_file(), f"ES2M snapshot 缺少 {relative}")
+                self.assertTrue(runtime_path.is_file(), f"KING Runtime overlay 缺少 {relative}")
+                self.assertEqual(
+                    snapshot_path.read_text(encoding="utf-8"),
+                    runtime_path.read_text(encoding="utf-8"),
+                    f"KING Runtime 的 {relative} 必須與 ES2M 快照一致；差異需先審核，不可直接覆蓋。",
+                )
+
+    def test_martial_engine_dependency_contract_is_visible(self):
+        # 武學引擎與戰鬥精靈互相依賴；未確認 action 契約前不得單獨替換 combatd。
+        martial = (SNAPSHOT / "std/martial_art.c").read_text(encoding="utf-8")
+        combat = (SNAPSHOT / "adm/daemons/combatd.c").read_text(encoding="utf-8")
+        for token in ['"damage_pct"', '"must_hit"', '"no_armor"', '"silent"']:
+            self.assertIn(token, martial)
+        for token in ['action["damage_pct"]', 'action["must_hit"]', 'action["no_armor"]', 'action["silent"]']:
+            self.assertIn(token, combat)
+        # 這是相容性契約檢查，不宣告 KING Runtime combatd 已完成同步。
+        self.assertTrue((ROOT / "es2_king_expansion/runtime/mudlib/std/martial_art.c").is_file())
+
     def test_combat_progression_source_contract(self):
         # combatd.c 的成長規則：成功閃躲／格擋有 combat 經驗，普通基本攻擊不給 martial art。
         combat = (SNAPSHOT / "adm/daemons/combatd.c").read_text(encoding="utf-8")
