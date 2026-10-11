@@ -65,6 +65,31 @@ def main() -> None:
     require('"avatar", "human", "rainnar"' in teacher, "King 私塾未使用正式 race 代碼 rainnar。")
     require('"avatar", "human", "rainner"' not in teacher, "King 私塾仍使用錯誤的 rainner 代碼。")
 
+    # 2026-10-11 ES2M updates: merge compatible fixes while preserving KING-only rules.
+    hainmay = read(OVERLAY / "daemon/skill/hainmay_force.c")
+    require('mm_minus = 29;' in hainmay, "寒梅心法武學之道應從 30 級按 (lv - 29) 計算。")
+    require('int valid_learn(object me)' in hainmay and 'is_faction(me, "fighter.lunmay")' in hainmay,
+            "寒梅心法缺少冷梅莊門派學習限制。")
+    require('COMBAT_D->int_formula_exp(me)' in hainmay,
+            "寒梅心法未同步 ES2M 標準內功修習點數公式。")
+
+    skill = read(OVERLAY / "feature/char/skill.c")
+    require('if( value <= 10 ) return 100;' in skill and 'if( value <= 25 ) return 60;' in skill,
+            "人物技能屬性成長機率未同步 ES2M 分段表。")
+    require('es2_king_skill_cap()' in skill and 'this_object()->query("id") == "king"' in skill,
+            "技能成長更新不得移除 KING 專屬 300 級權限。")
+
+    martial = read(OVERLAY / "std/martial_art.c")
+    require(martial.count('if( !objectp(weapon) ) weapon = 0;') >= 2,
+            "新版武功引擎缺少特殊攻擊／一般攻擊的武器物件型別防護。")
+
+    pot = read(OVERLAY / "d/snow/npc/obj/pot.c")
+    wine_pot = read(OVERLAY / "d/snow/npc/obj/wine_pot.c")
+    require('if( !(liquid = present("water", this_object())) )' in pot and 'liquid->set_volume(100000);' in pot,
+            "大水缸在水喝光後應能重新建立並補滿水。")
+    require('if( !(liquid = present("red wine", this_object())) )' in wine_pot and 'liquid->set_volume(150000);' in wine_pot,
+            "大酒缸在酒喝光後應能重新建立並補滿酒。")
+
     if args.runtime:
         runtime = args.runtime / "mudlib"
         # 這三個技能在 pinned Original ES2 不存在，由 ES2M 快照補入；因此必須逐位元相同。

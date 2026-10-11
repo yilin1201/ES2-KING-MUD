@@ -108,6 +108,7 @@ varargs int special_hit(object me, object victim, object weapon, mapping m,
 {
     mapping act;
 
+    if( !objectp(weapon) ) weapon = 0;
     if( !mapp(m) ) m = moves[random(sizeof(moves))];
     act = make_action(m, pct);
     act["gin_pct"] = gin_pct;
@@ -152,6 +153,7 @@ void attack_using(object me, object opponent, object weapon)
     int damage;
 
     if( !opponent ) return;
+    if( !objectp(weapon) ) weapon = 0;
     m = pick_move(me);
     damage = COMBAT_D->fight(me, opponent, art_id, make_action(m, 100), weapon);
     after_strike(me, opponent, weapon, m, damage);
