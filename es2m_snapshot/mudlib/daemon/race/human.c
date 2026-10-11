@@ -1,8 +1,7 @@
 /*---
 description: ES2-KING 明確採用的 wolfer168/es2-webmud 第三方重建人類設定；不是 Original ES2 已確認基準。
 source: https://github.com/wolfer168/es2-webmud/blob/main/source/upstream/mudlib/daemon/race/human.c
-
-description: 人類種族的定義。
+原始說明：人類種族的定義。
 author: Annihilator <taedlar@gmail.com>
 custom: WebMUD A-H race rebalance based on user-supplied 種族設定表.
 ---*/

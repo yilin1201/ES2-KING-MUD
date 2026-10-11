@@ -1,30 +1,28 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# M6-M9 Static Verification／M6-M9 靜態驗證
-# Static verification = 不啟動遊戲，先檢查種族設定程式是否符合專案規則。
+# M6-M9 Static Verification／M6-M9 靜態驗證：只檢查設定與接線，不啟動遊戲。
 RUNTIME_SCRIPT="scripts/apply_race_phase2_runtime.sh"
 
-
-# Priority races／優先種族：M6-M9 出生八項屬性暫定 50。
-priority=(headless yaksa ashura rainnar)
+# Priority races／優先種族：刑天已改採 ES2M 隨機值；其餘三族仍保留暫定 50。
+priority=(yaksa ashura rainnar)
 for race in "${priority[@]}"; do
   grep -q "$race" "$RUNTIME_SCRIPT"
 done
 
-# Base value／基礎值：確認優先種族 50、其他歷史種族 25 的寫入規則存在。
+# Legacy bootstrap generator／歷史生成器仍須保留 50/25 契約，但最終 Human/Avatar/Headless 由 ES2M snapshot 覆蓋。
 grep -q 'write_race "$r" 50' "$RUNTIME_SCRIPT"
 grep -q 'write_race "$r" 25' "$RUNTIME_SCRIPT"
+grep -Fq 'es2m_races=(human avatar' "$RUNTIME_SCRIPT"
+grep -Fq 'headless' "$RUNTIME_SCRIPT"
 
-# Attribute mapping／屬性對應：cps=定力、cor=膽識；程式欄位必須存在，避免中文說明與 ES2 屬性代碼對調。
+# Attribute mapping／屬性代碼對應：cps=定力、cor=膽識。
 grep -q '"cps":$value' "$RUNTIME_SCRIPT"
 grep -q '"cor":$value' "$RUNTIME_SCRIPT"
 
-# Runtime overlay／執行環境覆蓋層：11 個歷史種族都必須存在於設定腳本。
-for race in blackteeth human yenhold woochan dingling jiaojao rainnar ashura headless yaksa malik; do
+# All 12 race daemons／12 個登入種族均應納入 Runtime overlay。
+for race in human avatar blackteeth yenhold woochan dingling jiaojao rainnar ashura headless yaksa malik; do
   grep -q "$race" "$RUNTIME_SCRIPT"
 done
 
-grep -Fq 'es2m_races=(human avatar' "$RUNTIME_SCRIPT"
-grep -Fq 'headless' "$RUNTIME_SCRIPT"
-echo 'M6-M9 STATIC PASS／靜態驗證通過：50/25 基礎值、ES2M Human/Avatar/Headless overlay 與歷史種族設定存在。'
+echo 'M6-M9 STATIC PASS／靜態驗證通過：ES2M Human/Avatar/Headless overlay 與其餘種族暫定規則存在。'
