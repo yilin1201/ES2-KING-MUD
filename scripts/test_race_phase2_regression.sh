@@ -31,7 +31,7 @@ for token in '25+random(6)' '"cor":15+random(6)' '"int":8+random(6)' '"cps":11+r
 done
 
 # Login registry／登入種族清單及接受邏輯均須包含所有 12 個種族。
-ALL_RACES=(human avatar blackteeth yenhold woochan dingling jiaojao rainnar ashura headless yaksa malik)
+ALL_RACES=(human avatar blackteeth yenhold woochan dingling jiaojao rainner ashura headless yaksa malik)
 for race in "${ALL_RACES[@]}"; do
   grep -q "\"$race\"" "$LOGIN"
   grep -q "case \"$race\":" "$LOGIN" || {
@@ -41,7 +41,7 @@ for race in "${ALL_RACES[@]}"; do
 done
 
 # Other M6-M9 races／其餘指定種族仍依既有 50/25 暫定基準，不影響 ES2M 刑天設定。
-for race in yaksa ashura rainnar; do
+for race in yaksa ashura rainner; do
   file="$RACE_DIR/$race.c"
   for attr in str cps int spi cor dex con wis; do
     grep -q "\"$attr\":50" "$file"
