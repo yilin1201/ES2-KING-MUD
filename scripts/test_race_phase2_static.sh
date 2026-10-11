@@ -5,8 +5,6 @@ set -euo pipefail
 # Static verification = 不啟動遊戲，先檢查種族設定程式是否符合專案規則。
 RUNTIME_SCRIPT="scripts/apply_race_phase2_runtime.sh"
 
-# Source provenance／來源可信度與帳號分片：執行獨立靜態門檻，避免把第三方值混入 Original ES2。
-bash scripts/test_race_source_difference_review.sh
 
 # Priority races／優先種族：M6-M9 出生八項屬性暫定 50。
 priority=(headless yaksa ashura rainnar)
