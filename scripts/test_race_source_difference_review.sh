@@ -31,8 +31,13 @@ grep -Fq 'GIN=30/30 KEE=30/30 SEN=30/30' "$M5"
 # 第三方資料只能作差異參考，不可冒充 Original ES2 或自動套用 KING Runtime。
 grep -Fq '第三方重建差異' "$DOC"
 grep -Fq '第三方重建資料對照（不自動採用）' "$HEADLESS"
-grep -Fq '自然護甲 | +50' "$HEADLESS"
-grep -Fq '攻擊／防禦 | +30／+20' "$HEADLESS"
+grep -Fq '第三方資料索引（不在本原版考證檔保存數值）' original_es2/races/headless.md
+if grep -Fq '自然護甲 | +50' original_es2/races/headless.md; then
+  echo 'FAIL／Original ES2 刑天考證檔不應內嵌第三方數值。' >&2
+  exit 1
+fi
+grep -Fq '自然護甲 | +50' "$INVENTORY"
+grep -Fq '攻擊／防禦 | +30／+20' "$INVENTORY"
 
 # Numeric account shard／數字帳號分片：bootstrap 和獨立 E2E 都必須建立 0–9 目錄。
 grep -Fq 'login"/{a..z}' "$BOOTSTRAP"

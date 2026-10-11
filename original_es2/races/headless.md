@@ -63,26 +63,15 @@ ES2-KING 專案中文名稱統一使用「刑天」。歷史資料若出現「�
 
 ---
 
-### 第三方重建資料 [Archived／第三方重建]
+## 4. 第三方資料索引（不在本原版考證檔保存數值）
 
-來源：wolfer168/es2-webmud `source/upstream/mudlib/daemon/race/headless.c`
-（檔頭註明 CUSTOM A-H RACE，依使用者提供之 2006-09-15 原始種族資料；尚未對照 Original 原始碼）
+為避免把第三方重建資料與 Original ES2 證據混放，wolfer168 的刑天屬性、精氣神、攻防、護甲、裝備限制及職業等級資料，統一記錄於：
 
-| 屬性 | 初始值 |
-|---|---|
-| str 臂力 | 25 + random(6) |
-| cor 膽識 | 15 + random(6) |
-| int 悟性 | 8 + random(6) |
-| spi 靈性 | 5 + random(6) |
-| cps 定力 | 11 + random(6) |
-| dex 機敏 | 19 + random(6) |
-| con 根骨 | 23 + random(6) |
-| wis 慧根 | 13 + random(6) |
+`docs/research/THIRD_PARTY_CONTENT_INVENTORY_20261011.md`
 
-- 精／氣／神初始值：80 / 100 / 30
-- karma 25；commoner_score_base 160
-- 職業等級上限：commoner 1、fighter 65、taoist 40、alchemist 40、soldier 60、scholar 50、thief 50、monk -1（意義待確認）
-- 無頭無頸：不可穿 armor、cloth、head_eq、neck_eq 類護具
+第三方資料僅供差異研究，尚未確認為 Original ES2。此檔案不以第三方數值補完任何 Original ES2 欄位。
+
+---
 
 ## 5. Health / Resource
 

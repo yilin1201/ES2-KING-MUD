@@ -32,7 +32,7 @@ wolfer168 第三方重建差異：
 
 ## 2. 刑天／Headless
 
-wolfer168 `headless.c` 記錄的屬性、精氣神、自然護甲、攻防與裝備限制，已列入 `es2_king_expansion/races/headless.md` 的「第三方重建資料對照」段落，並標示為僅供比對。
+wolfer168 `headless.c` 記錄的屬性、精氣神、自然護甲、攻防、職業等級與裝備限制，已列入 `es2_king_expansion/races/headless.md` 的「第三方重建資料對照」段落，以及 `docs/research/THIRD_PARTY_CONTENT_INVENTORY_20261011.md` 的獨立來源登記。為維持 Original／第三方分層，`original_es2/races/headless.md` 只保留指向第三方索引的連結，不再內嵌第三方數值。
 
 **處理決策：** 不將自然護甲 +50、攻擊 +30、防禦 +20 或裝備限制直接套入 KING Runtime。KING 保留已確認的高定力（`cps`）、一般膽識（`cor`）、學習速度 60% 等設計，數值待全種族平衡階段統一決定。
 
@@ -71,6 +71,7 @@ A–H 種族、家園、老松林等第三方內容應登記於 Expansion／來�
 - [x] 保留 Original Human／Avatar M5 的已驗證契約。
 - [x] 更新 bootstrap 與玩家創角 E2E 測試，使其覆蓋數字分片目錄與 `7probe`。
 - [x] 補充 Headless 第三方差異表，未將其自動採用為 KING 設定。
+- [x] 新增第三方內容來源索引，並將 Original 刑天考證檔與第三方數值表分開保存。
 - [ ] 本輪尚未執行 Neolith Driver／LPC Runtime E2E。
 - [ ] 尚未驗證數字開頭帳號是否被上游合法性規則接受。
 - [x] 新增 Oracle 玩家檔案備份腳本與操作文件（尚未執行實際備份）。

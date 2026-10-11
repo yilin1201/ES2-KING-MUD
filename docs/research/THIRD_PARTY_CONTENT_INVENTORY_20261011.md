@@ -28,6 +28,30 @@
 | 釘靈 `dingling` | `es2m_snapshot/mudlib/daemon/race/dingling.c` | Third-party reconstruction／版本待交叉比對 | Reference only，除非另有 KING 決策 | 查明其是否屬目標 Original 版本 |
 | 巫首 `malik` | `es2m_snapshot/mudlib/daemon/race/malik.c` | Third-party reconstruction／版本待交叉比對 | Reference only，除非另有 KING 決策 | 查明其版本年代與 Original 身分 |
 
+### 刑天 `headless`：第三方完整數值快照
+
+來源：`wolfer168/es2-webmud/source/upstream/mudlib/daemon/race/headless.c`。該檔案註記為使用者提供的自訂 A–H 種族資料，不能直接當成 Original ES2 Confirmed。
+
+| 項目 | 第三方重建資料 | 狀態 |
+|---|---|---|
+| `str` 臂力 | `25 + random(6)`，25–30 | Reference only |
+| `cor` 膽識 | `15 + random(6)`，15–20 | Reference only |
+| `int` 悟性 | `8 + random(6)`，8–13 | Reference only |
+| `spi` 靈性 | `5 + random(6)`，5–10 | Reference only |
+| `cps` 定力 | `11 + random(6)`，11–16 | Reference only |
+| `dex` 機敏 | `19 + random(6)`，19–24 | Reference only |
+| `con` 根骨 | `23 + random(6)`，23–28 | Reference only |
+| `wis` 慧根 | `13 + random(6)`，13–18 | Reference only |
+| 精／氣／神 | 80／100／30 | Reference only |
+| karma | 25 | 歷史版本待交叉驗證 |
+| `commoner_score_base` | 160 | 第三方重建 |
+| 職業等級上限 | commoner 1、fighter 65、taoist 40、alchemist 40、soldier 60、scholar 50、thief 50、monk -1 | monk -1 的意義待確認 |
+| 自然護甲 | +50 | Reference only；KING 未採用 |
+| 攻擊／防禦 | +30／+20 | Reference only；KING 未採用 |
+| 裝備限制 | 不可穿 `armor`、`cloth`、`head_eq`、`neck_eq` | Reference only；KING 未採用 |
+
+此表只保存可追溯的第三方差異，不代表 KING 已採用這些數值。LPC 的 `random(6)` 在常見語義下回傳 0–5，因此表列範圍按起始值至起始值加 5 計算；最終仍應以來源版本的實際執行結果核對。
+
 > 上表是目前可在 Repository 內定位的種族候選清單，不宣稱它們全部都屬於同一個歷史版本，也不把它們推定為 Original ES2 已確認種族。
 
 ## 2. 區域、家園與地圖
