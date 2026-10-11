@@ -1,0 +1,45 @@
+name: Race Source Difference Gate
+
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths:
+      - '.github/workflows/race-source-difference-gate.yml'
+      - 'scripts/bootstrap_original_es2.sh'
+      - 'scripts/test_original_player_creation_e2e.sh'
+      - 'scripts/test_original_player_creation_e2e.mjs'
+      - 'scripts/test_race_source_difference_review.sh'
+      - 'scripts/test_race_phase2_static.sh'
+      - 'docs/research/RACE_SOURCE_DIFFERENCE_REVIEW_20261011.md'
+      - 'es2_king_expansion/races/headless.md'
+      - 'original_es2/runtime/m5_race_framework_result.md'
+  pull_request:
+    paths:
+      - '.github/workflows/race-source-difference-gate.yml'
+      - 'scripts/bootstrap_original_es2.sh'
+      - 'scripts/test_original_player_creation_e2e.sh'
+      - 'scripts/test_original_player_creation_e2e.mjs'
+      - 'scripts/test_race_source_difference_review.sh'
+      - 'scripts/test_race_phase2_static.sh'
+      - 'docs/research/RACE_SOURCE_DIFFERENCE_REVIEW_20261011.md'
+      - 'es2_king_expansion/races/headless.md'
+      - 'original_es2/runtime/m5_race_framework_result.md'
+
+jobs:
+  source-difference:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ES2-KING／取得專案程式
+        uses: actions/checkout@v4
+      - name: Shell syntax／Shell 語法檢查
+        run: |
+          bash -n scripts/bootstrap_original_es2.sh
+          bash -n scripts/test_original_player_creation_e2e.sh
+          bash -n scripts/test_race_source_difference_review.sh
+          bash -n scripts/test_race_phase2_static.sh
+      - name: JavaScript syntax／JavaScript 語法檢查
+        run: node --check scripts/test_original_player_creation_e2e.mjs
+      - name: Source difference contract／來源差異契約
+        run: bash scripts/test_race_source_difference_review.sh
+      - name: Race phase 2 static suite／種族第二階段靜態測試
+        run: bash scripts/test_race_phase2_static.sh
