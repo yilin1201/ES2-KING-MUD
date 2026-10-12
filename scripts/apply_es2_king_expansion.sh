@@ -142,35 +142,34 @@ print("ES2M TRAINING DUMMY APPLY PASS／假人戰鬥、fight/kill/look 與物件
 PY
 
 
-# ES2M Headless Dance Routing／Neolith 上游命令索引檔名為 cmd_d.lpc（不是 cmd_d.c）。
+# ES2M Headless Dance Routing／固定版 Original ES2 使用 cmd_d.c；相容不同來源副檔名。
 # 刑天 dance 走種族戰舞；其他種族仍使用 Original EMOTED 通用表情。
-COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.lpc"
+COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.c"
+if [[ ! -f "$COMMAND_D" ]]; then
+  COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.lpc"
+fi
+if [[ ! -f "$COMMAND_D" ]]; then
+  echo "EXPANSION APPLY FAIL：找不到 cmd_d.c 或 cmd_d.lpc，無法套用刑天 dance 路由。" >&2
+  exit 1
+fi
 python3 - "$COMMAND_D" <<'PY'
 from pathlib import Path
 import sys
 
-# 原始碼來源採 Neolith 的 LPC 檔名與實際縮排；只插入刑天 dance 的單一分流。
+# 以固定版 Original ES2 共用的 find_command 快取路徑錨點插入單一分流。
 p = Path(sys.argv[1])
 s = p.read_text()
-marker = '''    if (!pointerp(path))
-        return 0;
-
-    p = path - cached_path;
-'''
-patch = '''    if (!pointerp(path))
-        return 0;
-
-    // ES2M HEADLESS DANCE COMMAND ROUTING／刑天 dance 優先使用種族戰舞；其他種族保留 Original 表情。
-    if (verb == "dance" && objectp(this_player())
+marker = '    p = path - cached_path;'
+patch = '''    // ES2M HEADLESS DANCE COMMAND ROUTING／刑天 dance 優先使用種族戰舞；其他種族保留 Original 表情。
+    if( verb == "dance" && objectp(this_player())
     &&  this_player()->query("race") == "headless"
     &&  file_size("/cmds/usr/dance.c") > 0)
         return "/cmds/usr/dance";
 
-    p = path - cached_path;
-'''
+''' + marker
 if 'ES2M HEADLESS DANCE COMMAND ROUTING' not in s:
-    if marker not in s:
-        raise SystemExit('EXPANSION APPLY FAIL：cmd_d.lpc 找不到 find_command 的 path guard。')
+    if s.count(marker) != 1:
+        raise SystemExit('EXPANSION APPLY FAIL：cmd_d 找不到唯一 find_command 快取路徑錨點。')
     s = s.replace(marker, patch, 1)
 p.write_text(s)
 PY
