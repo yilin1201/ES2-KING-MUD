@@ -63,8 +63,42 @@ class SafeWorldImportTest(unittest.TestCase):
             output = root / "report.json"
             (snapshot / "d/lee").mkdir(parents=True)
             (runtime / "d/lee").mkdir(parents=True)
-            (snapshot / "d/lee/entrance.c").write_text("source\n", encoding="utf-8")
-            (runtime / "d/lee/entrance.c").write_text("different\n", encoding="utf-8")
+            (snapshot / "d/lee/entrance.c").write_text("source\\n", encoding="utf-8")
+            (runtime / "d/lee/entrance.c").write_text("different\\n", encoding="utf-8")
+            with self.assertRaises(SystemExit):
+                self.run_main(module, snapshot, runtime, output)
+
+    def test_known_overlay_is_preserved_without_overwrite(self):
+        module = load_module()
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            snapshot = root / "snapshot"
+            runtime = root / "runtime"
+            output = root / "report.json"
+            rel = Path("d/lee/obj/flour.c")
+            (snapshot / rel).parent.mkdir(parents=True)
+            (runtime / rel).parent.mkdir(parents=True)
+            (snapshot / rel).write_text("snapshot flour\\n", encoding="utf-8")
+            (runtime / rel).write_text("KING flour overlay\\n", encoding="utf-8")
+            self.run_main(module, snapshot, runtime, output)
+            self.assertEqual((runtime / rel).read_text(encoding="utf-8"), "KING flour overlay\\n")
+            report = __import__("json").loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(report["preserved_existing"][0]["path"], str(rel))
+            self.assertEqual(report["preserved_existing"][0]["status"],
+                             "PRESERVED_NOT_EQUIVALENT_NOT_GAMEPLAY_PASS")
+
+    def test_unknown_conflict_still_blocks(self):
+        module = load_module()
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            snapshot = root / "snapshot"
+            runtime = root / "runtime"
+            output = root / "report.json"
+            rel = Path("d/lee/unknown.c")
+            (snapshot / rel).parent.mkdir(parents=True)
+            (runtime / rel).parent.mkdir(parents=True)
+            (snapshot / rel).write_text("source\\n", encoding="utf-8")
+            (runtime / rel).write_text("different\\n", encoding="utf-8")
             with self.assertRaises(SystemExit):
                 self.run_main(module, snapshot, runtime, output)
 
