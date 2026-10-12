@@ -31,8 +31,7 @@ int set_attr(string what, int value)
     // Original 初始化規則保留；只允許兩個受權限保護的 KING 管理 daemon 突破一般上限。
     caller = previous_object();
     caller_name = objectp(caller) ? file_name(caller) : "";
-    king_admin = caller_name == "/adm/daemons/kcharadmind"
-              || caller_name == "/adm/daemons/kingd";
+    king_admin = caller_name == "/adm/daemons/kingd";
 
     // 八大屬性：一般角色上限 ATTRVAL_MAX；KING 管理 API 上限 99；所有角色均不得低於 ATTRVAL_MIN。
     if (userp(this_object())
