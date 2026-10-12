@@ -12,6 +12,44 @@ on:
       - 'scripts/test_admin_gm_runtime_gate.sh'
       - 'scripts/apply_es2_king_expansion.sh'
       - 'Dockerfile'
+      - 'es2_king_expansion/runtime/mudlib/cmds/adm/kadmin.c'
+      - 'es2_king_expansion/runtime/mudlib/adm/daemons/kadmind.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/adm/khome.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/adm/kcreate.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/adm/kcanon.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/adm/kmartial.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kroom.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kexit.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kgoto.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kmap.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kact.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kwhere.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/knpc.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kitem.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kobj.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/ktrace.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kbroken.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kmiss.c'
+      - 'scripts/test_k_admin_tools_static.sh'
+      - 'es2_king_expansion/runtime/mudlib/cmds/adm/kadmin.c'
+      - 'es2_king_expansion/runtime/mudlib/adm/daemons/kadmind.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/adm/khome.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/adm/kcreate.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/adm/kcanon.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/adm/kmartial.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kroom.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kexit.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kgoto.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kmap.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kact.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kwhere.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/knpc.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kitem.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kobj.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/ktrace.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kbroken.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/kmiss.c'
+      - 'scripts/test_k_admin_tools_static.sh'
   pull_request:
     paths:
       - '.github/workflows/admin-gm-regression.yml'
@@ -37,5 +75,8 @@ jobs:
           bash -n scripts/test_admin_gm_static.sh
           bash -n scripts/test_admin_gm_runtime_gate.sh
           bash -n scripts/apply_es2_king_expansion.sh
+          bash -n scripts/test_k_admin_tools_static.sh
       - name: Run ADMIN GM static gate
         run: bash scripts/test_admin_gm_static.sh
+      - name: Run K admin tools static gate
+        run: bash scripts/test_k_admin_tools_static.sh
