@@ -204,31 +204,37 @@ if 'ES2M HEADLESS DANCE EMOTE COLLISION' not in s:
 p.write_text(s)
 PY
 
-# Message Vision No Hard Wrap／人物敘述不得被固定 70 欄硬切：
-# Pinned Original message_vision() 對 first/second/third-person 全部使用 cjk_wrap(..., 70, -1)。
-# ES2-KING 保留原字串作者明確寫入的 \n，只移除這個顯示寬度造成的額外換行。
-# 不修改 Pinned Original repository；只 patch 生成 Runtime。
-MESSAGE_EFUN="$TARGET/mudlib/adm/simul_efun/message.lpc"
+# Message Vision No Hard Wrap／Pinned Original ES2 使用 mudlib/adm/simul_efun/message.c。
+# 保留作者明確寫入的換行，只移除 message_vision() 自動增加的固定 70 欄換行。
+# 不修改上游來源；只 patch 生成 Runtime，且支援已知原始檔路徑。
+MESSAGE_EFUN="$TARGET/mudlib/adm/simul_efun/message.c"
+if [[ ! -f "$MESSAGE_EFUN" ]]; then
+  MESSAGE_EFUN="$TARGET/mudlib/adm/simul_efun/message.lpc"
+fi
+if [[ ! -f "$MESSAGE_EFUN" ]]; then
+  echo "EXPANSION APPLY FAIL：找不到 simul_efun/message.c 或 message.lpc，無法套用訊息換行修正。" >&2
+  exit 1
+fi
 MESSAGE_NOWRAP_MARKER='ES2-KING MESSAGE VISION NO HARD WRAP'
 if ! grep -Fq "$MESSAGE_NOWRAP_MARKER" "$MESSAGE_EFUN"; then
   python3 - "$MESSAGE_EFUN" <<'PY'
 from pathlib import Path
 import sys
 
-# Neolith 上游實際使用 message.lpc 與 STD_WRAP_WIDTH；不可依舊版固定 70 欄錨點修改。
 path = Path(sys.argv[1])
 text = path.read_text()
+# Pinned Original ES2 message.c 的三個確切輸出點；其他邏輯保持不變。
 replacements = {
-    'message("vision", cjk_wrap (str2, STD_WRAP_WIDTH - 4, -1), you); // second-person':
+    'message("vision", cjk_wrap (str2, 70, -1), you); // second-person':
     'message("vision", str2, you); // second-person — ES2-KING MESSAGE VISION NO HARD WRAP',
-    'message ("vision", cjk_wrap (str1, STD_WRAP_WIDTH - 4, -1), me); // first-person':
+    'message ("vision", cjk_wrap (str1, 70, -1), me); // first-person':
     'message ("vision", str1, me); // first-person — ES2-KING MESSAGE VISION NO HARD WRAP',
-    'message ("vision", cjk_wrap (str3, STD_WRAP_WIDTH - 4, -1),  environment(me), ({ me, you }) ); // third-person':
+    'message ("vision", cjk_wrap (str3, 70, -1),  environment(me), ({ me, you }) ); // third-person':
     'message ("vision", str3, environment(me), ({ me, you }) ); // third-person — ES2-KING MESSAGE VISION NO HARD WRAP',
 }
 for old, new in replacements.items():
     if old not in text:
-        raise SystemExit("EXPANSION APPLY FAIL：找不到 Neolith message.lpc 的 STD_WRAP_WIDTH anchor。")
+        raise SystemExit("EXPANSION APPLY FAIL：找不到 Pinned Original message.c 的 message_vision() 輸出錨點。")
     text = text.replace(old, new, 1)
 path.write_text(text)
 PY
