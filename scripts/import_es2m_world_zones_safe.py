@@ -24,6 +24,17 @@ ZONE_DIRS = (
     Path("d/wutang"),
 )
 
+# 已知存在於 KING Runtime 的同名覆蓋：只保留現有版本並記錄雙方 SHA256。
+# 這不是內容相同或遊戲通過的宣告；其他未列出的衝突仍必須阻止建置。
+PRESERVE_EXISTING_CONFLICTS = {
+    Path("d/lee/obj/brow_staff.c"),
+    Path("d/lee/obj/flour.c"),
+    Path("d/lee/obj/salt.c"),
+    Path("d/lee/obj/sugar.c"),
+    Path("d/lee/obj/waterskin.c"),
+    Path("d/wutang/npc/may_yin_fong.c"),
+}
+
 LITERAL_LOCAL = __import__("re").compile(r'__DIR__\s*"([^"]+)"')
 LITERAL_ABSOLUTE = __import__("re").compile(r'"(/(?:d|custom|obj)/[^"\s]+)"')
 
@@ -97,6 +108,7 @@ def main() -> None:
         "staged": [],
         "identical": [],
         "conflicts_review": [],
+        "preserved_existing": [],
         "resolved_dependencies": [],
         "unresolved_dependencies": [],
     }
@@ -114,6 +126,14 @@ def main() -> None:
         if dst.is_file():
             if sha256(src) == sha256(dst):
                 result["identical"].append(str(rel))
+            elif rel in PRESERVE_EXISTING_CONFLICTS:
+                # 保留已存在的 KING 版本；記錄來源與 Runtime 指紋供後續人工比對。
+                result["preserved_existing"].append({
+                    "path": str(rel),
+                    "snapshot_sha256": sha256(src),
+                    "runtime_sha256": sha256(dst),
+                    "status": "PRESERVED_NOT_EQUIVALENT_NOT_GAMEPLAY_PASS",
+                })
             else:
                 result["conflicts_review"].append(str(rel))
         else:
