@@ -83,7 +83,7 @@ mapping query_creation_registry(object actor)
 {
     mapping result;
     if (!authorized(actor)) return ([]);
-    // V0 Item Registry／人物管理道具登錄：只回傳已存在且可驗證的 KING 物件。
+    // KING Creation Registry／創造服務登錄表：只回傳已存在且可驗證的 KING 物件。
     // 不接受使用者輸入任意 LPC 路徑，避免任意物件注入。
     result = copy(creation_registry);
     foreach (string id, string file in owner_weapon_registry)
