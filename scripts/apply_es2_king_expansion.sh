@@ -713,7 +713,13 @@ PY
 
 # KING Score Grid Bars／KING score 方格狀態條：只修改 Expansion Runtime 顯示層。
 # Current／Effective／Maximum 仍沿用 Original tribar_graph 三值語意；不改 Statistic 或 Combat。
-SCORE_CMD="$TARGET/mudlib/cmds/usr/score.lpc"
+# 固定版 Original ES2 使用 score.c；兼容歷史 .lpc 命名。
+SCORE_CMD="$TARGET/mudlib/cmds/usr/score.c"
+if [[ ! -f "$SCORE_CMD" ]]; then SCORE_CMD="$TARGET/mudlib/cmds/usr/score.lpc"; fi
+if [[ ! -f "$SCORE_CMD" ]]; then
+  echo "EXPANSION APPLY FAIL：找不到 cmds/usr/score.c 或 score.lpc，無法套用 Score 方格條。" >&2
+  exit 1
+fi
 SCORE_GRID_MARKER='ES2-KING SCORE GRID BARS'
 if ! grep -Fq "$SCORE_GRID_MARKER" "$SCORE_CMD"; then
   python3 - "$SCORE_CMD" <<'PY'
@@ -776,8 +782,13 @@ path.write_text(text)
 PY
 fi
 
-# Command Reindex Compatibility／Neolith 上游使用 cmd_d.lpc，管理員指令索引只增加已定稿指令。
-COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.lpc"
+# Command Reindex Compatibility／固定版 Original ES2 使用 cmd_d.c；兼容歷史 .lpc 命名。
+COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.c"
+if [[ ! -f "$COMMAND_D" ]]; then COMMAND_D="$TARGET/mudlib/adm/daemons/cmd_d.lpc"; fi
+if [[ ! -f "$COMMAND_D" ]]; then
+  echo "EXPANSION APPLY FAIL：找不到 cmd_d.c 或 cmd_d.lpc，無法套用管理員指令索引。" >&2
+  exit 1
+fi
 COMMAND_REHASH_MARKER='ES2-KING OWNER COMMAND REHASH'
 if ! grep -Fq "$COMMAND_REHASH_MARKER" "$COMMAND_D"; then
   python3 - "$COMMAND_D" <<'PY'
