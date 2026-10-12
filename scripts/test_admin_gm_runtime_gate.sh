@@ -6,7 +6,11 @@ ROOT="${1:-.runtime/es2-king}/mudlib"
 COMMAND="$ROOT/cmds/adm/admin.c"
 TIGER_BLADE="$ROOT/custom/weapon/blade/tiger_blade.c"
 SOLDIER="$ROOT/daemon/class/soldier.c"
-COMMAND_D="$ROOT/adm/daemons/cmd_d.lpc"
+# 固定版 Original ES2 使用 cmd_d.c；保留 .lpc 作為其他基準的相容備援。
+COMMAND_D="$ROOT/adm/daemons/cmd_d.c"
+if [[ ! -f "$COMMAND_D" ]]; then
+  COMMAND_D="$ROOT/adm/daemons/cmd_d.lpc"
+fi
 PRELOAD="$ROOT/adm/etc/preload"
 
 for file in "$COMMAND" "$COMMAND_D" "$PRELOAD" "$TIGER_BLADE" "$SOLDIER"; do
