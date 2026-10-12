@@ -13,13 +13,31 @@ def stage(snapshot, runtime):
     source = snapshot / "custom/zhenwu"
     if not source.is_dir() or not runtime.is_dir():
         raise FileNotFoundError("ZHENWU_STAGE_ROOT_MISSING")
-    report = {"staged": [], "identical": [], "conflicts_review": [],
+    report = {"staged": [], "identical": [], "overlay_compatible": [], "conflicts_review": [],
               "external_gate": "PENDING", "status": "FILE_STAGE_ONLY_NOT_GAMEPLAY_PASS"}
     for file in sorted(source.rglob("*.c")):
         rel = file.relative_to(snapshot)
         target = runtime / rel
         if target.exists():
-            report["identical" if sha(file) == sha(target) else "conflicts_review"].append(str(rel))
+            if sha(file) == sha(target):
+                report["identical"].append(str(rel))
+            elif str(rel) == "custom/zhenwu/npc/target_stake.c":
+                # ES2-KING overlay 只新增 accept_kill()，讓假人不喊救命；
+                # 以精確文字比對確認此已知相容差異，不覆寫任一來源檔。
+                original = file.read_text()
+                expected = original.replace(
+                    'int accept_fight(object who) { return 1; }\n',
+                    'int accept_fight(object who) { return 1; }\n\n'
+                    '/* 假人是死物：被 kill 時不會喊救命。 */\n'
+                    'void accept_kill(object ob) { }\n',
+                    1,
+                )
+                if expected != original and target.read_text() == expected:
+                    report["overlay_compatible"].append(str(rel))
+                else:
+                    report["conflicts_review"].append(str(rel))
+            else:
+                report["conflicts_review"].append(str(rel))
         else:
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(file, target)
