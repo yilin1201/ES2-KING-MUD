@@ -1,5 +1,5 @@
 {
-  "source": "user-provided Li Village map (2026-09-13)",
+  "source": "ES2M 主地圖出口定義；依 ES2-KDS source/upstream/mudlib/d/lee 原始房間程式核對（2026-10-13）",
   "rooms": {
     "gate_n": {
       "short": "村口大門",
@@ -168,8 +168,7 @@
       "status": "GENERATED",
       "exits": {
         "north": "square_w",
-        "east": "square_c",
-        "south": "pawnshop"
+        "east": "square_c"
       }
     },
     "square_c": {
@@ -178,15 +177,13 @@
       "exits": {
         "west": "square_s",
         "north": "square_e",
-        "south": "street1",
-        "east": "watermelon_n1"
+        "south": "street1"
       }
     },
     "watermelon_n1": {
       "short": "西瓜田",
       "status": "RECONSTRUCTED",
       "exits": {
-        "west": "square_c",
         "east": "watermelon_n2",
         "south": "watermelon_s1"
       }
@@ -206,14 +203,14 @@
       "exits": {
         "west": "watermelon_n2",
         "south": "watermelon_s3",
-        "northeast": "riverside_s"
+        "northeast": "riverside_s",
+        "east": "creek"
       }
     },
     "pawnshop": {
       "short": "李記當鋪",
       "status": "CONFIRMED_MIXED",
       "exits": {
-        "north": "square_s",
         "east": "street1"
       }
     },
@@ -250,8 +247,7 @@
       "status": "GENERATED",
       "exits": {
         "west": "watermelon_s2",
-        "north": "watermelon_n3",
-        "east": "creek"
+        "north": "watermelon_n3"
       }
     },
     "inn": {
@@ -315,7 +311,7 @@
       "status": "RECONSTRUCTED",
       "exits": {
         "north": "riverside_s",
-        "west": "watermelon_s3"
+        "west": "watermelon_n3"
       }
     },
     "nie_backroom": {
