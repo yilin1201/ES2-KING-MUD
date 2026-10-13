@@ -18,7 +18,8 @@ LONG
     set("exits", ([
         "west" : __DIR__"square_s",
         "north" : __DIR__"square_e",
-        "south" : __DIR__"street1"
+        "south" : __DIR__"street1",
+        "east" : __DIR__"watermelon_n1"
     ]));
     setup();
     replace_program(ROOM);
