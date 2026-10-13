@@ -786,3 +786,46 @@
 - 目前鏡像只有已提交的少量檔案，不能宣稱 1,482 個檔案已完整鏡像。
 - 本階段沒有執行完整 runtime 或遊戲 E2E 測試；不宣稱地圖、技能或任務已 PASS。
 - 來源固定 commit 為 `ee12e717e2d3d88728607a01c2c2f1d634bf9616`；後續如 ES2M 上游更新，應另開新的比對批次，不能靜默改變本次基準。
+
+
+## 9. 第二輪逐檔內容抽查（2026-10-13）
+
+本輪直接讀取來源 Blob 與 KING 快照 Blob 內容，以下結論只適用於列出的檔案；其他同目錄檔案仍需逐檔檢查。
+
+### 9.1 雪亭鎮（`d/snow`）
+
+| 檔案 | 已觀察差異 | 初步風險／處理 |
+|---|---|---|
+| `d/snow/inn_hall.c` | ES2M 原始版載入 `/daemon/board/celestial_board`（天朝公告）；KING 快照對應位置沒有該載入呼叫。 | **功能差異，待驗證**：確認公告板是否由其他路徑載入；不能當成單純格式差異。 |
+| `d/snow/npc/garrison.c` | 原始版設為 `soldier`、Lv.15；KING 快照改成 `commoner`、Lv.17，並加入不同屬性設定。 | **NPC 行為／平衡差異**：職業和等級已改，需檢查戰鬥行為、技能與區域定位。 |
+| `d/snow/npc/innkeeper.c` | `set_class("commoner")` 在快照中缺少；周邊營業時間、移動邏輯仍存在，但程式行位移。 | **角色分類差異**：應確認類別是否影響對話、技能或 NPC AI。 |
+| `d/snow/skill/dragon_force.c` | 原始版具有 `query_entry_level()`、`query_threshold_percent()`、`skill_completed()` 等介面；快照在相同位置出現 `skill_improved()` 與直接檢查技能／學習點數的邏輯。 | **高風險技能升級差異**：兩版的學習門檻／完成條件介面不同，需與技能 daemon 呼叫端及測試交叉比對，不能直接以檔案長度或行號決定新舊優劣。 |
+
+### 9.2 武當區域（`d/wutang`）
+
+| 檔案 | 已觀察差異 | 初步風險／處理 |
+|---|---|---|
+| `d/wutang/npc/apprentice.c` | 原始版有 `set_power("B")`；快照未見該設定，並加入 gin 的 maximum/effective/current 明確數值。 | **數值模型差異**：須確認 KING 的角色初始化是否以這些欄位取代 power 等級機制，避免生命／精力重複或互相覆蓋。 |
+| `d/wutang/npc/guard.c` | 原始版 Lv.5，快照改 Lv.20；原始版有 blade 技能，快照改用其他技能並加入明確 stat 設定。 | **高風險戰鬥平衡差異**：不是註解或格式變動；需要以原始用途與 KING 目前區域難度標準確認。 |
+| `d/wutang/npc/red_taoist.c` | 快照加入 gin/kee 的最大值、有效值及當前值；原始版主要依既有角色能力／power 設定。 | **角色數值初始化差異**：檢查這些欄位是否在 `setup()` 前後正確生效，並與現行 stat API 相容。 |
+
+### 9.3 老松林區域（`d/oldpine`）
+
+| 檔案 | 已觀察差異 | 初步風險／處理 |
+|---|---|---|
+| `d/oldpine/npc/bandit.c` | 原始版在初始化後裝備刀、皮背心並攜帶 5 枚銀幣；KING 快照相應位置加入 gin/kee 的 maximum/effective/current 設定。 | **裝備／掉落／數值風險**：需檢查裝備與銀幣程式是否仍存在於快照其他位置；若已移除，可能改變戰鬥與掉落行為。 |
+
+### 9.4 通用區域武器／衣物物件（`obj/area/obj`）
+
+| 檔案 | 已觀察差異 | 初步風險／處理 |
+|---|---|---|
+| `obj/area/obj/blade.c` | 原始版在物件 clone 時呼叫 `ENHANCE_D->roll_affix(this_object())`；快照改用 `varify_template(owner)` 內的 `ENHANCE_D->enhance_weapon(...)`，以 owner 等級計算強化值。 | **武器附加屬性系統差異**：兩版觸發時機與參數模型不同；須確認 daemon API、NPC 配裝及玩家取得武器路徑，不應覆蓋任一版。 |
+| `obj/area/obj/longsword.c` | 與 `blade.c` 類似，原始版 clone 時擲附加屬性；快照依 owner 等級呼叫武器強化。 | **同類型系統差異**：需確認兩種流程是否重複強化或造成玩家／NPC 武器結果不一致。 |
+| `obj/area/obj/cloth.c` | 原始版 `value=200`，KING 快照改成 `value=0`。 | **經濟行為差異**：可能影響出售價格／回收價值，需確認是否為 KING 的刻意平衡。 |
+
+### 9.5 本輪判定摘要
+
+- 本輪讀取 11 個檔案的來源版與快照版內容。
+- 觀察到的差異不只文字格式；涵蓋公告板載入、NPC 職業／等級／技能、技能升級 API、角色 stat 初始化、武器附加屬性流程及物件價值。
+- 上述內容全部先標記為 **DIFF CONFIRMED / SEMANTIC REVIEW REQUIRED**；沒有足夠 runtime 證據時，不將其升級為已確認缺陷，也不自動覆蓋。
+- 下一輪建議優先核對 `ENHANCE_D` 呼叫端與 weapon lifecycle、`dragon_force` 的技能升級呼叫端、以及 NPC 初始化 API；這些屬於共用機制，風險高於單一房間文案差異。
