@@ -168,7 +168,8 @@
       "status": "GENERATED",
       "exits": {
         "north": "square_w",
-        "east": "square_c"
+        "east": "square_c",
+        "south": "pawnshop"
       }
     },
     "square_c": {
@@ -177,7 +178,8 @@
       "exits": {
         "west": "square_s",
         "north": "square_e",
-        "south": "street1"
+        "south": "street1",
+        "east": "watermelon_n1"
       }
     },
     "watermelon_n1": {
@@ -185,7 +187,8 @@
       "status": "RECONSTRUCTED",
       "exits": {
         "east": "watermelon_n2",
-        "south": "watermelon_s1"
+        "south": "watermelon_s1",
+        "west": "square_c"
       }
     },
     "watermelon_n2": {
@@ -211,7 +214,8 @@
       "short": "李記當鋪",
       "status": "CONFIRMED_MIXED",
       "exits": {
-        "east": "street1"
+        "east": "street1",
+        "north": "square_s"
       }
     },
     "street1": {
@@ -247,7 +251,8 @@
       "status": "GENERATED",
       "exits": {
         "west": "watermelon_s2",
-        "north": "watermelon_n3"
+        "north": "watermelon_n3",
+        "east": "creek"
       }
     },
     "inn": {
@@ -311,7 +316,7 @@
       "status": "RECONSTRUCTED",
       "exits": {
         "north": "riverside_s",
-        "west": "watermelon_n3"
+        "west": "watermelon_s3"
       }
     },
     "nie_backroom": {
