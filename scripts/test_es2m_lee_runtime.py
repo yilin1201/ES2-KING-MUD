@@ -1,25 +1,47 @@
 #!/usr/bin/env python3
-"""Runtime topology gate for the ES2M Lee village snapshot."""
+"""Runtime topology gate for the ES2M Lee village snapshot.
 
+出口解析需兼容 LPC 中的不同空白格式、引号與 __DIR__/絕對路徑；
+Runtime gate 同時回報來源與生成檔案 SHA，避免把 parser 未命中誤判為出口不存在。
+"""
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 from pathlib import Path
 
 
+def sha256(path: Path) -> str:
+    """回報檔案 SHA256，協助確認 snapshot 是否真正進入生成 Runtime。"""
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def exits(path: Path) -> dict[str, str]:
+    """讀取靜態 exits mapping，並把 /d/lee/room.c 正規化為 room。"""
     code = path.read_text(encoding="utf-8")
-    match = re.search(r'set\("exits", \(\[(.*?)\]\)\);', code, re.S)
+    # LPC／支援 set("exits", ([...])) 的空白差異，不綁定單一格式。
+    match = re.search(
+        r'set\s*\(\s*["\']exits["\']\s*,\s*\(\s*\[(.*?)\]\s*\)\s*\)\s*;',
+        code,
+        re.S,
+    )
     if not match:
         return {}
-    return dict(
-        re.findall(
-            r'"([a-z]+)"\s*:\s*(?:__DIR__\s*)?"([^"]+)"',
-            match.group(1),
-        )
+    found = re.findall(
+        r'["\']([a-z]+)["\']\s*:\s*(?:__DIR__\s*)?["\']([^"\']+)["\']',
+        match.group(1),
     )
+    result: dict[str, str] = {}
+    for direction, raw_target in found:
+        target = raw_target.rstrip("/")
+        if target.startswith("/"):
+            target = target.rsplit("/", 1)[-1]
+        if target.endswith(".c"):
+            target = target[:-2]
+        result[direction] = target
+    return result
 
 
 def main() -> None:
@@ -37,12 +59,18 @@ def main() -> None:
 
     missing = []
     broken = []
+    source_runtime_mismatch = []
     for name, record in rooms.items():
+        source_path = snapshot_area / f"{name}.c"
         path = runtime_area / f"{name}.c"
         if not path.is_file():
             missing.append(name)
             continue
         actual = exits(path)
+        if source_path.is_file() and sha256(source_path) != sha256(path):
+            source_runtime_mismatch.append(
+                f"{name}: snapshot_sha256={sha256(source_path)} runtime_sha256={sha256(path)}"
+            )
         for direction, target in record.get("exits", {}).items():
             if actual.get(direction) != target:
                 broken.append(
@@ -54,7 +82,7 @@ def main() -> None:
     for path in runtime_area.glob("*.c"):
         code = path.read_text(encoding="utf-8")
         referenced_npcs.update(
-            re.findall(r'__DIR__"npc/([a-zA-Z0-9_]+)"', code)
+            re.findall(r'__DIR__\s*["\']npc/([a-zA-Z0-9_]+)["\']', code)
         )
 
     missing_npcs = sorted(
@@ -78,12 +106,14 @@ def main() -> None:
                     f"critical:{room}.{direction}->{actual.get(direction)} expected {target}"
                 )
 
-    if missing or broken or missing_npcs:
+    if missing or broken or missing_npcs or source_runtime_mismatch:
         print("ES2M_LEE_RUNTIME_FAIL")
         for item in missing:
             print("MISSING_ROOM:", item)
         for item in broken:
             print("BROKEN_EXIT:", item)
+        for item in source_runtime_mismatch:
+            print("SNAPSHOT_RUNTIME_FILE_MISMATCH:", item)
         for item in missing_npcs:
             print("MISSING_NPC:", item)
         raise SystemExit(1)
