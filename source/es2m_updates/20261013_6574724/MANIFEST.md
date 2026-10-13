@@ -22,13 +22,13 @@
 
 ## Runtime compatibility finding
 
-The ES2M `sneak.c` update changes progression during the cautious preparation phase to use the player's INT attribute and changes successful sneak progression to `COMBAT_D->int_formula_exp(me)`. The pinned Original ES2 Runtime does not provide `int_formula_exp()` in its combat daemon. Therefore, do not overwrite the Original file or place this version directly into the Runtime without a minimal KING Expansion adapter and targeted tests.
+The ES2M `sneak.c` update changes progression during the cautious preparation phase to use the player's INT attribute and changes successful sneak progression to `COMBAT_D->int_formula_exp(me)`. The pinned Original ES2 Runtime does not provide `int_formula_exp()` in its combat daemon. KING therefore adds a minimal Expansion adapter implementing the identical formula locally; the Original source remains unchanged. A targeted test is wired into the Docker build, but its execution result is still pending.
 
 ## Verification boundary
 
 - Upstream compare: 5 commits / 6 changed paths — confirmed.
 - Source archive: captured.
 - ES2M source snapshot: updated.
-- KING Runtime integration: pending compatibility adapter and tests.
+- KING Expansion adapter and targeted Docker gate: written; execution pending.
 - Docker build / Oracle gameplay: not validated by this snapshot operation.
 - PR #13 remains OPEN / NOT MERGED.
