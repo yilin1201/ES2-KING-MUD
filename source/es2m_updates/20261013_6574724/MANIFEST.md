@@ -13,7 +13,7 @@
 
 | ES2M source path | Status | Source blob SHA | KING handling |
 |---|---|---|---|
-| `source/upstream/mudlib/cmds/std/sneak.c` | modified | `6d9d5e6ddff340b56abb87882a2acb22d9459738` | Archived; snapshot staged; Runtime adapter review pending |
+| `source/upstream/mudlib/cmds/std/sneak.c` | modified | `6d9d5e6ddff340b56abb87882a2acb22d9459738` | Archived; snapshot staged; KING Expansion adapter added at `es2_king_expansion/runtime/mudlib/cmds/std/sneak.c`; Docker targeted gate added, execution pending |
 | `tests/test_v32069_interaction_priority.py` | modified | `249d8de349aa7982fca270c87d700c60ef9a691d` | Archived as source evidence; not run as KING test because it asserts ES2M WebMUD UI |
 | `web/app.js` | modified | `cdb13df40e38201a65ca8ff6db871808d8315ee5` | Archived; KING has no matching ES2M WebMUD client |
 | `web/automation.js` | modified | `35aab1fc85d4911353382e2a589279f09b8243f3` | Archived; KING has no matching ES2M WebMUD client |
