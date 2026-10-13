@@ -1,5 +1,5 @@
 {
-  "source": "ES2M 主地圖出口定義；依 ES2-KDS source/upstream/mudlib/d/lee 原始房間程式核對（2026-10-13）",
+  "source": "ES2M 主來源：wolfer168/es2-webmud 的 source/upstream/mudlib/d/lee/LEE_TOPOLOGY.json；出口拓樸以 ES2M main 明確登錄為優先，房間 LPC 為實作資料，發現差異時由 KING 工作快照修復，不回寫上游。",
   "rooms": {
     "gate_n": {
       "short": "村口大門",
@@ -343,5 +343,12 @@
     "direction": "northeast",
     "to": "/d/lee/entrance_s",
     "reverse_direction": "southwest"
-  }
+  },
+  "source_repository": "https://github.com/wolfer168/es2-webmud",
+  "source_branch": "main",
+  "source_commit": "ee12e717e2d3d88728607a01c2c2f1d634bf9616",
+  "source_topology_path": "source/upstream/mudlib/d/lee/LEE_TOPOLOGY.json",
+  "source_topology_blob_sha": "22589002f4bfc18ed86381a1bf52f3533823471e",
+  "auxiliary_source": "ES2-KDS 僅作交叉核對，不得覆蓋 ES2M 主來源",
+  "local_policy": "ES2M 主地圖拓樸 > ES2M 房間 LPC 實作 > ES2-KDS 輔助證據；ES2-KING 自訂路線須標示為重建／Expansion"
 }
