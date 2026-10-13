@@ -32,3 +32,9 @@ The ES2M `sneak.c` update changes progression during the cautious preparation ph
 - KING Expansion adapter and targeted Docker gate: written; execution pending.
 - Docker build / Oracle gameplay: not validated by this snapshot operation.
 - PR #13 remains OPEN / NOT MERGED.
+
+## KING synchronization follow-up — 2026-10-13
+
+- Added `scripts/test_es2m_sneak_adapter.py` to check that the preserved ES2M source retains `COMBAT_D->int_formula_exp(me)`, while the KING Expansion adapter uses its local compatibility formula and keeps the Original ES2 combat daemon unchanged.
+- Updated `.github/workflows/es2m-update-snapshot.yml` so push and pull-request changes to the ES2M sneak snapshot, KING adapter, and regression test trigger the targeted static contract gate.
+- Validation boundary: GitHub file writes confirmed; the Python regression test and GitHub Actions run have not yet been executed/verified in this operation. This does not establish LPC runtime or Oracle gameplay PASS.
