@@ -8,6 +8,9 @@ on:
       - '.github/workflows/es2m-update-snapshot.yml'
       - 'es2m_snapshot/mudlib/adm/daemons/combatd.c'
       - 'es2m_snapshot/mudlib/cmds/std/buy.c'
+      - 'es2m_snapshot/mudlib/cmds/std/sneak.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/sneak.c'
+      - 'scripts/test_es2m_sneak_adapter.py'
       - 'es2m_snapshot/mudlib/feature/npc/vendor.c'
       - 'es2m_snapshot/mudlib/d/snow/npc/waiter.c'
       - 'scripts/test_es2m_update_snapshot.py'
@@ -79,7 +82,7 @@ jobs:
         uses: actions/checkout@v4
       # Syntax Gate／語法檢查：先確保 Python 測試檔可解析。
       - name: Python syntax gate／Python 語法檢查
-        run: python3 -m py_compile scripts/test_es2m_update_snapshot.py scripts/test_es2m_fighter_level_contract.py scripts/test_es2m_skill_import.py scripts/test_es2m_cold_plum_overlay.py scripts/test_es2m_skill_commands.py
+        run: python3 -m py_compile scripts/test_es2m_update_snapshot.py scripts/test_es2m_fighter_level_contract.py scripts/test_es2m_skill_import.py scripts/test_es2m_cold_plum_overlay.py scripts/test_es2m_skill_commands.py scripts/test_es2m_sneak_adapter.py
       # Snapshot Gate／來源快照：驗證批量購買、庫存、交貨與戰鬥成長證據。
       - name: ES2M update snapshot／ES2M 更新來源檢查
         run: python3 scripts/test_es2m_update_snapshot.py
@@ -98,3 +101,7 @@ jobs:
       # Latest ES2M Gate／驗證上游封存與 KING 自訂武功各自完整，避免互相覆蓋。
       - name: Latest ES2M martial update contract／最新武學同步契約
         run: python3 scripts/test_es2m_latest_martial_updates.py
+
+      # Sneak Adapter Gate／潛行相容層靜態契約，不冒充 LPC 實機通過。
+      - name: ES2M sneak adapter／潛行相容層檢查
+        run: python3 -m pytest -q scripts/test_es2m_sneak_adapter.py
