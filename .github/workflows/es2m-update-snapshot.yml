@@ -105,6 +105,6 @@ jobs:
       - name: Latest ES2M martial update contract／最新武學同步契約
         run: python3 scripts/test_es2m_latest_martial_updates.py
 
-      # Sneak Adapter Gate／潛行相容層靜態契約，不冒充 LPC 實機通過。
+      # Sneak Adapter Gate／使用 Python 標準 unittest 驗證潛行相容層，不需額外安裝 pytest，也不冒充 LPC 實機通過。
       - name: ES2M sneak adapter／潛行相容層檢查
-        run: python3 -m pytest -q scripts/test_es2m_sneak_adapter.py
+        run: python3 scripts/test_es2m_sneak_adapter.py
