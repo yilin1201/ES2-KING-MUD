@@ -52,3 +52,12 @@
 1. 先恢復／確認 GitHub Actions Runner 可用性；目前 job 沒有執行步驟與日誌，不能把 Runner 未啟動當成程式測試失敗。Runner 可用後重新執行兩個 ES2M 閘門，取得真正的測試輸出。
 2. 若靜態測試通過，再針對 gain／人物升級機制做獨立相容性設計與測試；不可直接套用 ES2M 的整套角色升級程式。
 3. 對 combatd 進行逐段差異審查，確認可安全移植的最小變更後再另行整合。
+## 2026-10-14 — 寒梅心法同步邊界修正
+
+- 重新比對上游 kds121tw/ES2-KDS 的 rebuild/es2-game、KING es2m_snapshot/mudlib/daemon/skill/hainmay_force.c 與 KING Runtime overlay。
+- ES2M 原始快照 blob：f71871c01d26502cb5958ee668fc55c46ab8f90e；KING 凍結基準／Runtime overlay blob：1fc654ba02accb5c3ee864158c80b4c09e8433dd。
+- 差異屬已登錄的待評估項目：mm_minus、修煉點數公式、冷梅莊／等級 15 學習限制與描述。依凍結規則，這些差異不可在建置時自動覆蓋。
+- 已在 scripts/apply_es2_king_expansion.sh 增加 build gate：Runtime overlay 必須與 es2m_snapshot/king_frozen_baseline/daemon/skill/hainmay_force.c 完全一致；不一致即停止建置並輸出 diff。
+- 靜態核對結果：ES2M snapshot 保留上游更新；KING overlay 與凍結基準 SHA 完全一致；KING 專屬成長公式未被覆蓋。
+- GitHub Actions 觸發後仍是 failure，但相關 job 回傳 steps=[]，沒有執行測試步驟；分類為 INFRA FAIL，不可當作程式測試失敗或 PASS。尚未執行 Driver／遊戲實機驗證。
+- PR #13 維持 OPEN / NOT MERGED；本輪未部署、未建立雲端資源。
