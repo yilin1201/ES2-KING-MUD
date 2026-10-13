@@ -870,3 +870,46 @@
 ### 10.5 本輪處置原則
 
 這四個檔案屬於共用核心，不能直接以「來源版較原始」作為覆蓋依據。應保留來源原始鏡像與 KING 工作版本，逐函式建立差異、確認 KING 已定案功能，再以最小測試驗證。沒有測試證據前一律標記為 **DIFF CONFIRMED / RUNTIME VALIDATION PENDING**。
+
+
+## 11. 第四輪：技能成長介面與依賴檔案交叉驗證（2026-10-13）
+
+本輪不只比較單檔文字，而是將技能檔與角色技能核心的實際介面對照。檢查依據為固定 ES2M 來源 commit `ee12e717e2d3d88728607a01c2c2f1d634bf9616` 的 Blob，以及目前分支 `es2m_snapshot/mudlib/` 的實際檔案。
+
+### 11.1 `d/snow/skill/dragon_force.c` 與 `feature/char/skill.c` — 技能升級介面不相容風險
+
+- ES2M 來源版 `dragon_force.c` 提供 `query_entry_level()`、`query_threshold_percent()`、`skill_completed()`；KING 快照版則保留 `skill_improved()`，並自行檢查 `query_skill()`、`query_learn()` 及直接呼叫 `advance_skill()`。
+- KING 快照的 `feature/char/skill.c` 已實作 `skill_entry_level()`，會透過 `SKILL_D(skill)` 查詢 `query_entry_level()`；`skill_threshold()` 會查詢 `query_threshold_percent()`；技能從 0 級學成時，升級核心會呼叫 `skill_completed()`（若技能檔有此函式）。
+- **已確認的介面事實：** 快照版 `dragon_force.c` 未提供技能核心查詢的前兩個介面，也未提供學成回呼；因此龍圖心經不會透過這些介面宣告原始設定的學成等級／門檻，且無法由技能核心觸發原始版學成回呼。
+- **風險：高。** 技能可能使用通用預設學成等級／門檻，與技能檔自行處理的舊式學習點數邏輯不一致；單靠檔案能編譯不能證明升級流程正確。
+- **處置：** 不直接覆蓋技能檔。先決定 KING 要採用共用技能核心的新式介面，或保留舊式專用升級邏輯；若採新介面，需以最小修改補齊必要介面並移除重複升級路徑，再測試 0 級學成、學成門檻、40 級入門、120 級上限及精／氣／神上限獎勵。
+
+### 11.2 `feature/study.c` — 已確認快照缺少共用技能門檻檢查
+
+- KING 快照 `feature/char/skill.c` 有 `skill_threshold(skill, level)`，而且 `skill_threshold()` 會套用個別技能的門檻百分比與入門門檻；這證實技能學習點數門檻是目前角色技能系統的一部分，不是不存在的舊 API。
+- 固定來源版 `feature/study.c` 的 `study_capped()` 會同時檢查 `query_skill(skill, 1) >= limit` 與 `query_learn(skill) >= skill_threshold(skill, limit)`；KING 快照版只檢查技能等級。
+- **已確認的功能差異：** 讀書停止條件未與角色技能核心共用門檻保持一致。
+- **風險：高。** 當技能等級尚未升到書本上限，但累積學習點數已達該上限門檻時，讀書流程可能繼續消耗神並增加學習點數，造成超額累積或延後停止。
+- **處置：** 建議將此列為待修正候選，先新增邊界測試：技能等級低於上限且學習點數低於門檻、等於門檻、超過門檻，以及指定入門等級／折扣門檻的技能。測試通過後再以最小差異恢復雙條件。
+
+### 11.3 `adm/daemons/combatd.c` 與缺少的技能 daemon — 強力格擋成長路徑
+
+- 固定來源版 `combatd.c` 的 `restored_parry_gain()` 在基本招架經驗外，若角色學過 `heavy_parry`，會按定力與隨機比例另給 `heavy_parry` 經驗。
+- KING 快照版的相同函式沒有這段額外經驗分配；目前快照清冊也沒有 `daemon/skill/heavy_parry.c`，而該檔列在 ES2M 有、快照缺少的檔案清單中。
+- **已確認的差異：** 不只戰鬥 daemon 的經驗分配不同，技能 daemon 也缺檔；因此目前快照無法單靠原始來源所示路徑完整重現強力格擋成長機制。
+- **風險：高。** 可能使角色已學得或預期可學的強力格擋無法按來源規則成長；是否在 KING 設計中刻意移除，仍待產品規則確認。
+- **處置：** 先將來源 `heavy_parry.c` 放入隔離原始鏡像（不直接啟用），再確認技能註冊、可學習途徑、招架成功呼叫點與 KING 是否保留該技能。只有決定保留後，才做最小相容整合與實戰經驗測試。
+
+### 11.4 `feature/equip.c`／`obj/area/obj/blade.c` — 必須保護已定案的 KING 重擊術與武器流程
+
+- KING 快照 `feature/equip.c` 的重擊術觸發率以技能等級計算，並在觸發時呼叫 `improve_skill("powerblow", 1 + bonus/5)`；來源版則使用使用者已定案的公式：`random(1 + max_bonus) × (1 + powerblow 等級/20) × 膂力/5`，另有新版武功傷害百分比與免除防具計算的路徑。
+- KING 快照 `blade.c` 在 `varify_template(owner)` 中依持有者等級呼叫 `ENHANCE_D->enhance_weapon(...)`；來源版在每次 clone 時呼叫 `ENHANCE_D->roll_affix(...)`，並明確註明 NPC 持有時不再另行強化。
+- **判定：** 這些差異會影響 KING 的傷害、重擊術成長、武器詞綴產生時機及 NPC／玩家武器一致性；它們不是可以直接按原始版本回退的單純缺陷。依專案規則，保留已定案 KING 重擊術規則，另行比較詞綴系統的 API 與生命週期。
+- **待驗證：** 單手與雙持觸發次數、重擊術 0／中／高等級、膂力低／高、玩家取得武器、NPC 配裝及重新載入／複製武器後是否重複強化。沒有測試結果前不標記 PASS。
+
+### 11.5 本輪結論
+
+- 技能核心交叉比對已將 `dragon_force.c` 與 `feature/study.c` 的差異由「檔案不同」提升為「與現行技能門檻／回呼介面存在具體不一致」。
+- `heavy_parry` 是戰鬥呼叫邏輯與缺失技能檔的雙重缺項，應先隔離保存，再決定是否採用。
+- `powerblow` 與武器詞綴流程涉及 KING 已定案規則，不做原始版直接覆蓋。
+- 本輪為靜態原始碼交叉驗證，尚未執行 MUD runtime；以上不宣稱執行期 PASS。
