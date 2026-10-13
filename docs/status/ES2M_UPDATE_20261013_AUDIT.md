@@ -15,6 +15,7 @@
 2. 最新 `cmds/std/sneak.c` 已同步到 `es2m_snapshot/mudlib/cmds/std/sneak.c`，作為 ES2M 來源證據，不代表已套用至遊戲 Runtime。
 3. 其餘五個檔案屬於 ES2M WebMUD 前端／測試。KING 分支沒有相應的 ES2M WebMUD 前端目錄；因此完整封存但不把它們錯放進 KING LPC Runtime。
 4. 不變更 Original ES2 固定來源，也不把 ES2-KDS 的行為當作 ES2M 主來源。
+5. 已新增 KING Expansion `sneak.c` 相容性 adapter：以相同公式在檔案內實作 ES2M 的 `COMBAT_D->int_formula_exp(me)`，避免呼叫 Pinned Original 不存在的 daemon API；潛行準備階段與成功時的成長規則均保留。已新增 `scripts/test_es2m_sneak_progression.py`，並將其接入 Dockerfile 的 Expansion 後建置閘門。
 
 ## `sneak.c` 相容性
 
@@ -22,13 +23,13 @@ ES2M 更新包含兩個成長規則：
 - 潛行準備階段改以 `query_attr("int")` 作為 `improve_skill("sneak", ...)` 的輸入。
 - 潛行成功後改用 `COMBAT_D->int_formula_exp(me)` 計算經驗。
 
-KING 固定的 Original ES2 Runtime combat daemon 未提供 `int_formula_exp()`；ES2M snapshot 中的 combat daemon 有此函式，但該快照不能直接當作 KING Runtime。因此目前將 `sneak.c` 標記為 SOURCE SNAPSHOT PASS / RUNTIME ADAPTER REQUIRED。不得直接覆蓋 Original，也不得聲稱遊戲內功能已完成。
+KING 固定的 Original ES2 Runtime combat daemon 未提供 `int_formula_exp()`；ES2M snapshot 中的 combat daemon 有此函式，但該快照不能直接當作 KING Runtime。因此已在 KING Expansion `sneak.c` 內以相同公式建立相容 adapter，不修改 Original ES2 固定來源。
 
 ## 驗證狀態
 
 - ES2M 最新來源與 compare：PASS。
 - 6 個變更檔封存：PASS。
 - ES2M sneak source snapshot：已同步。
-- KING Runtime adapter / targeted tests：PENDING。
+- KING Expansion adapter 與 targeted test gate：已寫入 GitHub；Oracle/Docker 實際執行結果待驗證。
 - Docker build、Oracle gameplay、正式部署：未由本次 GitHub 封存操作驗證。
 - PR #13：OPEN / NOT MERGED。
