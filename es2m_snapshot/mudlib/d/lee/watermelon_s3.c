@@ -13,8 +13,7 @@ LONG
     );
     set("exits", ([
         "west" : __DIR__"watermelon_s2",
-        "north" : __DIR__"watermelon_n3",
-        "east" : __DIR__"creek"
+        "north" : __DIR__"watermelon_n3"
     ]));
     setup();
     replace_program(ROOM);
