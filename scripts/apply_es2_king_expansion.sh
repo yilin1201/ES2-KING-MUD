@@ -4,6 +4,24 @@ TARGET="${1:-.runtime/es2-king}"
 SOURCE="es2_king_expansion/runtime/mudlib"
 test -d "$TARGET/mudlib" || { echo "EXPANSION APPLY FAIL：缺少 $TARGET/mudlib，請先建立獨立 Runtime。" >&2; exit 1; }
 test -d "$SOURCE"
+
+# ES2M Hainmay force sync gate／寒梅心法同步閘門：
+# snapshot 是已核對的 ES2M vendored source；runtime overlay 必須逐位元一致，
+# 防止 build silently deploy 舊公式／舊學習條件。來源更新後須先完成同步再部署。
+REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+ES2M_HAINMAY_SOURCE="$REPO_ROOT/es2m_snapshot/mudlib/daemon/skill/hainmay_force.c"
+KING_HAINMAY_OVERLAY="$REPO_ROOT/es2_king_expansion/runtime/mudlib/daemon/skill/hainmay_force.c"
+if [[ ! -f "$ES2M_HAINMAY_SOURCE" || ! -f "$KING_HAINMAY_OVERLAY" ]]; then
+  echo "ES2M HAINMAY SYNC FAIL／寒梅心法同步失敗：缺少來源快照或 KING overlay。" >&2
+  exit 1
+fi
+if ! cmp -s "$ES2M_HAINMAY_SOURCE" "$KING_HAINMAY_OVERLAY"; then
+  echo "ES2M HAINMAY SYNC FAIL／寒梅心法來源與 KING overlay 不一致；停止套用，避免部署舊版。" >&2
+  diff -u "$ES2M_HAINMAY_SOURCE" "$KING_HAINMAY_OVERLAY" || true
+  exit 1
+fi
+echo "ES2M HAINMAY SYNC PASS／寒梅心法快照與 KING overlay 完全一致。"
+
 cp -a "$SOURCE/." "$TARGET/mudlib/"
 
 # ES2M Training Dummy／練武假人：只在生成 Runtime 套用 ES2M 行為，不改寫保存的 Original ES2。
