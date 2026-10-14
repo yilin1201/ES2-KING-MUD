@@ -102,3 +102,15 @@ KING Runtime 的 `feature/char/skill.c` 有專屬 **KING Owner skill cap 300** �
 4. NPC 基本技能系統另開一批，先完成 class/faction 及 NPC setup 依賴矩陣，再合併 daemon、header、preload、NPC hooks，最後移植相關 NPC 調整。
 5. 每批完成靜態測試後，必須執行實際 Neolith／Driver runtime regression；未執行者標記 NOT VERIFIED。
 6. 保持 PR #13 OPEN / NOT MERGED；未經使用者明確授權不得 Merge 或 Deploy。
+
+
+## 6. 追加全庫路徑掃描（2026-10-14）
+
+已對 KING 目標分支的完整 Git tree（2,496 個路徑，包含本次稽核文件）掃描技能檔名：
+
+- 舊檔名 `sanmeendo.c`、`tiger-force.c` 仍存在於 `es2m_snapshot/mudlib/daemon/skill/`，也存在於歷史匯入資料夾 `source/es2m_updates/...`。
+- KING 分支目前未找到 `ksanmando.c` 或 `tiger_force.c` 這兩個新檔名的路徑。
+- KING Runtime 的 `feature/char/skill.c` 仍將 `sanmeendo` 列入舊技能成長判斷；尚未找到對應的 `migrate_skill_ids()`。
+- KING Snapshot 的 `feature/save.c` 仍在 restore 成功後直接回傳，未呼叫技能 ID 遷移函式。
+
+這代表上游更名尚未以完整相容批次整合。此掃描是路徑與已讀取檔案內容的靜態證據，並不代表所有 LPC 動態字串引用均已完整掃描；後續仍需對技能 ID、技能映射與存檔資料做程式級搜尋及 Runtime 測試。
