@@ -108,6 +108,34 @@ def main() -> None:
 
     if missing or broken or missing_npcs or source_runtime_mismatch:
         print("ES2M_LEE_RUNTIME_FAIL")
+        # Forensic diagnostics／根因診斷：失敗時列出六個已確認出口房間的實際路徑、
+        # 檔案 SHA256、解析器結果與檔案開頭，區分檔案不存在、舊版檔案、parser 未命中。
+        # 只讀取與回報，不修改 Runtime。
+        diagnostic_rooms = {
+            "square_s", "square_c", "watermelon_n1",
+            "pawnshop", "watermelon_s3", "creek",
+        }
+        for room_name in sorted(diagnostic_rooms):
+            source_path = snapshot_area / f"{room_name}.c"
+            runtime_path = runtime_area / f"{room_name}.c"
+            if not runtime_path.is_file():
+                print(f"ROOM_DIAGNOSTIC: {room_name} runtime=MISSING path={runtime_path}")
+                continue
+            runtime_text = runtime_path.read_text(encoding="utf-8", errors="replace")
+            source_hash = sha256(source_path) if source_path.is_file() else "SNAPSHOT_MISSING"
+            print(
+                "ROOM_DIAGNOSTIC:",
+                json.dumps({
+                    "room": room_name,
+                    "runtime_path": str(runtime_path),
+                    "runtime_sha256": sha256(runtime_path),
+                    "snapshot_sha256": source_hash,
+                    "same_bytes": source_hash == sha256(runtime_path),
+                    "parsed_exits": exits(runtime_path),
+                    "runtime_bytes": runtime_path.stat().st_size,
+                    "runtime_head": runtime_text[:320],
+                }, ensure_ascii=False, sort_keys=True),
+            )
         for item in missing:
             print("MISSING_ROOM:", item)
         for item in broken:
