@@ -53,4 +53,4 @@ ES2M_BIRTH_ATTRIBUTE_CONTRACT_STATIC_PASS: 12 races x 8 attributes; NOT RUNTIME 
 - 種族 E2E 尚未執行。
 - Docker／Neolith Runtime 尚未取得本輪執行結果。
 - ES2M 上游最新 commit 尚待獨立重新抓取並確認。
-- `yenhold/breathe.c`、human `resurge`、avatar `radiate` 及固定 Original 與 ES2M 的登入／指令契約差異仍待證據審查。
+- `yenhold/breathe.c`、human `resurge`、avatar `radiate` 的上游來源差異已確認並完成快照／接線更新；實際 LPC 載入、登入／指令契約與玩家 Runtime 結果仍待測試。
