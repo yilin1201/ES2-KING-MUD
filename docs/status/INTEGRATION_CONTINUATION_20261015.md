@@ -14,6 +14,14 @@
 3. 新增 `scripts/test_es2m_birth_attribute_contract.py`，用靜態來源契約比對 12 個種族的 8 個屬性，避免 E2E 腳本中的出生範圍表與保存快照逐漸不一致；並已將此檢查加入 Dockerfile 的建置閘門，供下一次建置自動執行。
 4. 新增此續作紀錄，明確保留尚未執行的測試與阻塞項目。
 
+
+## 後續整合更新（2026-10-15）
+
+- 已確認 ES2M 參考來源 wolfer168/es2-webmud/main 的 HEAD 為 f21f59cecb55e5c3e31d2e97a7ef6d43783ecdcb，與先前盤點記錄一致；這是第三方 ES2M 來源，不等同 Original ES2。
+- 已同步 yenhold/breathe 的裝備火焰傷害加成，並新增 human/resurge 與 avatar/radiate 參考指令。
+- 已將 resurge/radiate 接入 race overlay，並更新靜態、回歸及玩家 E2E 測試。
+- 本輪尚未執行完整 Repository 測試、Docker、Neolith 或玩家 E2E；目前不能宣稱 Runtime PASS。Render 維持暫停，PR #13 不合併。
+
 ## 新增靜態測試
 
 從 Repository 根目錄執行：
