@@ -1,0 +1,38 @@
+name: ES2-KING Race Integration Static Gates
+
+on:
+  push:
+    branches:
+      - audit/king-race-runtime-inventory-20261015
+    paths:
+      - "es2m_snapshot/mudlib/daemon/race/**"
+      - "scripts/apply_race_phase2_runtime.sh"
+      - "scripts/test_es2m_birth_attribute_contract.py"
+      - "scripts/test_es2m_race_command_contract.py"
+      - "scripts/test_race_phase2_static.sh"
+      - "scripts/test_race_phase2_regression.sh"
+      - "scripts/test_original_player_creation_e2e.mjs"
+      - ".github/workflows/es2m-race-static.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  race-static:
+    name: Race source and command contract (static only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Check 12-race birth attribute ranges
+        run: python3 scripts/test_es2m_birth_attribute_contract.py
+      - name: Check race command source, overlay and E2E contract
+        run: python3 scripts/test_es2m_race_command_contract.py
+      - name: Check race overlay wiring
+        run: bash scripts/test_race_phase2_static.sh
