@@ -9,7 +9,7 @@
 - 本次盤點基準 HEAD：`25f5f2ac2daaa4e5ad130d0f3f79abccc1dea7a9`
 - 本文件分支：`audit/king-race-runtime-inventory-20261015`
 - Docker 固定 Original ES2 commit：`cc45c06af4852380e5148dad3c9d53ff06854f2c`（取自基準分支 Dockerfile）
-- ES2M 最新來源 commit：`f21f59cecb55e5c3e31d2e97a7ef6d43783ecdcb`（依本輪提供的差異盤點紀錄；本文件尚未獨立重新抓取該上游 commit 驗證）
+- ES2M 最新來源 commit：`f21f59cecb55e5c3e31d2e97a7ef6d43783ecdcb`（已獨立確認 wolfer168/es2-webmud/main HEAD，且 commit SHA 相同）
 - Render：暫停
 - PR #13：本輪查詢結果為 OPEN / NOT MERGED；基底分支 main，HEAD 為上述基準 HEAD。
 
