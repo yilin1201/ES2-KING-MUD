@@ -54,3 +54,13 @@ ES2M_BIRTH_ATTRIBUTE_CONTRACT_STATIC_PASS: 12 races x 8 attributes; NOT RUNTIME 
 - Docker／Neolith Runtime 尚未取得本輪執行結果。
 - ES2M 上游 commit 已獨立確認：wolfer168/es2-webmud/main = `f21f59cecb55e5c3e31d2e97a7ef6d43783ecdcb`；該來源仍屬第三方 ES2M，不代表 Original ES2。
 - `yenhold/breathe.c`、human `resurge`、avatar `radiate` 的上游來源差異已確認並完成快照／接線更新；實際 LPC 載入、登入／指令契約與玩家 Runtime 結果仍待測試。
+
+## 後續整合補強（2026-10-15）
+
+- 已將 `human/resurge.c` 與 `avatar/radiate.c` 快照恢復為與第三方 ES2M 上游來源逐位元文字一致；來源說明保留在本文件與盤點清冊，不插入原始程式內容。
+- 已擴充 `test_race_phase2_regression.sh`：檢查全部 10 個種族指令確實存在於生成 Runtime 的 `mudlib/cmds/usr`，並逐檔比對其內容是否與 ES2M 快照一致。只檢查 `daemon/race/<race>` 的來源檔不足以證明玩家指令可達。
+- 新增 `scripts/test_es2m_race_command_contract.py`，核對 10 組 race-to-command mapping、快照來源檔、回歸檢查與 E2E 探測是否一致；Dockerfile 已加入此靜態閘門。
+- 新增獨立 GitHub Actions 靜態驗證 workflow：`.github/workflows/es2m-race-static.yml`。本輪兩次 workflow run 均回報 failure，但工作記錄 API 回傳 Logs 404 / BlobNotFound，無法取得實際步驟輸出；因此目前將 CI 結果分類為 `INFRA/DIAGNOSTIC BLOCKED`，不能把它當作程式測試失敗的根因，也不能宣稱 PASS。
+- 已使用 GitHub 取得的原始碼，以等價靜態解析重新比對 12 個種族 × 8 項屬性範圍，兩批共 96 項一致；這不是實際執行 Python 測試程式或 LPC Runtime 的證據。
+- 本地容器無法解析 github.com，無法在本工作環境 clone 完整 repository；Render 繼續暫停，不以部署取代驗證。
+
