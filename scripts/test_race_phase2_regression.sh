@@ -8,6 +8,7 @@ LOGIN="$ROOT/mudlib/adm/daemons/logind.c"
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 ES2M_RACE_DIR="$REPO_ROOT/es2m_snapshot/mudlib/daemon/race"
+CMD_DIR="$ROOT/mudlib/cmds/usr"
 
 # ES2M source contract／來源契約：三個優先 Runtime daemon 必須存在。
 for race in human avatar headless; do
@@ -62,8 +63,9 @@ for race in "${ALL_RACES[@]}"; do
   }
 done
 
-# Additional ES2M race commands／人類復甦、化身光耀及厭火吐息必須由快照接入 Runtime。
-for pair in human:resurge avatar:radiate yenhold:breathe; do
+# Race command reachability／所有映射種族指令必須真正複製至玩家 command path，且與快照一致。
+# 只檢查 daemon/race/<race> 下的來源檔不足以證明玩家可執行。
+for pair in human:resurge avatar:radiate blackteeth:gnaw yenhold:breathe woochan:replete dingling:hoof jiaojao:hide rainner:feed headless:dance yaksa:devour; do
   race="${pair%%:*}"
   command="${pair#*:}"
   test -f "$ES2M_RACE_DIR/$race/$command.c" || {
@@ -78,9 +80,17 @@ for pair in human:resurge avatar:radiate yenhold:breathe; do
     echo "FAIL／Runtime 種族指令與快照不一致：$race/$command.c" >&2
     exit 1
   }
+  test -f "$CMD_DIR/$command.c" || {
+    echo "FAIL／玩家指令路徑缺少：cmds/usr/$command.c" >&2
+    exit 1
+  }
+  cmp -s "$ES2M_RACE_DIR/$race/$command.c" "$CMD_DIR/$command.c" || {
+    echo "FAIL／玩家指令與 ES2M 快照不一致：cmds/usr/$command.c" >&2
+    exit 1
+  }
 done
 grep -Fq '[human]=resurge' "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh"
 grep -Fq '[avatar]=radiate' "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh"
 grep -Fq '[yenhold]=breathe' "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh"
 
-echo 'RACE ES2M REGRESSION PASS／12 個 Runtime 種族檔與 ES2M 快照一致，登入清單及優先種族及新增指令契約通過；不代表 LPC 編譯或 Runtime E2E 已通過。'
+echo 'RACE ES2M REGRESSION PASS／12 個 Runtime 種族檔與 ES2M 快照一致，登入清單及優先種族、10 個玩家指令來源及實際 command path 契約通過；不代表 LPC 編譯或 Runtime E2E 已通過。'
