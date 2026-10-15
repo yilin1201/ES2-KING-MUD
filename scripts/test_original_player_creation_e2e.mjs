@@ -64,6 +64,8 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   s=session(); await s.wait("您的使用者代號"); s.send(id+"\r\n"); await s.wait("請輸入密碼"); s.send(password+"\r\n");
   await s.wait("目前權限: (player)"); await s.wait("客棧大堂"); await s.wait("> ");
   const raceCommandProbe = {
+    human:["resurge",/只有形體或氣降到最大值四分之一以下時才能使用 resurge|復甦之力尚未恢復/],
+    avatar:["radiate",/身上泛起一陣柔和光芒|radiate 尚在冷卻中/],
     blackteeth:["gnaw",/你要咬誰/],
     yenhold:["breathe",/沒有敵人|神不足/],
     woochan:["replete",/腹中空鳴|神不足/],
