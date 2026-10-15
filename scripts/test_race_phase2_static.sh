@@ -18,6 +18,9 @@ for race in human avatar blackteeth yenhold woochan dingling jiaojao rainner ash
 done
 
 # Priority race commands／歷史種族的專屬指令需由 overlay 明確接線。
+for token in '[human]=resurge' '[avatar]=radiate'; do
+  grep -Fq "$token" "$RUNTIME_SCRIPT"
+done
 for token in '[blackteeth]=gnaw' '[yenhold]=breathe' '[woochan]=replete' '[dingling]=hoof' '[jiaojao]=hide' '[rainner]=feed' '[headless]=dance' '[yaksa]=devour'; do
   grep -Fq "$token" "$RUNTIME_SCRIPT"
 done
