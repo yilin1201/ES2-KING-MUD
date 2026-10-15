@@ -30,6 +30,7 @@ COPY . .
 # ES2M Birth Attribute Contract Gate／防止 E2E 出生屬性範圍與保存的 ES2M race daemon 不一致。
 # 靜態來源驗證，不代表 LPC 編譯或實際創角 Runtime PASS。
 RUN python3 scripts/test_es2m_birth_attribute_contract.py
+RUN python3 scripts/test_es2m_race_command_contract.py
 
 # ADMIN GM Static Gate／先在建置早期驗證管理員指令的權限、參數與技能映射契約。
 RUN bash scripts/test_admin_gm_static.sh
