@@ -32,8 +32,73 @@ jobs:
         with:
           python-version: "3.x"
       - name: Check 12-race birth attribute ranges
-        run: python3 scripts/test_es2m_birth_attribute_contract.py
+        id: birth_contract
+        continue-on-error: true
+        run: |
+          set +e
+          python3 scripts/test_es2m_birth_attribute_contract.py 2>&1 | tee /tmp/birth-contract.log
+          rc=${PIPESTATUS[0]}
+          echo "exit_code=$rc" >> "$GITHUB_OUTPUT"
+          exit "$rc"
       - name: Check race command source, overlay and E2E contract
-        run: python3 scripts/test_es2m_race_command_contract.py
+        id: command_contract
+        continue-on-error: true
+        run: |
+          set +e
+          python3 scripts/test_es2m_race_command_contract.py 2>&1 | tee /tmp/command-contract.log
+          rc=${PIPESTATUS[0]}
+          echo "exit_code=$rc" >> "$GITHUB_OUTPUT"
+          exit "$rc"
       - name: Check race overlay wiring
-        run: bash scripts/test_race_phase2_static.sh
+        id: overlay_static
+        continue-on-error: true
+        run: |
+          set +e
+          bash scripts/test_race_phase2_static.sh 2>&1 | tee /tmp/overlay-static.log
+          rc=${PIPESTATUS[0]}
+          echo "exit_code=$rc" >> "$GITHUB_OUTPUT"
+          exit "$rc"
+      - name: Publish gate diagnostics
+        if: always()
+        env:
+          BIRTH_OUTCOME: ${{ steps.birth_contract.outcome }}
+          BIRTH_CODE: ${{ steps.birth_contract.outputs.exit_code }}
+          COMMAND_OUTCOME: ${{ steps.command_contract.outcome }}
+          COMMAND_CODE: ${{ steps.command_contract.outputs.exit_code }}
+          OVERLAY_OUTCOME: ${{ steps.overlay_static.outcome }}
+          OVERLAY_CODE: ${{ steps.overlay_static.outputs.exit_code }}
+        run: |
+          {
+            echo "## ES2-KING race static gate diagnostics"
+            echo
+            echo "| Gate | Outcome | Exit code |"
+            echo "|---|---|---:|"
+            echo "| Birth attribute contract | ${BIRTH_OUTCOME:-NOT_RUN} | ${BIRTH_CODE:-unknown} |"
+            echo "| Race command contract | ${COMMAND_OUTCOME:-NOT_RUN} | ${COMMAND_CODE:-unknown} |"
+            echo "| Overlay wiring | ${OVERLAY_OUTCOME:-NOT_RUN} | ${OVERLAY_CODE:-unknown} |"
+            echo
+            echo "These are static source checks only; they do not establish LPC/Neolith runtime or player E2E PASS."
+          } >> "$GITHUB_STEP_SUMMARY"
+          mkdir -p /tmp/race-static-diagnostics
+          for f in /tmp/birth-contract.log /tmp/command-contract.log /tmp/overlay-static.log; do
+            if [ -f "$f" ]; then cp "$f" /tmp/race-static-diagnostics/; fi
+          done
+      - name: Upload gate logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: es2m-race-static-diagnostics
+          path: /tmp/race-static-diagnostics/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Fail if any static gate failed
+        if: always()
+        env:
+          BIRTH_OUTCOME: ${{ steps.birth_contract.outcome }}
+          COMMAND_OUTCOME: ${{ steps.command_contract.outcome }}
+          OVERLAY_OUTCOME: ${{ steps.overlay_static.outcome }}
+        run: |
+          if [ "$BIRTH_OUTCOME" != "success" ] || [ "$COMMAND_OUTCOME" != "success" ] || [ "$OVERLAY_OUTCOME" != "success" ]; then
+            echo "One or more race static gates failed; see job summary and artifact."
+            exit 1
+          fi
