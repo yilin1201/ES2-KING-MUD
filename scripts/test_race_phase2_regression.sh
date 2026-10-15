@@ -62,4 +62,25 @@ for race in "${ALL_RACES[@]}"; do
   }
 done
 
-echo 'RACE ES2M REGRESSION PASS／12 個 Runtime 種族檔與 ES2M 快照一致，登入清單及優先種族契約通過；不代表 LPC 編譯或 Runtime E2E 已通過。'
+# Additional ES2M race commands／人類復甦、化身光耀及厭火吐息必須由快照接入 Runtime。
+for pair in human:resurge avatar:radiate yenhold:breathe; do
+  race="${pair%%:*}"
+  command="${pair#*:}"
+  test -f "$ES2M_RACE_DIR/$race/$command.c" || {
+    echo "FAIL／ES2M 缺少種族指令：$race/$command.c" >&2
+    exit 1
+  }
+  test -f "$RACE_DIR/$race/$command.c" || {
+    echo "FAIL／Runtime 缺少種族指令：$race/$command.c" >&2
+    exit 1
+  }
+  cmp -s "$ES2M_RACE_DIR/$race/$command.c" "$RACE_DIR/$race/$command.c" || {
+    echo "FAIL／Runtime 種族指令與快照不一致：$race/$command.c" >&2
+    exit 1
+  }
+done
+grep -Fq '[human]=resurge' "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh"
+grep -Fq '[avatar]=radiate' "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh"
+grep -Fq '[yenhold]=breathe' "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh"
+
+echo 'RACE ES2M REGRESSION PASS／12 個 Runtime 種族檔與 ES2M 快照一致，登入清單及優先種族及新增指令契約通過；不代表 LPC 編譯或 Runtime E2E 已通過。'
