@@ -1,7 +1,4 @@
-/* CUSTOM A-H RACE COMMAND: human resurge
- * Source: wolfer168/es2-webmud, main at f21f59cecb55e5c3e31d2e97a7ef6d43783ecdcb.
- * ES2-KING third-party ES2M reference; not asserted as Original ES2 canon.
- */
+/* CUSTOM A-H RACE COMMAND: human resurge */
 #include <ansi.h>
 inherit F_CLEAN_UP;
 #define RESURGE_COOLDOWN 360
