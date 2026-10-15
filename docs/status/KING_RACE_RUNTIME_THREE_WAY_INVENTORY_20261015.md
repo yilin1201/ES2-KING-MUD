@@ -87,6 +87,19 @@
 | `feature/char/score.c` | phase2 套用腳本已從 snapshot 複製到 Generated Runtime | 既有整合 | 不重複整合；針對角色成長與種族職業上限做 Runtime 驗證 |
 | 12 個種族 daemon | 現有靜態回歸腳本要求 Runtime 檔案與 snapshot 相同，並檢查登入種族表 | 靜態契約已具備；真實創角證據待補 | 逐一執行創角、核對出生數值、存檔與重登；保存原始輸出 |
 
+## 實機創角腳本檢查發現的證據缺口
+
+檢查既有 `scripts/test_original_player_creation_e2e.mjs` 後，確認原本腳本會檢查角色存檔存在、種族、commoner 職業、等級 1、部分種族指令、存檔／登出／重登；但原本**沒有直接比對存檔中的八大出生屬性數值**。因此即使創角旅程通過，也不足以單獨證明出生屬性符合 ES2M。
+
+本盤點分支已新增八大出生屬性範圍斷言，涵蓋 12 種族，並輸出 `ES2M_BIRTH_ATTRIBUTES_PASS:<race>` 標記。範圍依本分支各 race daemon 的 `base + random(n)` 推導，包含下限與上限；此修改只調整測試，不改遊戲邏輯。
+
+- 測試檔：`scripts/test_original_player_creation_e2e.mjs`
+- 修改前 Git blob SHA：`d410b05e8f5bb2c9f902f6cb9bccda1433463045`
+- 修改後 Git blob SHA：`a545ad26501b34625c8283f4b46921c6e3529a9c`
+- 修改後 commit：`28e850a3822f6b7cc5644582d481e2ae2d7a8b52`
+- 驗證狀態：`RUNTIME_UNKNOWN`；尚未在 Docker／Neolith 實際執行，需確認存檔序列化格式確實可由測試取出屬性欄位，並確認 12 種族的範圍斷言與實測一致。
+- 注意：這是對 ES2M snapshot 採用值的測試，不代表該第三方數值等於 Original ES2 Canon。
+
 ## 三方雜湊表的完成規則
 
 每個目標檔案需記錄三種不同證據，不能混用：
