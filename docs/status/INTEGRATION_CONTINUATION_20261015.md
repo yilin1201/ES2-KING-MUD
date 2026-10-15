@@ -11,7 +11,7 @@
 
 1. 重新讀取 `admin.c` 在 `build/original-es2-races-phase2` 與 `audit/king-race-runtime-inventory-20261015` 的版本。兩者 Git blob SHA 相同，均為 `8488ecdf4ea69507c1ac43e2e589c03f5779cfb6`；這只能證明兩個已查分支相同，不能證明包含 Claude 尚未推送的修改。
 2. 逐一核對 ES2M snapshot 的 12 個種族 daemon，確認其八大出生屬性來源使用 `init_attribute` 中的 `base + random(n)` 形式。
-3. 新增 `scripts/test_es2m_birth_attribute_contract.py`，用靜態來源契約比對 12 個種族的 8 個屬性，避免 E2E 腳本中的出生範圍表與保存快照逐漸不一致。
+3. 新增 `scripts/test_es2m_birth_attribute_contract.py`，用靜態來源契約比對 12 個種族的 8 個屬性，避免 E2E 腳本中的出生範圍表與保存快照逐漸不一致；並已將此檢查加入 Dockerfile 的建置閘門，供下一次建置自動執行。
 4. 新增此續作紀錄，明確保留尚未執行的測試與阻塞項目。
 
 ## 新增靜態測試
@@ -41,7 +41,7 @@ ES2M_BIRTH_ATTRIBUTE_CONTRACT_STATIC_PASS: 12 races x 8 attributes; NOT RUNTIME 
 
 ## 尚未證明的項目
 
-- 新增的 Python 靜態契約測試尚未在完整 Repository 工作目錄實際執行。
+- 新增的 Python 靜態契約測試尚未在完整 Repository 工作目錄實際執行；本輪已透過 GitHub 讀取到的 12 個來源檔與 E2E 範圍表做等價靜態比對，12×8 項均一致，但這不等於 Python 測試程式或 Docker 建置已實際執行。
 - 種族 E2E 尚未執行。
 - Docker／Neolith Runtime 尚未取得本輪執行結果。
 - ES2M 上游最新 commit 尚待獨立重新抓取並確認。
