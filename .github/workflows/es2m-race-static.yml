@@ -12,6 +12,7 @@ on:
       - "scripts/test_race_phase2_static.sh"
       - "scripts/test_race_phase2_regression.sh"
       - "scripts/test_original_player_creation_e2e.mjs"
+      - "Dockerfile"
       - ".github/workflows/es2m-race-static.yml"
   workflow_dispatch:
 
