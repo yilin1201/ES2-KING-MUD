@@ -49,7 +49,7 @@
 | human | `es2m_snapshot/mudlib/daemon/race/human.c` | `1e339ef44e23ea5b360a8a51ba16827b88cc6b7e` | 直接複製至 Runtime race daemon | `RUNTIME_UNKNOWN`：需 12 種族實機創角證據 |
 | avatar | `es2m_snapshot/mudlib/daemon/race/avatar.c` | `41de6963abc2d779798138f06328853a77c8ae06` | 直接複製至 Runtime race daemon | `RUNTIME_UNKNOWN` |
 | blackteeth | `es2m_snapshot/mudlib/daemon/race/blackteeth.c` | `e401307026485eb8228353929a80215b6cf71b4a` | 直接複製；另接 gnaw 指令 | `RUNTIME_UNKNOWN` |
-| yenhold | `es2m_snapshot/mudlib/daemon/race/yenhold.c` | `10678bf657204fbc46029ee47ca767daf6e275b7` | 直接複製；另接 breathe 指令 | `RUNTIME_UNKNOWN`；breathe 與較新上游來源有已報告差異 |
+| yenhold | `es2m_snapshot/mudlib/daemon/race/yenhold.c` | `10678bf657204fbc46029ee47ca767daf6e275b7` | 直接複製；另接 breathe 指令 | `RUNTIME_UNKNOWN`；breathe 已同步 f21f59c 上游差異，仍待 Runtime 驗證 |
 | woochan | `es2m_snapshot/mudlib/daemon/race/woochan.c` | `b0091a7812cd20f6af8793635b589c5a766bfe12` | 直接複製；另接 replete 指令 | `RUNTIME_UNKNOWN` |
 | dingling | `es2m_snapshot/mudlib/daemon/race/dingling.c` | `9a9069ed650e981ffb80efb6682024a6293d148a` | 直接複製；另接 hoof 指令 | `RUNTIME_UNKNOWN` |
 | jiaojao | `es2m_snapshot/mudlib/daemon/race/jiaojao.c` | `f97688a52c7cdb539713daa6eccfddcc64789158` | 直接複製；另接 hide 指令 | `RUNTIME_UNKNOWN` |
@@ -72,16 +72,16 @@
 | `es2m_snapshot/mudlib/daemon/class/scholar.c` | `f3580a90c07849eaae87fc247ea42b6584d5c47c` | 同上 | 既有整合 | 同上 |
 | `es2m_snapshot/mudlib/daemon/class/monk.c` | `e508baf3c28714645cc29f06b4d2d8583d203e6e` | 同上 | 既有整合 | 同上 |
 | `es2m_snapshot/mudlib/daemon/class/thief.c` | `f67ac5f7a6e3112692eb84760156fa99b735e88f` | 同上 | 既有整合 | 同上 |
-| `es2m_snapshot/mudlib/daemon/race/yenhold/breathe.c` | `03d870214c719e4ab80c52b269862e9578bd3771` | 複製至 `cmds/usr/breathe.c` | 與 ES2M 最新來源的內容差異待確認 | 取得最新來源檔、做語意 diff、再決定是否更新 snapshot |
+| `es2m_snapshot/mudlib/daemon/race/yenhold/breathe.c` | `6aca4dc824bc3c36fb1361dd0c0f45e919d82116` | 複製至 `cmds/usr/breathe.c` | 已同步上游火焰傷害力加成 | 靜態／Runtime 回歸仍待執行 |
 | `es2m_snapshot/mudlib/daemon/race/headless/dance.c` | `eab9f024cfeab307e9524c1868feaa0ddbdbe0e6` | 複製至 `cmds/usr/dance.c` | 既有指令接線 | 實際玩家指令可達性測試 |
 
 ## 已報告差異與處理決策
 
 | 項目 | 目前觀察 | 分類 | 本輪處理 |
 |---|---|---|---|
-| `yenhold/breathe.c` | 使用者提供的比對報告指出，ES2M 最新版新增裝備火焰傷害力；snapshot 仍是舊版 | `UNKNOWN`，待重新取得上游檔案與 diff | 不直接更新；先驗證差異、依賴與裝備效果測試 |
-| Human `resurge` | 比對報告指出較新 ES2M 有此指令，snapshot 與 phase2 接線未包含 | `ADAPTER_REQUIRED`（待確認來源及完整依賴） | 不先接線；先檢查指令源碼、登入／角色能力契約、衝突及權限 |
-| Avatar `radiate` | 比對報告指出較新 ES2M 有此指令，snapshot 與 phase2 接線未包含 | `ADAPTER_REQUIRED`（待確認來源及完整依賴） | 不先接線；先檢查指令源碼、登入／角色能力契約、衝突及權限 |
+| `yenhold/breathe.c` | 已直接核對 wolfer168/es2-webmud commit `f21f59cecb55e5c3e31d2e97a7ef6d43783ecdcb`；上游多出 `apply/damage_vs_fire` 加成與 help 說明 | `SOURCE_DIFF_CONFIRMED`；Runtime 行為仍 `UNKNOWN` | 已同步快照；待測裝備加成、傷害與指令 Runtime |
+| Human `resurge` | 已從上游 commit `f21f59cecb55e5c3e31d2e97a7ef6d43783ecdcb` 取得來源，已加入快照並接入 race command overlay | `ADAPTER_REQUIRED`；Runtime／數值邊界仍 `UNKNOWN` | 靜態回歸與實際玩家指令測試待執行 |
+| Avatar `radiate` | 已從上游 commit `f21f59cecb55e5c3e31d2e97a7ef6d43783ecdcb` 取得來源，已加入快照並接入 race command overlay | `ADAPTER_REQUIRED`；Runtime／數值邊界仍 `UNKNOWN` | 靜態回歸與實際玩家指令測試待執行 |
 | `std/char/npc.c` | 較新 ES2M 有 NPC 技能機制；非種族階段核心範圍 | `UNKNOWN`／範圍外 | 不納入本輪種族整合；另開 NPC 依賴審查 |
 | `logind.c`、`chard.c`、`command.h` | snapshot 未收錄；生成 Runtime 使用固定 Original 版本 | `COMPATIBILITY_REVIEW_REQUIRED` | 不以 snapshot 缺檔判為過時；比對固定 Original 與最新 ES2M 的契約差異 |
 | `feature/char/score.c` | phase2 套用腳本已從 snapshot 複製到 Generated Runtime | 既有整合 | 不重複整合；針對角色成長與種族職業上限做 Runtime 驗證 |
@@ -124,7 +124,7 @@ Git blob SHA 不等於 SHA-256；相同 blob SHA 表示 Git 內容物件相同�
 5. [ ] 確認測試腳本中的 12 種族靜態檢查通過；將靜態結果與真實 Runtime E2E 分開記錄。
 6. [ ] 使用可切換單鍵／整行輸入的實機創角腳本，逐一建立 12 個種族角色，保存登入、出生屬性、存檔、登出及重登證據。
 7. [ ] 逐項重現與確認五個阻擋點，建立「現象、重現步驟、日誌、根因狀態、影響、後續方案」紀錄；未取得證據前不自行命名根因。
-8. [ ] 重新取得 ES2M 最新版 `yenhold/breathe.c`、Human `resurge`、Avatar `radiate` 原始檔並做語意 diff；此步完成前不修改 snapshot 或接線。
+8. [x] 已重新取得 ES2M 最新版 `yenhold/breathe.c`、Human `resurge`、Avatar `radiate` 並完成來源差異確認；`breathe` 已同步，`resurge`／`radiate` 已新增並接線。仍需執行靜態、LPC 與玩家 Runtime 驗證。
 9. [ ] 更新本清冊的三方 SHA、Runtime 證據與狀態。
 10. [ ] PR #13 保持 OPEN / NOT MERGED；不部署 Render；不套用外部整合 ZIP。
 
