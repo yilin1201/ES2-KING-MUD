@@ -52,5 +52,5 @@ ES2M_BIRTH_ATTRIBUTE_CONTRACT_STATIC_PASS: 12 races x 8 attributes; NOT RUNTIME 
 - 新增的 Python 靜態契約測試尚未在完整 Repository 工作目錄實際執行；本輪已透過 GitHub 讀取到的 12 個來源檔與 E2E 範圍表做等價靜態比對，12×8 項均一致，但這不等於 Python 測試程式或 Docker 建置已實際執行。
 - 種族 E2E 尚未執行。
 - Docker／Neolith Runtime 尚未取得本輪執行結果。
-- ES2M 上游最新 commit 尚待獨立重新抓取並確認。
+- ES2M 上游 commit 已獨立確認：wolfer168/es2-webmud/main = `f21f59cecb55e5c3e31d2e97a7ef6d43783ecdcb`；該來源仍屬第三方 ES2M，不代表 Original ES2。
 - `yenhold/breathe.c`、human `resurge`、avatar `radiate` 的上游來源差異已確認並完成快照／接線更新；實際 LPC 載入、登入／指令契約與玩家 Runtime 結果仍待測試。
