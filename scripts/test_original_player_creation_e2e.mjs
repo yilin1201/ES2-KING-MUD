@@ -30,7 +30,37 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   for(const cmd of ["look","score","skills","inventory"]){const o=s.output().length;s.send(cmd+"\r\n");await s.wait("> ",o)}
   s.send("save\r\n"); await s.wait("檔案儲存完畢"); assert.equal(await exists(login),true); assert.equal(await exists(user),true);
   s.send("quit\r\n"); await s.wait("歡迎下次再來"); s.close(); await new Promise(r=>setTimeout(r,250));
-  const saved=await readFile(user,"utf8"); assert.match(saved,new RegExp(`"race":"${raceId}"`)); assert.match(saved,/"class":"commoner"/); assert.match(saved,/"level":1/);
+  const saved=await readFile(user,"utf8");
+  assert.match(saved,new RegExp(`"race":"${raceId}"`));
+  assert.match(saved,/"class":"commoner"/);
+  assert.match(saved,/"level":1/);
+
+  // ES2M birth-attribute contract／核對實際存檔的八大出生屬性；範圍依同分支 ES2M race daemon 的 base + random(n) 推導。
+  // random(n) 的有效範圍為 base 至 base+n-1；這裡只驗證出生屬性範圍，不把 Original ES2 基準與 ES2M 採用值混為一談。
+  const birthRanges = {
+    human:      {str:[13,18],cor:[13,18],int:[13,18],spi:[13,18],cps:[13,18],dex:[13,18],con:[13,18],wis:[13,18]},
+    avatar:     {str:[15,20],cor:[15,20],int:[15,20],spi:[15,20],cps:[15,20],dex:[15,20],con:[15,20],wis:[15,20]},
+    blackteeth: {str:[14,19],cor:[15,20],int:[5,15],spi:[3,8],cps:[10,15],dex:[11,16],con:[13,18],wis:[6,11]},
+    yenhold:    {str:[15,20],cor:[9,14],int:[5,10],spi:[7,12],cps:[14,20],dex:[9,14],con:[17,22],wis:[10,15]},
+    woochan:    {str:[10,15],cor:[10,15],int:[15,20],spi:[15,20],cps:[13,18],dex:[15,20],con:[10,15],wis:[14,22]},
+    dingling:   {str:[14,20],cor:[8,11],int:[11,18],spi:[8,11],cps:[8,17],dex:[17,25],con:[14,20],wis:[12,16]},
+    jiaojao:    {str:[8,14],cor:[8,13],int:[16,19],spi:[13,19],cps:[13,19],dex:[18,24],con:[11,16],wis:[13,18]},
+    rainner:    {str:[6,9],cor:[6,9],int:[17,22],spi:[18,24],cps:[15,20],dex:[10,13],con:[10,13],wis:[20,28]},
+    ashura:     {str:[20,25],cor:[25,40],int:[13,18],spi:[14,22],cps:[5,10],dex:[15,20],con:[17,22],wis:[13,18]},
+    headless:   {str:[25,30],cor:[15,20],int:[8,13],spi:[5,10],cps:[11,16],dex:[19,24],con:[23,28],wis:[13,18]},
+    yaksa:      {str:[16,25],cor:[17,25],int:[13,18],spi:[13,18],cps:[13,18],dex:[13,18],con:[16,25],wis:[13,18]},
+    malik:      {str:[8,11],cor:[8,11],int:[25,30],spi:[25,30],cps:[23,28],dex:[20,25],con:[10,15],wis:[20,25]}
+  };
+  const expectedAttributes = birthRanges[raceId];
+  assert.ok(expectedAttributes, `缺少 ${raceId} 出生屬性驗證規格`);
+  for (const [attribute, [min, max]] of Object.entries(expectedAttributes)) {
+    const match = saved.match(new RegExp(`"${attribute}"\\s*:\\s*(-?\\d+)`));
+    assert.ok(match, `存檔缺少出生屬性 ${attribute}，無法判定 ${raceId} 創角數值`);
+    const value = Number(match[1]);
+    assert.ok(value >= min && value <= max,
+      `${raceId} 出生屬性 ${attribute}=${value} 超出 ES2M 快照範圍 ${min}..${max}`);
+  }
+  console.log(`ES2M_BIRTH_ATTRIBUTES_PASS:${raceId}`);
   s=session(); await s.wait("您的使用者代號"); s.send(id+"\r\n"); await s.wait("請輸入密碼"); s.send(password+"\r\n");
   await s.wait("目前權限: (player)"); await s.wait("客棧大堂"); await s.wait("> ");
   const raceCommandProbe = {
