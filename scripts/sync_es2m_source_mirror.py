@@ -86,16 +86,25 @@ def main() -> None:
 
         stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d")
         archive = ARCHIVE_ROOT / f"{stamp}_{latest[:7]}"
+        # 失敗重跑時可能留下未完成的同名封存目錄；只有缺少 MANIFEST 的暫存目錄才允許清理。
+        # 已有 MANIFEST 的封存視為完成證據，不自動覆蓋。
         if archive.exists():
-            raise SystemExit(f"ES2M SYNC BLOCKED：封存目錄已存在：{archive.relative_to(ROOT)}")
-        archive.mkdir(parents=True)
+            if (archive / "MANIFEST.md").is_file():
+                raise SystemExit(f"ES2M SYNC BLOCKED：完整封存已存在：{archive.relative_to(ROOT)}")
+            print(f"ES2M SYNC RECOVERY：清理未完成封存 {archive.relative_to(ROOT)}")
+            shutil.rmtree(archive)
+        archive_stage = archive.with_name(archive.name + ".sync-tmp")
+        if archive_stage.exists():
+            shutil.rmtree(archive_stage)
+        archive_stage.mkdir(parents=True)
 
+        print(f"ES2M SYNC STAGE：base={previous} latest={latest} paths={len(changes)}")
         archived = 0
         for status, rel, old_rel in changes:
             # 刪除檔不從 KING 刪除；只記錄刪除狀態，其餘保存上游最新原始檔。
             source = safe_source_path(upstream, rel)
             if status != "D" and source.is_file():
-                destination = archive / rel
+                destination = archive_stage / rel
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(source, destination)
                 archived += 1
@@ -144,9 +153,12 @@ def main() -> None:
         ]
         for status, rel, old_rel in changes:
             manifest_lines.append(f"| {status} | {rel} | {old_rel or ''} |")
-        (archive / "MANIFEST.md").write_text(
+        (archive_stage / "MANIFEST.md").write_text(
             "\n".join(manifest_lines) + "\n", encoding="utf-8"
         )
+        # 只有封存清單完成後才公開正式目錄，避免半成品被誤認為已同步。
+        archive_stage.rename(archive)
+        print(f"ES2M SYNC STAGE：archive ready files={archived}")
 
         mirror_manifest = {
             "purpose": "ES2M 原始 Mudlib 完整唯讀鏡像；不得直接當成 KING runtime overlay。",
