@@ -37,5 +37,7 @@
 - 職業經驗／等級批次：`HOLD`，等待差異分析，特別是 `score.c` 及四類職業的經驗規則。
 - `look.c` Docker 阻塞：根因已由使用者本機重播 `beb9e673` 確認；Expansion 的 Python replacement 把字面反斜線 n 寫進 LPC 原始碼。已修正為真正換行，加入輸出防呆，並在 Dockerfile 加入 Neolith 實際載入 `/cmds/std/look` 的 gate。狀態：`FIX COMMITTED / RUNTIME PRELOAD PENDING`；未重跑前不得標記 PASS。
 - 數字開頭帳號：Pinned Original ES2 `logind.c` 的 `check_legal_id()` 明確只接受 3–12 個小寫英文字母，數字會被拒絕。依 preserve Original ES2 原則，保留登入規則；E2E 改為驗證數字開頭 ID 被拒絕且不產生存檔，不修改 `logind.c`。
+- 低成本整合語法／來源契約閘門：GitHub Actions run `38974801566`（`ES2-KING Integration Look Gate`）已成功；涵蓋 Bash、Python、Node 語法，假人來源契約、12 種族／出生屬性契約與數字帳號拒絕政策。此結果不代表 Docker／Neolith Runtime PASS。
+- Docker builder 驗證：已在整合工作流程加入明確 opt-in 的完整 builder job；本次提交會要求執行 `docker build --progress=plain --target builder`，只建置、不推送、不部署。結果待 Actions 回報。
 - 全量／範圍式來源盤點：程式與唯讀工作流程已放入整合分支，但尚未有成功執行產生的 `UPSTREAM_HEAD.txt`、`IMPORT_PLAN.json` 證據。
 - PR #13 保持 OPEN / NOT MERGED。
