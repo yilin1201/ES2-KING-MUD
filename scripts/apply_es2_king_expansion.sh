@@ -155,7 +155,7 @@ patch_once(look, "ES2M TRAINING DUMMY LOOK", patch_look)
 # Runtime source guard／防止 Python 把字面反斜線 n 寫進 LPC 程式。
 # 靜態防呆只確認輸出形態；實際編譯由 Docker 的 Neolith preload gate 負責。
 generated_look = look.read_text()
-if r'\\nif ((string)obj->query("humanoid")' in generated_look:
+if r'\nif ((string)obj->query("humanoid")' in generated_look:
     raise SystemExit("ES2M TRAINING DUMMY FAIL：look.c 含字面反斜線 n，拒絕繼續建置。")
 if '\nif ((string)obj->query("humanoid")' not in generated_look:
     raise SystemExit("ES2M TRAINING DUMMY FAIL：look.c 未產生獨立的外貌／年齡條件行。")
