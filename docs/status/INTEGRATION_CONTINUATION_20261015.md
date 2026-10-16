@@ -71,11 +71,11 @@
 - 種族確認文字將非人類種族顯示成 Avatar，屬顯示錯誤；先列入待修清單，沒有混入本輪建置阻塞修正。
 - 使用者本機表示 12 個可選種族皆可創角，並檢查了屬性、精氣神、防禦力、職業上限；這是每種族單次取樣，不能證明隨機範圍，也尚未由本輪 CI 獨立重現。
 - `scripts/replay_dockerfile_steps.py` 尚未加入，因目前未取得使用者所指本機重播工具的實際檔案內容；不得假裝已整合該工具。
-- 新增 CI 閘門已提交，但截至本紀錄更新時，尚未讀取到由最新 commit 觸發的可判讀執行結果。
+- 新增 CI 閘門已提交；後續 Run `38830538066` 已取得可判讀結果，五項靜態 gate 全部成功。
 
 ### 本輪驗證狀態
 
-- 已確認 audit 分支相較 `build/original-es2-races-phase2` 的基準 commit `25f5f2ac2daaa4e5ad130d0f3f79abccc1dea7a9` 多 29 個既有 commit；本輪另有新提交，所有上述修正仍只在 audit 分支。
+- 目前 audit 分支相較 `build/original-es2-races-phase2` 的基準 commit `25f5f2ac2daaa4e5ad130d0f3f79abccc1dea7a9` ahead 39 commits；所有本輪修正仍只在 audit 分支。
 - 本輪修改尚未以可存取的完整 Repository 本機執行測試；不得標記 PASS。
 - Docker／Neolith、12 種族實際隨機範圍、存檔／登出／重登，以及完整玩家 E2E 仍待新一輪建置驗證。
 - PR #13 不合併、Render 不部署、`admin.c` 不修改，凍結武學與 Score UI 不做非必要變更。
