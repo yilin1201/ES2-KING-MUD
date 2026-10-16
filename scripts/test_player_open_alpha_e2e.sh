@@ -29,9 +29,13 @@ trap cleanup EXIT INT TERM
 test -x "$DRIVER_BIN"
 cp -a "$SOURCE_RUNTIME/mudlib" "$TEMP_ROOT/mudlib"
 cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
-bash "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh" "$TEMP_ROOT"
-bash "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
-bash "$REPO_ROOT/scripts/apply_combat_balance_instrumentation.sh" "$TEMP_ROOT"
+if [[ "${ES2_RUNTIME_ALREADY_OVERLAID:-0}" == "1" ]]; then
+  echo "PLAYER OPEN ALPHA: using pre-overlaid source Runtime; skipped duplicate overlay application."
+else
+  bash "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh" "$TEMP_ROOT"
+  bash "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
+  bash "$REPO_ROOT/scripts/apply_combat_balance_instrumentation.sh" "$TEMP_ROOT"
+fi
 
 # Fresh Data／全新資料：此 E2E 不複製任何 login/user fixture。
 rm -rf -- "$TEMP_ROOT/mudlib/data"
