@@ -16,7 +16,7 @@ def executable_source_without_module_docstring(source: str) -> str:
     first = tree.body[0]
     if (
         isinstance(first, ast.Expr)
-        and isinstance(first.value, (ast.Str, ast.Constant))
+        and isinstance(first.value, ast.Constant)
         and isinstance(getattr(first.value, "value", None), str)
     ):
         lines = source.splitlines(keepends=True)
