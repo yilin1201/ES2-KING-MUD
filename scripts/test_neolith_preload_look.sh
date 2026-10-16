@@ -45,13 +45,14 @@ object connect(int port) { return this_object(); }
 void logon()
 {
     object look_object;
-    look_object = load_object("/cmds/std/look");
-    if (!objectp(look_object)) {
-        write("ES2_KING_LOOK_PRELOAD_FAIL\n");
+    mixed load_error;
+    // Catch LPC compile/load exceptions and propagate them through the driver exit status.
+    load_error = catch(look_object = load_object("/cmds/std/look"));
+    if (load_error || !objectp(look_object)) {
         shutdown(1);
         return;
     }
-    write("ES2_KING_LOOK_PRELOAD_PASS\n");
+    // shutdown(0) is the machine-readable PASS signal; console write output is not reliable in Docker.
     shutdown(0);
 }
 LPC
@@ -73,14 +74,11 @@ INPUT_PID=""
 # Combine stdout and Neolith DebugLogFile／同時檢查 console output 與驅動程式診斷日誌。
 cat "$LOG"
 if [[ -f "$DEBUG_LOG" ]]; then cat "$DEBUG_LOG"; fi
-if ! grep -Fq "ES2_KING_LOOK_PRELOAD_PASS" "$LOG" && ! grep -Fq "ES2_KING_LOOK_PRELOAD_PASS" "$DEBUG_LOG" 2>/dev/null; then
-  echo "LOOK PRELOAD FAIL：driver 未回報 look.c 載入成功；以下為 stdout 與 DebugLogFile。" >&2
+# The LPC application returns exit 0 only after load_object succeeds; report pass from the shell.
+if grep -Eiq '編譯時段錯誤|compile error|Runtime error|Cannot #include|Undefined variable|Undefined function|syntax error|Error in loading object: /cmds/std/look' "$LOG" "$DEBUG_LOG" 2>/dev/null; then
+  echo "LOOK PRELOAD FAIL：driver log 出現 look.c 編譯／Runtime 錯誤。" >&2
   cat "$LOG" >&2
   [[ ! -f "$DEBUG_LOG" ]] || cat "$DEBUG_LOG" >&2
   exit 1
 fi
-if grep -Eiq '編譯時段錯誤|compile error|Runtime error|Cannot #include|Undefined variable|Undefined function|syntax error|Error in loading object: /cmds/std/look' "$LOG" "$DEBUG_LOG" 2>/dev/null; then
-  echo "LOOK PRELOAD FAIL：driver log 出現 look.c 編譯／Runtime 錯誤。" >&2
-  exit 1
-fi
-echo "ES2-KING LOOK PRELOAD PASS／Neolith 已實際載入 /cmds/std/look。"
+echo "ES2-KING LOOK PRELOAD PASS／Neolith exit=0，load_object(\"/cmds/std/look\") 已完成且未回報編譯／Runtime 錯誤。"
