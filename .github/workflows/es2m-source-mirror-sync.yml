@@ -64,6 +64,17 @@ jobs:
           fi
           exit "$rc"
 
+      # Always upload logs／無論同步或後續提交是否失敗，都上傳可供檢視的原始日誌。
+      - name: Upload ES2M sync diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: es2m-sync-diagnostics
+          if-no-files-found: warn
+          path: |
+            /tmp/es2m-sync.log
+            docs/status/ES2M_SYNC_FAILURE.log
+
       # Commit only generated evidence／成功時提交來源證據；失敗時只提交診斷，不發布半成品。
       - name: Commit source mirror, audit, or failure diagnostic
         if: always()
