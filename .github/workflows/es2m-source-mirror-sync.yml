@@ -20,8 +20,7 @@ concurrency:
 
 jobs:
   sync-source-evidence:
-    # GitHub Actions 自己的同步提交不重複觸發，避免形成無限循環。
-    if: github.actor != 'github-actions[bot]'
+    # 同步提交若再次觸發，HEAD 相同時會安全地 NO-OP，不會形成無限提交。
     runs-on: ubuntu-latest
     steps:
       # Checkout／取得 KING 工作分支；所有變更只提交到這個分支。
