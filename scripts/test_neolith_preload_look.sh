@@ -20,7 +20,12 @@ APP="$RUNTIME/mudlib/adm/apps/es2_king_preload_look_test.c"
 LOG="$(mktemp)"
 TEST_CONF="$RUNTIME/neolith.look-preload.conf"
 DEBUG_LOG="$RUNTIME/mudlib/log/look-preload-debug.log"
+INPUT_DIR="$(mktemp -d)"
+INPUT_FIFO="$INPUT_DIR/stdin"
+INPUT_PID=""
 cleanup() {
+  if [[ -n "$INPUT_PID" ]]; then kill "$INPUT_PID" 2>/dev/null || true; wait "$INPUT_PID" 2>/dev/null || true; fi
+  rm -rf -- "$INPUT_DIR"
   rm -f -- "$APP" "$TEST_CONF" "$DEBUG_LOG"
   if [[ "${KEEP_LOOK_PRELOAD_LOG:-0}" != "1" ]]; then rm -f -- "$LOG"; else echo "LOOK PRELOAD LOG: $LOG"; fi
 }
@@ -51,13 +56,20 @@ void logon()
 }
 LPC
 
+# Console stdin／Docker RUN 沒有互動式 stdin；維持 FIFO writer 開啟，避免 Neolith 在 logon 前收到 Console EOF。
+mkfifo "$INPUT_FIFO"
+tail -f /dev/null > "$INPUT_FIFO" &
+INPUT_PID=$!
 # 使用原 Runtime 設定，讓 driver 按實際 LPC 編譯／載入路徑處理 /cmds/std/look。
-if ! (cd "$RUNTIME" && timeout 30 "$DRIVER_BIN" -f neolith.look-preload.conf -c mudlib/adm/apps/es2_king_preload_look_test.c) >"$LOG" 2>&1; then
+if ! (cd "$RUNTIME" && timeout 30 "$DRIVER_BIN" -f neolith.look-preload.conf -c mudlib/adm/apps/es2_king_preload_look_test.c < "$INPUT_FIFO") >"$LOG" 2>&1; then
   cat "$LOG" >&2
   [[ ! -f "$DEBUG_LOG" ]] || cat "$DEBUG_LOG" >&2
   echo "LOOK PRELOAD FAIL：Neolith 執行或載入 look.c 失敗。" >&2
   exit 1
 fi
+kill "$INPUT_PID" 2>/dev/null || true
+wait "$INPUT_PID" 2>/dev/null || true
+INPUT_PID=""
 # Combine stdout and Neolith DebugLogFile／同時檢查 console output 與驅動程式診斷日誌。
 cat "$LOG"
 if [[ -f "$DEBUG_LOG" ]]; then cat "$DEBUG_LOG"; fi
