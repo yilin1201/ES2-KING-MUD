@@ -20,8 +20,16 @@ def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def display_path(path: Path) -> str:
+    """Show repo-relative paths when possible, but do not mask missing external paths."""
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
 def read(path: Path) -> str:
-    require(path.is_file(), "缺少檔案：" + str(path.relative_to(ROOT)))
+    require(path.is_file(), "缺少檔案：" + display_path(path))
     return path.read_text(encoding="utf-8")
 
 
