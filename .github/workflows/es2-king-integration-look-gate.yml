@@ -1,0 +1,80 @@
+name: ES2-KING Integration Look Gate
+
+# 只跑低成本語法與來源契約檢查；不建置完整 Docker、不部署，也不取代 Neolith Runtime Gate。
+on:
+  push:
+    branches:
+      - integration/es2m-audit-import-20261017
+    paths:
+      - "Dockerfile"
+      - "scripts/apply_es2_king_expansion.sh"
+      - "scripts/test_neolith_preload_look.sh"
+      - "scripts/test_es2m_training_dummy.py"
+      - "scripts/test_original_player_creation_e2e.mjs"
+      - "scripts/test_original_player_creation_e2e.sh"
+      - ".github/workflows/es2-king-integration-look-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: es2-king-integration-look-gate
+  cancel-in-progress: false
+
+jobs:
+  source-gates:
+    name: Look patch and numeric-ID policy static gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout integration branch
+        uses: actions/checkout@v4
+        with:
+          ref: integration/es2m-audit-import-20261017
+
+      - name: Bash syntax
+        run: |
+          bash -n scripts/apply_es2_king_expansion.sh
+          bash -n scripts/test_neolith_preload_look.sh
+          bash -n scripts/test_original_player_creation_e2e.sh
+
+      - name: Python syntax
+        run: |
+          python3 -m py_compile scripts/test_es2m_training_dummy.py
+
+      - name: Node syntax
+        run: node --check scripts/test_original_player_creation_e2e.mjs
+
+      - name: ES2M training dummy source contract
+        run: python3 scripts/test_es2m_training_dummy.py
+
+      - name: Race and birth attribute source contracts
+        run: |
+          python3 scripts/test_es2m_birth_attribute_contract.py
+          python3 scripts/test_es2m_race_command_contract.py
+
+      - name: Verify numeric ID policy follows Original ES2
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("scripts/test_original_player_creation_e2e.mjs").read_text(encoding="utf-8")
+          assert "async function testNumericIdRejected()" in p
+          assert "ORIGINAL_PLAYER_CREATION_NUMERIC_ID_REJECTED_PASS" in p
+          assert "await testNumericIdRejected();" in p
+          assert "ORIGINAL_PLAYER_CREATION_NUMERIC_ID_E2E_PASS" not in p
+          sh = Path("scripts/test_original_player_creation_e2e.sh").read_text(encoding="utf-8")
+          assert "ORIGINAL_PLAYER_CREATION_NUMERIC_ID_REJECTED_PASS" in sh
+          print("ORIGINAL ES2 NUMERIC-ID REJECTION CONTRACT PASS")
+          PY
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## ES2-KING integration look gate"
+            echo
+            echo "- This workflow checks source syntax and static contracts only."
+            echo "- It does not claim that the Docker build or the Neolith look preload passed."
+            echo "- Full runtime verification remains in the Dockerfile gate."
+          } >> "$GITHUB_STEP_SUMMARY"
