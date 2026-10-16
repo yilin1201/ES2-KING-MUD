@@ -1,0 +1,158 @@
+# ES2M-derived source delta — 2026-10-09
+
+## Source identity
+- Source repository: https://github.com/wolfer168/es2-webmud
+- Source branch: `main`
+- Exact source HEAD: `0948a4cb77fb5fe982d7fe09681791255db18253`
+- Previous KING tracked baseline: `be98db057a7de64f368037b6bad9504764cdd854`
+- Upstream delta: 35 commits, 134 changed paths.
+- Archived to KING: 119 runtime/mudlib source files + 5 design documents + 7 Python tests = 131 files.
+- Binary XLSX, web UI/server/deployment-only files, and general instruction files are excluded from this mudlib source archive.
+- Classification: **ES2M-derived WebMUD custom variant**, not confirmed Original ES2 canonical content.
+
+## Safety boundary
+This package is source preservation only. It does not replace `es2m_snapshot`, pinned Original ES2, or KING Runtime. Files are mirrored under this package with their upstream paths preserved. The upstream branch contains custom features, notably the NPC power-tier system and its NPC rebalance; these must not be relabeled as canonical Original ES2.
+
+## Change summary
+- NPC/map content: 87 modified Lee, Oldpine, Snow and Wutang NPC files, primarily migrated to the custom NPC power-tier feature.
+- NPC power system: `daemon/misc/npc_power.c`, `std/char/npc.c`, `include/daemon.h`, `adm/etc/preload`, beast handling and associated NPC files.
+- Training dummy: shared combat daemon and `fight`/`kill`/`look` command behavior.
+- Martial arts: Lunmay / Advance Lunmay / Hainmay Force / Sanmeendo / Tiger Blade / Tiger Force / Tiger Steps.
+- Skill progression: `feature/char/skill.c` and skill-related commands.
+- Exact archived source file list:
+- `source/upstream/mudlib/adm/daemons/combatd.c` — modified, source blob `ec1fd8473766a52537cdd44c8dce5c7a1629a561`
+- `source/upstream/mudlib/adm/etc/preload` — modified, source blob `571d3ea433c3767ef3d6dcc49bb668206483731c`
+- `source/upstream/mudlib/cmds/std/fight.c` — modified, source blob `ad0669e72a810796092094faeba887c29a0c550e`
+- `source/upstream/mudlib/cmds/std/kill.c` — modified, source blob `420e9b3295c83c188ac6f653503576b27bc4fa85`
+- `source/upstream/mudlib/cmds/std/look.c` — modified, source blob `de2200e97e1e7c8d037d75626059e41e62f9d475`
+- `source/upstream/mudlib/cmds/usr/abandon.c` — modified, source blob `e3c739bdf9b2890505afd87d5f3ac179d1a6cb92`
+- `source/upstream/mudlib/cmds/usr/disable.c` — modified, source blob `e1303e0035c10f153b549c76e20059d5ed8e4d75`
+- `source/upstream/mudlib/cmds/usr/enable.c` — modified, source blob `233d824854baa960ec6d90019947d9e8ebe5bd7d`
+- `source/upstream/mudlib/custom/home/npc/butler.c` — modified, source blob `6e498180a7f7c629e7179ef7d0a2b576db13a002`
+- `source/upstream/mudlib/custom/taoism/npc/fire_taoist.c` — modified, source blob `a99aedfa885b56656fd59ddc8c1c6f6d132498bd`
+- `source/upstream/mudlib/custom/taoism/npc/freeze_taoist.c` — modified, source blob `c002d71c0d18e35ef7115a1da748b3b1818359e7`
+- `source/upstream/mudlib/custom/taoism/npc/storm_taoist.c` — modified, source blob `28f725b8ca8cd88633da99a4acac8300f5b7465d`
+- `source/upstream/mudlib/custom/taoism/npc/thunder_taoist.c` — modified, source blob `062955caa5c05b4e2c838ac6b2511e656bb622cf`
+- `source/upstream/mudlib/custom/zhenwu/npc/lu_xinien.c` — modified, source blob `18bb33616687bc8a909ae86a1c87544df4377c57`
+- `source/upstream/mudlib/custom/zhenwu/npc/mee_pei.c` — modified, source blob `fbe871b3cafe39e2904d94c1cee717bdff018435`
+- `source/upstream/mudlib/custom/zhenwu/npc/soldier.c` — modified, source blob `fee09b00e8296cc72c9657cf69e0b99da7b93858`
+- `source/upstream/mudlib/custom/zhenwu/npc/target_stake.c` — modified, source blob `186e854e88e98dc55a9154b27dca865a8a8150c4`
+- `source/upstream/mudlib/custom/zhenwu/npc/zhenwu_soldier.c` — modified, source blob `eb400c559cea1f28fd564c4f9f0c15613ec68896`
+- `source/upstream/mudlib/d/lee/npc/child.c` — modified, source blob `48f9c0d9ecd171593324f241641349acfb6b43db`
+- `source/upstream/mudlib/d/lee/npc/farmer.c` — modified, source blob `22a4a9269fa372248aac35a8bade6177dc82b17a`
+- `source/upstream/mudlib/d/lee/npc/guard.c` — modified, source blob `e24eeb00adc1264078b72a035347289de828ecc7`
+- `source/upstream/mudlib/d/lee/npc/hawthorn_seller.c` — modified, source blob `9b54252e04cd733a10f3d88e14387e12895d39e5`
+- `source/upstream/mudlib/d/lee/npc/herb_boy.c` — modified, source blob `4e458cbcdf7162e6e036f82439c1f8f8d31dd92d`
+- `source/upstream/mudlib/d/lee/npc/hunter.c` — modified, source blob `8f13073d61d4f2a4dc659f2196024ac9de1ea2ca`
+- `source/upstream/mudlib/d/lee/npc/lee_hsu_hsien.c` — modified, source blob `3198c4057262fbda177968fdba7330e838d892be`
+- `source/upstream/mudlib/d/lee/npc/lee_xiao_tian.c` — modified, source blob `a9cabb7f09b9e84bf0fe444021d19e967c48574f`
+- `source/upstream/mudlib/d/lee/npc/lee_yen.c` — modified, source blob `64cda7ead2baff6f58960ff0859f62bea8fbe962`
+- `source/upstream/mudlib/d/lee/npc/lee_yong.c` — modified, source blob `e55767d080e94f82396ab15dbd368611720f3f20`
+- `source/upstream/mudlib/d/lee/npc/lee_zhong.c` — modified, source blob `57a4d75c74118f500f7b98c5fdec244760181309`
+- `source/upstream/mudlib/d/lee/npc/li_ban_xian.c` — modified, source blob `2c2dd74978c42977a6d0a47b0c60412e82183d28`
+- `source/upstream/mudlib/d/lee/npc/nee_cheng.c` — modified, source blob `b4560b40fe1a789f1ca026cb5bdb90a37e5c8c9c`
+- `source/upstream/mudlib/d/lee/npc/teacher.c` — modified, source blob `2a0df9a5ef3b5106c7307b6dde2979a42c770d03`
+- `source/upstream/mudlib/d/lee/npc/traveller.c` — modified, source blob `e7e2b57a6b4565305c6ab7b5bcdcc92d4587a419`
+- `source/upstream/mudlib/d/lee/npc/waiter.c` — modified, source blob `3f9790eef2e39af73cb74ee5d28ee6bb0113d435`
+- `source/upstream/mudlib/d/lee/npc/woman.c` — modified, source blob `756d581c0286eb16f162c1df0ca75a25fdd73342`
+- `source/upstream/mudlib/d/oldpine/npc/bandit.c` — modified, source blob `eb7a7fedc950dfc75c32591ca5af4b5bd61149e5`
+- `source/upstream/mudlib/d/oldpine/npc/bandit_minion.c` — modified, source blob `ff23bc08e53dc06084ed2eaa7c643bd5e34667e1`
+- `source/upstream/mudlib/d/oldpine/npc/big_bear.c` — modified, source blob `c63a3c94490b19d3b0121c6a2b4d66d3fecf06ca`
+- `source/upstream/mudlib/d/oldpine/npc/da_guan.c` — modified, source blob `7091d5360bc6c1d928984625f65a11879a27bb55`
+- `source/upstream/mudlib/d/oldpine/npc/deer.c` — modified, source blob `4a5c6750a0110e7f7566dc5cfce1691ddb98153c`
+- `source/upstream/mudlib/d/oldpine/npc/herbalist.c` — modified, source blob `f1e81f42e7fbb4c28314610d9a8f72c2198dd117`
+- `source/upstream/mudlib/d/oldpine/npc/injured_traveller.c` — modified, source blob `b11c18a6becb0a59a931f3396fc4781609b786ce`
+- `source/upstream/mudlib/d/oldpine/npc/kao_shen.c` — modified, source blob `ff83bcc98874bdd6c887fb7f374cbf5a4b9455dd`
+- `source/upstream/mudlib/d/oldpine/npc/lin_yuchan.c` — modified, source blob `2a0fbd7cb511eeb5ee079e7e3d7f00e85a7b6474`
+- `source/upstream/mudlib/d/oldpine/npc/little_bear.c` — modified, source blob `b04340e2805e87a6757e2bd36e3efbb763022c3c`
+- `source/upstream/mudlib/d/oldpine/npc/rat.c` — modified, source blob `32fecafe794a122096fe8ed95ba9526231531903`
+- `source/upstream/mudlib/d/oldpine/npc/seller.c` — modified, source blob `233cb5638fce9f177a167baa558e53d16bcea6ba`
+- `source/upstream/mudlib/d/oldpine/npc/squirrel.c` — modified, source blob `42b134dbfc4feea011e4d5de0924ce5a1a969003`
+- `source/upstream/mudlib/d/oldpine/npc/waiter.c` — modified, source blob `f36009d3636a6fd59d770e7965d616a498ff231d`
+- `source/upstream/mudlib/d/oldpine/npc/wild_bear.c` — modified, source blob `55143c58d6b1db12ddf9f081008e6d668f26d54e`
+- `source/upstream/mudlib/d/oldpine/npc/wolf.c` — modified, source blob `9fc547ea58d858d97d31210f7fe710226727f10a`
+- `source/upstream/mudlib/d/oldpine/npc/xue_biao.c` — modified, source blob `6460625555a4edccfb3f9ab70e0a5a54ca3dd974`
+- `source/upstream/mudlib/d/snow/npc/alchemist.c` — modified, source blob `58d32a6cb7288a94c570ce3f14b67ca85fd48621`
+- `source/upstream/mudlib/d/snow/npc/child.c` — modified, source blob `4c48f7bf79e9b0458224ace2aaf56cffb5cfdec2`
+- `source/upstream/mudlib/d/snow/npc/child1.c` — modified, source blob `81e043a4e48dcd5cf9da72c78ea5043bf2bdb9f3`
+- `source/upstream/mudlib/d/snow/npc/child2.c` — modified, source blob `2e473c86ab5398c0808d2afdfb05c3c06a5fd1e9`
+- `source/upstream/mudlib/d/snow/npc/child3.c` — modified, source blob `e025717f9cd55fbb4cf8282214d5012bf5bebb0d`
+- `source/upstream/mudlib/d/snow/npc/child4.c` — modified, source blob `10973370d1850490e440a4372abaa3aea78ef8ac`
+- `source/upstream/mudlib/d/snow/npc/foreman.c` — modified, source blob `c40457732f9501ffb595a4de5ab62febc2d7ce8a`
+- `source/upstream/mudlib/d/snow/npc/gammer.c` — modified, source blob `c7a3360dd171b904facd82a6d11d95391832c9f3`
+- `source/upstream/mudlib/d/snow/npc/garrison.c` — modified, source blob `ce9efed96383bfb904c7af24627c319dace63a99`
+- `source/upstream/mudlib/d/snow/npc/girl.c` — modified, source blob `bb07be3e22edee092f28b22ec05faf95564b0e60`
+- `source/upstream/mudlib/d/snow/npc/guard.c` — modified, source blob `37ee393548b9e12f7d2b0f256a1fe294423a7d29`
+- `source/upstream/mudlib/d/snow/npc/herbalist.c` — modified, source blob `5f1a83034f02591111ba11a7b5bca2ce61847353`
+- `source/upstream/mudlib/d/snow/npc/innkeeper.c` — modified, source blob `4336369fe851cb3f642d5b2b7865b55c5b478ccc`
+- `source/upstream/mudlib/d/snow/npc/junkman.c` — modified, source blob `cef52c4015e1d40aeb99bb8d418700b88ebc7737`
+- `source/upstream/mudlib/d/snow/npc/lieutenant.c` — modified, source blob `8a94e0e8ae84ef2d6e9876a84cb2d38282961c11`
+- `source/upstream/mudlib/d/snow/npc/miller.c` — modified, source blob `22c6473af68f366999c915771df56b951f123a61`
+- `source/upstream/mudlib/d/snow/npc/oldman.c` — modified, source blob `74f7ec8180dee9caf40db3f82e4ce5516a5b6f92`
+- `source/upstream/mudlib/d/snow/npc/patrol.c` — modified, source blob `a75ecd11f1ed3fe4ef81090075ae1c4fca24f605`
+- `source/upstream/mudlib/d/snow/npc/smith.c` — modified, source blob `39d7b6551a27bae4c32154b4dfbd2f2157d3b2f7`
+- `source/upstream/mudlib/d/snow/npc/teacher.c` — modified, source blob `3418099cb14f82665b261634d189551244859a10`
+- `source/upstream/mudlib/d/snow/npc/waiter.c` — modified, source blob `6d525b0641b6082ebcdd0b14fca3d2e8c89b30fa`
+- `source/upstream/mudlib/d/snow/npc/woman.c` — modified, source blob `74adea8c1bb5d8176c15890e469c0343586af7c2`
+- `source/upstream/mudlib/d/snow/npc/yu.c` — modified, source blob `f91bd7251a7f1a49bc0d739cd3b920702546f990`
+- `source/upstream/mudlib/d/wutang/npc/apprentice.c` — modified, source blob `91c7efdffb4d20562452120abeb17999da9bf50e`
+- `source/upstream/mudlib/d/wutang/npc/big_boar.c` — modified, source blob `4d8121119ef1518000cd8623f421b5f93afca682`
+- `source/upstream/mudlib/d/wutang/npc/boar.c` — modified, source blob `ac158fcbdb3184bf3a18fa1d10fdae517d40bc86`
+- `source/upstream/mudlib/d/wutang/npc/fisher.c` — modified, source blob `7f7033608e2a72ef847c2c3c97df651f37c3cf70`
+- `source/upstream/mudlib/d/wutang/npc/guard.c` — modified, source blob `961141b5e5b0ec7b7dbe5a7246a385c197e4b356`
+- `source/upstream/mudlib/d/wutang/npc/guo_boo.c` — modified, source blob `cb826c055107fd0e26004cd2f0367d3e2ff87bec`
+- `source/upstream/mudlib/d/wutang/npc/huang.c` — modified, source blob `fda46673b44f33d4fdf8b278bb36d678569363d7`
+- `source/upstream/mudlib/d/wutang/npc/huyen_guan.c` — modified, source blob `88a3430f4b6627fac89226b0848e8dc0f3159a67`
+- `source/upstream/mudlib/d/wutang/npc/jeweller.c` — modified, source blob `288d43cd9f7ff15fd344c34627b42fdac413eef8`
+- `source/upstream/mudlib/d/wutang/npc/keeper.c` — modified, source blob `f96e692cd3d281262d1d539a62964df4a7eead32`
+- `source/upstream/mudlib/d/wutang/npc/lee_shan.c` — modified, source blob `ea097702c82fb117a4d13e8003216842681cf103`
+- `source/upstream/mudlib/d/wutang/npc/lu_estimator.c` — modified, source blob `674f8619a2edd4206245e2bc718260bf5575c9fa`
+- `source/upstream/mudlib/d/wutang/npc/old_fire.c` — modified, source blob `0692d74fcfc92add7d15eda6c75e3cfdbe743aab`
+- `source/upstream/mudlib/d/wutang/npc/oldman.c` — modified, source blob `9013bef49fd48ce6a0ab2ee1b680c6727a1d7b88`
+- `source/upstream/mudlib/d/wutang/npc/red_taoist.c` — modified, source blob `93f47c6f30bd700718ab66a87611f765a4fde1bb`
+- `source/upstream/mudlib/d/wutang/npc/ro.c` — modified, source blob `d03bdbf21a4eca0def8a7dd60f6baf27c3c9b1be`
+- `source/upstream/mudlib/d/wutang/npc/royalist.c` — modified, source blob `0feaf9c8446e11c4889094596cd4471fe951af28`
+- `source/upstream/mudlib/d/wutang/npc/seller.c` — modified, source blob `7f4dc92e988502169cee4236fa0e7734ebc3b251`
+- `source/upstream/mudlib/d/wutang/npc/sheep.c` — modified, source blob `274fcec63a676912bfef299a2e5d3c5018ac1cbc`
+- `source/upstream/mudlib/d/wutang/npc/shepherd.c` — modified, source blob `e9d075b2726fe0c80ebea93b1ca4278cd24948f3`
+- `source/upstream/mudlib/d/wutang/npc/smoke_fisher.c` — modified, source blob `f26ebdb649925f15c0844c7e73f99e42d996cb18`
+- `source/upstream/mudlib/d/wutang/npc/tao.c` — modified, source blob `54ad9814532c6fb6f38d1c58a14f2242c374930e`
+- `source/upstream/mudlib/d/wutang/npc/waiter.c` — modified, source blob `983353047fafa9aceb430f415e6251f34b22ca5f`
+- `source/upstream/mudlib/d/wutang/npc/white_taoist.c` — modified, source blob `9bca04c505c5cc51c10ae7c48adc0f1480c78f12`
+- `source/upstream/mudlib/d/wutang/npc/yaesae.c` — modified, source blob `b10363b454cb2e3d8c1fad62d6c03c6574dd4563`
+- `source/upstream/mudlib/d/wutang/npc/yang_zlin.c` — modified, source blob `70035e0634ec78b3951e1643ba7c739e946e68d0`
+- `source/upstream/mudlib/d/wutang/npc/young_gentleman.c` — modified, source blob `c8c1e845078861ed90711b716b37793578b062bb`
+- `source/upstream/mudlib/d/wutang/npc/young_man.c` — modified, source blob `5640a496d0876b14b11e308b81a3b13ea112d4fd`
+- `source/upstream/mudlib/d/wutang/npc/young_scholar.c` — modified, source blob `f0d5fcc8904ecb6c055c443fa269093abfab8814`
+- `source/upstream/mudlib/d/wutang/npc/yung_tai.c` — modified, source blob `daf28c55d47f2d9ed53ec77c3b2df700943aac52`
+- `source/upstream/mudlib/daemon/misc/npc_power.c` — added, source blob `84df1915d93a1997464c997ca386dd98e51406b0`
+- `source/upstream/mudlib/daemon/race/beast.c` — modified, source blob `6a0e6d2af99daee7bdcc797332d808d0cf0596e7`
+- `source/upstream/mudlib/daemon/skill/advance_lunmay.c` — modified, source blob `f850d5e94727bc414e93b200e9c8deaa7c6db780`
+- `source/upstream/mudlib/daemon/skill/hainmay_force.c` — modified, source blob `d8178aea5914aab761f52a058126c1d8f9eabac4`
+- `source/upstream/mudlib/daemon/skill/lunmay.c` — modified, source blob `6b495228ea2af25f23ab7d5f031b04b3c6e88c3f`
+- `source/upstream/mudlib/daemon/skill/sanmeendo.c` — modified, source blob `57435ca174b60c9bde029dde924551b5666dc8ba`
+- `source/upstream/mudlib/daemon/skill/tiger-blade.c` — modified, source blob `415205923e625493f2a6a4a14f55fb19c1734ce7`
+- `source/upstream/mudlib/daemon/skill/tiger-force.c` — modified, source blob `c27295c93dbdabca37c06ce74f34c97d6c1a4a11`
+- `source/upstream/mudlib/daemon/skill/tiger-steps.c` — modified, source blob `cae9e59ba2e14b40cd4cb14bc6eefa372ce6cb11`
+- `source/upstream/mudlib/feature/char/combat.c` — modified, source blob `fad1bf7f5908b4f3e3c72ee4874df7aafd62044a`
+- `source/upstream/mudlib/feature/char/skill.c` — modified, source blob `aad581c58ee0e88f577459fca84760efdc776e01`
+- `source/upstream/mudlib/include/daemon.h` — modified, source blob `5ef750a9fafb749bb35296c5924c8130ead63009`
+- `source/upstream/mudlib/std/char/npc.c` — modified, source blob `6a69a47b0ad3329f2847cf937304c7108ad116eb`
+- `source/upstream/mudlib/std/martial_art.c` — modified, source blob `b07fb6cf87991b6a4195fd03fe5546a0f951344d`
+
+## Design and test evidence
+- `docs/CUSTOM_NPC_POWER.md` — added, source blob `b0fe35a38301e7783026417f9616887451b291a0`
+- `docs/NPC_POWER_LIST.md` — added, source blob `383449856a860dd8a9435ca006aefe7b8a27655d`
+- `docs/martial_arts/sanmeendo_三門刀法.md` — modified, source blob `813f397eaba53787e6748be1c9f383ffec7a662b`
+- `docs/martial_arts/冷梅莊_劍士武功.md` — modified, source blob `53014666b51b51f716fb56c9567a94156ceb11b2`
+- `docs/martial_arts/虎刀門_瘋虎刀法.md` — added, source blob `95cf686015c7f633a9d2e8a01981d544f9ec7ded`
+- `tests/test_area_oldpine.py` — modified, source blob `4ec08d325f81052973bbcc8c64ffdce41319d529`
+- `tests/test_npc_power.py` — added, source blob `e1688e368a78ddee8883187a42dc27bb9611d493`
+- `tests/test_v32046_tiger_followup.py` — modified, source blob `59c9fb5c2b788296d9595e5bf74f5490364eace6`
+- `tests/test_v32047_gaoshen_completion.py` — modified, source blob `9598da86dbcf3a91f06bef74d4278df85a6956e0`
+- `tests/test_v32059_persistence_and_force_ticks.py` — modified, source blob `cc8c8e4a9d43b6029bb233b349a7353be893cf17`
+- `tests/test_v32059_skill_boundaries.py` — modified, source blob `421df7b81216af2ea59f4c987cd35b64c7ecbf1d`
+- `tests/test_v32059_skill_learned_restore.py` — modified, source blob `04123ae8516b533cf14bd2a191d83e3231f66800`
+
+## Integration status
+Source files are preserved for comparison. They have **not** been bulk-overlaid onto KING Runtime. Core combat/commands, NPC initialization, skill progression and frozen martial-art settings require file-level diff and targeted regression before any runtime integration. This snapshot alone is not Runtime or Gameplay PASS.

@@ -1,0 +1,235 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ADMIN GM LPC Load Gate／使用真實 Neolith Driver 啟動生成 Runtime，
+# 讓 preload 實際載入 /cmds/adm/admin；只檢查編譯／載入與服務啟動，不冒充玩家指令 E2E。
+ROOT="${1:-.runtime/es2-king}"
+LOG="$(mktemp)"
+DRIVER=""
+PID=""
+
+cleanup() {
+  if [[ -n "$PID" ]] && kill -0 "$PID" 2>/dev/null; then
+    kill "$PID" 2>/dev/null || true
+    wait "$PID" 2>/dev/null || true
+  fi
+  rm -f "$LOG"
+}
+trap cleanup EXIT
+
+test -d "$ROOT/mudlib" || { echo "ADMIN GM LPC LOAD FAIL：缺少生成 Runtime $ROOT/mudlib" >&2; exit 1; }
+test -f "$ROOT/mudlib/cmds/adm/admin.c" || { echo "ADMIN GM LPC LOAD FAIL：缺少 admin.c" >&2; exit 1; }
+test -f "$ROOT/mudlib/adm/etc/preload" || { echo "ADMIN GM LPC LOAD FAIL：缺少 preload" >&2; exit 1; }
+grep -Fqx '/cmds/adm/admin' "$ROOT/mudlib/adm/etc/preload" || {
+  echo "ADMIN GM LPC LOAD FAIL：admin 未加入 preload" >&2; exit 1;
+}
+
+# 測試帳號只寫入 CI 的暫存 Runtime，不提交到 Repository 或正式環境。
+WIZLIST="$ROOT/mudlib/adm/etc/wizlist"
+grep -Fqx 'gmtest (admin)' "$WIZLIST" || printf '%s\n' 'gmtest (admin)' >> "$WIZLIST"
+
+DRIVER="$(find "$ROOT/neolith/out" -type f -name neolith -perm -111 | head -n 1)"
+test -n "$DRIVER" || { echo "ADMIN GM LPC LOAD FAIL：找不到已建置的 Neolith Driver" >&2; exit 1; }
+# 轉成絕對路徑，再切換到 Runtime 根目錄，避免相對路徑被重複拼接。
+DRIVER="$(realpath "$DRIVER")"
+
+cd "$ROOT"
+"$DRIVER" -f neolith.conf -c >"$LOG" 2>&1 &
+PID=$!
+
+# 等待實際 TCP 監聽；僅確認程序仍存在，不代表 Runtime 已完成啟動。
+python3 - "$PID" "$LOG" <<'PY'
+import os, socket, sys, time
+pid, log = int(sys.argv[1]), sys.argv[2]
+for _ in range(45):
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        print(open(log, errors="replace").read())
+        raise SystemExit("ADMIN GM LPC LOAD FAIL：Neolith 在開啟服務前退出。")
+    sock = socket.socket()
+    sock.settimeout(0.5)
+    try:
+        sock.connect(("127.0.0.1", 4000))
+        sock.close()
+        break
+    except OSError:
+        sock.close()
+        time.sleep(1)
+else:
+    print(open(log, errors="replace").read())
+    raise SystemExit("ADMIN GM LPC LOAD FAIL：45 秒內未監聽 TCP 4000。")
+PY
+
+# 即使 preload 編譯錯誤後 Neolith 仍繼續啟動，也要明確檢查啟動日誌。
+if grep -Eiq 'Error in loading object: /cmds/adm/admin|/cmds/adm/admin(\.c)?.*(compile error|syntax error|failed to load)|admin\.c.*(compile error|syntax error)' "$LOG"; then
+  cat "$LOG"
+  echo "ADMIN GM LPC LOAD FAIL：admin.c 發生 LPC 編譯／載入錯誤。" >&2
+  exit 1
+fi
+
+# Admin command E2E／建立臨時最高管理員帳號，實際執行指令與數值邊界檢查。
+python3 - <<'PY'
+import re, sys, telnetlib, time
+
+ANSI = re.compile(r'\x1b\[[0-9;?]*[ -/]*[@-~]')
+
+def session():
+    return telnetlib.Telnet('127.0.0.1', 4000, timeout=5)
+
+def read(tn, buf, seconds=0.8):
+    end = time.time() + seconds
+    while time.time() < end:
+        try:
+            data = tn.read_very_eager()
+            if data:
+                buf.extend(data)
+        except (EOFError, ConnectionResetError, BrokenPipeError, OSError):
+            return
+        time.sleep(0.05)
+
+def line(tn, buf, value, seconds=0.8):
+    try:
+        tn.write(value.encode() + b'\r\n')
+    except OSError:
+        return ''
+    start = len(buf)
+    read(tn, buf, seconds)
+    return ANSI.sub('', bytes(buf[start:]).decode(errors='replace'))
+
+def key(tn, buf, value, seconds=0.8):
+    try:
+        tn.write(value.encode())
+    except OSError:
+        return ''
+    start = len(buf)
+    read(tn, buf, seconds)
+    return ANSI.sub('', bytes(buf[start:]).decode(errors='replace'))
+
+def text(buf):
+    return ANSI.sub('', bytes(buf).decode(errors='replace'))
+
+def attrs_from(output):
+    return dict((k, int(v)) for k, v in re.findall(
+        r'^\s*(str|cor|int|spi|cps|dex|con|wis)\s*:\s*(\d+)\s*$',
+        output, re.M))
+
+def require(condition, message, output=''):
+    if not condition:
+        if output:
+            print(output)
+        raise SystemExit('ADMIN GM E2E FAIL：' + message)
+
+tn = session()
+buf = bytearray()
+read(tn, buf, 1.0)
+line(tn, buf, 'gmtest', 1.0)
+key(tn, buf, 'Y', 0.6)
+line(tn, buf, 'gmtestpass', 0.6)
+line(tn, buf, 'gmtestpass', 0.6)
+line(tn, buf, 'none', 0.6)
+line(tn, buf, '1', 0.6)
+key(tn, buf, 'M', 0.6)
+line(tn, buf, 'GM測試', 0.6)
+key(tn, buf, 'Y', 1.5)
+
+probe = line(tn, buf, 'admin probe', 1.0)
+require('ADMIN PROBE: main() reached' in probe,
+        '管理員帳號無法呼叫 admin probe，或命令未正確派送。', text(buf))
+
+set_attrs = line(tn, buf, 'admin attrs 50', 0.8)
+require('八大屬性已驗證設定為 50' in set_attrs,
+        'admin attrs 50 未成功回報。', set_attrs)
+inspect = line(tn, buf, 'admin inspect', 0.8)
+require(attrs_from(inspect) == dict((k, 50) for k in
+        ('str','cor','int','spi','cps','dex','con','wis')),
+        '八大屬性設定 50 後讀回不一致。', inspect)
+
+bad_attrs = line(tn, buf, 'admin attrs 51', 0.8)
+require('屬性數值須介於 1～50' in bad_attrs,
+        'admin attrs 51 未被原版屬性上限拒絕。', bad_attrs)
+inspect = line(tn, buf, 'admin inspect', 0.8)
+require(attrs_from(inspect) == dict((k, 50) for k in
+        ('str','cor','int','spi','cps','dex','con','wis')),
+        '拒絕 attrs 51 後既有屬性發生變動。', inspect)
+
+set_skill = line(tn, buf, 'admin skill blade 200', 0.8)
+require('blade = 200' in set_skill, '技能等級 200 未成功設定。', set_skill)
+learn_skill = line(tn, buf, 'admin learn blade', 0.8)
+require('已學會 blade' in learn_skill, 'admin learn blade 未成功。', learn_skill)
+# 以 0 級 unarmed 驗證用途映射：映射 blade 200 後 query_skill(unarmed) 應為 100。
+set_unarmed = line(tn, buf, 'admin skill unarmed 0', 0.8)
+require('unarmed = 0' in set_unarmed, '無法建立 unarmed 0 級映射測試基線。', set_unarmed)
+mapping = line(tn, buf, 'admin enable unarmed with blade', 0.8)
+require('已將用途 unarmed 對應至技能 blade' in mapping,
+        'admin enable 用途 with 技能 的自用格式未成功。', mapping)
+inspect = line(tn, buf, 'admin inspect', 0.8)
+require(re.search(r'blade\s*:\s*200', inspect) is not None,
+        '技能等級 200 讀回不一致。', inspect)
+require(re.search(r'unarmed\s*:\s*100', inspect) is not None,
+        '用途 unarmed 未正確映射至 blade（預期有效等級 100）。', inspect)
+
+# ES2M Skill Commands／驗證停用、恢復及中止／恢復學習狀態。
+disable = line(tn, buf, 'disable blade', 0.8)
+require('停止使用所學有關' in disable,
+        'disable blade 未停用技能或未回報結果。', disable)
+enable = line(tn, buf, 'enable blade', 0.8)
+require('恢復使用所學有關' in enable,
+        'enable blade 未恢復技能使用或未回報結果。', enable)
+abandon = line(tn, buf, 'abandon blade', 0.8)
+require('中止學習' in abandon,
+        'abandon blade 未中止學習或未回報結果。', abandon)
+restore_abandon = line(tn, buf, 'abandon -c blade', 0.8)
+require('恢復學習' in restore_abandon,
+        'abandon -c blade 未恢復學習或未回報結果。', restore_abandon)
+
+unlearn = line(tn, buf, 'admin unlearn blade', 0.8)
+require('已取消學會 blade' in unlearn, 'admin unlearn blade 未成功。', unlearn)
+inspect = line(tn, buf, 'admin inspect', 0.8)
+require(re.search(r'blade\s*:\s*200', inspect) is not None,
+        'unlearn 不應刪除已設定的 blade 技能等級。', inspect)
+require(re.search(r'unarmed\s*:\s*0', inspect) is not None,
+        'unlearn blade 後仍殘留 unarmed → blade 用途映射。', inspect)
+
+bad_skill = line(tn, buf, 'admin skill blade 201', 0.8)
+require('技能等級須介於 0～200' in bad_skill,
+        'admin skill 201 未被原版技能上限拒絕。', bad_skill)
+inspect = line(tn, buf, 'admin inspect', 0.8)
+require(re.search(r'blade\s*:\s*200', inspect) is not None,
+        '拒絕技能等級 201 後技能值發生變動。', inspect)
+
+bad_level = line(tn, buf, 'admin level 1000', 0.8)
+require('角色等級須介於 1～999' in bad_level,
+        'admin level 1000 未被原版角色等級上限拒絕。', bad_level)
+
+# 狀態管理回歸：批次精氣神、最大 HP、HP 不可超過最大值。
+stats = line(tn, buf, 'admin stats 999', 0.8)
+require('精氣神全部設定為 999' in stats, 'admin stats 999 未成功。', stats)
+inspect = line(tn, buf, 'admin inspect', 0.8)
+require(re.search(r'GIN\s+:\s*999\s*/\s*999', inspect) is not None
+        and re.search(r'KEE\s+:\s*999\s*/\s*999', inspect) is not None
+        and re.search(r'SEN\s+:\s*999\s*/\s*999', inspect) is not None,
+        '精氣神 999 設定後讀回不一致。', inspect)
+
+maxhp = line(tn, buf, 'admin maxhp 120', 0.8)
+require('最大 HP = 120' in maxhp, 'admin maxhp 120 未成功。', maxhp)
+hp = line(tn, buf, 'admin hp 150', 0.8)
+require('HP = 120' in hp, 'admin hp 150 未被最大 HP 120 限制。', hp)
+inspect = line(tn, buf, 'admin inspect', 0.8)
+require(re.search(r'HP\s+:\s*120\s*/\s*120', inspect) is not None,
+        'HP 上限檢查後讀回不一致。', inspect)
+
+saved = line(tn, buf, 'admin save', 0.8)
+require('人物資料已保存' in saved, 'admin save 未回報成功。', saved)
+
+# Setup 必須在預檢物件、設定數值及裝備結果後才宣稱成功。
+setup = line(tn, buf, 'admin setup', 1.8)
+require('ADMIN SETUP OK' in setup and '虎紋刀已裝備並確認' in setup,
+        'admin setup 未完成數值設定、虎紋刀裝備及保存驗證。', setup)
+
+print('ADMIN GM E2E PASS：admin probe、技能映射/unlearn、屬性/技能邊界、精氣神、HP 上限、save 與 setup 均通過。')
+line(tn, buf, 'quit', 0.4)
+tn.close()
+PY
+
+echo "ADMIN GM LPC LOAD PASS／Neolith 啟動、admin.c 預載及管理員指令 E2E 全部通過。"

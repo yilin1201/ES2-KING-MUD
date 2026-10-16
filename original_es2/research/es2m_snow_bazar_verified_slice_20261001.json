@@ -1,0 +1,18 @@
+{
+  "schema": "es2m-world-slice-v1",
+  "source": "taedlar/es2_mudlib",
+  "commit": "cc45c06af4852380e5148dad3c9d53ff06854f2c",
+  "region": "snow",
+  "status": "SOURCE_VERIFIED_TARGET_COMPATIBILITY_PENDING",
+  "rooms": [
+    {"path": "/d/snow/bazar", "source": "mudlib/d/snow/bazar.c", "source_blob": "5624adfa28d38df6cc4cfa5a9ab73e462edb380a", "short": "魚記小鋪", "inherit": "BANK", "exits": {"west": "/d/snow/sstreet1"}, "spawns": {"/d/snow/npc/yu": 1}},
+    {"path": "/d/snow/sstreet1", "source": "mudlib/d/snow/sstreet1.c", "source_blob": "18e2ac81e1c7aea8207bee2af515cf2d4a1a4e19", "short": "街道", "inherit": "ROOM", "exits": {"south": "/d/snow/sgate", "north": "/d/snow/square_s", "west": "/d/snow/store", "east": "/d/snow/bazar"}}
+  ],
+  "npcs": [
+    {"path": "/d/snow/npc/yu", "source": "mudlib/d/snow/npc/yu.c", "source_blob": "3fed86f81a693a517579b30ddf17eb56c75da428", "name": "魚天", "inherits": ["F_VILLAGER", "F_VENDOR"], "merchandise": {"/d/snow/npc/obj/blue_jacket": 5, "/obj/armor/fur_hat": 5, "/obj/bottle": 5}, "worn_object": "/d/snow/npc/obj/blue_jacket"}
+  ],
+  "unverified_dependencies": ["/d/snow/sgate", "/d/snow/square_s", "/d/snow/store", "/d/snow/npc/obj/blue_jacket", "/obj/armor/fur_hat", "/obj/bottle", "BANK", "F_VILLAGER", "F_VENDOR"],
+  "import_decision": "REFERENCE_ONLY",
+  "reason": "只核對三份 pinned upstream LPC 原始檔；未確認目標版本、全部相依與 Runtime，不覆蓋既有地圖。",
+  "next_validation": ["target original source comparison", "dependent LPC source verification", "ordinary-player east/west journey", "vendor list and item purchase", "bank command regression"]
+}

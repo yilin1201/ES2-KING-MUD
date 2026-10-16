@@ -1,0 +1,13 @@
+.git
+.github
+.runtime
+**/.runtime
+**/node_modules
+**/out
+**/build
+king-owner-runtime-*
+playable-alpha-*
+toolchain
+bison-src
+*.log
+*.o
