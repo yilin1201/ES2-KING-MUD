@@ -82,15 +82,12 @@ fi
 # Target roster 固定 human/avatar；中文名稱只屬 Runtime 顯示層，不改 Original race ID。
 bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_original_race_roster_source_gate.sh" "$RUNTIME_DIR" "$ORIGINAL_MUDLIB"
 
-# Original Human Runtime Fixture Gate／人類種族精準 Source Fixture：
-# 直接對 Docker 最終 mudlib 驗證 human→commoner→Lv.1 dependency 與固定初始化邊界，
-# 不把 Static PASS 誤標成 Runtime PASS。
-bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_original_human_runtime_fixture_static.sh" "$RUNTIME_DIR"
+# Original Human fixture：creation/setup flow 由最終 Runtime 驗證；
+# Original karma/attributes/GIN-KEE-SEN/armor 僅對 pinned Original source 驗證。
+bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_original_human_runtime_fixture_static.sh" "$RUNTIME_DIR" "$ORIGINAL_MUDLIB"
 
-# Normal Player Training Source Gate／普通玩家練功來源閘門：
-# 直接鎖定 pinned Original 真正存在的 skills/enable/study/perform 與 skill progression engine，
-# 並防止把缺失的 learn/practice/exercise 誤標為已恢復。
-bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_player_training_source_gate.sh" "$RUNTIME_DIR"
+# Player training：Original source behavior 只對 pinned Original 驗證；KING cap 另查 Runtime。
+bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_player_training_source_gate.sh" "$RUNTIME_DIR" "$ORIGINAL_MUDLIB"
 
 # Cold Plum Arena Static Gate／冷梅演武界靜態閘門：在 Docker 最終 Runtime overlay 後檢查，
 # 確保部署映像實際包含梅寒霜、六式與 UNKNOWN 邊界，而不是只檢查 repository source。
