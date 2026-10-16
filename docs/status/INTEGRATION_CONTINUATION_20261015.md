@@ -67,7 +67,7 @@
 
 ### 尚未處理／需保留決策
 
-- `test_original_race_roster_source_gate.sh` 將 Original Human／Avatar karma 規格套用到已由 ES2M daemon 覆蓋的 Runtime，存在來源層級混用。尚未改寫此 gate：需要明確拆成「pinned Original source gate」與「ES2M Runtime contract」，不可靜默選擇其中一種 karma 規則。
+- `test_original_race_roster_source_gate.sh` 原先將 Original Human／Avatar karma 規格套用到已由 ES2M daemon 覆蓋的 Runtime。已拆開來源層級：Original karma／稀有轉化規則只讀 `/build/es2m-original-mudlib` 的 pinned Original source；Runtime 種族名冊只確認 12 個 daemon 存在，逐檔 ES2M 一致性由 race regression gate 驗證。沒有改寫或選擇任何一方的 karma 數值。Commit：`8f8dd3448e9fe0479bc910010033b7078e7b4fc7`、`e8f22ade08bc5395d95a802e2c8eecea75e111f5`、`3129b9000e31b607d9b06ebf40ee63a562ac3981`。尚待 Docker final runtime gate 實際執行。
 - 種族確認文字將非人類種族顯示成 Avatar，屬顯示錯誤；先列入待修清單，沒有混入本輪建置阻塞修正。
 - 使用者本機表示 12 個可選種族皆可創角，並檢查了屬性、精氣神、防禦力、職業上限；這是每種族單次取樣，不能證明隨機範圍，也尚未由本輪 CI 獨立重現。
 - `scripts/replay_dockerfile_steps.py` 尚未加入，因目前未取得使用者所指本機重播工具的實際檔案內容；不得假裝已整合該工具。
@@ -93,3 +93,10 @@
 - 兩個 E2E shell 腳本已改用 bash 呼叫 overlay，避免依賴 Git 檔案 executable bit。
 - Dockerfile 現在透過 ES2_RUNTIME_ALREADY_OVERLAID=1 明確告知 E2E：來源 Runtime 已套用 race／Expansion，測試不應再重複套用；未設定旗標的手動呼叫仍保留原本建置暫存 Runtime 的流程。
 - 本輪 CI 是靜態工作流程，不會執行這兩個 Driver E2E。因此這項修正尚未由實際玩家旅程驗證。
+
+
+## Original／ES2M 名冊閘門分層
+
+- `assert_m30_final_runtime.sh` 現在將 pinned Original mudlib 路徑作為第二參數傳入 race roster gate；Dockerfile 傳入建置早期封存的 `/build/es2m-original-mudlib`。
+- Original gate 僅驗證固定原版來源；ES2M Runtime 的 12 種族名冊另做存在性檢查，完整內容一致性仍由 race phase2 regression gate 負責。
+- 靜態 workflow 增加四個 shell 腳本的 `bash -n` 語法檢查，並把 gate／assert 腳本納入 path filter。該 workflow 只驗證靜態語法與來源契約，不會執行 Docker final runtime gate。
