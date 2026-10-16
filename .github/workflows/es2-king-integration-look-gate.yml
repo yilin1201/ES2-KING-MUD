@@ -12,6 +12,7 @@ on:
       - "scripts/test_es2m_training_dummy.py"
       - "scripts/test_original_player_creation_e2e.mjs"
       - "scripts/test_original_player_creation_e2e.sh"
+      - "docs/status/ES2M_COMPATIBILITY_BATCH_PLAN_20261017.md"
       - ".github/workflows/es2-king-integration-look-gate.yml"
   workflow_dispatch:
 
@@ -77,4 +78,27 @@ jobs:
             echo "- This workflow checks source syntax and static contracts only."
             echo "- It does not claim that the Docker build or the Neolith look preload passed."
             echo "- Full runtime verification remains in the Dockerfile gate."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # Full Docker builder is opt-in via a meaningful commit message marker; no image push/deployment.
+  docker-builder-validation:
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[docker-validate]') }}
+    name: Full Docker builder validation (no deploy)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout integration branch
+        uses: actions/checkout@v4
+        with:
+          ref: integration/es2m-audit-import-20261017
+      - name: Build full Docker builder target
+        run: docker build --progress=plain --target builder -t es2-king-integration-validation:ci .
+      - name: Validation boundary summary
+        if: always()
+        run: |
+          {
+            echo "## ES2-KING Docker builder validation"
+            echo
+            echo "- Target: builder stage only; no registry push and no deployment."
+            echo "- The build must pass the generated look.c Neolith preload gate and all subsequent Dockerfile gates."
           } >> "$GITHUB_STEP_SUMMARY"
