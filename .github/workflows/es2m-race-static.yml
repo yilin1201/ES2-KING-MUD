@@ -150,7 +150,8 @@ jobs:
           fi
 
   docker-builder-validation:
-    # Expensive full build runs only on an explicitly tagged commit; never deploy or push an image.
+    # Expensive full build runs only on an explicitly tagged commit; read-only contents permission,
+    # local image tag only: no registry login, no image push, and no deployment.
     if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[docker-validate]') }}
     name: Full Docker builder validation (no deploy)
     runs-on: ubuntu-latest
