@@ -1,4 +1,5 @@
 name: ES2M Source Mirror Sync
+# 由 GitHub Actions 自動封存 ES2M 上游差異；不直接覆蓋 KING Runtime。
 
 on:
   push:
