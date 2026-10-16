@@ -147,9 +147,18 @@ def patch_look(s):
     matches = list(pattern.finditer(s))
     if len(matches) != 1:
         raise SystemExit("ES2M TRAINING DUMMY FAIL：look 外貌／年齡條件數量不符。")
-    replacement = '// ES2M TRAINING DUMMY LOOK／假人不顯示外貌與年齡。\\nif ((string)obj->query("humanoid") && intp(age = obj->query("age")) && !obj->query("training_dummy")) {'
+    replacement = '''// ES2M TRAINING DUMMY LOOK／假人不顯示外貌與年齡。
+if ((string)obj->query("humanoid") && intp(age = obj->query("age")) && !obj->query("training_dummy")) {'''
     return s[:matches[0].start()] + replacement + s[matches[0].end():]
 patch_once(look, "ES2M TRAINING DUMMY LOOK", patch_look)
+
+# Runtime source guard／防止 Python 把字面反斜線 n 寫進 LPC 程式。
+# 靜態防呆只確認輸出形態；實際編譯由 Docker 的 Neolith preload gate 負責。
+generated_look = look.read_text()
+if r'\\nif ((string)obj->query("humanoid")' in generated_look:
+    raise SystemExit("ES2M TRAINING DUMMY FAIL：look.c 含字面反斜線 n，拒絕繼續建置。")
+if '\nif ((string)obj->query("humanoid")' not in generated_look:
+    raise SystemExit("ES2M TRAINING DUMMY FAIL：look.c 未產生獨立的外貌／年齡條件行。")
 
 # 必須確認 overlay 已提供假人本體；沒有物件時不能把指令支援誤報為完整功能。
 stake = root / "custom/zhenwu/npc/target_stake.c"
