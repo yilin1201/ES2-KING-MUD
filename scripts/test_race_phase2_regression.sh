@@ -18,6 +18,13 @@ for race in human avatar headless; do
   }
 done
 
+# ES2M karma contract／明確鎖定第三方重建快照的 karma，不能只依賴檔案一致性。
+# ES2M 的 human/avatar karma 均為 5；Original Avatar karma=100 由獨立 Original source gate 驗證。
+grep -Fq 'set("karma", 5);' "$ES2M_RACE_DIR/human.c"
+grep -Fq 'set("karma", 5);' "$ES2M_RACE_DIR/avatar.c"
+grep -Fq 'set("karma", 5);' "$RACE_DIR/human.c"
+grep -Fq 'set("karma", 5);' "$RACE_DIR/avatar.c"
+
 # Human／人類：13–18 屬性、精氣神 35、自然護甲 +10、來源指定的 0.01% 化身轉換。
 grep -Fq '13 + random(6)' "$RACE_DIR/human.c"
 grep -Fq '"gin":35, "kee":35, "sen":35' "$RACE_DIR/human.c"
