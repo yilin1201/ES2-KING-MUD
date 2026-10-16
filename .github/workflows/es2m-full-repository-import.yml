@@ -1,0 +1,46 @@
+name: ES2M Scoped Source Audit
+# 手動執行唯讀盤點；只上傳報告 artifact，不自動提交或推送。
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: es2m-scoped-source-audit
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout integration branch
+        uses: actions/checkout@v4
+        with:
+          ref: integration/es2m-audit-import-20261017
+          fetch-depth: 0
+      - name: Validate Python syntax
+        run: python3 -m py_compile scripts/import_es2m_repository.py
+      - name: Generate scoped ES2M source evidence and candidates
+        run: python3 scripts/import_es2m_repository.py
+      - name: Validate generated audit manifests
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path(".")
+          mirror = json.loads((root / "es2m_source_mirror/MANIFEST.json").read_text(encoding="utf-8"))
+          plan = json.loads((root / "es2m_import_candidate/IMPORT_PLAN.json").read_text(encoding="utf-8"))
+          assert mirror["tracked_scoped_file_count"] == len(mirror["repository_files"])
+          assert mirror["mudlib_file_count"] == len(mirror["mudlib_files"])
+          assert mirror["import_candidate_file_count"] == len(plan["candidate_files"])
+          assert (root / "es2m_source_mirror/UPSTREAM_HEAD.txt").read_text().strip() == mirror["source_commit"]
+          print("ES2M SCOPED AUDIT MANIFEST PASS")
+          PY
+      - name: Upload source evidence and audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: es2m-scoped-source-audit
+          path: |
+            es2m_source_mirror/
+            es2m_import_candidate/
+            docs/status/ES2M_FULL_IMPORT_*.md
+          if-no-files-found: error
+          retention-days: 14
