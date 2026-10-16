@@ -23,11 +23,20 @@ INITIAL_BASE = "6574724aeac69c3f353fad5b2da90ccfab3714b1"
 
 
 def run(*args: str, cwd: Path | None = None) -> str:
-    """執行 Git 指令並回傳輸出；任何錯誤都中止，避免產生不完整鏡像。"""
+    """執行 Git 指令；失敗時保留 stdout/stderr，讓 Actions 可追溯真正根因。"""
     result = subprocess.run(
-        list(args), cwd=cwd, check=True, text=True, stdout=subprocess.PIPE,
+        list(args), cwd=cwd, check=False, text=True, stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
+    if result.returncode != 0:
+        command = " ".join(args)
+        details = (
+            f"ES2M SYNC COMMAND FAIL：exit={result.returncode} command={command}\n"
+            f"--- stdout ---\n{result.stdout}\n"
+            f"--- stderr ---\n{result.stderr}"
+        )
+        print(details, flush=True)
+        raise RuntimeError(details)
     return result.stdout.strip()
 
 
