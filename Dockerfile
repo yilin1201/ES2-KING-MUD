@@ -206,7 +206,7 @@ RUN python3 scripts/test_es2m_skill_import.py /opt/es2-king/runtime
 RUN python3 scripts/test_es2m_latest_martial_updates.py --runtime /opt/es2-king/runtime
 
 RUN echo "[M30 BUILD 5/5] Assert final playable Runtime" \
-    && bash scripts/assert_m30_final_runtime.sh /opt/es2-king/runtime \
+    && bash scripts/assert_m30_final_runtime.sh /opt/es2-king/runtime /build/es2m-original-mudlib \
     && bash scripts/test_king_omega_static.sh /opt/es2-king/runtime
 
 # 與既有 Bootstrap 相同：只在生成的 ES2-KING Runtime 關閉歷史 anti-spam，
