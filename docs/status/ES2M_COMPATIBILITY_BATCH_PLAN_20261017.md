@@ -41,3 +41,17 @@
 - Docker builder 驗證：已在整合工作流程加入明確 opt-in 的完整 builder job；本次提交會要求執行 `docker build --progress=plain --target builder`，只建置、不推送、不部署。結果待 Actions 回報。
 - 全量／範圍式來源盤點：程式與唯讀工作流程已放入整合分支，但尚未有成功執行產生的 `UPSTREAM_HEAD.txt`、`IMPORT_PLAN.json` 證據。
 - PR #13 保持 OPEN / NOT MERGED。
+
+## 71693beb 變更範圍的初步相容性判定（只盤點，不代表已移植）
+
+來源 commit：`wolfer168/es2-webmud@71693beb79ced81d51719ea1ccf7c02c641ca9b0`，merge PR #48「職業經驗補齊（書生、和尚、道士、方士）、閃躲招架修正、戰鬥流程文件」。本輪 293 個路徑差異中，以下是需優先處理的共用核心／成長檔案。
+
+| 來源檔案 | 初步分類 | 已看到的差異與風險 | 下一個必要驗證 |
+|---|---|---|---|
+| `adm/daemons/combatd.c` | `ADAPTER_REQUIRED` | 新增特殊內功設定下空手命中後的 `force` 精確經驗，並修正未格擋時的訊息。KING overlay 已有 `improve_skill_exact()` 與 `restored_force_tick_exp()`；觸發時機與累計量不同，不能直接疊加。 | 比較命中事件、每回合內功成長與存檔後技能進度；確認不重複發放，再加空手／持武器／無特殊內功三組 Runtime 案例。 |
+| `feature/char/combat.c` | `ADAPTER_REQUIRED` | 玩家停用 dodge 時直接跳過閃躲判定，並調整招架失敗敘述。這會改變目前「未映射身法仍使用基本 dodge 能力」的行為。 | 驗證玩家停用／啟用 dodge、NPC 防守、招架減傷與招架訊息；只改玩家指定狀態，不影響 NPC。 |
+| `feature/char/skill.c` | `ADAPTER_REQUIRED` | 新增舊技能 ID 遷移（`sanmeendo` → `ksanmando`、`tiger-force` → `tiger force`），並新增特殊法術技能升級時的 magic mastery。KING overlay 已有精確成長與存檔恢復相容層，但尚未看到相同的 ID 遷移函式。 | 追查 `feature/save.c` restore 呼叫鏈、技能／學習進度／旗標與映射表遷移；測試新舊存檔與一次升多級情境，避免丟失或重複累積。 |
+| `adm/daemons/chard.c` | `CONFLICT / POLICY HOLD` | 移除擊殺時扣除 reputation 與 martial fame 的規則。來源註解寫有「使用者定案」，但不把另一條來源分支的註解自動當成 KING 正式政策。 | 比較 KING 目前擊殺／聲望／黑道聲望規則；在 KING 政策確認前不移植。 |
+| `cmds/std/conjure.c`、`cmds/usr/praise.c`、`daemon/class/taoist.c`、`daemon/skill/absorption.c`、`archaic_attainment.c`、`literate.c`、`taoism-spells.c` | `PROGRESSION BATCH HOLD` | 涉及 magic、alchemy、martial fame、negative fame、buddhology、literature mastery、literature、spell mastery 等累計公式與觸發條件；新舊等級補發可能造成重複計分。 | 逐一核對 KING score 儲存／顯示鍵、既有升級回呼、舊角色補差額邏輯與數值邊界測試。此來源差異清單中沒有 `score.c` 變更，不代表 KING 的 score 顯示與存檔相容性已驗證。 |
+
+以上均為來源差異盤點與初步分類，不是 Runtime 移植。職業經驗／等級批次仍維持 HOLD；所有程式變更必須在本次 look.c/Docker 閘門與既有回歸驗證完成後，另以獨立批次執行。
