@@ -62,6 +62,8 @@ RUN echo "[M30 BUILD 4/5] Apply ES2-KING Expansion overlay" \
 RUN python3 scripts/test_es2m_sneak_progression.py --runtime /opt/es2-king/runtime/mudlib
 # ES2M Training Dummy／驗證假人命中、fight/kill/look 與私塾更新已實際套用到生成 Runtime。
 RUN python3 scripts/test_es2m_training_dummy.py --runtime /opt/es2-king/runtime
+# Neolith Look Preload Gate／實際載入 /cmds/std/look，確認 LPC 編譯器可接受生成的 look.c。
+RUN bash scripts/test_neolith_preload_look.sh /opt/es2-king/runtime
 
 # ADMIN GM Runtime Gate／核對實際生成 Runtime，而非只檢查 Expansion 原始檔。
 RUN bash scripts/test_admin_gm_runtime_gate.sh /opt/es2-king/runtime
