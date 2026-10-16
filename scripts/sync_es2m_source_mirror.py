@@ -106,6 +106,7 @@ def main() -> None:
         source_mudlib = upstream / "source" / "upstream" / "mudlib"
         if not source_mudlib.is_dir():
             raise SystemExit("ES2M SYNC FAIL：上游缺少 source/upstream/mudlib。")
+        MIRROR_SOURCE.parent.mkdir(parents=True, exist_ok=True)
         temp_mirror = MIRROR_SOURCE.with_name("mudlib.sync-tmp")
         if temp_mirror.exists():
             shutil.rmtree(temp_mirror)
