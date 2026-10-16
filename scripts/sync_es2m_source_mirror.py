@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import datetime as dt
+import hashlib
+import json
 import shutil
 import subprocess
 import tempfile
@@ -112,6 +114,15 @@ def main() -> None:
             shutil.rmtree(MIRROR_SOURCE)
         temp_mirror.rename(MIRROR_SOURCE)
         mudlib_count = sum(1 for path in MIRROR_SOURCE.rglob("*") if path.is_file())
+        mudlib_files = sorted(path for path in MIRROR_SOURCE.rglob("*") if path.is_file())
+        mirror_entries = []
+        for path in mudlib_files:
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            mirror_entries.append({
+                "path": path.relative_to(MIRROR_SOURCE).as_posix(),
+                "size": path.stat().st_size,
+                "sha256": digest,
+            })
 
         commit_count = run("git", "rev-list", "--count", f"{previous}..{latest}", cwd=upstream)
         manifest_lines = [
@@ -134,6 +145,28 @@ def main() -> None:
             manifest_lines.append(f"| {status} | {rel} | {old_rel or ''} |")
         (archive / "MANIFEST.md").write_text(
             "\n".join(manifest_lines) + "\n", encoding="utf-8"
+        )
+
+        mirror_manifest = {
+            "purpose": "ES2M 原始 Mudlib 完整唯讀鏡像；不得直接當成 KING runtime overlay。",
+            "source_repository": "wolfer168/es2-webmud",
+            "source_branch": BRANCH,
+            "source_commit": latest,
+            "previous_source_commit": previous,
+            "source_path": "source/upstream/mudlib/",
+            "mirror_path": "es2m_source_mirror/mudlib/",
+            "file_count": len(mirror_entries),
+            "hash_algorithm": "SHA-256",
+            "files": mirror_entries,
+            "policy": [
+                "原始來源鏡像與 es2m_snapshot 工作快照分開保存。",
+                "先逐檔比較、分類與驗證，再選擇性採用到 KING runtime。",
+                "不得以全目錄覆蓋方式取代 KING 專屬修改。",
+            ],
+        }
+        (MIRROR_SOURCE.parent / "MANIFEST.json").write_text(
+            json.dumps(mirror_manifest, ensure_ascii=False, indent=2) + "\\n",
+            encoding="utf-8",
         )
 
         HEAD_FILE.write_text(latest + "\n", encoding="utf-8")
