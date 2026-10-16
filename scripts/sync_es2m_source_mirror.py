@@ -165,7 +165,7 @@ def main() -> None:
             ],
         }
         (MIRROR_SOURCE.parent / "MANIFEST.json").write_text(
-            json.dumps(mirror_manifest, ensure_ascii=False, indent=2) + "\\n",
+            json.dumps(mirror_manifest, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
 
