@@ -88,7 +88,7 @@ jobs:
         continue-on-error: true
         run: |
           set +e
-          bash -n scripts/test_original_race_roster_source_gate.sh scripts/assert_m30_final_runtime.sh scripts/test_original_player_creation_e2e.sh scripts/test_player_open_alpha_e2e.sh 2>&1 | tee /tmp/shell-syntax.log
+          bash -n scripts/test_original_race_roster_source_gate.sh scripts/test_original_human_runtime_fixture_static.sh scripts/test_player_training_source_gate.sh scripts/assert_m30_final_runtime.sh scripts/test_original_player_creation_e2e.sh scripts/test_player_open_alpha_e2e.sh 2>&1 | tee /tmp/shell-syntax.log
           rc=${PIPESTATUS[0]}
           echo "exit_code=$rc" >> "$GITHUB_OUTPUT"
           exit "$rc"
