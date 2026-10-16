@@ -78,6 +78,8 @@ def main() -> None:
         require("ES2M TRAINING DUMMY KILL" in kill, "生成 Runtime kill 未套用假人分流。")
         require("ES2M TRAINING DUMMY LOOK" in look and '!obj->query("training_dummy")' in look,
                 "生成 Runtime look 仍顯示假人外貌／年齡。")
+        require(r'\nif ((string)obj->query("humanoid")' not in look,
+                "生成 Runtime look.c 含字面反斜線 n，不能交給 LPC 編譯器。")
         require(runtime_stake.is_file() and 'set("training_dummy", 1);' in runtime_stake.read_text(encoding="utf-8"),
                 "生成 Runtime 缺少假人物件。")
         require("ES2-KING ORIGINAL SCHOLAR UTF-8 COMPATIBILITY" in runtime_teacher,
