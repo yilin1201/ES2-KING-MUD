@@ -7,6 +7,12 @@ on:
     paths:
       - "es2m_snapshot/mudlib/daemon/race/**"
       - "scripts/apply_race_phase2_runtime.sh"
+      - "scripts/apply_es2m_20261008_world_delta.py"
+      - "scripts/test_apply_es2m_20261008_world_delta.py"
+      - "scripts/test_es2m_latest_martial_updates.py"
+      - "scripts/test_original_player_creation_e2e.sh"
+      - "scripts/test_player_open_alpha_e2e.sh"
+      - "scripts/test_original_race_roster_source_gate.sh"
       - "scripts/test_es2m_birth_attribute_contract.py"
       - "scripts/test_es2m_race_command_contract.py"
       - "scripts/test_race_phase2_static.sh"
@@ -58,6 +64,24 @@ jobs:
           rc=${PIPESTATUS[0]}
           echo "exit_code=$rc" >> "$GITHUB_OUTPUT"
           exit "$rc"
+      - name: Check ES2M world delta scope contract
+        id: world_delta
+        continue-on-error: true
+        run: |
+          set +e
+          python3 scripts/test_apply_es2m_20261008_world_delta.py 2>&1 | tee /tmp/world-delta.log
+          rc=${PIPESTATUS[0]}
+          echo "exit_code=$rc" >> "$GITHUB_OUTPUT"
+          exit "$rc"
+      - name: Check latest martial source/runtime file contract (static only)
+        id: martial_contract
+        continue-on-error: true
+        run: |
+          set +e
+          python3 scripts/test_es2m_latest_martial_updates.py 2>&1 | tee /tmp/martial-contract.log
+          rc=${PIPESTATUS[0]}
+          echo "exit_code=$rc" >> "$GITHUB_OUTPUT"
+          exit "$rc"
       - name: Publish gate diagnostics
         if: always()
         env:
@@ -67,6 +91,10 @@ jobs:
           COMMAND_CODE: ${{ steps.command_contract.outputs.exit_code }}
           OVERLAY_OUTCOME: ${{ steps.overlay_static.outcome }}
           OVERLAY_CODE: ${{ steps.overlay_static.outputs.exit_code }}
+          WORLD_OUTCOME: ${{ steps.world_delta.outcome }}
+          WORLD_CODE: ${{ steps.world_delta.outputs.exit_code }}
+          MARTIAL_OUTCOME: ${{ steps.martial_contract.outcome }}
+          MARTIAL_CODE: ${{ steps.martial_contract.outputs.exit_code }}
         run: |
           {
             echo "## ES2-KING race static gate diagnostics"
@@ -76,11 +104,13 @@ jobs:
             echo "| Birth attribute contract | ${BIRTH_OUTCOME:-NOT_RUN} | ${BIRTH_CODE:-unknown} |"
             echo "| Race command contract | ${COMMAND_OUTCOME:-NOT_RUN} | ${COMMAND_CODE:-unknown} |"
             echo "| Overlay wiring | ${OVERLAY_OUTCOME:-NOT_RUN} | ${OVERLAY_CODE:-unknown} |"
+            echo "| World delta scope contract | ${WORLD_OUTCOME:-NOT_RUN} | ${WORLD_CODE:-unknown} |"
+            echo "| Latest martial source contract | ${MARTIAL_OUTCOME:-NOT_RUN} | ${MARTIAL_CODE:-unknown} |"
             echo
             echo "These are static source checks only; they do not establish LPC/Neolith runtime or player E2E PASS."
           } >> "$GITHUB_STEP_SUMMARY"
           mkdir -p /tmp/race-static-diagnostics
-          for f in /tmp/birth-contract.log /tmp/command-contract.log /tmp/overlay-static.log; do
+          for f in /tmp/birth-contract.log /tmp/command-contract.log /tmp/overlay-static.log /tmp/world-delta.log /tmp/martial-contract.log; do
             if [ -f "$f" ]; then cp "$f" /tmp/race-static-diagnostics/; fi
           done
       - name: Upload gate logs
@@ -97,8 +127,10 @@ jobs:
           BIRTH_OUTCOME: ${{ steps.birth_contract.outcome }}
           COMMAND_OUTCOME: ${{ steps.command_contract.outcome }}
           OVERLAY_OUTCOME: ${{ steps.overlay_static.outcome }}
+          WORLD_OUTCOME: ${{ steps.world_delta.outcome }}
+          MARTIAL_OUTCOME: ${{ steps.martial_contract.outcome }}
         run: |
-          if [ "$BIRTH_OUTCOME" != "success" ] || [ "$COMMAND_OUTCOME" != "success" ] || [ "$OVERLAY_OUTCOME" != "success" ]; then
-            echo "One or more race static gates failed; see job summary and artifact."
+          if [ "$BIRTH_OUTCOME" != "success" ] || [ "$COMMAND_OUTCOME" != "success" ] || [ "$OVERLAY_OUTCOME" != "success" ] || [ "$WORLD_OUTCOME" != "success" ] || [ "$MARTIAL_OUTCOME" != "success" ]; then
+            echo "One or more static gates failed; see job summary and artifact."
             exit 1
           fi
