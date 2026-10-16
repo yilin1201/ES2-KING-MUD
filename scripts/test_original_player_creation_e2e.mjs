@@ -92,8 +92,8 @@ async function testNumericIdRejected(){
   const s=session();
   await s.wait("您的使用者代號");
   const offset=s.output().length;
-  s.send(id+"\\r\\n");
-  await s.wait(/只能由 a 到 z 的英文字母組成[\\s\\S]*您的使用者代號/,offset);
+  s.send(id+"\r\n");
+  await s.wait(/只能由 a 到 z 的英文字母組成[\s\S]*您的使用者代號/,offset);
   assert.equal(await exists(login),false); assert.equal(await exists(user),false);
   s.close();
   console.log("ORIGINAL_PLAYER_CREATION_NUMERIC_ID_REJECTED_PASS");
