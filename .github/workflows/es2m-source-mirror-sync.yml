@@ -7,6 +7,11 @@ on:
     paths:
       - '.github/workflows/es2m-source-mirror-sync.yml'
       - 'scripts/sync_es2m_source_mirror.py'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '.github/workflows/es2m-source-mirror-sync.yml'
+      - 'scripts/sync_es2m_source_mirror.py'
   schedule:
     - cron: '17 3 * * *'
   workflow_dispatch:
