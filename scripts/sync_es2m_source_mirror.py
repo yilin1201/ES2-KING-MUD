@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """ES2M 上游同步器：封存差異並更新完整唯讀鏡像，不直接改寫遊戲 Runtime。"""
+# 診斷版：Git 子程序失敗時輸出 stderr，並由 Workflow 上傳原始日誌。
 
 from __future__ import annotations
 
