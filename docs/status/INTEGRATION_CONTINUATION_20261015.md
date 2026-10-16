@@ -79,3 +79,17 @@
 - 本輪修改尚未以可存取的完整 Repository 本機執行測試；不得標記 PASS。
 - Docker／Neolith、12 種族實際隨機範圍、存檔／登出／重登，以及完整玩家 E2E 仍待新一輪建置驗證。
 - PR #13 不合併、Render 不部署、`admin.c` 不修改，凍結武學與 Score UI 不做非必要變更。
+
+
+## 最新 CI 結果（2026-10-16）
+
+- Run 38830465015（commit e272c9054dff90e834e2b388b01e1131c8b0a8ac）首次實際取得可讀 log。出生屬性、種族指令、overlay 接線及 latest martial 四項通過；World delta 測試失敗原因是 Python 3.14 已移除 ast.Str，不是原本的 WebSocket 說明文字假陽性。
+- 已將模組 docstring 範圍判斷改成只使用 ast.Constant，commit 0d60e36948fd0296e88cb21fe35bab241c8ce39e。
+- 最新 Run 38830538066 已完成且 SUCCESS。五項靜態 gate 全部 success，Step Summary 與診斷 artifact 正常產生：https://github.com/yilin1201/ES2-KING-MUD/actions/runs/38830538066
+- 此成功只代表五項靜態檢查通過；沒有執行 Dockerfile 完整建置、Neolith Driver、12 種族實際創角隨機範圍或玩家存檔／登出／重登旅程。
+
+## E2E overlay 重複套用修正的驗證限制
+
+- 兩個 E2E shell 腳本已改用 bash 呼叫 overlay，避免依賴 Git 檔案 executable bit。
+- Dockerfile 現在透過 ES2_RUNTIME_ALREADY_OVERLAID=1 明確告知 E2E：來源 Runtime 已套用 race／Expansion，測試不應再重複套用；未設定旗標的手動呼叫仍保留原本建置暫存 Runtime 的流程。
+- 本輪 CI 是靜態工作流程，不會執行這兩個 Driver E2E。因此這項修正尚未由實際玩家旅程驗證。
