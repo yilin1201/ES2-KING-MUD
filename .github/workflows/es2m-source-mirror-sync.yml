@@ -40,21 +40,53 @@ jobs:
       - name: Validate sync script syntax
         run: python3 -m py_compile scripts/sync_es2m_source_mirror.py
 
-      # Source sync／來源同步：封存上游差異並刷新完整唯讀 mudlib 鏡像。
+      # Source sync／來源同步：保存完整錯誤輸出，失敗時也可追查真正原因。
       - name: Sync ES2M source evidence
-        run: python3 scripts/sync_es2m_source_mirror.py
+        id: sync
+        shell: bash
+        run: |
+          set +e
+          python3 scripts/sync_es2m_source_mirror.py > /tmp/es2m-sync.log 2>&1
+          rc=$?
+          cat /tmp/es2m-sync.log
+          if [ "$rc" -ne 0 ]; then
+            mkdir -p docs/status
+            {
+              echo "# ES2M 同步失敗診斷"
+              echo
+              echo "- UTC：$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+              echo "- 分支：build/original-es2-races-phase2"
+              echo "- Exit code：$rc"
+              echo
+              echo "同步器輸出："
+              cat /tmp/es2m-sync.log
+            } > docs/status/ES2M_SYNC_FAILURE.log
+          fi
+          exit "$rc"
 
-      # Commit only generated evidence／只提交同步器產生的來源證據，不碰 Runtime 檔案。
-      - name: Commit source mirror and audit
+      # Commit only generated evidence／成功時提交來源證據；失敗時只提交診斷，不發布半成品。
+      - name: Commit source mirror, audit, or failure diagnostic
+        if: always()
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add es2m_source_mirror source/es2m_updates docs/status/ES2M_UPDATE_*_AUDIT.md
+          if [ "${{ steps.sync.outcome }}" = "failure" ]; then
+            git add docs/status/ES2M_SYNC_FAILURE.log
+            message="ES2M: record source sync failure diagnostics"
+          else
+            git add es2m_source_mirror source/es2m_updates docs/status/ES2M_UPDATE_*_AUDIT.md
+            message="ES2M: refresh upstream source mirror and archive"
+          fi
           if git diff --cached --quiet; then
-            echo "ES2M source is already current; no commit required."
+            echo "No generated ES2M evidence or failure diagnostic to commit."
             exit 0
           fi
-          git commit -m "ES2M: refresh upstream source mirror and archive"
+          git commit -m "$message"
           git push origin HEAD:build/original-es2-races-phase2
+
+      # Fail the job after publishing diagnostics／保留失敗狀態，避免把診斷提交誤報為同步成功。
+      - name: Preserve failed sync status
+        if: steps.sync.outcome == 'failure'
+        run: exit 1
