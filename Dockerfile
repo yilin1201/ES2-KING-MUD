@@ -228,9 +228,9 @@ RUN cd webtelnet && npm ci --omit=dev
 # Release Candidate Gameplay Gates／候選版本實際玩法閘門：
 # 直接使用剛編譯完成的 Driver，在全新隔離 data 上執行 12 種族創角與普通玩家完整旅程。
 # 這不是 Static PASS；任一創角、移動、NPC、物品、裝備、戰鬥、轉職、練功、save/quit/relogin 失敗都阻止部署。
-RUN ES2_DRIVER_BIN=/opt/es2-king/bin/neolith \
+RUN ES2_DRIVER_BIN=/opt/es2-king/bin/neolith ES2_RUNTIME_ALREADY_OVERLAID=1 \
     bash scripts/test_original_player_creation_e2e.sh /opt/es2-king/runtime
-RUN ES2_DRIVER_BIN=/opt/es2-king/bin/neolith \
+RUN ES2_DRIVER_BIN=/opt/es2-king/bin/neolith ES2_RUNTIME_ALREADY_OVERLAID=1 \
     bash scripts/test_player_open_alpha_e2e.sh /opt/es2-king/runtime
 
 # Image 內保存唯讀初始資料；啟動時才複製至 ES2_SAVE_DIR（持久存檔目錄）。
