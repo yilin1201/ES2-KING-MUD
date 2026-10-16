@@ -4,6 +4,7 @@ set -euo pipefail
 trap 'status=$?; echo "FINAL_RUNTIME_ASSERT_FAIL line=$LINENO status=$status command=$BASH_COMMAND" >&2' ERR
 
 RUNTIME_DIR="${1:-${ES2_RUNTIME_DIR:-/opt/es2-king/runtime}}"
+ORIGINAL_MUDLIB="${2:-${ES2_ORIGINAL_MUDLIB:-}}"
 LOGIN_D="$RUNTIME_DIR/mudlib/adm/daemons/logind.c"
 COMMAND_D="$RUNTIME_DIR/mudlib/adm/daemons/cmd_d.c"
 PRELOAD_FILE="$RUNTIME_DIR/mudlib/adm/etc/preload"
@@ -79,7 +80,7 @@ fi
 
 # Original Race Roster Source Gate／Original 可選種族來源閘門：
 # Target roster 固定 human/avatar；中文名稱只屬 Runtime 顯示層，不改 Original race ID。
-bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_original_race_roster_source_gate.sh" "$RUNTIME_DIR"
+bash "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/test_original_race_roster_source_gate.sh" "$RUNTIME_DIR" "$ORIGINAL_MUDLIB"
 
 # Original Human Runtime Fixture Gate／人類種族精準 Source Fixture：
 # 直接對 Docker 最終 mudlib 驗證 human→commoner→Lv.1 dependency 與固定初始化邊界，
