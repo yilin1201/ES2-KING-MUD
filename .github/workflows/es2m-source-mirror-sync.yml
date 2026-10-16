@@ -1,0 +1,55 @@
+name: ES2M Source Mirror Sync
+
+on:
+  push:
+    branches:
+      - build/original-es2-races-phase2
+    paths:
+      - '.github/workflows/es2m-source-mirror-sync.yml'
+      - 'scripts/sync_es2m_source_mirror.py'
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: es2m-source-mirror-sync
+  cancel-in-progress: false
+
+jobs:
+  sync-source-evidence:
+    # GitHub Actions 自己的同步提交不重複觸發，避免形成無限循環。
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout／取得 KING 工作分支；所有變更只提交到這個分支。
+      - name: Checkout KING branch
+        uses: actions/checkout@v4
+        with:
+          ref: build/original-es2-races-phase2
+          fetch-depth: 0
+
+      # Python syntax gate／語法閘門：避免同步器語法錯誤時修改資料。
+      - name: Validate sync script syntax
+        run: python3 -m py_compile scripts/sync_es2m_source_mirror.py
+
+      # Source sync／來源同步：封存上游差異並刷新完整唯讀 mudlib 鏡像。
+      - name: Sync ES2M source evidence
+        run: python3 scripts/sync_es2m_source_mirror.py
+
+      # Commit only generated evidence／只提交同步器產生的來源證據，不碰 Runtime 檔案。
+      - name: Commit source mirror and audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add es2m_source_mirror source/es2m_updates docs/status/ES2M_UPDATE_*_AUDIT.md
+          if git diff --cached --quiet; then
+            echo "ES2M source is already current; no commit required."
+            exit 0
+          fi
+          git commit -m "ES2M: refresh upstream source mirror and archive"
+          git push origin HEAD:build/original-es2-races-phase2
