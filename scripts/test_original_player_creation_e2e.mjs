@@ -83,9 +83,22 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   }
   s.close();
   console.log(`ORIGINAL_PLAYER_CREATION_${raceId.toUpperCase()}_E2E_PASS`);
-  // 數字開頭帳號需走同一套建立、存檔、登出及重新登入流程，驗證資料分片目錄可用。
-  if (/^\d/.test(id)) console.log("ORIGINAL_PLAYER_CREATION_NUMERIC_ID_E2E_PASS");
 }
+// Original ES2 policy／原始登入規則只允許 3–12 個英文字母；數字開頭帳號應明確被拒絕。
+async function testNumericIdRejected(){
+  const id="7probe", shard=id[0];
+  const login=`${saveDir}/login/${shard}/${id}.o`, user=`${saveDir}/user/${shard}/${id}.o`;
+  assert.equal(await exists(login),false); assert.equal(await exists(user),false);
+  const s=session();
+  await s.wait("您的使用者代號");
+  const offset=s.output().length;
+  s.send(id+"\\r\\n");
+  await s.wait(/只能由 a 到 z 的英文字母組成[\\s\\S]*您的使用者代號/,offset);
+  assert.equal(await exists(login),false); assert.equal(await exists(user),false);
+  s.close();
+  console.log("ORIGINAL_PLAYER_CREATION_NUMERIC_ID_REJECTED_PASS");
+}
+
 const races = [
   ["humanprobe","human","Human（人類）","人類測試","human"],
   ["avatarprobe","人類族","Avatar（人類族）","人類族測試","avatar"],
@@ -98,10 +111,10 @@ const races = [
   ["ashprobe","ashura","阿修羅","阿修羅測試","ashura"],
   ["headprobe","headless","刑天","刑天測試","headless"],
   ["yaksaprobe","yaksa","夜叉","夜叉測試","yaksa"],
-  ["malikprobe","malik","巫首","巫首測試","malik"],
-  ["7probe","human","Human（人類）","數字帳號測試","human"]
+  ["malikprobe","malik","巫首","巫首測試","malik"]
 ];
 for (const [id,raceChoice,raceLabel,name,raceId] of races)
   await runPlayer({id,raceChoice,raceLabel,name,raceId});
+await testNumericIdRejected();
 console.log("ES2M_RACE_ABILITY_COMMANDS_E2E_PASS");
 console.log("ES2M_PLAYER_CREATION_12_RACES_E2E_PASS");
