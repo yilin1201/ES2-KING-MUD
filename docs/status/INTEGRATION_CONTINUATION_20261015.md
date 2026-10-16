@@ -103,3 +103,17 @@
 
 
 Latest CI Run 38830731827 (commit 011c889d2c08bf7d467d3dda7cace0da96a944a5) completed SUCCESS; all six static gates passed, including bash -n syntax checks for four shell scripts. This does not establish full Docker/Neolith/player E2E PASS. https://github.com/yilin1201/ES2-KING-MUD/actions/runs/38830731827
+
+
+## 2026-10-16 Docker builder failure follow-up: Original/Runtime source-layer separation
+
+- Run [38830821542](https://github.com/yilin1201/ES2-KING-MUD/actions/runs/38830821542) failed at Dockerfile step `[M30 BUILD 5/5] Assert final playable Runtime`. The first failing sub-gate was `test_original_human_runtime_fixture_static.sh`, called by `assert_m30_final_runtime.sh` at line 88.
+- Root cause reported from user local replay: the fixture combined final Runtime creation-flow checks with Original-only numeric source assertions. The final Runtime had already received the ES2M race overlay, so Original whitespace and numeric expectations were invalid for that layer.
+- Fix on audit branch: `test_original_human_runtime_fixture_static.sh` now requires the pinned Original mudlib as argument 2; creation/setup flow is checked against final Runtime `logind.c`/ `chard.c`, while Original Human/Avatar karma, attributes, GIN/KEE/SEN, armor, and Original Avatar registration are checked against pinned Original source. Missing Original path is a hard failure, never a silent skip.
+- Fix on audit branch: `assert_m30_final_runtime.sh` passes both Runtime and pinned Original mudlib to the Human fixture and player training source gate.
+- Fix on audit branch: `test_player_training_source_gate.sh` now checks Original enable/skills/study/perform, skill progression and sneak/steal call sites against pinned Original source; the KING-only skill cap is checked separately against final Runtime. This addresses the reported likely next blocker in `cmds/std/sneak.c` without treating the unconfirmed local replay prediction as a confirmed Docker failure.
+- Fix on audit branch: `test_race_phase2_regression.sh` now explicitly asserts that ES2M snapshot and Runtime human/avatar both contain `set("karma", 5);`. The separate Original roster gate continues to assert Original Avatar karma=100. This is a source-layer contract, not a gameplay test.
+- Workflow review: `.github/workflows/es2m-race-static.yml` declares `permissions: contents: read`; the Docker validation job only runs `docker build --target builder -t es2-king-validation:ci .`. It has no registry login, no image push, no deploy action, and does not request write permissions. Static shell syntax checks now include the Human fixture and player training source gate.
+- Still open: the user-reported difference between final Runtime `may_yin_fong.c` and its snapshot must be reviewed as a genuine source/runtime delta. Skipping duplicate overlay application prevents a false collision but does not resolve or explain this content difference. Keep it in the unresolved audit list until a three-way Original/ES2M snapshot/Runtime comparison determines whether it is expected, accidental, or requires Owner decision.
+- Still open: 12-race randomized attribute ranges have not been proven by one-character-per-race samples; full distribution/range and player lifecycle E2E must remain pending until the next full Docker builder run supplies evidence.
+- No PR merge, Render deploy, `admin.c` edit, or frozen martial/Score UI changes were made. Changes remain on the audit branch only.
