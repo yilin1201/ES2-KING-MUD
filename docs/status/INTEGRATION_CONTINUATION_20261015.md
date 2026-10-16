@@ -100,3 +100,6 @@
 - `assert_m30_final_runtime.sh` 現在將 pinned Original mudlib 路徑作為第二參數傳入 race roster gate；Dockerfile 傳入建置早期封存的 `/build/es2m-original-mudlib`。
 - Original gate 僅驗證固定原版來源；ES2M Runtime 的 12 種族名冊另做存在性檢查，完整內容一致性仍由 race phase2 regression gate 負責。
 - 靜態 workflow 增加四個 shell 腳本的 `bash -n` 語法檢查，並把 gate／assert 腳本納入 path filter。該 workflow 只驗證靜態語法與來源契約，不會執行 Docker final runtime gate。
+
+
+Latest CI Run 38830731827 (commit 011c889d2c08bf7d467d3dda7cace0da96a944a5) completed SUCCESS; all six static gates passed, including bash -n syntax checks for four shell scripts. This does not establish full Docker/Neolith/player E2E PASS. https://github.com/yilin1201/ES2-KING-MUD/actions/runs/38830731827
