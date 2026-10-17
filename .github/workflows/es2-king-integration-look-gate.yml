@@ -17,6 +17,7 @@ on:
       - "scripts/apply_es2m_login_policy_runtime.py"
       - "scripts/test_apply_es2m_login_policy_runtime.py"
       - "scripts/test_original_player_creation_e2e.sh"
+      - "scripts/start_es2_king_web.sh"
       - "docs/status/ES2M_COMPATIBILITY_BATCH_PLAN_20261017.md"
       - "docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json"
       - "source/es2m_updates/**"
@@ -61,6 +62,7 @@ jobs:
           bash -n scripts/apply_es2_king_expansion.sh
           bash -n scripts/test_neolith_preload_look.sh
           bash -n scripts/test_original_player_creation_e2e.sh
+          bash -n scripts/start_es2_king_web.sh
 
       - name: Python syntax
         run: |
