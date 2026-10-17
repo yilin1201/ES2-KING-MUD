@@ -34,9 +34,9 @@ class ThreeWayMergeTest(unittest.TestCase):
             self.assertEqual(len(json.loads(report.read_text())["preserved_conflicts"]),1)
     def test_preserves_king_when_git_reports_multiple_conflicts(self):
         with tempfile.TemporaryDirectory() as td:
-            base=b"one=0\ntwo=0\nthree=0\n"
-            king=b"one=1\ntwo=1\nthree=1\n"
-            upstream=b"one=2\ntwo=2\nthree=2\n"
+            base=b"one=0\nseparator-a\ntwo=0\nseparator-b\nthree=0\n"
+            king=b"one=1\nseparator-a\ntwo=1\nseparator-b\nthree=1\n"
+            upstream=b"one=2\nseparator-a\ntwo=2\nseparator-b\nthree=2\n"
             proc,target,report=self.setup_case(Path(td),base,king,upstream)
             self.assertEqual(proc.returncode,0,proc.stderr)
             self.assertEqual(target.read_bytes(),king)
