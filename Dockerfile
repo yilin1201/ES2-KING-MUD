@@ -27,8 +27,8 @@ RUN cmake -S /opt/es2-king/runtime/neolith -B /build/neolith -G Ninja \
 WORKDIR /build/repository
 COPY . .
 # Latest ES2M import pipeline syntax gate／在昂貴的 Driver 與完整 E2E 前，先驗證補檔及三方合併工具語法。
-RUN python3 -m py_compile scripts/import_es2m_latest_missing_files.py scripts/merge_es2m_latest_changes_safe.py scripts/sync_es2m_latest_import_overlay.py
-RUN python3 -m unittest -v scripts/test_sync_es2m_latest_import_overlay.py
+RUN python3 -m py_compile scripts/import_es2m_latest_missing_files.py scripts/merge_es2m_latest_changes_safe.py scripts/sync_es2m_latest_import_overlay.py scripts/classify_es2m_latest_conflicts.py
+RUN python3 -m unittest -v scripts/test_sync_es2m_latest_import_overlay.py scripts/test_classify_es2m_latest_conflicts.py
 
 # ES2M Birth Attribute Contract Gate／防止 E2E 出生屬性範圍與保存的 ES2M race daemon 不一致。
 # 靜態來源驗證，不代表 LPC 編譯或實際創角 Runtime PASS。
@@ -255,6 +255,12 @@ RUN python3 scripts/merge_es2m_latest_changes_safe.py \
     --runtime /opt/es2-king/runtime/mudlib \
     --manifest /build/repository/docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json \
     --output /build/es2m-latest-three-way-merge.json
+# ES2M conflict classification／交叉核對補檔衝突與三方合併，避免重複計數並辨識 KING 自訂差異。
+RUN python3 scripts/classify_es2m_latest_conflicts.py \
+    --manifest /build/repository/docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json \
+    --additive-report /build/es2m-latest-additive-import.json \
+    --merge-report /build/es2m-latest-three-way-merge.json \
+    --output /build/es2m-latest-conflict-classification.json
 # 匯出無衝突檔案，供工作流程持久寫入 KING 版本庫；HOLD 衝突不會匯出。
 RUN python3 scripts/sync_es2m_latest_import_overlay.py export \
     --runtime /opt/es2-king/runtime/mudlib \
