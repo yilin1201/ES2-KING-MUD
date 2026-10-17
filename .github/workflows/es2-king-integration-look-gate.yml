@@ -20,6 +20,8 @@ on:
       - "scripts/test_es2m_source_sync_manifest.py"
       - "scripts/import_es2m_latest_missing_files.py"
       - "scripts/test_import_es2m_latest_missing_files.py"
+      - "scripts/merge_es2m_latest_changes_safe.py"
+      - "scripts/test_merge_es2m_latest_changes_safe.py"
       - ".gitmodules"
       - ".github/workflows/es2-king-integration-look-gate.yml"
   workflow_dispatch:
@@ -64,6 +66,9 @@ jobs:
 
       - name: Safe latest ES2M additive importer unit tests
         run: python3 -m unittest -v scripts/test_import_es2m_latest_missing_files.py
+
+      - name: Safe latest ES2M three-way merge unit tests
+        run: python3 -m unittest -v scripts/test_merge_es2m_latest_changes_safe.py
 
       - name: Race and birth attribute source contracts
         run: |
