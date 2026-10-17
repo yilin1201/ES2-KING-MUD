@@ -252,6 +252,7 @@ RUN cd scripts && python3 -m unittest -v test_merge_es2m_latest_changes_safe
 RUN python3 scripts/merge_es2m_latest_changes_safe.py \
     --source-root /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/source/upstream/mudlib \
     --original-root /build/es2m-original-mudlib \
+    --snapshot-root /build/repository/es2m_snapshot/mudlib \
     --runtime /opt/es2-king/runtime/mudlib \
     --manifest /build/repository/docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json \
     --output /build/es2m-latest-three-way-merge.json
