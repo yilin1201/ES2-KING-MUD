@@ -114,6 +114,48 @@ jobs:
           submodules: recursive
       - name: Build full Docker builder target
         run: docker build --progress=plain --target builder -t es2-king-integration-validation:ci .
+      - name: Extract ES2M import reports from successful builder image
+        if: always()
+        run: |
+          if ! docker image inspect es2-king-integration-validation:ci >/dev/null 2>&1; then
+            echo "Builder image unavailable; no import report can be extracted."
+            exit 0
+          fi
+          container_id="$(docker create es2-king-integration-validation:ci)"
+          trap 'docker rm -f "$container_id" >/dev/null 2>&1 || true' EXIT
+          for report in es2m-latest-qiaoyin-stage.json es2m-latest-additive-import.json es2m-latest-three-way-merge.json; do
+            docker cp "$container_id:/build/$report" "$report" 2>/dev/null || true
+          done
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          from os import environ
+          summary = Path(environ["GITHUB_STEP_SUMMARY"])
+          lines = ["## ES2M latest-source import report", ""]
+          for name in ("es2m-latest-qiaoyin-stage.json", "es2m-latest-additive-import.json", "es2m-latest-three-way-merge.json"):
+              path = Path(name)
+              if not path.is_file():
+                  continue
+              data = json.loads(path.read_text(encoding="utf-8"))
+              lines += [f"### {name}", f"- Status: `{data.get('status', 'unknown')}`"]
+              for key, value in data.items():
+                  if isinstance(value, list):
+                      lines.append(f"- {key}: {len(value)}")
+              for key in ("copied", "source_replaced", "merged", "preserved_conflicts"):
+                  values = data.get(key, [])
+                  if values and isinstance(values[0], dict):
+                      lines.append(f"- {key} paths: " + ", ".join(str(x.get("path", "?")) for x in values))
+              lines.append("")
+          summary.write_text(summary.read_text(encoding="utf-8") + "\n".join(lines) + "\n", encoding="utf-8")
+          PY
+      - name: Upload ES2M import reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: es2m-latest-import-reports
+          path: es2m-*.json
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Validation boundary summary
         if: always()
         run: |
