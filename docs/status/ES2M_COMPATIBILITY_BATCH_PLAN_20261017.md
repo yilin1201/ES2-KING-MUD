@@ -39,7 +39,7 @@
 - 帳號／中文名稱長度政策：`HOLD / POLICY NOT DECIDED`。使用者提供的版本證據顯示固定原版 `cc45c06a` 僅接受 `a–z`、3–18 位元組；ES2M `71693beb79ced81d51719ea1ccf7c02c641ca9b0` 接受英文字母與數字、1–18 位元組；Phase 2 Runtime 目前仍是僅接受 `a–z`、3–18 位元組。這是兩項玩家可見行為差異，不可只處理數字帳號而忽略中文名稱長度。現有 E2E 的 `7probe` 案例必須保留，並明確標示為政策決策閘門；政策未決前，不得把它改成預期成功、移除案例，或宣稱 ES2M 創角相容性已通過。現有 Runtime 拒絕 `7probe` 僅代表觀察到的基線行為，不等於已核定採用原版政策。
 - 低成本整合語法／來源契約閘門：GitHub Actions run `38974801566`（`ES2-KING Integration Look Gate`）已成功；涵蓋 Bash、Python、Node 語法，假人來源契約、12 種族／出生屬性契約與數字帳號拒絕政策。此結果不代表 Docker／Neolith Runtime PASS。
 - Docker builder 驗證：已在整合工作流程加入明確 opt-in 的完整 builder job；本次提交會要求執行 `docker build --progress=plain --target builder`，只建置、不推送、不部署。結果待 Actions 回報。
-- ES2M 最新來源固定與全量盤點：已將 `wolfer168/es2-webmud@71693beb79ced81d51719ea1ccf7c02c641ca9b0` 固定為 Git submodule（子模組：以固定上游 commit 連結完整來源，不複製或覆蓋 KING Runtime），路徑 `source/es2m_updates/20261017_71693beb/upstream-es2-webmud`；完整 1,678 個 `source/upstream/mudlib` 檔案清單寫入 `docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json`。與現有 `es2m_snapshot/mudlib` 比對：981 個檔案內容相同、160 個檔案不同、537 個上游檔案未出現在目前快照、3 個快照檔案未出現在上游，合計 700 個差異路徑需審核。此統計是「完整上游與目前快照」比較，不等同於先前以不同基準得到的 293 路徑差異。非相同檔案全部先標記 `HOLD_REVIEW`；這代表來源證據已固定與清單化，不代表 700 個檔案已寫入正式 Runtime。已另將上游戰鬥流程說明保存至 `docs/es2m_reference/ES2M_戰鬥流程說明_71693beb.md`，並加上外部證據標記。新增 `scripts/test_es2m_source_sync_manifest.py`，由低成本 GitHub Actions 驗證來源 commit、檔案數量、差異統計、HOLD 閘門與 submodule commit。
+- ES2M 最新來源固定與全量盤點：已將 `wolfer168/es2-webmud@71693beb79ced81d51719ea1ccf7c02c641ca9b0` 固定為 Git submodule（子模組：以固定上游 commit 連結完整來源，不複製或覆蓋 KING Runtime），路徑 `source/es2m_updates/20261017_71693beb/upstream-es2-webmud`；完整 1,678 個 `source/upstream/mudlib` 檔案清單寫入 `docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json`。與現有 `es2m_snapshot/mudlib` 比對：981 個檔案內容相同、160 個檔案不同、537 個上游檔案未出現在目前快照、3 個快照檔案未出現在上游，合計 700 個差異路徑需審核。此統計是「完整上游與目前 ES2M 快照」比較，不等同於先前以不同基準得到的 293 路徑差異。另以固定 Original ES2 `cc45c06af4852380e5148dad3c9d53ff06854f2c` 的 `mudlib/` 為基準比較 1,678 個上游檔案：372 個與原版相同、162 個修改、1,144 個上游路徑在固定原版中不存在、2 個原版檔案在上游不存在。這是另一個獨立基準；「原版不存在」不代表可直接匯入，仍需逐項分類與依賴驗證。非相同檔案全部先標記 `HOLD_REVIEW`；這代表來源證據已固定與清單化，不代表 700 個檔案已寫入正式 Runtime。已另將上游戰鬥流程說明保存至 `docs/es2m_reference/ES2M_戰鬥流程說明_71693beb.md`，並加上外部證據標記。新增 `scripts/test_es2m_source_sync_manifest.py`，由低成本 GitHub Actions 驗證來源 commit、檔案數量、差異統計、HOLD 閘門與 submodule commit。
 - PR #13 保持 OPEN / NOT MERGED。
 
 ## 71693beb 變更範圍的初步相容性判定（只盤點，不代表已移植）
@@ -104,3 +104,17 @@
 - 創角帳號字元／長度及中文名稱最短長度仍為 `HOLD / POLICY NOT DECIDED`；不能用整批同步繞過政策閘門。
 - 職業經驗／等級與技能成長仍為 `HOLD`；戰鬥核心須分批做 API／數值／存檔與 Runtime 驗證。
 - PR #13 保持 OPEN / NOT MERGED；Phase 2 固定基線不變。
+
+
+### 與固定 Original ES2 的獨立比較
+
+基準：`taedlar/es2_mudlib@cc45c06af4852380e5148dad3c9d53ff06854f2c` 的 `mudlib/`。
+
+| 狀態 | 數量 | 意義 |
+|---|---:|---|
+| 上游與 Original 內容相同 | 372 | 內容雜湊一致；仍需依 KING 現況判斷是否已存在 |
+| 上游修改 Original 檔案 | 162 | 修改既有原版行為，必須做三方差異與相容性審核 |
+| 上游有、Original 無 | 1,144 | 可能是新增系統、內容或上游專用檔案；不得直接整批複製到 Runtime |
+| Original 有、上游無 | 2 | 保留原版檔案，不因上游缺少而刪除 |
+
+注意：以上比較只用於辨識來源差異，不是 1,144 個檔案都屬於「新功能」，也不是 162 個修改都應採用。需要依檔案功能、呼叫關係、依賴與實際 Runtime 行為再分類。
