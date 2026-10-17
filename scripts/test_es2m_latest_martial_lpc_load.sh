@@ -36,13 +36,21 @@ do
   grep -Fqx "$obj" "$PRELOAD" || printf '%s\n' "$obj" >> "$PRELOAD"
 done
 
+# ES2M Port Contract／從實際 mudlib 與 Driver config 讀取連接埠，避免固定使用 Original 的 4000。
+MUD_PORT="$(awk '$1 == "#define" && $2 == "MUD_PORT" { print $3; exit }' "$ROOT/mudlib/include/globals.h")"
+CONFIG_PORT="$(awk '$1 == "Port" { split($2, p, ":"); print p[1]; exit }' "$ROOT/neolith.conf")"
+if [[ ! "$MUD_PORT" =~ ^[0-9]+$ || "$CONFIG_PORT" != "$MUD_PORT" ]]; then
+  echo "ES2M MARTIAL LOAD BLOCKED：連接埠不一致（globals.h=$MUD_PORT, neolith.conf=$CONFIG_PORT）。" >&2
+  exit 1
+fi
+
 cd "$ROOT"
 "$DRIVER" -f neolith.conf -c >"$LOG" 2>&1 &
 PID=$!
 
-python3 - "$PID" "$LOG" <<'PY'
+python3 - "$PID" "$LOG" "$MUD_PORT" <<'PY'
 import os, socket, sys, time
-pid, log = int(sys.argv[1]), sys.argv[2]
+pid, log, port = int(sys.argv[1]), sys.argv[2], int(sys.argv[3])
 for _ in range(60):
     try:
         os.kill(pid, 0)
@@ -52,7 +60,7 @@ for _ in range(60):
     sock = socket.socket()
     sock.settimeout(0.5)
     try:
-        sock.connect(("127.0.0.1", 4000))
+        sock.connect(("127.0.0.1", port))
         sock.close()
         break
     except OSError:
@@ -60,7 +68,7 @@ for _ in range(60):
         time.sleep(1)
 else:
     print(open(log, errors="replace").read())
-    raise SystemExit("ES2M MARTIAL LOAD FAIL：60 秒內未監聽 TCP 4000。")
+    raise SystemExit(f"ES2M MARTIAL LOAD FAIL：60 秒內未監聽 TCP {port}。")
 PY
 
 if grep -Eiq 'Error in loading object: /(daemon/skill/(tiger-steps|sanmeendo|tiger-force)|d/oldpine/npc/kao_shen)|((compile|syntax) error).*(tiger-steps|sanmeendo|tiger-force|kao_shen)' "$LOG"; then
