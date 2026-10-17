@@ -270,6 +270,11 @@ RUN cd webtelnet && npm ci --omit=dev
 # 在匯入稽核階段與正式 Runtime E2E 之間切開，讓即使 Gameplay Gate 失敗，也能先取回匯入清冊並持久化已安全合併內容。
 FROM es2m-import-audit AS builder
 
+# ES2M Login Policy／將固定 ES2M 的帳號英數字與單字顯示名稱規則適配至生成 Runtime。
+# 只修改建置產生的 logind，不回寫 Original ES2；三個精確錨點或政策後置條件不符即停止。
+RUN cd scripts && python3 -m unittest -v test_apply_es2m_login_policy_runtime
+RUN python3 scripts/apply_es2m_login_policy_runtime.py --runtime /opt/es2-king/runtime/mudlib
+
 # Release Candidate Gameplay Gates／候選版本實際玩法閘門：
 # 直接使用剛編譯完成的 Driver，在全新隔離 data 上執行 12 種族創角與普通玩家完整旅程。
 # 這不是 Static PASS；任一創角、移動、NPC、物品、裝備、戰鬥、轉職、練功、save/quit/relogin 失敗都阻止部署。
