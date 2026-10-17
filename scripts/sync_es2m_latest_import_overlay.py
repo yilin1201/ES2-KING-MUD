@@ -136,7 +136,7 @@ def main() -> None:
                 combined.setdefault(relative, item)
         manifest["files"] = [combined[key] for key in sorted(combined)]
         manifest["file_count"] = len(manifest["files"])
-        persisted_manifest.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+        persisted_manifest.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print("ES2M_OVERLAY_PERSISTED", manifest.get("file_count", 0))
         return
 
