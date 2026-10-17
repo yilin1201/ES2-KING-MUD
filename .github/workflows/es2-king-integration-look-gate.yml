@@ -11,6 +11,8 @@ on:
       - "scripts/test_neolith_preload_look.sh"
       - "scripts/test_es2m_training_dummy.py"
       - "scripts/test_original_player_creation_e2e.mjs"
+      - "scripts/apply_es2m_login_policy_runtime.py"
+      - "scripts/test_apply_es2m_login_policy_runtime.py"
       - "scripts/test_original_player_creation_e2e.sh"
       - "docs/status/ES2M_COMPATIBILITY_BATCH_PLAN_20261017.md"
       - "docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json"
@@ -56,8 +58,8 @@ jobs:
 
       - name: Python syntax
         run: |
-          python3 -m py_compile scripts/test_es2m_training_dummy.py scripts/sync_es2m_latest_import_overlay.py
-          python3 -m unittest -v scripts/test_sync_es2m_latest_import_overlay.py
+          python3 -m py_compile scripts/test_es2m_training_dummy.py scripts/sync_es2m_latest_import_overlay.py scripts/apply_es2m_login_policy_runtime.py
+          python3 -m unittest -v scripts/test_sync_es2m_latest_import_overlay.py scripts/test_apply_es2m_login_policy_runtime.py
 
       - name: Node syntax
         run: node --check scripts/test_original_player_creation_e2e.mjs
@@ -79,18 +81,20 @@ jobs:
           python3 scripts/test_es2m_birth_attribute_contract.py
           python3 scripts/test_es2m_race_command_contract.py
 
-      - name: Verify numeric ID policy follows Original ES2
+      - name: Verify ES2M login policy runtime contract
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          p = Path("scripts/test_original_player_creation_e2e.mjs").read_text(encoding="utf-8")
-          assert "async function testNumericIdRejected()" in p
-          assert "ORIGINAL_PLAYER_CREATION_NUMERIC_ID_REJECTED_PASS" in p
-          assert "await testNumericIdRejected();" in p
-          assert "ORIGINAL_PLAYER_CREATION_NUMERIC_ID_E2E_PASS" not in p
-          sh = Path("scripts/test_original_player_creation_e2e.sh").read_text(encoding="utf-8")
-          assert "ORIGINAL_PLAYER_CREATION_NUMERIC_ID_REJECTED_PASS" in sh
-          print("ORIGINAL ES2 NUMERIC-ID REJECTION CONTRACT PASS")
+          e2e = Path("scripts/test_original_player_creation_e2e.mjs").read_text(encoding="utf-8")
+          shell = Path("scripts/test_original_player_creation_e2e.sh").read_text(encoding="utf-8")
+          adapter = Path("scripts/apply_es2m_login_policy_runtime.py").read_text(encoding="utf-8")
+          assert "async function testEs2mLoginPolicy()" in e2e
+          assert "ES2M_PLAYER_CREATION_NUMERIC_ID_ACCEPTED_PASS" in e2e
+          assert "ES2M_SINGLE_CHARACTER_DISPLAY_NAME_PASS" in e2e
+          assert "ES2M_SINGLE_CHARACTER_DISPLAY_NAME_PASS" in shell
+          assert "ID_CHAR_ES2M" in adapter and "NAME_CONDITION_ES2M" in adapter
+          assert "ORIGINAL_PLAYER_CREATION_NUMERIC_ID_REJECTED_PASS" not in e2e
+          print("ES2M LOGIN POLICY CONTRACT PASS: 3-12 lowercase alphanumeric ID; 1-18 UTF-8 display name")
           PY
 
       - name: Summary
