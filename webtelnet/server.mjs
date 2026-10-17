@@ -10,7 +10,7 @@ import { TelnetTextFilter, initialTelnetResponse } from "./telnet.mjs";
 const here = dirname(fileURLToPath(import.meta.url));
 const webPort = Number(process.env.PORT || process.env.WEBTELNET_PORT || 8080);
 const mudHost = process.env.ES2_HOST || "127.0.0.1";
-const mudPort = Number(process.env.ES2_PORT || 4000);
+const mudPort = Number(process.env.ES2_PORT || 4001);
 // Build Identity（建置版本識別）：Render 提供的公開 Commit SHA 只用於核對部署版本，
 // 不讀取或輸出其他環境變數，避免洩漏 Secret（秘密資料）。
 const buildCommit = process.env.RENDER_GIT_COMMIT || process.env.ES2_BUILD_COMMIT || "unknown";
