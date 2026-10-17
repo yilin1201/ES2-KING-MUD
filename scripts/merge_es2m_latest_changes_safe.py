@@ -43,11 +43,14 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--original-root", type=Path, required=True)
+    # ES2M Snapshot／既有 ES2M 快照：對 Original 尚不存在、但快照中已存在的路徑，使用快照作為版本演進基底。
+    parser.add_argument("--snapshot-root", type=Path)
     parser.add_argument("--runtime", type=Path, required=True)
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     source_root = args.source_root.resolve(); original_root = args.original_root.resolve(); runtime = args.runtime.resolve()
+    snapshot_root = args.snapshot_root.resolve() if args.snapshot_root else None
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     if manifest.get("source_commit") != EXPECTED_COMMIT:
         raise SystemExit(f"ES2M_THREE_WAY_FAIL: unexpected source commit {manifest.get('source_commit')}")
@@ -59,7 +62,23 @@ def main() -> None:
     }
     seen = set()
     for entry in manifest.get("files", []):
-        if entry.get("original_status") != "CHANGED_FROM_PINNED_ORIGINAL":
+        original_status = entry.get("original_status")
+        # 優先使用固定 Original 作為 base；Original 沒有此檔時，若既有 ES2M 快照有記錄，
+        # 則以該快照作為 ES2M 版本演進 base，避免把 KING 自訂差異誤判成無法合併。
+        if original_status == "CHANGED_FROM_PINNED_ORIGINAL":
+            base_root = original_root
+            expected_base_sha = entry.get("original_sha")
+            base_label = "Original ES2"
+        elif (
+            original_status == "NEW_TO_PINNED_ORIGINAL"
+            and entry.get("status") == "CHANGED_FROM_EXISTING_ES2M_SNAPSHOT"
+            and entry.get("snapshot_sha")
+            and snapshot_root is not None
+        ):
+            base_root = snapshot_root
+            expected_base_sha = entry.get("snapshot_sha")
+            base_label = "ES2M snapshot"
+        else:
             continue
         relative = entry.get("path", "")
         if relative in seen:
@@ -70,16 +89,16 @@ def main() -> None:
             report["excluded"].append({"path": relative, "reason": why})
             continue
         source = safe_file(source_root, relative)
-        original = safe_file(original_root, relative)
+        base = safe_file(base_root, relative)
         target = safe_file(runtime, relative)
-        if not source.is_file() or not original.is_file():
-            raise SystemExit(f"ES2M_THREE_WAY_FAIL: source/original file missing: {relative}")
+        if not source.is_file() or not base.is_file():
+            raise SystemExit(f"ES2M_THREE_WAY_FAIL: source/{base_label} file missing: {relative}")
         source_sha = git_blob_sha(source)
-        original_sha = git_blob_sha(original)
+        base_sha = git_blob_sha(base)
         if source_sha != entry.get("sha"):
             raise SystemExit(f"ES2M_THREE_WAY_FAIL: ES2M source blob mismatch: {relative}")
-        if original_sha != entry.get("original_sha"):
-            raise SystemExit(f"ES2M_THREE_WAY_FAIL: Original ES2 baseline blob mismatch: {relative}")
+        if base_sha != expected_base_sha:
+            raise SystemExit(f"ES2M_THREE_WAY_FAIL: {base_label} baseline blob mismatch: {relative}")
         report["eligible_files"] += 1
         if not target.exists():
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -93,25 +112,25 @@ def main() -> None:
         if target_sha == source_sha:
             report["already_source"].append(relative)
             continue
-        if target_sha == original_sha:
+        if target_sha == base_sha:
             target.write_bytes(source.read_bytes())
             report["source_replaced"].append(relative)
             continue
         # Git 的 merge-file 對二進位檔不適合做文字合併；先辨識 NUL，保留 KING 並列為人工 HOLD。
         source_bytes = source.read_bytes()
-        original_bytes = original.read_bytes()
+        original_bytes = base.read_bytes()
         target_bytes = target.read_bytes()
         if b"\0" in source_bytes or b"\0" in original_bytes or b"\0" in target_bytes:
             report["preserved_conflicts"].append({
                 "path": relative, "reason": "binary_file_preserved_KING",
-                "source_git_blob": source_sha, "original_git_blob": original_sha,
+                "source_git_blob": source_sha, "base_git_blob": base_sha, "merge_base": base_label,
                 "runtime_git_blob": target_sha,
             })
             continue
         proc = subprocess.run([
             "git", "merge-file", "-p",
             "-L", "KING Runtime", "-L", "Original ES2", "-L", "ES2M 71693beb",
-            str(target), str(original), str(source),
+            str(target), str(base), str(source),
         ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
         if proc.returncode == 0:
             target.write_bytes(proc.stdout)
