@@ -237,6 +237,7 @@ RUN ES2_DRIVER_BIN=/opt/es2-king/bin/neolith \
 
 # ES2M 最新來源全量加法補檔：補入所有缺失的固定來源檔案，不覆蓋 KING 同名檔。
 # 排除 data/、log/、編譯物件與時間戳備份；衝突寫入報告，後續逐檔適配。
+# Manifest 的 40 位 sha 是 Git blob SHA-1；匯入器逐檔比對固定來源 blob ID，不能用 SHA-256 混算。
 RUN cd scripts && python3 -m unittest -v test_import_es2m_latest_missing_files
 RUN python3 scripts/import_es2m_latest_missing_files.py \
     --source-root /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/source/upstream/mudlib \
