@@ -1,7 +1,7 @@
 {
   "source_commit": "71693beb79ced81d51719ea1ccf7c02c641ca9b0",
   "status": "CONFLICT_FREE_IMPORTS_ONLY",
-  "file_count": 294,
+  "file_count": 392,
   "files": [
     {
       "path": "adm/daemons/channeld.c",
@@ -164,9 +164,19 @@
       "sha256": "8c8236bd938bae51599b1b7271fa5d6996ba7b4aeb16a5e0f002a3bc577cf46d"
     },
     {
+      "path": "custom/armor/feet/spider_boots.c",
+      "origin": "source_replaced",
+      "sha256": "7ec332f10d2ca8d02e5785ebef33fd751ce61f8cbca3c12bcfe3695dfc9919cd"
+    },
+    {
       "path": "custom/condition/weapon_poison.c",
       "origin": "additive_copy",
       "sha256": "96585aff554e0d80b48f88aeeea1cbacd71270dda1d4f49cc1f5fbea13775536"
+    },
+    {
+      "path": "custom/home/npc/butler.c",
+      "origin": "source_replaced",
+      "sha256": "dfc7f1407974aaee09f3d049b33286f4353da27bfdb872993a095f746afbfc89"
     },
     {
       "path": "custom/legacy_npc/abbot_wu_nian.c",
@@ -769,9 +779,34 @@
       "sha256": "89e3d6bfc9ae756d1a574863cbf1795c6479502be2c5f3bd8ea57d76d00f0689"
     },
     {
+      "path": "custom/taoism/npc/fire_taoist.c",
+      "origin": "source_replaced",
+      "sha256": "035aeed0582f18b354104252c481646aace7c12cc7df404ad5a16dd62c9aafd3"
+    },
+    {
+      "path": "custom/taoism/npc/freeze_taoist.c",
+      "origin": "source_replaced",
+      "sha256": "3312d466870df4bebd8157c9810c1666b37fb11b79b1ce76bca95bfddf09354c"
+    },
+    {
+      "path": "custom/taoism/npc/storm_taoist.c",
+      "origin": "source_replaced",
+      "sha256": "731ecb69483b804720618fb0cfc3e427dc7b242d5527cb752a73880242f06743"
+    },
+    {
+      "path": "custom/taoism/npc/thunder_taoist.c",
+      "origin": "source_replaced",
+      "sha256": "80c9f0231bee4075e7d5fea28397579d8b63c0f82e5daa1fe420ee3e25aaf384"
+    },
+    {
       "path": "custom/test/obj/infinite_100_gold.c",
       "origin": "additive_copy",
       "sha256": "9a9e2ac26d5cc8f9fa81f0180c1b1adcae3468da48dbbca775ca57283c31c1dc"
+    },
+    {
+      "path": "custom/weapon/blade/green_blade.c",
+      "origin": "source_replaced",
+      "sha256": "7bf4e3285c40af9ca1f63f2dcd15e8859cc24c43f520f656d0d1a40ff74ca82c"
     },
     {
       "path": "custom/wizroom/w/windstory/npc/gammer.c",
@@ -792,6 +827,251 @@
       "path": "custom/wizroom/w/windstory/room/inn_w.c",
       "origin": "additive_copy",
       "sha256": "317192b992978243085b1e7adebe844fbf5871ab43846fad5925d2afaa42cf7a"
+    },
+    {
+      "path": "custom/zhenwu/npc/lu_xinien.c",
+      "origin": "source_replaced",
+      "sha256": "b6edc686d8d4934264075b3140ff90574b69f906c6494cdf76aecfc32c1a8b34"
+    },
+    {
+      "path": "custom/zhenwu/npc/mee_pei.c",
+      "origin": "source_replaced",
+      "sha256": "e5ee6662d1df65f27ac28feb8b2f7a2d7cd1368fc67fb0d90e5cf45fb359f9dc"
+    },
+    {
+      "path": "custom/zhenwu/npc/soldier.c",
+      "origin": "source_replaced",
+      "sha256": "a1f7336f144202435daacbb1963e9e053003aefead050fb358f0554920c4341f"
+    },
+    {
+      "path": "custom/zhenwu/npc/zhenwu_soldier.c",
+      "origin": "source_replaced",
+      "sha256": "3dcc5d3cef69d8a9c0f1945e154d49f26f287192b736631f356ce8924782c5c6"
+    },
+    {
+      "path": "custom/zhenwu/obj/recruit_stone.c",
+      "origin": "source_replaced",
+      "sha256": "99943b7b5bf0a7b0f3be7b76dba42b1eea19b2922225788c0babe21c14854b8c"
+    },
+    {
+      "path": "d/lee/LEE_TOPOLOGY.json",
+      "origin": "source_replaced",
+      "sha256": "400d2b38f4489efdc3804bb11aefdb9171a37de85a040ebe1f4957590bf750f9"
+    },
+    {
+      "path": "d/lee/creek.c",
+      "origin": "source_replaced",
+      "sha256": "88b4216ced04ac87f9dba8c309b07d9b14023d354cd3705e4fc6beb899d74e36"
+    },
+    {
+      "path": "d/lee/npc/child.c",
+      "origin": "source_replaced",
+      "sha256": "9e5ef7cdb1f9ef6f117353652cc0ba5b002f630675c1d9bc11a7339b08fa58fd"
+    },
+    {
+      "path": "d/lee/npc/farmer.c",
+      "origin": "source_replaced",
+      "sha256": "1c3b2eaac88638566a1fabe01a2a4005c8d21487237f637fcafb8c01643ab19e"
+    },
+    {
+      "path": "d/lee/npc/guard.c",
+      "origin": "source_replaced",
+      "sha256": "996d4c29dd9cfd3cd67c0837d41098e609d60c22c64bf3ec50c51db34dd922f6"
+    },
+    {
+      "path": "d/lee/npc/hawthorn_seller.c",
+      "origin": "source_replaced",
+      "sha256": "a85d71c5d6848bc45ee80f18a00c14b4203a65b22aff586398c8ab94f1882ca6"
+    },
+    {
+      "path": "d/lee/npc/herb_boy.c",
+      "origin": "source_replaced",
+      "sha256": "2706ce7f84fc528380116839d6d3d065e5bdbca392e70cb0d7c9b6f9a45acefa"
+    },
+    {
+      "path": "d/lee/npc/hunter.c",
+      "origin": "source_replaced",
+      "sha256": "e2aa27d083273920882a356e0c562004cb86da855779de10cf7a958df92eecf4"
+    },
+    {
+      "path": "d/lee/npc/lee_hsu_hsien.c",
+      "origin": "source_replaced",
+      "sha256": "de3d6fb6521a5cb19246b3ca83b799520a1aaa99add120dd0db69ec432a71430"
+    },
+    {
+      "path": "d/lee/npc/lee_xiao_tian.c",
+      "origin": "source_replaced",
+      "sha256": "486228a54e5c5e25f52872ebf9821eaff68526c54b1965d8102dcf8d544bbb6a"
+    },
+    {
+      "path": "d/lee/npc/lee_yen.c",
+      "origin": "source_replaced",
+      "sha256": "fa10a2bfabd225dc131f2af6cfe1f592947c271e2a35c58724509c4fc62dc160"
+    },
+    {
+      "path": "d/lee/npc/lee_yong.c",
+      "origin": "source_replaced",
+      "sha256": "39892353e1cecf0cb8cbe993601c85c1a5b824f25b1a2970d0914c3c4b4c6d4c"
+    },
+    {
+      "path": "d/lee/npc/lee_zhong.c",
+      "origin": "source_replaced",
+      "sha256": "f5aa106d2d8feea0d6863769a538e4871bdfaf49b256fb82000ef0665f7a68d1"
+    },
+    {
+      "path": "d/lee/npc/li_ban_xian.c",
+      "origin": "source_replaced",
+      "sha256": "7b1ba92e908671240155872618ecca5366ad772495b6ae4921ce2e9923dbaaa7"
+    },
+    {
+      "path": "d/lee/npc/nee_cheng.c",
+      "origin": "source_replaced",
+      "sha256": "9ebbc4992bd49fd9a856d379f507ddeefa942e6c606719d67c0bf9d784072cd8"
+    },
+    {
+      "path": "d/lee/npc/teacher.c",
+      "origin": "source_replaced",
+      "sha256": "0cc144d6ab38552bce58573a9bcdf40bb9aaeb173f20c39ce0a372f2b6a9cf61"
+    },
+    {
+      "path": "d/lee/npc/traveller.c",
+      "origin": "source_replaced",
+      "sha256": "bc9243c681306f60e73a70430daac312126c100ad621152a4668b737e9afa020"
+    },
+    {
+      "path": "d/lee/npc/waiter.c",
+      "origin": "source_replaced",
+      "sha256": "7546a150def90d11102e27a3d2fc4dfd2e03a5263d00bfe79fa40d8400de9be1"
+    },
+    {
+      "path": "d/lee/npc/woman.c",
+      "origin": "source_replaced",
+      "sha256": "6d42b838d2e7a6ea153818256d017aa1e4ef79643cf882ede1513e4f922019f1"
+    },
+    {
+      "path": "d/lee/obj/waterskin.c",
+      "origin": "merged",
+      "sha256": "3e74121ca0a63fe3af59de93e2a2bf119f8641e0fcfb9c3ebd57acf7030eb180"
+    },
+    {
+      "path": "d/lee/pawnshop.c",
+      "origin": "source_replaced",
+      "sha256": "b577ced6a76c179d3ea5e8897f6f218bf9e869c7970128ce79cd3821b831261f"
+    },
+    {
+      "path": "d/lee/square_c.c",
+      "origin": "source_replaced",
+      "sha256": "53d29429e7b72bf9a2d3458665264f75446afab27771b90a751a7e5eba1a068b"
+    },
+    {
+      "path": "d/lee/square_s.c",
+      "origin": "source_replaced",
+      "sha256": "b875a8ecdcb6fe0ea33f13dde9ada1311dc5f972c238707bbfbb40a10c3fb263"
+    },
+    {
+      "path": "d/lee/watermelon_n1.c",
+      "origin": "source_replaced",
+      "sha256": "54f81f4116134d9a6d82f620b69c3f21a47746dcf6613ce55aaaa7153da26a3f"
+    },
+    {
+      "path": "d/lee/watermelon_s3.c",
+      "origin": "source_replaced",
+      "sha256": "95ac93a56cd092699e71592aa8a3022e13f1bac36ceca83460b7d3f810015102"
+    },
+    {
+      "path": "d/oldpine/cave_deep.c",
+      "origin": "source_replaced",
+      "sha256": "9737bf739b34fbe7123a8cb490575a40850fee052af72709d457b866c75697b6"
+    },
+    {
+      "path": "d/oldpine/highway.c",
+      "origin": "source_replaced",
+      "sha256": "d6aac7b071e61c6f6d14118832e78d6c1623b3f3f816d28bf0c3efc3fa80ca75"
+    },
+    {
+      "path": "d/oldpine/npc/bandit.c",
+      "origin": "source_replaced",
+      "sha256": "708a0a353e342085f079f79066e9686b4146d1b4ef4981164058eaafe6c2ed67"
+    },
+    {
+      "path": "d/oldpine/npc/bandit_minion.c",
+      "origin": "source_replaced",
+      "sha256": "7a41b3d820a1168c3413fcdd4422e76b2b3c58fef46477a2415de3f9e7287f27"
+    },
+    {
+      "path": "d/oldpine/npc/big_bear.c",
+      "origin": "source_replaced",
+      "sha256": "11d5ef2267c7b015f9a84caa525910cec9c378c4232077d1a7c1f00822f99019"
+    },
+    {
+      "path": "d/oldpine/npc/da_guan.c",
+      "origin": "source_replaced",
+      "sha256": "ff060c92c55a04f4d15f190c3cab965951ff7800bc14513162d8657c543bf9c5"
+    },
+    {
+      "path": "d/oldpine/npc/deer.c",
+      "origin": "source_replaced",
+      "sha256": "b8002c326438fa564afd5d6f0ca76b59fc2ee36049ca57ede59e665c11ba2121"
+    },
+    {
+      "path": "d/oldpine/npc/herbalist.c",
+      "origin": "source_replaced",
+      "sha256": "f9d6867bd8d657211136e435508d37e3b901ac136b4b3d34b4e5f3944ea90041"
+    },
+    {
+      "path": "d/oldpine/npc/injured_traveller.c",
+      "origin": "source_replaced",
+      "sha256": "d72660f9168ef99631dec4983a9fece27d9673f9c877951f5559bf163d7e7f44"
+    },
+    {
+      "path": "d/oldpine/npc/kao_shen.c",
+      "origin": "source_replaced",
+      "sha256": "fee1310cbb17321793891e42d65cb84012274e3214d0a144a2b73c4c5dcc078f"
+    },
+    {
+      "path": "d/oldpine/npc/lin_yuchan.c",
+      "origin": "source_replaced",
+      "sha256": "46d2afadcd7a6bc496a03d53e02a7e56ac2466e3eb5b385b081bce1cfdf9c6c9"
+    },
+    {
+      "path": "d/oldpine/npc/little_bear.c",
+      "origin": "source_replaced",
+      "sha256": "3ecc016b95077abdb6254e0bd1cca28b235fc31b858cd84530b6668d29470919"
+    },
+    {
+      "path": "d/oldpine/npc/rat.c",
+      "origin": "source_replaced",
+      "sha256": "10e65b82bca9740a9371db0004c3df25e3bcc8c977709a60fa2d9bbe8f9bd007"
+    },
+    {
+      "path": "d/oldpine/npc/seller.c",
+      "origin": "source_replaced",
+      "sha256": "2f5b23cadc3676f247aaf1fd43cfbcb3ed8c04d9f60bb645e15e2823e9f1c703"
+    },
+    {
+      "path": "d/oldpine/npc/squirrel.c",
+      "origin": "source_replaced",
+      "sha256": "b5f274c45feeb191f1516b2fb14116c1d2723eaf08502d8d7139502b00e2470c"
+    },
+    {
+      "path": "d/oldpine/npc/waiter.c",
+      "origin": "source_replaced",
+      "sha256": "967de0e32607c6c2b0505718c45c4b6e033ff8e2ebce0d07936693bea6a0b3d2"
+    },
+    {
+      "path": "d/oldpine/npc/wild_bear.c",
+      "origin": "source_replaced",
+      "sha256": "3da3bdda7f7320cd4acaf99111e95fe77f3782072ff0b395f3d7b689c3a6b299"
+    },
+    {
+      "path": "d/oldpine/npc/wolf.c",
+      "origin": "source_replaced",
+      "sha256": "6b0ada23ad834e3810bf2782a6e08146e2953ef0ef4c4b77c16a32c498ebdcdf"
+    },
+    {
+      "path": "d/oldpine/npc/xue_biao.c",
+      "origin": "source_replaced",
+      "sha256": "548e03a03e584825717238c0bb99acdafcce38e0f85edeb14d239b99328ec514"
     },
     {
       "path": "d/snow/bazar.c",
@@ -1104,6 +1384,166 @@
       "sha256": "6446254d5619eeeacec4e625781d04b2c9f5151fd2ee61e45b4c5ba2daa174a0"
     },
     {
+      "path": "d/wutang/npc/apprentice.c",
+      "origin": "source_replaced",
+      "sha256": "4888ef055cd702b38a9f824c102529eb54d3ae3c4d63762b950f6654bd75ae92"
+    },
+    {
+      "path": "d/wutang/npc/big_boar.c",
+      "origin": "source_replaced",
+      "sha256": "bbb8f3bcd72d381dbee32f5f560c73d0f133049d06a9d4fd68ee47e17dcbb27d"
+    },
+    {
+      "path": "d/wutang/npc/boar.c",
+      "origin": "source_replaced",
+      "sha256": "70dc6e4a7112e62b0c56a8f88ab4dd1fef152fac3e7e3000505367dc70963221"
+    },
+    {
+      "path": "d/wutang/npc/fisher.c",
+      "origin": "source_replaced",
+      "sha256": "b88415720d01b7c2acd090d18594027307da80bb1d482d233929ff07286ac67d"
+    },
+    {
+      "path": "d/wutang/npc/guard.c",
+      "origin": "source_replaced",
+      "sha256": "25a501020350bce8dcdb05f9943b8a5e7224a896698796d71b1cfa1c5b194748"
+    },
+    {
+      "path": "d/wutang/npc/guo_boo.c",
+      "origin": "source_replaced",
+      "sha256": "f5d3d9e7b73fa1f025d715363435b99bba2738bc7239318decb4bbb9db6f7390"
+    },
+    {
+      "path": "d/wutang/npc/huang.c",
+      "origin": "source_replaced",
+      "sha256": "363d3fe704dd57a398e0e71cf325d28de0d2e9d14c33d629e6ff70e007608439"
+    },
+    {
+      "path": "d/wutang/npc/huyen_guan.c",
+      "origin": "source_replaced",
+      "sha256": "4a784d43cc4aa02c26c41cc6838810b36343ed04ecd7ce980d6990d02c94c825"
+    },
+    {
+      "path": "d/wutang/npc/jeweller.c",
+      "origin": "source_replaced",
+      "sha256": "f3fa186c19454e92d4eb966e66d935a8c5c4616ca94950d340088073f1199a30"
+    },
+    {
+      "path": "d/wutang/npc/keeper.c",
+      "origin": "source_replaced",
+      "sha256": "5c22a37add455422ebba9c1550e73b3222261827923edd120f7160eca576a100"
+    },
+    {
+      "path": "d/wutang/npc/lee_shan.c",
+      "origin": "source_replaced",
+      "sha256": "5981478b60d48300229413e00b8d176c99297ca59e7e7b2a71f536fb595923c8"
+    },
+    {
+      "path": "d/wutang/npc/lu_estimator.c",
+      "origin": "source_replaced",
+      "sha256": "8d97ca62f99cd7bf27f3187bf991a887dee1123e0f80ea247252e6fbdaf37c1a"
+    },
+    {
+      "path": "d/wutang/npc/may_yin_fong.c",
+      "origin": "merged",
+      "sha256": "2c2d4a4f6b7a6323b11c3d2369bfd4b24cccf130a55b6c02f6d88d4986e3c2a6"
+    },
+    {
+      "path": "d/wutang/npc/old_fire.c",
+      "origin": "source_replaced",
+      "sha256": "f651e569cced82a778651fe8db228a70aedea7308c68525b451bec296ce85628"
+    },
+    {
+      "path": "d/wutang/npc/oldman.c",
+      "origin": "source_replaced",
+      "sha256": "252beb04f739161c315d868348c571f16e3d1705063a69d749f7e207a43f1ff0"
+    },
+    {
+      "path": "d/wutang/npc/red_taoist.c",
+      "origin": "source_replaced",
+      "sha256": "56e898e7bab8afdd75fbca4efba497ce10bb1c62c675de64b2dcace8e1498070"
+    },
+    {
+      "path": "d/wutang/npc/ro.c",
+      "origin": "source_replaced",
+      "sha256": "13d3a5a3979209328476b2c4af85ec75ca22fa01a781d666568db5a50ad43cb7"
+    },
+    {
+      "path": "d/wutang/npc/royalist.c",
+      "origin": "source_replaced",
+      "sha256": "f8040e85438e46b8dd0a0fa60933f359ee0b0acf8993b182f70676eccd44b2dd"
+    },
+    {
+      "path": "d/wutang/npc/seller.c",
+      "origin": "source_replaced",
+      "sha256": "0759664e4a2b76d197092630a9d288f9268bd504dfee9012d421d197f9a61e9b"
+    },
+    {
+      "path": "d/wutang/npc/sheep.c",
+      "origin": "source_replaced",
+      "sha256": "54f245d9a1f5c4ef269860ebaa7c2e993adc59b0a30bfa29d40a600434a31c18"
+    },
+    {
+      "path": "d/wutang/npc/shepherd.c",
+      "origin": "source_replaced",
+      "sha256": "a325c0744fae38c57e2412decee179c8b4b07ff8196ebe4d2a9a3933cc4471e0"
+    },
+    {
+      "path": "d/wutang/npc/smoke_fisher.c",
+      "origin": "source_replaced",
+      "sha256": "6ab907796aa0be0a968327be6ae88890777915551143f620d1b8b27e13770469"
+    },
+    {
+      "path": "d/wutang/npc/tao.c",
+      "origin": "source_replaced",
+      "sha256": "8c71d8f16743c666a7be371e0851924ee081844cc14227bc7992ee3410641982"
+    },
+    {
+      "path": "d/wutang/npc/waiter.c",
+      "origin": "source_replaced",
+      "sha256": "ec3273c2348c5cb9a8ae5f13a0978914ad98d06d0591359ef1fe0f8384d259dc"
+    },
+    {
+      "path": "d/wutang/npc/white_taoist.c",
+      "origin": "source_replaced",
+      "sha256": "b08c146aa187fe49c8a43e74c10a001cd8530a65d2d5e4511b7798f4dd637123"
+    },
+    {
+      "path": "d/wutang/npc/yaesae.c",
+      "origin": "source_replaced",
+      "sha256": "e6209bc8a8838b6a666a6ca6784b043c214bbe8092e91e3d8f1afa56958983f3"
+    },
+    {
+      "path": "d/wutang/npc/yang_zlin.c",
+      "origin": "source_replaced",
+      "sha256": "8cc6204e859822671383bfcbfaaf01e91f465a95b4d70a5a42d27cddbd12f881"
+    },
+    {
+      "path": "d/wutang/npc/young_gentleman.c",
+      "origin": "source_replaced",
+      "sha256": "63d9b3008c968fc126fb80300916063700e3aa5098d50d0c70d42bf8d5f32a81"
+    },
+    {
+      "path": "d/wutang/npc/young_man.c",
+      "origin": "source_replaced",
+      "sha256": "1e4d719edb505f6127e2fa5cc5741f1c00a125a24dc4b1be5dfebd09db11f7e0"
+    },
+    {
+      "path": "d/wutang/npc/young_scholar.c",
+      "origin": "source_replaced",
+      "sha256": "29a1932e2010c5656b8a89232e277eb75e68d9324351d6159c00fb14deb3a523"
+    },
+    {
+      "path": "d/wutang/npc/yung_tai.c",
+      "origin": "source_replaced",
+      "sha256": "7b5e3baf74fd29e2216bfecaa1f1f7c7f9008e1954827a3ecbc4fc0f0cbc2b5e"
+    },
+    {
+      "path": "d/wutang/three_way.c",
+      "origin": "source_replaced",
+      "sha256": "eaa070bbf9491468b3b2da50303cef6ece64407b94f755618726407df513a154"
+    },
+    {
       "path": "daemon/board/celestial_board.c",
       "origin": "additive_copy",
       "sha256": "87bfdf7fe0952e7a8c52c1ba605cb470be94574aa6073c1198d3b7fcbe28cc0d"
@@ -1169,6 +1609,11 @@
       "sha256": "78422c1464f353b8910b35d62c7cb4d3423a38b1ff1c32525934d4b1d0a1f33a"
     },
     {
+      "path": "daemon/skill/archaic_attainment.c",
+      "origin": "source_replaced",
+      "sha256": "57752f3df2138ee36096aaedb0a0bf85129754524245e7259fa83996e2dca460"
+    },
+    {
       "path": "daemon/skill/berserk.c",
       "origin": "additive_copy",
       "sha256": "3882ca3b504768a796eab52d9cdd43aef9dcaa4253c570761862cfbb695d9a0d"
@@ -1189,9 +1634,24 @@
       "sha256": "1f55e3b3e95d1bfceca8294ef10360cded12e06f24a155c7e5db5b7a574a2dd4"
     },
     {
+      "path": "daemon/skill/literate.c",
+      "origin": "source_replaced",
+      "sha256": "bb74c628583b5e329bacde0ec47af1a033da7c1136fdad57dab3329db683e6b6"
+    },
+    {
       "path": "daemon/skill/powerblow.c",
       "origin": "additive_copy",
       "sha256": "9313b96dc64ad37a5bad76e230301607c973afe16e02b094e872f5f667341d7d"
+    },
+    {
+      "path": "daemon/skill/taoism-spells.c",
+      "origin": "source_replaced",
+      "sha256": "ab95cda3a4db4eb6ae1ca2225b3e64e2a0bb3bc160ec3b20bd90fd9bdee5cec8"
+    },
+    {
+      "path": "daemon/skill/tiger-blade.c",
+      "origin": "source_replaced",
+      "sha256": "8c43a65f3973b58a07384ee61a3e9c10b30514489dd2f4acab786cde96bc7fc9"
     },
     {
       "path": "daemon/skill/tiger_force.c",
@@ -1434,6 +1894,31 @@
       "sha256": "37dd4f0dba7e2aeb8fc3e208efb279831517189c1fc9d69d80a7b704917c5038"
     },
     {
+      "path": "obj/books/compendium_of_translations.c",
+      "origin": "source_replaced",
+      "sha256": "16a7da572eeb2d3571ce4ce0e8cefe5350c17f2590e09eab06494c106b3f8d1f"
+    },
+    {
+      "path": "obj/books/simple_guide_to_words.c",
+      "origin": "source_replaced",
+      "sha256": "8e3f6f88de52a832b0bdebc79c7d041b6c1c08d8421bac6f44650843bb7b3220"
+    },
+    {
+      "path": "obj/books/treatise_on_words.c",
+      "origin": "source_replaced",
+      "sha256": "0f70fa8069247922f3bf58ac6e643875e069cea48906f3b6aefbb7ad7a33a17e"
+    },
+    {
+      "path": "obj/books/verses_of_the_thirteen_spirits.c",
+      "origin": "source_replaced",
+      "sha256": "eae2a691d9f89edcb921b226fb5c35f1397283b8047e430fec5078909b736dee"
+    },
+    {
+      "path": "obj/books/yin_yang_canon.c",
+      "origin": "source_replaced",
+      "sha256": "bc9726fb4e2c651c8de6cd1e5a21705442b2fe0badfbfb9b52c9dcfb3188d1ce"
+    },
+    {
       "path": "obj/money/coin.c",
       "origin": "source_replaced",
       "sha256": "9163dae241ec2c2c9b6ddb0d03b186b9148982d081a8e3cf9a1c91e539cd1544"
@@ -1459,6 +1944,11 @@
       "sha256": "cf4ace7e359cc78c02336f9bdbee23d7a41b913bae454769789d78fb97522955"
     },
     {
+      "path": "std/martial_art.c",
+      "origin": "source_replaced",
+      "sha256": "80534126041111e4b75ec4420fd24ed173b5e4d14c631dc7fd89a8ec23ea7026"
+    },
+    {
       "path": "std/race/humanoid.c",
       "origin": "merged",
       "sha256": "ff41543a43cd1e1946b069ab9be972e089a1296a5d33622a4cea6b23ad2d0c1b"
@@ -1474,5 +1964,5 @@
       "sha256": "245dcf5e2ed4ae1ebb2d02353ffa6418c52117c32765b501082f781f59d346c9"
     }
   ],
-  "excluded_conflict_count": 379
+  "excluded_conflict_count": 381
 }
