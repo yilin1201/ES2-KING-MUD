@@ -11,8 +11,8 @@ from pathlib import Path
 SCRIPT = Path(__file__).with_name("import_es2m_latest_missing_files.py")
 COMMIT = "71693beb79ced81d51719ea1ccf7c02c641ca9b0"
 
-def sha(data: bytes) -> str:
-    return hashlib.sha256(data).hexdigest()
+def git_blob_sha(data: bytes) -> str:
+    return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\\0" + data).hexdigest()
 
 class LatestAdditiveImportTest(unittest.TestCase):
     def run_import(self, root: Path, entries):
@@ -31,8 +31,8 @@ class LatestAdditiveImportTest(unittest.TestCase):
             root = Path(td)
             a = b"new source\n"; b = b"upstream version\n"
             entries = [
-                ({"path": "d/new_room.c", "sha": sha(a)}, a),
-                ({"path": "d/king_room.c", "sha": sha(b)}, b),
+                ({"path": "d/new_room.c", "sha": git_blob_sha(a)}, a),
+                ({"path": "d/king_room.c", "sha": git_blob_sha(b)}, b),
             ]
             proc, runtime, output = self.run_import(root, entries)
             (runtime / "d/king_room.c").write_bytes(b"KING custom\n")
@@ -52,7 +52,7 @@ class LatestAdditiveImportTest(unittest.TestCase):
             entries = []
             for path, data in [("data/player.o", b"state"), ("log/runtime.log", b"log"),
                                ("custom/room.c.1789329689", b"backup"), ("d/room.c", b"room")]:
-                entries.append(({"path": path, "sha": sha(data)}, data))
+                entries.append(({"path": path, "sha": git_blob_sha(data)}, data))
             proc, runtime, output = self.run_import(root, entries)
             self.assertEqual(proc.returncode, 0, proc.stderr)
             report = json.loads(output.read_text(encoding="utf-8"))
@@ -65,7 +65,7 @@ class LatestAdditiveImportTest(unittest.TestCase):
     def test_source_hash_mismatch_fails(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td); data = b"real bytes"
-            entries = [({"path": "d/room.c", "sha": "0" * 64}, data)]
+            entries = [({"path": "d/room.c", "sha": "0" * 40}, data)]
             proc, runtime, output = self.run_import(root, entries)
             self.assertNotEqual(proc.returncode, 0)
             self.assertIn("source SHA mismatch", proc.stderr)
