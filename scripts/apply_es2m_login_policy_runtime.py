@@ -44,11 +44,11 @@ def apply(text: str) -> str:
         text = replace_once(text, ID_LENGTH_ORIGINAL, ID_LENGTH_ES2M, "account length message")
         text = replace_once(text, ID_CHAR_ORIGINAL, ID_CHAR_ES2M, "account character rule")
         text = replace_once(text, ID_ERROR_ORIGINAL, ID_ERROR_ES2M, "account character message")
-        text = text.replace(ID_LENGTH_ES2M, "// " + ID_MARKER + "\\n    " + ID_LENGTH_ES2M, 1)
+        text = text.replace(ID_LENGTH_ES2M, "// " + ID_MARKER + "\n    " + ID_LENGTH_ES2M, 1)
     if NAME_MARKER not in text:
         text = replace_once(text, NAME_CONDITION_ORIGINAL, NAME_CONDITION_ES2M, "display-name length rule")
         text = replace_once(text, NAME_ERROR_ORIGINAL, NAME_ERROR_ES2M, "display-name length message")
-        text = text.replace(NAME_CONDITION_ES2M, "// " + NAME_MARKER + "\\n    " + NAME_CONDITION_ES2M, 1)
+        text = text.replace(NAME_CONDITION_ES2M, "// " + NAME_MARKER + "\n    " + NAME_CONDITION_ES2M, 1)
 
     required = (ID_MARKER, NAME_MARKER, ID_CHAR_ES2M, ID_ERROR_ES2M, NAME_CONDITION_ES2M, NAME_ERROR_ES2M)
     missing = [marker for marker in required if marker not in text]
