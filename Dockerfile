@@ -26,6 +26,8 @@ RUN cmake -S /opt/es2-king/runtime/neolith -B /build/neolith -G Ninja \
 
 WORKDIR /build/repository
 COPY . .
+# Latest ES2M import pipeline syntax gate／在昂貴的 Driver 與完整 E2E 前，先驗證補檔及三方合併工具語法。
+RUN python3 -m py_compile scripts/import_es2m_latest_missing_files.py scripts/merge_es2m_latest_changes_safe.py
 
 # ES2M Birth Attribute Contract Gate／防止 E2E 出生屬性範圍與保存的 ES2M race daemon 不一致。
 # 靜態來源驗證，不代表 LPC 編譯或實際創角 Runtime PASS。
