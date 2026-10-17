@@ -56,6 +56,34 @@ class ThreeWayMergeTest(unittest.TestCase):
             conflicts=json.loads(report.read_text())["preserved_conflicts"]
             self.assertEqual(conflicts[0]["reason"],"binary_file_preserved_KING")
 
+    def test_merges_snapshot_based_path_when_original_baseline_is_absent(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td)
+            source=root/"source"; original=root/"original"; snapshot=root/"snapshot"; runtime=root/"runtime"
+            for p in (source/"custom", original/"custom", snapshot/"custom", runtime/"custom"):
+                p.mkdir(parents=True,exist_ok=True)
+            base=b"alpha\\nbeta\\n"
+            king=b"alpha\\nKING\\nbeta\\n"
+            upstream=b"alpha\\nbeta\\nES2M\\n"
+            (snapshot/"custom/item.c").write_bytes(base)
+            (source/"custom/item.c").write_bytes(upstream)
+            (runtime/"custom/item.c").write_bytes(king)
+            entry={"path":"custom/item.c","sha":blob(upstream),"snapshot_sha":blob(base),
+                   "snapshot_sha":blob(base),"original_sha":None,
+                   "original_status":"NEW_TO_PINNED_ORIGINAL",
+                   "status":"CHANGED_FROM_EXISTING_ES2M_SNAPSHOT"}
+            manifest=root/"manifest.json"
+            manifest.write_text(json.dumps({"source_commit":COMMIT,"files":[entry]}),encoding="utf-8")
+            output=root/"report.json"
+            proc=subprocess.run([sys.executable,str(SCRIPT),"--source-root",str(source),
+                "--original-root",str(original),"--snapshot-root",str(snapshot),
+                "--runtime",str(runtime),"--manifest",str(manifest),"--output",str(output)],
+                capture_output=True,text=True)
+            self.assertEqual(proc.returncode,0,proc.stdout+proc.stderr)
+            self.assertEqual((runtime/"custom/item.c").read_bytes(),b"alpha\\nKING\\nbeta\\nES2M\\n")
+            report=json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(report["merged"],["custom/item.c"])
+
     def test_rejects_original_baseline_drift(self):
         with tempfile.TemporaryDirectory() as td:
             proc,target,report=self.setup_case(Path(td),b"base\n",b"king\n",b"upstream\n",original_sha="0"*40)
