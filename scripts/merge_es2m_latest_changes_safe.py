@@ -129,7 +129,7 @@ def main() -> None:
             continue
         proc = subprocess.run([
             "git", "merge-file", "-p",
-            "-L", "KING Runtime", "-L", "Original ES2", "-L", "ES2M 71693beb",
+            "-L", "KING Runtime", "-L", base_label, "-L", "ES2M 71693beb",
             str(target), str(base), str(source),
         ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
         if proc.returncode == 0:
@@ -141,7 +141,7 @@ def main() -> None:
             report["preserved_conflicts"].append({
                 "path": relative, "reason": "three_way_conflict_preserved_KING",
                 "conflict_count": proc.returncode,
-                "source_git_blob": source_sha, "original_git_blob": original_sha,
+                "source_git_blob": source_sha, "base_git_blob": base_sha, "merge_base": base_label,
                 "runtime_git_blob": target_sha,
             })
         else:
