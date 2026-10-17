@@ -117,13 +117,26 @@ def main() -> None:
             else:
                 dst.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(src, dst)
+        # 允許安全擴充既有 overlay：舊檔必須仍與既有 manifest hash 相符；
+        # 新增路徑可追加，但同一路徑內容不同時立即 HOLD，絕不覆寫 KING。
         persisted_manifest = root.parent / "manifest.json"
+        combined = {item["path"]: item for item in manifest.get("files", [])}
         if persisted_manifest.exists():
             old = json.loads(persisted_manifest.read_text(encoding="utf-8"))
-            if old != manifest:
-                raise SystemExit("ES2M_OVERLAY_HOLD: existing overlay manifest differs; manual review required")
-        else:
-            persisted_manifest.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            if old.get("source_commit") != SOURCE_COMMIT or old.get("status") != "CONFLICT_FREE_IMPORTS_ONLY":
+                raise SystemExit("ES2M_OVERLAY_HOLD: existing overlay manifest pin/status mismatch")
+            for item in old.get("files", []):
+                relative = item["path"]
+                dst = safe(root, relative)
+                if not dst.is_file() or digest(dst) != item.get("sha256"):
+                    raise SystemExit(f"ES2M_OVERLAY_HOLD: existing persisted file hash mismatch: {relative}")
+                fresh = combined.get(relative)
+                if fresh and fresh.get("sha256") != item.get("sha256"):
+                    raise SystemExit(f"ES2M_OVERLAY_HOLD: existing path changed in new export: {relative}")
+                combined.setdefault(relative, item)
+        manifest["files"] = [combined[key] for key in sorted(combined)]
+        manifest["file_count"] = len(manifest["files"])
+        persisted_manifest.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
         print("ES2M_OVERLAY_PERSISTED", manifest.get("file_count", 0))
         return
 
