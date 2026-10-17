@@ -25,6 +25,8 @@ on:
       - "scripts/merge_es2m_latest_changes_safe.py"
       - "scripts/test_merge_es2m_latest_changes_safe.py"
       - "scripts/sync_es2m_latest_import_overlay.py"
+      - "scripts/classify_es2m_latest_conflicts.py"
+      - "scripts/test_classify_es2m_latest_conflicts.py"
       - "scripts/test_sync_es2m_latest_import_overlay.py"
       - "es2m_snapshot/latest_import_overlay/**"
       - ".gitmodules"
@@ -58,8 +60,8 @@ jobs:
 
       - name: Python syntax
         run: |
-          python3 -m py_compile scripts/test_es2m_training_dummy.py scripts/sync_es2m_latest_import_overlay.py scripts/apply_es2m_login_policy_runtime.py
-          python3 -m unittest -v scripts/test_sync_es2m_latest_import_overlay.py scripts/test_apply_es2m_login_policy_runtime.py
+          python3 -m py_compile scripts/test_es2m_training_dummy.py scripts/sync_es2m_latest_import_overlay.py scripts/apply_es2m_login_policy_runtime.py scripts/classify_es2m_latest_conflicts.py
+          python3 -m unittest -v scripts/test_sync_es2m_latest_import_overlay.py scripts/test_apply_es2m_login_policy_runtime.py scripts/test_classify_es2m_latest_conflicts.py
 
       - name: Node syntax
         run: node --check scripts/test_original_player_creation_e2e.mjs
@@ -128,7 +130,7 @@ jobs:
           mkdir -p es2m-reports
           container_id="$(docker create es2-king-es2m-audit:ci)"
           trap 'docker rm -f "$container_id" >/dev/null 2>&1 || true' EXIT
-          for report in es2m-latest-qiaoyin-stage.json es2m-latest-additive-import.json es2m-latest-three-way-merge.json; do
+          for report in es2m-latest-qiaoyin-stage.json es2m-latest-additive-import.json es2m-latest-three-way-merge.json es2m-latest-conflict-classification.json; do
             docker cp "$container_id:/build/$report" "es2m-reports/$report"
           done
           docker cp "$container_id:/build/es2m-latest-import-overlay" /tmp/es2m-latest-import-overlay
@@ -150,6 +152,8 @@ jobs:
               lines.append("")
           manifest = json.loads(Path("/tmp/es2m-latest-import-overlay/manifest.json").read_text())
           lines += ["### Persistent KING overlay", f"- Pinned source: `{manifest['source_commit']}`", f"- Persisted conflict-free files: {manifest['file_count']}", f"- Conflicts excluded from overlay: {manifest['excluded_conflict_count']}", ""]
+          classification = json.loads(Path("es2m-reports/es2m-latest-conflict-classification.json").read_text(encoding="utf-8"))
+          lines += ["### Conflict classification", "- Additive conflicts classified: " + str(classification["additive_conflict_count"]), "- Three-way conflicts: " + str(classification["three_way_conflict_count"]), "- Categories: " + json.dumps(classification["summary"], ensure_ascii=False), ""]
           summary.write_text(summary.read_text(encoding="utf-8") + "\n".join(lines) + "\n", encoding="utf-8")
           PY
       - name: Commit conflict-free ES2M changes into KING source tree
