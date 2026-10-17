@@ -5,7 +5,7 @@ import { randomBytes } from "node:crypto";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { WebSocketServer } from "ws";
-import { TelnetTextFilter } from "./telnet.mjs";
+import { TelnetTextFilter, initialTelnetResponse } from "./telnet.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const webPort = Number(process.env.PORT || process.env.WEBTELNET_PORT || 8080);
@@ -206,6 +206,9 @@ function createMudSession(browser, firstMessage = null) {
   mud.once("connect", () => {
     mud.setTimeout(0);
     console.log(`[public-session ${sessionId}] mud-connected host=${mudHost} port=${mudPort}`);
+    // Telnet negotiation／先回覆 Neolith 的 TTYPE、NAWS、LINEMODE 要求；
+    // 此文字橋接不支援這三項終端功能，明確回 WONT，不把控制位元組送到瀏覽器。
+    mud.write(initialTelnetResponse());
     if (firstMessage) forwardBrowserMessage(firstMessage);
   });
   mud.on("data", data => {
