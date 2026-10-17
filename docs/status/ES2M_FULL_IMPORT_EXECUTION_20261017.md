@@ -44,7 +44,8 @@
 - `import_es2m_latest_missing_files.py` 依 1,678 筆固定 manifest Git blob ID 逐檔驗證，將來源中缺少於 Runtime 的檔案加入生成 Runtime，保留所有同名 KING 衝突並輸出清冊。
 - `merge_es2m_latest_changes_safe.py` 針對 `original_status=CHANGED_FROM_PINNED_ORIGINAL` 的路徑進行三方合併；只有無衝突結果會寫入生成 Runtime，衝突一律保留 KING 現有版本。這不是直接修改保存的 Original ES2，也不會把衝突當成已完成。
 - 任一同名異內容或未解依賴都必須讓建置失敗，不可默默略過。
-- 即使 Docker PASS，也只代表檔案階段通過；出口連通、NPC／商店／任務與實際玩家路徑仍需另行驗證。
+- 完整 builder 成功時，workflow 會擷取橋隱、加法補檔與三方合併 JSON 報告，附加到 Actions Summary 並上傳 14 天 artifact，供後續逐檔處理衝突。
+- 即使 Docker PASS，也只代表已執行的檔案／合併與既有回歸閘門通過；出口連通、NPC／商店／任務與實際玩家路徑仍需另行驗證。
 
 ## 目前未完成項目
 
