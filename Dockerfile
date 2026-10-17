@@ -27,8 +27,10 @@ RUN cmake -S /opt/es2-king/runtime/neolith -B /build/neolith -G Ninja \
 WORKDIR /build/repository
 COPY . .
 # ES2M driver configuration／同步固定 ES2M 的 Neolith 設定；此版本 MUD_PORT=4001，不能混用 Original 的 4000。
-RUN cp /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/source/upstream/neolith.conf /opt/es2-king/runtime/neolith.conf \\
-    && grep -Eq '^[[:space:]]*Port[[:space:]]+4001:telnet[[:space:]]*# Latest ES2M import pipeline syntax gate／在昂貴的 Driver 與完整 E2E 前，先驗證補檔及三方合併工具語法。
+RUN cp /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/source/upstream/neolith.conf /opt/es2-king/runtime/neolith.conf \
+    && grep -Eq '^[[:space:]]*Port[[:space:]]+4001:telnet[[:space:]]*$' /opt/es2-king/runtime/neolith.conf \
+    && echo "ES2M_DRIVER_PORT_CONFIG_PASS: Port 4001:telnet"
+
 RUN python3 -m py_compile scripts/import_es2m_latest_missing_files.py scripts/merge_es2m_latest_changes_safe.py scripts/sync_es2m_latest_import_overlay.py scripts/classify_es2m_latest_conflicts.py
 RUN python3 -m unittest -v scripts/test_sync_es2m_latest_import_overlay.py scripts/test_classify_es2m_latest_conflicts.py
 
