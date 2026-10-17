@@ -50,3 +50,29 @@
 ## 目前未完成項目
 
 全量整合尚未完成。第一個 Docker 嘗試 `39026936503` 因當時 workflow 未設定遞迴 checkout submodule，在第 58/75 步找不到最新來源目錄而失敗；不是 LPC 或地圖內容測試失敗。已把 `submodules: recursive` 加入 workflow，並新增完整缺檔加法匯入流程後重新觸發建置。後續檢查上游 Git tree 又確認來源實際路徑為 `source/upstream/mudlib`，先前 Dockerfile 使用錯誤的 `.../mudlib` 路徑；已修正全部 4 個引用並再次觸發完整建置。最新實際複製數、三方合併數、衝突數與建置結果仍待 Actions 回報。不可將來源 submodule、差異清冊、檔案補入或 Docker 建置成功單獨視為「所有 ES2M 更新已寫入 KING」。每批通過後更新本紀錄與相容性矩陣，直至每一個來源差異都有可追溯的移植結果或明確 HOLD 理由。
+
+## 實際匯入結果更新（GitHub Actions Run 39039333422）
+
+來源固定為 `71693beb79ced81d51719ea1ccf7c02c641ca9b0`；本節是 Actions 真實輸出，不是估算。
+
+| 階段 | 實際結果 | 解讀 |
+|---|---:|---|
+| 橋隱區域依賴檢查 | staged 61、resolved dependencies 170、unresolved 0 | 檔案階段通過，不代表遊戲任務已通關 |
+| 全來源加法補檔 | copied 186、identical 1,135、preserved conflicts 350、excluded 7 | 只補缺檔；同名不同內容不覆蓋 |
+| Original／KING／ES2M 三方合併 | source replaced 102、already source 23、merged 6、preserved conflicts 29、excluded 2 | 29 個真正三方合併衝突仍保留 KING |
+| 持久化匯入 overlay | 294 個無衝突檔案 | 已寫入 `es2m_snapshot/latest_import_overlay/71693beb/`，並驗證 SHA-256 |
+| Runtime 套用驗證 | `ES2M_OVERLAY_APPLY_PASS 294` | 生成 Runtime 與已持久化的 294 個檔案逐檔一致 |
+
+注意：加法補檔的 350 個衝突與三方合併的 29 個衝突有路徑重疊，不能直接相加當成 379 個獨立檔案。已新增衝突分類器，將交叉核對清單區分為「已由三方流程處理」、「ES2M 與 Original 相同但 KING 有自訂差異」及「仍需適配的來源變更」。
+
+### 建置阻塞與目前狀態
+
+Run `39039333422` 的來源匯入階段、overlay 持久化及靜態檢查均成功；完整 Runtime 建置仍因創角 E2E 未收到「您的使用者代號」提示而失敗。Bridge 日誌顯示 WebSocket 已開啟、TCP 曾連上 MUD listener，但連線隨即被關閉，尚未取得登入提示。這是 Runtime E2E 阻塞，不能視為 ES2M 匯入失敗，也不能宣稱完整遊戲驗證通過。
+
+後續工作：
+1. 讀取衝突分類器報告，先處理真正有 ES2M／Original 差異且尚未合併的項目。
+2. 針對 29 個三方衝突逐檔比對來源、KING 改動與呼叫鏈，按批次安全適配。
+3. 追查創角 E2E 的 MUD 連線立即關閉問題；不以跳過 E2E 或放寬成功條件掩蓋錯誤。
+4. ES2M 帳號英數字與 1 字元顯示名稱政策已建立獨立 Runtime adapter 及測試；仍須以實際創角／存檔／重新登入 E2E 證實。
+5. PR #13 維持 OPEN / NOT MERGED；Phase 2 固定基線不修改。
+
