@@ -69,9 +69,30 @@ for id in humanprobe avatarprobe blackprobe yenprobe wooprobe dingprobe jiaoprob
 done
 
 (cd "$TEMP_ROOT"; exec "$DRIVER_BIN" -f neolith.conf) >"$TEMP_ROOT/driver.stdout" 2>&1 & driver_pid=$!
-ES2_TEST_PORT=4000 node -e 'const n=require("net"),d=Date.now()+30000;(function p(){const s=n.createConnection({host:"127.0.0.1",port:+process.env.ES2_TEST_PORT});s.once("connect",()=>{s.destroy();process.exit(0)});s.once("error",()=>{s.destroy();Date.now()<d?setTimeout(p,100):process.exit(1)})})()'
+# Readiness gate／只讀核心 TCP listener 狀態，不建立後立即中斷的探測連線。
+# 部分 Driver 對啟動期短連線的處理會觸發異常；不可用 connect-and-close 來判斷 ready。
+port_listening(){
+  awk 'NR > 1 && $2 ~ /:0FA0$/ && $4 == "0A" { found=1 } END { exit !found }' \
+    /proc/net/tcp /proc/net/tcp6 2>/dev/null
+}
+driver_ready=0
+for _ in {1..300}; do
+  if ! kill -0 "$driver_pid" 2>/dev/null; then
+    echo "ORIGINAL PLAYER CREATION E2E BLOCKED：Neolith 在 listener ready 前已退出。" >&2
+    tail -n 100 "$TEMP_ROOT/driver.stdout" >&2 || true
+    exit 1
+  fi
+  if port_listening; then driver_ready=1; break; fi
+  sleep 0.1
+done
+if ((driver_ready == 0)); then
+  echo "ORIGINAL PLAYER CREATION E2E BLOCKED：等待 Neolith port 4000 listener timeout。" >&2
+  tail -n 100 "$TEMP_ROOT/driver.stdout" >&2 || true
+  exit 1
+fi
 (cd "$REPO_ROOT/webtelnet"; ES2_HOST=127.0.0.1 ES2_PORT=4000 PORT="$WEB_PORT" exec node server.mjs) >"$TEMP_ROOT/bridge.stdout" 2>&1 & bridge_pid=$!
-ES2_TEST_PORT="$WEB_PORT" node -e 'const h=require("http"),d=Date.now()+10000;(function p(){h.get({host:"127.0.0.1",port:+process.env.ES2_TEST_PORT,path:"/health"},r=>{r.resume();r.statusCode===200?process.exit(0):Date.now()<d?setTimeout(p,100):process.exit(1)}).on("error",()=>Date.now()<d?setTimeout(p,100):process.exit(1))})()'
+# Bridge readiness gate／確認 HTTP 靜態入口已啟動；不呼叫 /health，避免重複建立 MUD 探測連線。
+ES2_TEST_PORT="$WEB_PORT" node -e 'const h=require("http"),d=Date.now()+10000;(function p(){h.get({host:"127.0.0.1",port:+process.env.ES2_TEST_PORT,path:"/"},r=>{r.resume();r.statusCode===200?process.exit(0):Date.now()<d?setTimeout(p,100):process.exit(1)}).on("error",()=>Date.now()<d?setTimeout(p,100):process.exit(1))})()'
 
 LOG="$TEMP_ROOT/player-creation.log"
 ES2_E2E_WS_URL="ws://127.0.0.1:$WEB_PORT/mud" ES2_E2E_SAVE_DIR="$TEMP_ROOT/mudlib/data" ES2_E2E_PASSWORD="$TEST_PASSWORD" node "$REPO_ROOT/scripts/test_original_player_creation_e2e.mjs" | tee "$LOG"
