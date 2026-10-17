@@ -13,6 +13,10 @@ on:
       - "scripts/test_original_player_creation_e2e.mjs"
       - "scripts/test_original_player_creation_e2e.sh"
       - "docs/status/ES2M_COMPATIBILITY_BATCH_PLAN_20261017.md"
+      - "docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json"
+      - "docs/es2m_reference/ES2M_戰鬥流程說明_71693beb.md"
+      - "scripts/test_es2m_source_sync_manifest.py"
+      - ".gitmodules"
       - ".github/workflows/es2-king-integration-look-gate.yml"
   workflow_dispatch:
 
@@ -49,6 +53,9 @@ jobs:
 
       - name: ES2M training dummy source contract
         run: python3 scripts/test_es2m_training_dummy.py
+
+      - name: ES2M full source inventory and pin gate
+        run: python3 scripts/test_es2m_source_sync_manifest.py
 
       - name: Race and birth attribute source contracts
         run: |
