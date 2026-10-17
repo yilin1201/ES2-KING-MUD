@@ -179,6 +179,16 @@ RUN python3 scripts/test_es2m_wutang_topology.py \
     --source /build/repository/es2m_snapshot/mudlib \
     --runtime /opt/es2-king/runtime/mudlib
 
+# ES2M latest source batch 1／最新上游世界區域批次 1：橋隱（qiaoyin）
+# 使用固定 71693beb submodule，不使用舊 snapshot 代替最新來源；只補缺檔、檢查字面依賴，任何衝突即停止建置。
+RUN test -d /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/mudlib/d/qiaoyin \
+    && cd scripts && python3 -m unittest -v test_import_es2m_world_zones_safe
+RUN python3 scripts/import_es2m_world_zones_safe.py \
+    --snapshot /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/mudlib \
+    --runtime /opt/es2-king/runtime/mudlib \
+    --output /build/es2m-latest-qiaoyin-stage.json \
+    --zones d/qiaoyin
+# 檔案補入不等於地圖可玩；後續批次需另驗證出口連通、NPC/商店/任務依賴及實際玩家路徑。
 # ES2M 2026-10-08 安全世界增量：只套用留言板與李家村非戰區，遇到同名異動即阻止建置。
 RUN python3 scripts/test_apply_es2m_20261008_world_delta.py
 RUN python3 scripts/apply_es2m_20261008_world_delta.py \
