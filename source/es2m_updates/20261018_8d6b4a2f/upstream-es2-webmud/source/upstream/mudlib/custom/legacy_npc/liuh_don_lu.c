@@ -1,0 +1,109 @@
+// /custom/legacy_npc/liuh_don_lu.c — 舊站 NPC：柳東蘆（Liuh don-lu）。
+/*
+LEGACY NPC. 名稱、英文 ID、敘述、年紀、性別、種族、裝備取自舊站畫面紀錄（DOCUMENTED，
+docs/LEGACY_ROOM_NPC_COMPENDIUM.md）；職業、等級、強度、門派、行為依使用者提供的
+「舊有 NPC 待製作清單」（2026-10-15）。放在喬陰縣正廳（d/qiaoyin/fonxan_hall.c）。
+封山派師父（使用者定案，2026-10-17）：平民可拜師，拜師後成為「封山派弟子」。
+武功見 docs/martial_arts/封山派_封山劍法與倒亂七星步法.md。
+*/
+inherit "/custom/legacy_npc/legacy_npc";
+
+#define FACTION "fighter.fonxan"
+
+void create()
+{
+    seteuid(getuid());
+    set_name("柳東蘆", ({ "liuh don-lu", "liuh", "don-lu" }));
+    set("title", "封山派掌門");
+    set_race("human");
+    set_class("fighter");
+    set_level(70);
+    set("gender", "male");
+    set("age", 55);
+    set("long",
+        "柳東蘆是赫赫有名的封山劍派掌門人，封山劍派原本只以劍法見長，但是柳東\n"
+        "蘆近幾年以家傳拳法融合封山劍法劍意，彌補了封山劍法中的許多缺點，四年\n"
+        "前的武林大會便技壓群雄奪得武林盟主的寶座，但是他當武林盟主不到半年便\n"
+        "宣佈退隱，據說是因為身染絕症之故，不過在你面前的這位年約五、六十歲的\n"
+        "白髮老者似乎仍然精神矍鑠，不像是身有重病的樣子。\n");
+    // 武功等級依門派自動配置（daemon/misc/npc_skill.c）；玄蘇劍是雙手劍，另外指定雙手劍也用封山劍法。
+    map_skill("twohanded sword", "fonxansword");
+
+    set("custom_faction", FACTION);   // 封山派（docs/martial_arts/門派武功對照表.md）
+    set_power("S");
+    setup();
+    carry_object("/custom/armor/leg/red_scale_leggings")->wear();   // 火鱗脛甲
+    carry_object("/custom/armor/waist/red_scale_girth")->wear();   // 火鱗腰帶
+    carry_object("/custom/armor/hand/red_scale_gloves")->wear();   // 火鱗手套
+    carry_object("/custom/armor/head/red_scale_helm")->wear();   // 火鱗盔
+    carry_object("/custom/armor/feet/red_scale_boots")->wear();   // 火鱗靴
+    carry_object("/custom/armor/armor/red_scale_plate")->wear();   // 火鱗胸鎧
+    carry_object("/custom/armor/cloth/red_scale_cloth")->wear();   // 火鱗衣
+    carry_object("/custom/weapon/sword/blackthorn")->wield();   // 玄蘇劍
+}
+
+// ------------------------------------------------------------------
+// 拜師：平民可拜師，拜師後成為武者、封山派弟子。
+// ------------------------------------------------------------------
+
+int accept_info(object ob, string type)
+{
+    return type == "skills";
+}
+
+int accept_apprentice(object me)
+{
+    if( me->query_class() != "commoner" ) {
+        command("say 閣下已有師承，柳某不敢奪人之美。");
+        return 0;
+    }
+    return 1;
+}
+
+int init_apprentice(object me)
+{
+    if( ::init_apprentice(me) ) {
+        me->set_class("fighter");
+        me->set("title", "封山派弟子");
+        me->set("custom_faction", FACTION);
+        do_chat(({
+            "柳東蘆撫鬚微笑：好，從今日起，你便是我封山派弟子。\n",
+            "柳東蘆說道：封山劍法不求一擊制敵，貴在綿長不絕，你要記住了。\n",
+        }));
+    }
+    return 1;
+}
+
+// ------------------------------------------------------------------
+// 傳授：封山派弟子才教；每門只補足到剛好可以升到 1 級的經驗。
+// ------------------------------------------------------------------
+
+int acquire_skill(object me, string skill)
+{
+    if( me->query("custom_faction") != FACTION ) return 0;
+
+    switch( skill ) {
+    case "fonxansword":
+    case "chaos-steps":
+    case "sword":
+    case "twohanded sword":
+    case "parry":
+    case "dodge":
+    case "unarmed":
+        break;
+    case "fonxan force":
+    case "force":
+        if( me->query_level() < 15 )
+            return notify_fail("柳東蘆搖頭道：你根基尚淺，還承受不住本門的醇厚真氣。\n");
+        break;
+    default:
+        return 0;
+    }
+
+    if( me->query_learn(skill) >= me->skill_threshold(skill, 1) )
+        return notify_fail("柳東蘆說道：入門的要訣已經傳給你了，往後全看你自己。\n");
+
+    me->improve_skill_exact(skill, me->skill_threshold(skill, 1) - me->query_learn(skill));
+    tell_object(me, "柳東蘆將「" + to_chinese(skill) + "」的入門要訣傳授給你。\n");
+    return 1;
+}

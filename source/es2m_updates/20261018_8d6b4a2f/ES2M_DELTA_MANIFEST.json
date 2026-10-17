@@ -1,0 +1,67 @@
+{
+  "source_repository": "wolfer168/es2-webmud",
+  "source_branch": "main",
+  "source_commit": "8d6b4a2f5df8a89c5df790590c96ab8da2611966",
+  "source_commit_date": "2026-10-17T15:23:30Z",
+  "previous_import_base": "71693beb79ced81d51719ea1ccf7c02c641ca9b0",
+  "comparison": {
+    "status": "ahead",
+    "commits": 16,
+    "changed_files": 13
+  },
+  "note": "持久化 ES2M 上游差異快照。只保存自上一固定基準以來的 13 個變更檔；尚不代表差異已套用至 KING Runtime。逐檔相容性分類與 Runtime 驗證待完成。",
+  "files": [
+    {
+      "path": "CLAUDE.md",
+      "status": "changed_since_previous_base"
+    },
+    {
+      "path": "docs/martial_arts/封山派_封山劍法與倒亂七星步法.md",
+      "status": "changed_since_previous_base"
+    },
+    {
+      "path": "docs/martial_arts/戰鬥流程說明.md",
+      "status": "changed_since_previous_base"
+    },
+    {
+      "path": "docs/martial_arts/門派武功對照表.md",
+      "status": "changed_since_previous_base"
+    },
+    {
+      "path": "source/upstream/mudlib/adm/daemons/combatd.c",
+      "status": "changed_since_previous_base"
+    },
+    {
+      "path": "source/upstream/mudlib/custom/legacy_npc/liuh_don_lu.c",
+      "status": "changed_since_previous_base"
+    },
+    {
+      "path": "source/upstream/mudlib/d/snow/npc/teacher.c",
+      "status": "changed_since_previous_base"
+    },
+    {
+      "path": "source/upstream/mudlib/daemon/skill/chaos-steps.c",
+      "status": "changed_since_previous_base"
+    },
+    {
+      "path": "source/upstream/mudlib/daemon/skill/fonxan_force.c",
+      "status": "changed_since_previous_base"
+    },
+    {
+      "path": "source/upstream/mudlib/daemon/skill/fonxansword.c",
+      "status": "changed_since_previous_base"
+    },
+    {
+      "path": "source/upstream/mudlib/daemon/skill/liuh-ken.c",
+      "status": "changed_since_previous_base"
+    },
+    {
+      "path": "source/upstream/mudlib/feature/char/combat.c",
+      "status": "changed_since_previous_base"
+    },
+    {
+      "path": "tests/test_v32059_skill_boundaries.py",
+      "status": "changed_since_previous_base"
+    }
+  ]
+}
