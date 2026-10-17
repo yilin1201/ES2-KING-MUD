@@ -44,6 +44,16 @@ trap cleanup EXIT INT TERM
 test -x "$DRIVER_BIN"
 cp -a "$SOURCE_RUNTIME/mudlib" "$TEMP_ROOT/mudlib"
 cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
+
+# ES2M Port Contract／依實際 mudlib globals.h 核對 Driver 設定，避免 4000/4001 混用。
+MUD_PORT="$(awk '$1 == "#define" && $2 == "MUD_PORT" { print $3; exit }' "$TEMP_ROOT/mudlib/include/globals.h")"
+CONFIG_PORT="$(awk '$1 == "Port" { split($2, p, ":"); print p[1]; exit }' "$TEMP_ROOT/neolith.conf")"
+if [[ ! "$MUD_PORT" =~ ^[0-9]+$ || "$CONFIG_PORT" != "$MUD_PORT" ]]; then
+  echo "ORIGINAL PLAYER CREATION E2E BLOCKED：連接埠不一致（globals.h=$MUD_PORT, neolith.conf=$CONFIG_PORT）。" >&2
+  exit 1
+fi
+PORT_HEX="$(printf '%04X' "$MUD_PORT")"
+echo "ES2M_E2E_PORT_CONTRACT_PASS: mudlib=$MUD_PORT config=$CONFIG_PORT"
 # Docker passes a runtime that already received both overlays. Reapplying the expansion
 # to that generated runtime can collide with deliberately protected NPC/world files.
 # Local callers keep the default behavior and build the overlays in the isolated temp runtime.
@@ -86,7 +96,7 @@ done
 # Readiness gate／只讀核心 TCP listener 狀態，不建立後立即中斷的探測連線。
 # 部分 Driver 對啟動期短連線的處理會觸發異常；不可用 connect-and-close 來判斷 ready。
 port_listening(){
-  awk 'NR > 1 && $2 ~ /:0FA0$/ && $4 == "0A" { found=1 } END { exit !found }' \
+  awk -v port=":$PORT_HEX" 'NR > 1 && $2 ~ (port "$\") && $4 == "0A" { found=1 } END { exit !found }' \
     /proc/net/tcp /proc/net/tcp6 2>/dev/null
 }
 driver_ready=0
@@ -100,11 +110,11 @@ for _ in {1..300}; do
   sleep 0.1
 done
 if ((driver_ready == 0)); then
-  echo "ORIGINAL PLAYER CREATION E2E BLOCKED：等待 Neolith port 4000 listener timeout。" >&2
+  echo "ORIGINAL PLAYER CREATION E2E BLOCKED：等待 Neolith port $MUD_PORT listener timeout。" >&2
   tail -n 100 "$TEMP_ROOT/driver.stdout" >&2 || true
   exit 1
 fi
-(cd "$REPO_ROOT/webtelnet"; ES2_HOST=127.0.0.1 ES2_PORT=4000 PORT="$WEB_PORT" exec node server.mjs) >"$TEMP_ROOT/bridge.stdout" 2>&1 & bridge_pid=$!
+(cd "$REPO_ROOT/webtelnet"; ES2_HOST=127.0.0.1 ES2_PORT="$MUD_PORT" PORT="$WEB_PORT" exec node server.mjs) >"$TEMP_ROOT/bridge.stdout" 2>&1 & bridge_pid=$!
 # Bridge readiness gate／確認 HTTP 靜態入口已啟動；不呼叫 /health，避免重複建立 MUD 探測連線。
 ES2_TEST_PORT="$WEB_PORT" node -e 'const h=require("http"),d=Date.now()+10000;(function p(){h.get({host:"127.0.0.1",port:+process.env.ES2_TEST_PORT,path:"/"},r=>{r.resume();r.statusCode===200?process.exit(0):Date.now()<d?setTimeout(p,100):process.exit(1)}).on("error",()=>Date.now()<d?setTimeout(p,100):process.exit(1))})()'
 
