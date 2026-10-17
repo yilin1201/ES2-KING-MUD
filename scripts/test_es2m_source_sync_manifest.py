@@ -62,7 +62,9 @@ class TestES2MSourceSyncManifest(unittest.TestCase):
     def test_nonidentical_files_are_not_auto_imported(self):
         # 新增／修改來源一律先審核；不可因來源更新就直接覆蓋 KING Runtime。
         for entry in self.manifest["files"]:
-            if entry["status"] != "SAME_AS_EXISTING_ES2M_SNAPSHOT":
+            if entry["status"] == "SAME_AS_EXISTING_ES2M_SNAPSHOT":
+                self.assertEqual(entry["runtime_import"], "NO_CHANGE_REQUIRED", entry["path"])
+            else:
                 self.assertEqual(entry["runtime_import"], "HOLD_REVIEW", entry["path"])
         self.assertTrue(all(x["status"] == "KING_SNAPSHOT_ONLY_REVIEW"
                             for x in self.manifest["snapshot_only_files"]))
