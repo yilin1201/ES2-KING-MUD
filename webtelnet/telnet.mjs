@@ -56,3 +56,10 @@ export class TelnetTextFilter {
     return Buffer.from(output);
   }
 }
+
+
+// Initial Telnet response／Neolith 啟動時會要求 TTYPE、NAWS、LINEMODE。
+// WebTelnet 只傳輸文字、不提供終端尺寸或行模式；明確回覆 WONT，避免協定協商停滯。
+export function initialTelnetResponse() {
+  return Buffer.from([IAC, WONT, 24, IAC, WONT, 31, IAC, WONT, 34]);
+}
