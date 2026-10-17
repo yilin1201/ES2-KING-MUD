@@ -1,0 +1,4 @@
+# ES2M upstream source pin／將 ES2M 原始來源固定到可重現的提交。
+[submodule "source/es2m_updates/20261017_71693beb/upstream-es2-webmud"]
+	path = source/es2m_updates/20261017_71693beb/upstream-es2-webmud
+	url = https://github.com/wolfer168/es2-webmud.git
