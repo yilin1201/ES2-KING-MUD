@@ -12,7 +12,7 @@ SCRIPT = Path(__file__).with_name("import_es2m_latest_missing_files.py")
 COMMIT = "71693beb79ced81d51719ea1ccf7c02c641ca9b0"
 
 def git_blob_sha(data: bytes) -> str:
-    return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\\0" + data).hexdigest()
+    return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest()
 
 class LatestAdditiveImportTest(unittest.TestCase):
     def run_import(self, root: Path, entries):
