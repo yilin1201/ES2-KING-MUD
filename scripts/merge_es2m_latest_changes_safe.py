@@ -97,6 +97,17 @@ def main() -> None:
             target.write_bytes(source.read_bytes())
             report["source_replaced"].append(relative)
             continue
+        # Git 的 merge-file 對二進位檔不適合做文字合併；先辨識 NUL，保留 KING 並列為人工 HOLD。
+        source_bytes = source.read_bytes()
+        original_bytes = original.read_bytes()
+        target_bytes = target.read_bytes()
+        if b"\\0" in source_bytes or b"\\0" in original_bytes or b"\\0" in target_bytes:
+            report["preserved_conflicts"].append({
+                "path": relative, "reason": "binary_file_preserved_KING",
+                "source_git_blob": source_sha, "original_git_blob": original_sha,
+                "runtime_git_blob": target_sha,
+            })
+            continue
         proc = subprocess.run([
             "git", "merge-file", "-p",
             "-L", "KING Runtime", "-L", "Original ES2", "-L", "ES2M 71693beb",
@@ -112,7 +123,11 @@ def main() -> None:
                 "runtime_git_blob": target_sha,
             })
         else:
-            raise SystemExit(f"ES2M_THREE_WAY_FAIL: git merge-file error for {relative}: {proc.stderr.decode('utf-8', errors='replace')}")
+            detail = proc.stderr.decode("utf-8", errors="replace").strip()
+            raise SystemExit(
+                f"ES2M_THREE_WAY_FAIL: git merge-file error for {relative}; "
+                f"returncode={proc.returncode}; stderr={detail!r}; stdout_bytes={len(proc.stdout)}"
+            )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     summary = {key: (len(value) if isinstance(value, list) else value) for key, value in report.items() if key not in {"status", "source_commit"}}
