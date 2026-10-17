@@ -28,7 +28,7 @@
 | 批次 | 範圍 | 執行方式 | 狀態 |
 |---|---|---|---|
 | 0 | 固定來源與差異清冊 | 固定 submodule、三方 manifest 與來源契約檢查 | 已建立；不代表內容已移植 |
-| 1 | 最新 ES2M 的 `d/qiaoyin` 橋隱區域 | 固定 submodule 來源；只補 Runtime 缺檔、追蹤字面依賴、同名衝突即停止 | 首次建置因 Actions 尚未遞迴 checkout submodule，來源目錄不存在而 FAIL；已修正 workflow 的 `submodules: recursive` 並重新觸發建置，待結果 |
+| 1 | 最新 ES2M 的 `d/qiaoyin` 橋隱區域 | 固定 submodule 來源；只補 Runtime 缺檔、追蹤字面依賴、同名衝突即停止 | 首次建置因 Actions 尚未遞迴 checkout submodule，來源目錄不存在而 FAIL；已修正 workflow 的 `submodules: recursive`；再由上游 Git tree 確認實際來源位於 `source/upstream/mudlib`（不是 repo root 的 `mudlib`），並修正 Docker 來源路徑後重新觸發建置，待結果 |
 | 1A | 固定來源中所有缺少於 Runtime 的 ES2M 檔案 | 新增 `import_es2m_latest_missing_files.py`；逐檔 SHA-256 驗證，只補缺檔、不覆蓋既有 KING；排除 `data/`、`log/`、編譯物件及時間戳備份，衝突輸出 JSON | 已加入 Docker builder 與單元測試；等待最新建置結果；不是全部移植完成 |
 | 2 | 最新來源的戰鬥核心、技能與職業成長 | 逐檔比較 Original／ES2M／KING，檢查呼叫鏈、存檔與數值回歸 | HOLD，待分批執行 |
 | 3 | 其他新增地圖、NPC、物品與任務 | 依區域及依賴分批匯入；每批需出口／依賴／Runtime Journey 驗證 | 待執行 |
@@ -46,4 +46,4 @@
 
 ## 目前未完成項目
 
-全量整合尚未完成。第一個 Docker 嘗試 `39026936503` 因當時 workflow 未設定遞迴 checkout submodule，在第 58/75 步找不到最新來源目錄而失敗；不是 LPC 或地圖內容測試失敗。已把 `submodules: recursive` 加入 workflow，並新增完整缺檔加法匯入流程後重新觸發建置。最新實際複製數、衝突數與建置結果仍待 Actions 回報。不可將來源 submodule、差異清冊、檔案補入或 Docker 建置成功單獨視為「所有 ES2M 更新已寫入 KING」。每批通過後更新本紀錄與相容性矩陣，直至每一個來源差異都有可追溯的移植結果或明確 HOLD 理由。
+全量整合尚未完成。第一個 Docker 嘗試 `39026936503` 因當時 workflow 未設定遞迴 checkout submodule，在第 58/75 步找不到最新來源目錄而失敗；不是 LPC 或地圖內容測試失敗。已把 `submodules: recursive` 加入 workflow，並新增完整缺檔加法匯入流程後重新觸發建置。後續檢查上游 Git tree 又確認來源實際路徑為 `source/upstream/mudlib`，先前 Dockerfile 使用錯誤的 `.../mudlib` 路徑；已修正全部 4 個引用並再次觸發完整建置。最新實際複製數、衝突數與建置結果仍待 Actions 回報。不可將來源 submodule、差異清冊、檔案補入或 Docker 建置成功單獨視為「所有 ES2M 更新已寫入 KING」。每批通過後更新本紀錄與相容性矩陣，直至每一個來源差異都有可追溯的移植結果或明確 HOLD 理由。
