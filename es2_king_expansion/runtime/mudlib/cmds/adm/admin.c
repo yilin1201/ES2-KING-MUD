@@ -366,7 +366,9 @@ private int set_stat(object ob, string stat, int value)
 int main(object me, string arg)
 {
     string cmd, value_s, target_name, skill;
-    int value;
+    string *parts;
+    string skill_name, resolved, target;
+    int value, level_index, skill_level;
     object ob, gift, weapon;
     object *players;
 
@@ -420,10 +422,6 @@ int main(object me, string arg)
      * 才把最後一個 token 視為在線目標。保留 KING 的管理員保護與技能排列。
      */
     if (sscanf(arg, "learn %s", value_s) == 1) {
-        string *parts;
-        string skill_name;
-        string resolved;
-        string target;
 
         parts = explode(value_s, " ") - ({ "" });
         skill_name = implode(parts, " ");
@@ -460,10 +458,6 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "unlearn %s", value_s) == 1) {
-        string *parts;
-        string skill_name;
-        string resolved;
-        string target;
 
         parts = explode(value_s, " ") - ({ "" });
         skill_name = implode(parts, " ");
@@ -496,29 +490,19 @@ int main(object me, string arg)
 
     /* skill <技能名稱含空格> <等級> [在線玩家] */
     if (sscanf(arg, "skill %s", value_s) == 1) {
-        string *parts;
-        string skill_name;
-        string resolved;
-        string target;
-        int level_index;
-
         parts = explode(value_s, " ") - ({ "" });
-        level = -1;
-        level_index = -1;
-        for (i = 0; i < sizeof(parts); i++) {
-            if (sscanf(parts[i], "%d", value) == 1) {
-                level = value;
-                level_index = i;
-                break;
-            }
-        }
-        if (level_index < 1)
+        skill_level = -1;
+        level_index = 0;
+        while (level_index < sizeof(parts)
+        && sscanf(parts[level_index], "%d", skill_level) != 1)
+            level_index++;
+        if (level_index < 1 || level_index >= sizeof(parts))
             return notify_fail("用法：admin skill <技能> <等級> [玩家]。\n");
         skill_name = implode(parts[0..level_index - 1], " ");
         resolved = resolve_skill_name(skill_name);
         if (!resolved)
             return notify_fail("沒有這個技能：" + skill_name + "\n");
-        if (level < 0 || level > ADMIN_SKILL_MAX)
+        if (skill_level < 0 || skill_level > ADMIN_SKILL_MAX)
             return notify_fail("技能等級須介於 0～200；未修改任何資料。\n");
 
         if (sizeof(parts) > level_index + 1) {
@@ -528,18 +512,18 @@ int main(object me, string arg)
             ob = mutable_target(me, target);
             if (!ob)
                 return notify_fail("找不到可修改的在線玩家：" + target + "\n");
-            ob->set_skill(resolved, level);
+            ob->set_skill(resolved, skill_level);
             value = (int)ob->query_skill(resolved, 1);
-            if (value != level)
-                return notify_fail(sprintf("技能設定未通過驗證：要求 %d，實際 %d。\n", level, value));
+            if (value != skill_level)
+                return notify_fail(sprintf("技能設定未通過驗證：要求 %d，實際 %d。\n", skill_level, value));
             printf("ADMIN: %s 的 %s = %d [OK]\n", ob->query("id"), resolved, value);
             return 1;
         }
 
-        me->set_skill(resolved, level);
+        me->set_skill(resolved, skill_level);
         value = (int)me->query_skill(resolved, 1);
-        if (value != level)
-            return notify_fail(sprintf("技能設定未通過驗證：要求 %d，實際 %d。\n", level, value));
+        if (value != skill_level)
+            return notify_fail(sprintf("技能設定未通過驗證：要求 %d，實際 %d。\n", skill_level, value));
         printf("ADMIN: %s = %d [OK]\n", resolved, value);
         return 1;
     }
