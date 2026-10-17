@@ -84,19 +84,35 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   s.close();
   console.log(`ORIGINAL_PLAYER_CREATION_${raceId.toUpperCase()}_E2E_PASS`);
 }
-// Original ES2 policy／原始登入規則只允許 3–12 個英文字母；數字開頭帳號應明確被拒絕。
-async function testNumericIdRejected(){
+// ES2M login policy／固定來源允許 3–12 位小寫英文字母或數字，顯示名稱允許 1–18 個 UTF-8 字元。
+async function testEs2mLoginPolicy(){
   const id="7probe", shard=id[0];
   const login=`${saveDir}/login/${shard}/${id}.o`, user=`${saveDir}/user/${shard}/${id}.o`;
   assert.equal(await exists(login),false); assert.equal(await exists(user),false);
   const s=session();
   await s.wait("您的使用者代號");
-  const offset=s.output().length;
-  s.send(id+"\r\n");
-  await s.wait(/只能由 a 到 z 的英文字母組成[\s\S]*您的使用者代號/,offset);
-  assert.equal(await exists(login),false); assert.equal(await exists(user),false);
-  s.close();
-  console.log("ORIGINAL_PLAYER_CREATION_NUMERIC_ID_REJECTED_PASS");
+  s.send(id+"\\r\\n");
+  await s.wait("您確定嗎");
+  await choice(s,"yes");
+  await s.wait("請設定您的密碼"); s.send(password+"\\r\\n");
+  await s.wait("請再輸入一次您的密碼"); s.send(password+"\\r\\n");
+  await s.wait("您的電子郵件地址"); s.send("none\\r\\n");
+  await s.wait("Human（人類）");
+  const raceOffset=s.output().length;
+  await choice(s,"human");
+  await s.wait("您要扮演的哪種性別",raceOffset);
+  await choice(s,"male");
+  await s.wait("您的顯示名稱"); s.send("熊\\r\\n");
+  await s.wait("您確定要創造這個角色嗎"); await choice(s,"yes");
+  await s.wait("目前權限: (player)"); await s.wait("客棧大堂"); await s.wait("> ");
+  s.send("save\\r\\n"); await s.wait("檔案儲存完畢");
+  assert.equal(await exists(login),true); assert.equal(await exists(user),true);
+  const saved=await readFile(user,"utf8");
+  assert.match(saved,/"race"\\s*:\\s*"human"/);
+  assert.match(saved,/"name"\\s*:\\s*"熊"/);
+  console.log("ES2M_PLAYER_CREATION_NUMERIC_ID_ACCEPTED_PASS");
+  console.log("ES2M_SINGLE_CHARACTER_DISPLAY_NAME_PASS");
+  s.send("quit\\r\\n"); await s.wait("歡迎下次再來"); s.close();
 }
 
 const races = [
@@ -115,6 +131,6 @@ const races = [
 ];
 for (const [id,raceChoice,raceLabel,name,raceId] of races)
   await runPlayer({id,raceChoice,raceLabel,name,raceId});
-await testNumericIdRejected();
+await testEs2mLoginPolicy();
 console.log("ES2M_RACE_ABILITY_COMMANDS_E2E_PASS");
 console.log("ES2M_PLAYER_CREATION_12_RACES_E2E_PASS");
