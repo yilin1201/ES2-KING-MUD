@@ -14,13 +14,10 @@ from pathlib import Path
 EXPECTED_COMMIT = "71693beb79ced81d51719ea1ccf7c02c641ca9b0"
 TIMESTAMP_BACKUP = re.compile(r"\.\d{10,}$")
 
-def sha256(path: Path) -> str:
-    """計算 SHA-256，確認匯入位元組與固定來源清冊一致。"""
-    h = hashlib.sha256()
-    with path.open("rb") as stream:
-        for block in iter(lambda: stream.read(1024 * 1024), b""):
-            h.update(block)
-    return h.hexdigest()
+def git_blob_sha(path: Path) -> str:
+    """計算 Git blob SHA-1；manifest 的 40 位 sha 是 Git blob ID，不是 SHA-256。"""
+    data = path.read_bytes()
+    return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\\0" + data).hexdigest()
 
 def excluded(relative: str) -> str | None:
     """不複製執行期狀態、編譯物件或帶時間戳的編輯備份。"""
@@ -66,25 +63,25 @@ def main() -> None:
         src = (source_root / rel).resolve()
         if not src.is_relative_to(source_root) or not src.is_file():
             raise SystemExit(f"ES2M_LATEST_IMPORT_FAIL: source file missing or escaped root: {relative}")
-        actual_source_sha = sha256(src)
+        actual_source_sha = git_blob_sha(src)
         if actual_source_sha != entry.get("sha"):
             raise SystemExit(f"ES2M_LATEST_IMPORT_FAIL: source SHA mismatch: {relative}")
         dst = runtime / rel
         if not dst.resolve(strict=False).is_relative_to(runtime):
             raise SystemExit(f"ES2M_LATEST_IMPORT_FAIL: runtime path escaped root: {relative}")
         if dst.is_file():
-            if sha256(dst) == actual_source_sha:
+            if git_blob_sha(dst) == actual_source_sha:
                 report["identical"].append(relative)
             else:
                 report["preserved_conflicts"].append({
-                    "path": relative, "source_sha256": actual_source_sha,
-                    "runtime_sha256": sha256(dst), "status": "PRESERVED_NOT_OVERWRITTEN_HOLD",
+                    "path": relative, "source_git_blob_sha": actual_source_sha,
+                    "runtime_git_blob_sha": git_blob_sha(dst), "status": "PRESERVED_NOT_OVERWRITTEN_HOLD",
                 })
             continue
         if dst.exists():
             report["preserved_conflicts"].append({
                 "path": relative, "source_sha256": actual_source_sha,
-                "runtime_sha256": None, "status": "NON_FILE_TARGET_PRESERVED_HOLD",
+                "runtime_git_blob_sha": None, "status": "NON_FILE_TARGET_PRESERVED_HOLD",
             })
             continue
         dst.parent.mkdir(parents=True, exist_ok=True)
