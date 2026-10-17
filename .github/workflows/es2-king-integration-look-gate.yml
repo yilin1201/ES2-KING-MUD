@@ -22,12 +22,14 @@ on:
       - "scripts/test_import_es2m_latest_missing_files.py"
       - "scripts/merge_es2m_latest_changes_safe.py"
       - "scripts/test_merge_es2m_latest_changes_safe.py"
+      - "scripts/sync_es2m_latest_import_overlay.py"
+      - "es2m_snapshot/latest_import_overlay/**"
       - ".gitmodules"
       - ".github/workflows/es2-king-integration-look-gate.yml"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: es2-king-integration-look-gate
@@ -53,7 +55,7 @@ jobs:
 
       - name: Python syntax
         run: |
-          python3 -m py_compile scripts/test_es2m_training_dummy.py
+          python3 -m py_compile scripts/test_es2m_training_dummy.py scripts/sync_es2m_latest_import_overlay.py
 
       - name: Node syntax
         run: node --check scripts/test_original_player_creation_e2e.mjs
@@ -140,7 +142,7 @@ jobs:
                   if isinstance(value, list):
                       lines.append(f"- {key}: {len(value)}")
               lines.append("")
-          manifest = json.loads(Path("es2_snapshot_placeholder").read_text()) if False else json.loads(Path("/tmp/es2m-latest-import-overlay/manifest.json").read_text())
+          manifest = json.loads(Path("/tmp/es2m-latest-import-overlay/manifest.json").read_text())
           lines += ["### Persistent KING overlay", f"- Pinned source: `{manifest['source_commit']}`", f"- Persisted conflict-free files: {manifest['file_count']}", f"- Conflicts excluded from overlay: {manifest['excluded_conflict_count']}", ""]
           summary.write_text(summary.read_text(encoding="utf-8") + "\n".join(lines) + "\n", encoding="utf-8")
           PY
