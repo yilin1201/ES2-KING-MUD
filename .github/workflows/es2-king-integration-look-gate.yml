@@ -11,6 +11,9 @@ on:
       - "scripts/test_neolith_preload_look.sh"
       - "scripts/test_es2m_training_dummy.py"
       - "scripts/test_original_player_creation_e2e.mjs"
+      - "webtelnet/server.mjs"
+      - "webtelnet/telnet.mjs"
+      - "scripts/test_webtelnet_telnet_handshake.mjs"
       - "scripts/apply_es2m_login_policy_runtime.py"
       - "scripts/test_apply_es2m_login_policy_runtime.py"
       - "scripts/test_original_player_creation_e2e.sh"
@@ -63,8 +66,12 @@ jobs:
           python3 -m py_compile scripts/test_es2m_training_dummy.py scripts/sync_es2m_latest_import_overlay.py scripts/apply_es2m_login_policy_runtime.py scripts/classify_es2m_latest_conflicts.py
           python3 -m unittest -v scripts/test_sync_es2m_latest_import_overlay.py scripts/test_apply_es2m_login_policy_runtime.py scripts/test_classify_es2m_latest_conflicts.py
 
-      - name: Node syntax
-        run: node --check scripts/test_original_player_creation_e2e.mjs
+      - name: Node syntax and Telnet negotiation test
+        run: |
+          node --check scripts/test_original_player_creation_e2e.mjs
+          node --check webtelnet/server.mjs
+          node --check webtelnet/telnet.mjs
+          node scripts/test_webtelnet_telnet_handshake.mjs
 
       - name: ES2M training dummy source contract
         run: python3 scripts/test_es2m_training_dummy.py
