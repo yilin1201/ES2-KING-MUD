@@ -23,6 +23,7 @@ on:
       - "scripts/merge_es2m_latest_changes_safe.py"
       - "scripts/test_merge_es2m_latest_changes_safe.py"
       - "scripts/sync_es2m_latest_import_overlay.py"
+      - "scripts/test_sync_es2m_latest_import_overlay.py"
       - "es2m_snapshot/latest_import_overlay/**"
       - ".gitmodules"
       - ".github/workflows/es2-king-integration-look-gate.yml"
@@ -56,6 +57,7 @@ jobs:
       - name: Python syntax
         run: |
           python3 -m py_compile scripts/test_es2m_training_dummy.py scripts/sync_es2m_latest_import_overlay.py
+          python3 -m unittest -v scripts/test_sync_es2m_latest_import_overlay.py
 
       - name: Node syntax
         run: node --check scripts/test_original_player_creation_e2e.mjs
