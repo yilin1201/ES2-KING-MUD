@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 AS builder
+FROM ubuntu:24.04 AS es2m-import-audit
 
 ARG ORIGINAL_ES2_COMMIT=cc45c06af4852380e5148dad3c9d53ff06854f2c
 
@@ -262,7 +262,20 @@ RUN python3 scripts/merge_es2m_latest_changes_safe.py \
     --runtime /opt/es2-king/runtime/mudlib \
     --manifest /build/repository/docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json \
     --output /build/es2m-latest-three-way-merge.json
+# 匯出無衝突檔案，供工作流程持久寫入 KING 版本庫；HOLD 衝突不會匯出。
+RUN python3 scripts/sync_es2m_latest_import_overlay.py export \
+    --runtime /opt/es2-king/runtime/mudlib \
+    --additive-report /build/es2m-latest-additive-import.json \
+    --merge-report /build/es2m-latest-three-way-merge.json \
+    --output /build/es2m-latest-import-overlay
+# 已存在的持久 overlay 必須與本輪新產生結果逐檔一致；不同即 HOLD，不允許舊檔覆蓋新內容。
+RUN python3 scripts/sync_es2m_latest_import_overlay.py apply \
+    --overlay-root /build/repository/es2m_snapshot/latest_import_overlay/71693beb/mudlib \
+    --runtime /opt/es2-king/runtime/mudlib
 RUN cd webtelnet && npm ci --omit=dev
+
+# 在匯入稽核階段與正式 Runtime E2E 之間切開，讓即使 Gameplay Gate 失敗，也能先取回匯入清冊並持久化已安全合併內容。
+FROM es2m-import-audit AS builder
 
 # Release Candidate Gameplay Gates／候選版本實際玩法閘門：
 # 直接使用剛編譯完成的 Driver，在全新隔離 data 上執行 12 種族創角與普通玩家完整旅程。
