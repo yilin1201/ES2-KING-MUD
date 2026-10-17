@@ -14,6 +14,8 @@ on:
       - "scripts/test_original_player_creation_e2e.sh"
       - "docs/status/ES2M_COMPATIBILITY_BATCH_PLAN_20261017.md"
       - "docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json"
+      - "source/es2m_updates/**"
+      - "es2m_snapshot/mudlib/**"
       - "docs/es2m_reference/ES2M_戰鬥流程說明_71693beb.md"
       - "scripts/test_es2m_source_sync_manifest.py"
       - ".gitmodules"
