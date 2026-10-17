@@ -32,6 +32,7 @@ on:
       - "scripts/test_classify_es2m_latest_conflicts.py"
       - "scripts/test_sync_es2m_latest_import_overlay.py"
       - "es2m_snapshot/latest_import_overlay/**"
+      - "es2_king_expansion/runtime/mudlib/cmds/adm/admin.c"
       - ".gitmodules"
       - ".github/workflows/es2-king-integration-look-gate.yml"
   workflow_dispatch:
@@ -65,6 +66,36 @@ jobs:
         run: |
           python3 -m py_compile scripts/test_es2m_training_dummy.py scripts/sync_es2m_latest_import_overlay.py scripts/apply_es2m_login_policy_runtime.py scripts/classify_es2m_latest_conflicts.py
           python3 -m unittest -v scripts/test_sync_es2m_latest_import_overlay.py scripts/test_apply_es2m_login_policy_runtime.py scripts/test_classify_es2m_latest_conflicts.py
+
+      - name: KING admin help string-size gate
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          source = Path("es2_king_expansion/runtime/mudlib/cmds/adm/admin.c").read_text(encoding="utf-8")
+          lines = source.splitlines()
+          sizes = []
+          i = 0
+          while i < len(lines):
+              if "write(@HELP" not in lines[i]:
+                  i += 1
+                  continue
+              start = i
+              i += 1
+              body = []
+              while i < len(lines) and lines[i] != "HELP":
+                  body.append(lines[i])
+                  i += 1
+              if i == len(lines):
+                  raise SystemExit(f"ADMIN HELP FAIL: unterminated block at line {start + 1}")
+              size = len("\\n".join(body).encode("utf-8"))
+              sizes.append((start + 1, size))
+              if size > 400:
+                  raise SystemExit(f"ADMIN HELP FAIL: string at line {start + 1} is {size} UTF-8 bytes (limit 400)")
+              i += 1
+          if not sizes:
+              raise SystemExit("ADMIN HELP FAIL: no help blocks found")
+          print(f"ADMIN_HELP_STRING_SIZE_PASS: {len(sizes)} blocks; max={max(size for _, size in sizes)} bytes")
+          PY
 
       - name: Node syntax and Telnet negotiation test
         run: |
