@@ -101,7 +101,7 @@ def main() -> None:
         source_bytes = source.read_bytes()
         original_bytes = original.read_bytes()
         target_bytes = target.read_bytes()
-        if b"\\0" in source_bytes or b"\\0" in original_bytes or b"\\0" in target_bytes:
+        if b"\0" in source_bytes or b"\0" in original_bytes or b"\0" in target_bytes:
             report["preserved_conflicts"].append({
                 "path": relative, "reason": "binary_file_preserved_KING",
                 "source_git_blob": source_sha, "original_git_blob": original_sha,
@@ -116,16 +116,19 @@ def main() -> None:
         if proc.returncode == 0:
             target.write_bytes(proc.stdout)
             report["merged"].append(relative)
-        elif proc.returncode == 1:
+        elif 1 <= proc.returncode <= 127:
+            # git merge-file 的正數回傳值是衝突區塊數，不是只在 1 時才代表衝突。
+            # 即使同一檔有多個衝突，也必須保留 KING 原檔並列入 HOLD。
             report["preserved_conflicts"].append({
                 "path": relative, "reason": "three_way_conflict_preserved_KING",
+                "conflict_count": proc.returncode,
                 "source_git_blob": source_sha, "original_git_blob": original_sha,
                 "runtime_git_blob": target_sha,
             })
         else:
             detail = proc.stderr.decode("utf-8", errors="replace").strip()
             raise SystemExit(
-                f"ES2M_THREE_WAY_FAIL: git merge-file error for {relative}; "
+                f"ES2M_THREE_WAY_FAIL: git merge-file execution error for {relative}; "
                 f"returncode={proc.returncode}; stderr={detail!r}; stdout_bytes={len(proc.stdout)}"
             )
     args.output.parent.mkdir(parents=True, exist_ok=True)
