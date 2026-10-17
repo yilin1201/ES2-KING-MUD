@@ -59,6 +59,31 @@ class TestES2MSourceSyncManifest(unittest.TestCase):
         self.assertEqual(len(self.manifest["snapshot_only_files"]), 3)
         self.assertEqual(self.manifest["counts"]["requires_review"], 700)
 
+    def test_original_es2_baseline_comparison_is_complete(self):
+        # 同時對照固定 Original ES2，避免把「目前快照缺檔」誤當成上游新增。
+        baseline = self.manifest["original_baseline"]
+        self.assertEqual(baseline["repository"], "https://github.com/taedlar/es2_mudlib")
+        self.assertEqual(baseline["commit"], "cc45c06af4852380e5148dad3c9d53ff06854f2c")
+        self.assertEqual(baseline["counts"], {
+            "original_mudlib_files": 536,
+            "upstream_files": 1678,
+            "same_as_original": 372,
+            "changed_from_original": 162,
+            "new_to_original": 1144,
+            "original_only_files": 2,
+        })
+        for entry in self.manifest["files"]:
+            self.assertIn(entry["original_status"], {
+                "SAME_AS_PINNED_ORIGINAL",
+                "CHANGED_FROM_PINNED_ORIGINAL",
+                "NEW_TO_PINNED_ORIGINAL",
+            })
+            if entry["original_status"] == "SAME_AS_PINNED_ORIGINAL":
+                self.assertEqual(entry["original_sha"], entry["sha"], entry["path"])
+            else:
+                self.assertNotEqual(entry["original_sha"], entry["sha"], entry["path"])
+        self.assertEqual(len(baseline["original_only_files"]), 2)
+
     def test_nonidentical_files_are_not_auto_imported(self):
         # 新增／修改來源一律先審核；不可因來源更新就直接覆蓋 KING Runtime。
         for entry in self.manifest["files"]:
