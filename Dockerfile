@@ -181,10 +181,10 @@ RUN python3 scripts/test_es2m_wutang_topology.py \
 
 # ES2M latest source batch 1／最新上游世界區域批次 1：橋隱（qiaoyin）
 # 使用固定 71693beb submodule，不使用舊 snapshot 代替最新來源；只補缺檔、檢查字面依賴，任何衝突即停止建置。
-RUN test -d /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/mudlib/d/qiaoyin \
+RUN test -d /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/source/upstream/mudlib/d/qiaoyin \
     && cd scripts && python3 -m unittest -v test_import_es2m_world_zones_safe
 RUN python3 scripts/import_es2m_world_zones_safe.py \
-    --snapshot /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/mudlib \
+    --snapshot /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/source/upstream/mudlib \
     --runtime /opt/es2-king/runtime/mudlib \
     --output /build/es2m-latest-qiaoyin-stage.json \
     --zones d/qiaoyin
@@ -239,7 +239,7 @@ RUN ES2_DRIVER_BIN=/opt/es2-king/bin/neolith \
 # 排除 data/、log/、編譯物件與時間戳備份；衝突寫入報告，後續逐檔適配。
 RUN cd scripts && python3 -m unittest -v test_import_es2m_latest_missing_files
 RUN python3 scripts/import_es2m_latest_missing_files.py \
-    --source-root /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/mudlib \
+    --source-root /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/source/upstream/mudlib \
     --runtime /opt/es2-king/runtime/mudlib \
     --manifest /build/repository/docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json \
     --output /build/es2m-latest-additive-import.json
@@ -247,7 +247,7 @@ RUN python3 scripts/import_es2m_latest_missing_files.py \
 # 排除 data/、log/、編譯物件與時間戳備份；衝突寫入報告，後續逐檔適配。
 RUN cd scripts && python3 -m unittest -v test_import_es2m_latest_missing_files
 RUN python3 scripts/import_es2m_latest_missing_files.py \
-    --source-root /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/mudlib \
+    --source-root /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/source/upstream/mudlib \
     --runtime /opt/es2-king/runtime/mudlib \
     --manifest /build/repository/docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json \
     --output /build/es2m-latest-additive-import.json
