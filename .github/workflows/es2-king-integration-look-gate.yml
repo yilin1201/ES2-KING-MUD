@@ -112,48 +112,57 @@ jobs:
         with:
           ref: integration/es2m-audit-import-20261017
           submodules: recursive
-      - name: Build full Docker builder target
-        run: docker build --progress=plain --target builder -t es2-king-integration-validation:ci .
-      - name: Extract ES2M import reports from successful builder image
-        if: always()
+      - name: Build ES2M import audit stage (before gameplay gates)
+        run: docker build --progress=plain --target es2m-import-audit -t es2-king-es2m-audit:ci .
+      - name: Extract ES2M import reports and conflict-free overlay
+        if: success()
         run: |
-          if ! docker image inspect es2-king-integration-validation:ci >/dev/null 2>&1; then
-            echo "Builder image unavailable; no import report can be extracted."
-            exit 0
-          fi
-          container_id="$(docker create es2-king-integration-validation:ci)"
+          mkdir -p es2m-reports
+          container_id="$(docker create es2-king-es2m-audit:ci)"
           trap 'docker rm -f "$container_id" >/dev/null 2>&1 || true' EXIT
           for report in es2m-latest-qiaoyin-stage.json es2m-latest-additive-import.json es2m-latest-three-way-merge.json; do
-            docker cp "$container_id:/build/$report" "$report" 2>/dev/null || true
+            docker cp "$container_id:/build/$report" "es2m-reports/$report"
           done
+          docker cp "$container_id:/build/es2m-latest-import-overlay" /tmp/es2m-latest-import-overlay
+          python3 scripts/sync_es2m_latest_import_overlay.py persist \
+            --export-root /tmp/es2m-latest-import-overlay \
+            --overlay-root es2m_snapshot/latest_import_overlay/71693beb/mudlib
           python3 - <<'PY'
           import json
           from pathlib import Path
           from os import environ
           summary = Path(environ["GITHUB_STEP_SUMMARY"])
           lines = ["## ES2M latest-source import report", ""]
-          for name in ("es2m-latest-qiaoyin-stage.json", "es2m-latest-additive-import.json", "es2m-latest-three-way-merge.json"):
-              path = Path(name)
-              if not path.is_file():
-                  continue
+          for path in sorted(Path("es2m-reports").glob("*.json")):
               data = json.loads(path.read_text(encoding="utf-8"))
-              lines += [f"### {name}", f"- Status: `{data.get('status', 'unknown')}`"]
+              lines += [f"### {path.name}", f"- Status: `{data.get('status', 'unknown')}`"]
               for key, value in data.items():
                   if isinstance(value, list):
                       lines.append(f"- {key}: {len(value)}")
-              for key in ("copied", "source_replaced", "merged", "preserved_conflicts"):
-                  values = data.get(key, [])
-                  if values and isinstance(values[0], dict):
-                      lines.append(f"- {key} paths: " + ", ".join(str(x.get("path", "?")) for x in values))
               lines.append("")
+          manifest = json.loads(Path("es2_snapshot_placeholder").read_text()) if False else json.loads(Path("/tmp/es2m-latest-import-overlay/manifest.json").read_text())
+          lines += ["### Persistent KING overlay", f"- Pinned source: `{manifest['source_commit']}`", f"- Persisted conflict-free files: {manifest['file_count']}", f"- Conflicts excluded from overlay: {manifest['excluded_conflict_count']}", ""]
           summary.write_text(summary.read_text(encoding="utf-8") + "\n".join(lines) + "\n", encoding="utf-8")
           PY
+      - name: Commit conflict-free ES2M changes into KING source tree
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add es2m_snapshot/latest_import_overlay/71693beb
+          if git diff --cached --quiet; then
+            echo "No new conflict-free ES2M files to persist."
+          else
+            git commit -m "Persist conflict-free ES2M 71693beb imports [skip ci]"
+            git push origin HEAD:integration/es2m-audit-import-20261017
+          fi
+      - name: Build full Docker builder target (including gameplay E2E)
+        run: docker build --progress=plain --target builder -t es2-king-integration-validation:ci .
       - name: Upload ES2M import reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: es2m-latest-import-reports
-          path: es2m-*.json
+          path: es2m-reports/*.json
           if-no-files-found: ignore
           retention-days: 14
       - name: Validation boundary summary
