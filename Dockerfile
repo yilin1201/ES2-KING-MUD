@@ -272,6 +272,7 @@ RUN python3 scripts/sync_es2m_latest_import_overlay.py apply \
     --overlay-root /build/repository/es2m_snapshot/latest_import_overlay/71693beb/mudlib \
     --runtime /opt/es2-king/runtime/mudlib
 RUN cd webtelnet && npm ci --omit=dev
+RUN node scripts/test_webtelnet_telnet_handshake.mjs
 
 # 在匯入稽核階段與正式 Runtime E2E 之間切開，讓即使 Gameplay Gate 失敗，也能先取回匯入清冊並持久化已安全合併內容。
 FROM es2m-import-audit AS builder
