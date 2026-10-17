@@ -45,15 +45,6 @@ test -x "$DRIVER_BIN"
 cp -a "$SOURCE_RUNTIME/mudlib" "$TEMP_ROOT/mudlib"
 cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
 
-# ES2M Port Contract／依實際 mudlib globals.h 核對 Driver 設定，避免 4000/4001 混用。
-MUD_PORT="$(awk '$1 == "#define" && $2 == "MUD_PORT" { print $3; exit }' "$TEMP_ROOT/mudlib/include/globals.h")"
-CONFIG_PORT="$(awk '$1 == "Port" { split($2, p, ":"); print p[1]; exit }' "$TEMP_ROOT/neolith.conf")"
-if [[ ! "$MUD_PORT" =~ ^[0-9]+$ || "$CONFIG_PORT" != "$MUD_PORT" ]]; then
-  echo "ORIGINAL PLAYER CREATION E2E BLOCKED：連接埠不一致（globals.h=$MUD_PORT, neolith.conf=$CONFIG_PORT）。" >&2
-  exit 1
-fi
-PORT_HEX="$(printf '%04X' "$MUD_PORT")"
-echo "ES2M_E2E_PORT_CONTRACT_PASS: mudlib=$MUD_PORT config=$CONFIG_PORT"
 # Docker passes a runtime that already received both overlays. Reapplying the expansion
 # to that generated runtime can collide with deliberately protected NPC/world files.
 # Local callers keep the default behavior and build the overlays in the isolated temp runtime.
@@ -63,6 +54,17 @@ else
   bash "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh" "$TEMP_ROOT"
   bash "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
 fi
+
+# ES2M Port Contract／依實際 mudlib globals.h 核對 Driver 設定，避免 4000/4001 混用。
+MUD_PORT="$(awk '$1 == "#define" && $2 == "MUD_PORT" { print $3; exit }' "$TEMP_ROOT/mudlib/include/globals.h")"
+CONFIG_PORT="$(awk '$1 == "Port" { split($2, p, ":"); print p[1]; exit }' "$TEMP_ROOT/neolith.conf")"
+if [[ ! "$MUD_PORT" =~ ^[0-9]+$ || "$CONFIG_PORT" != "$MUD_PORT" ]]; then
+  echo "ORIGINAL PLAYER CREATION E2E BLOCKED：連接埠不一致（globals.h=$MUD_PORT, neolith.conf=$CONFIG_PORT）。" >&2
+  exit 1
+fi
+PORT_HEX="$(printf '%04X' "$MUD_PORT")"
+echo "ES2M_E2E_PORT_CONTRACT_PASS: mudlib=$MUD_PORT config=$CONFIG_PORT"
+
 # Test-only Host Throttle／測試專用主機限流處理：12 個種族皆由同一個 localhost 建立，
 # 會觸發 Original ES2 的每 IP 十帳號保護。只在 mktemp Runtime 套用既有 KING
 # bootstrap 政策，不修改來源保存區，也不把「同 IP 大量創角」宣稱為正式 Gameplay。
