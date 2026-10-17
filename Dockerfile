@@ -252,6 +252,14 @@ RUN python3 scripts/import_es2m_latest_missing_files.py \
     --runtime /opt/es2-king/runtime/mudlib \
     --manifest /build/repository/docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json \
     --output /build/es2m-latest-additive-import.json
+# ES2M 最新來源三方合併：以固定 Original 為 base，合併 KING 與 ES2M 非重疊修改；衝突保留 KING。
+RUN cd scripts && python3 -m unittest -v test_merge_es2m_latest_changes_safe
+RUN python3 scripts/merge_es2m_latest_changes_safe.py \
+    --source-root /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/source/upstream/mudlib \
+    --original-root /build/es2m-original-mudlib \
+    --runtime /opt/es2-king/runtime/mudlib \
+    --manifest /build/repository/docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json \
+    --output /build/es2m-latest-three-way-merge.json
 RUN cd webtelnet && npm ci --omit=dev
 
 # Release Candidate Gameplay Gates／候選版本實際玩法閘門：
