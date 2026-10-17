@@ -35,10 +35,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Checkout integration branch
+      - name: Checkout integration branch and pinned ES2M source
         uses: actions/checkout@v4
         with:
           ref: integration/es2m-audit-import-20261017
+          submodules: recursive
 
       - name: Bash syntax
         run: |
@@ -96,10 +97,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Checkout integration branch
+      - name: Checkout integration branch and pinned ES2M source
         uses: actions/checkout@v4
         with:
           ref: integration/es2m-audit-import-20261017
+          submodules: recursive
       - name: Build full Docker builder target
         run: docker build --progress=plain --target builder -t es2-king-integration-validation:ci .
       - name: Validation boundary summary
