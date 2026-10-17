@@ -1,0 +1,1478 @@
+{
+  "source_commit": "71693beb79ced81d51719ea1ccf7c02c641ca9b0",
+  "status": "CONFLICT_FREE_IMPORTS_ONLY",
+  "file_count": 294,
+  "files": [
+    {
+      "path": "adm/daemons/channeld.c",
+      "origin": "source_replaced",
+      "sha256": "12bf05ff16def5a3036db4d3112b47a803e3ea50a6f592ce0aa303917259c7c6"
+    },
+    {
+      "path": "adm/daemons/chard.c",
+      "origin": "source_replaced",
+      "sha256": "8156a1361c3f3ee7ace761ae454bb6e87123c8919bdb93a33a85e2a4b0652f59"
+    },
+    {
+      "path": "adm/daemons/securityd.c",
+      "origin": "source_replaced",
+      "sha256": "8c4bb5c5b4a05ee2f4738fabff10d832e3e4886bcde7260709e99dca9b7f9842"
+    },
+    {
+      "path": "adm/etc/preload",
+      "origin": "merged",
+      "sha256": "aa7a5de0672d56dafceb858ee708e89eed7b600926912447d8bb6f4207618752"
+    },
+    {
+      "path": "adm/etc/welcome",
+      "origin": "source_replaced",
+      "sha256": "fb72afef43c87ca81921205bfb3ca23b58124a9109b39c07f1633c2e8ad803c1"
+    },
+    {
+      "path": "adm/simul_efun/cursor.c",
+      "origin": "source_replaced",
+      "sha256": "7e0c45064e7fca180feac7ced099d194895369a94502b8355434dc4a7f6e76b7"
+    },
+    {
+      "path": "cmds/adm/restart.c",
+      "origin": "additive_copy",
+      "sha256": "22b7e453560696b94615c37ba0537d8418502551aa39369abf422cefeb35eabf"
+    },
+    {
+      "path": "cmds/adm/shutdown.c",
+      "origin": "source_replaced",
+      "sha256": "6e89644d2238be4e6b1db460db8f5ff4f456a5e253a235a0602ee1046eb7fb0f"
+    },
+    {
+      "path": "cmds/imm/delink.c",
+      "origin": "additive_copy",
+      "sha256": "1fdc9c8c98b6238f6cfddbcc153653f6213cab3ceb13e18b1fb62270f7040ca2"
+    },
+    {
+      "path": "cmds/imm/where.c",
+      "origin": "source_replaced",
+      "sha256": "6cf144d4638aead1ac47bf8eb36fb709efaf7286682d821499b600da4ea1d9aa"
+    },
+    {
+      "path": "cmds/std/balance.c",
+      "origin": "additive_copy",
+      "sha256": "bb3cd4dd486198b249fd8d36a66993df3ff35e1b8503113290e39917325e577b"
+    },
+    {
+      "path": "cmds/std/berserk.c",
+      "origin": "source_replaced",
+      "sha256": "ea68ffd41584904ced3e7027213b7518d56b9941aced7bf750fdcf12d175a2b0"
+    },
+    {
+      "path": "cmds/std/cast.c",
+      "origin": "source_replaced",
+      "sha256": "ce79e1a753b4ef8935fb22de259307be2b1f4a3b23b80fb81e7c6c20bfc971c3"
+    },
+    {
+      "path": "cmds/std/close.c",
+      "origin": "source_replaced",
+      "sha256": "924d31792ae2e1492291ca1710f7bd0b30a9591dc6e032a8242b233bd92fbd53"
+    },
+    {
+      "path": "cmds/std/conjure.c",
+      "origin": "source_replaced",
+      "sha256": "9c04f10ae0112203d192e17c61761ec0d63164965795dcc1b692847838c93e1d"
+    },
+    {
+      "path": "cmds/std/convert.c",
+      "origin": "additive_copy",
+      "sha256": "af4cd5d73a09615525782476b7b47a30db26c6e4c314137247d5feede414865c"
+    },
+    {
+      "path": "cmds/std/deposit.c",
+      "origin": "additive_copy",
+      "sha256": "1b5f6b511790f7ae9783854a88476d10eb11095792df1de6dcb7c62dd7540ca2"
+    },
+    {
+      "path": "cmds/std/identify.c",
+      "origin": "source_replaced",
+      "sha256": "ae7c63aee3027cea7acb4ce54c8131bd64ac74a122a937ca374fdffcca50757d"
+    },
+    {
+      "path": "cmds/std/open.c",
+      "origin": "source_replaced",
+      "sha256": "668d5377b9100566e12dd9f5d1c981b047189f73d3c58b0467645bb9e4092001"
+    },
+    {
+      "path": "cmds/std/withdraw.c",
+      "origin": "additive_copy",
+      "sha256": "e2e6f2aedf2b971d5e4fa2e2228f1e998fde815f463fad321c5aa7ffac740beb"
+    },
+    {
+      "path": "cmds/usr/help.c",
+      "origin": "source_replaced",
+      "sha256": "794233917d3fe68165a457776f7d648f13cfefc70fbe696552ea3a1c795e67f2"
+    },
+    {
+      "path": "cmds/usr/hp.c",
+      "origin": "source_replaced",
+      "sha256": "774d14ff51f079edb08d62f957197108bb1756c7cf33c2f2ae59e3102fb8d35c"
+    },
+    {
+      "path": "cmds/usr/inventory.c",
+      "origin": "merged",
+      "sha256": "4aa6c2c4d0b243e0b4680d36fe900ec38068b71d936e521ceb80f8f3b0aa3195"
+    },
+    {
+      "path": "cmds/usr/praise.c",
+      "origin": "source_replaced",
+      "sha256": "d489ecc4317d7acf28532a1621ebaff62060c72c14c337df15627e597f038df6"
+    },
+    {
+      "path": "cmds/usr/recall.c",
+      "origin": "additive_copy",
+      "sha256": "84ddb1b75d01401c26ebd9bd405b0786630cc55e9976c98b85fb6f93bcb7c29b"
+    },
+    {
+      "path": "cmds/usr/skills.c",
+      "origin": "source_replaced",
+      "sha256": "f829dc49b7fcd1b691aa3630fd84d40109d15d29f9f1696bb10d798410d8fd6d"
+    },
+    {
+      "path": "cmds/usr/webhud.c",
+      "origin": "additive_copy",
+      "sha256": "9bc50f1af156c799e1d984671e9e58b289e4faa3a3e7aaf3590414d8b23a78e5"
+    },
+    {
+      "path": "cmds/usr/who.c",
+      "origin": "source_replaced",
+      "sha256": "8b02c722c17e4eceeb3107eeddb41bab246c03bcc4e58dc9c7f93d2184d0bca1"
+    },
+    {
+      "path": "cmds/wiz/analyze.c",
+      "origin": "source_replaced",
+      "sha256": "f739760098f24dda237f9ce97f2ed9db3202fb2b09e1a3f9cb8acbc810a64f57"
+    },
+    {
+      "path": "cmds/wiz/link.c",
+      "origin": "additive_copy",
+      "sha256": "584114c1e54a6f4dc038516df9dd03eb1fb1d5759d4b4bba7210c55466c28cd6"
+    },
+    {
+      "path": "custom/armor/armor/heart_armor.c",
+      "origin": "additive_copy",
+      "sha256": "ad4ef771a80c6deb8f2b22c3c63aaf6fa5afd60b3a66ed97725fc35b9b129b8f"
+    },
+    {
+      "path": "custom/armor/cloth/green_cloth.c",
+      "origin": "additive_copy",
+      "sha256": "8c8236bd938bae51599b1b7271fa5d6996ba7b4aeb16a5e0f002a3bc577cf46d"
+    },
+    {
+      "path": "custom/condition/weapon_poison.c",
+      "origin": "additive_copy",
+      "sha256": "96585aff554e0d80b48f88aeeea1cbacd71270dda1d4f49cc1f5fbea13775536"
+    },
+    {
+      "path": "custom/legacy_npc/abbot_wu_nian.c",
+      "origin": "additive_copy",
+      "sha256": "bb5686435d6d44c673f8ef72157f848a3f654170efef16579446129c08b630eb"
+    },
+    {
+      "path": "custom/legacy_npc/ai_xiao_hu.c",
+      "origin": "additive_copy",
+      "sha256": "6a371dbba1af34ccad537bfc053191003058f7a647932291a4c9d8f32def7a50"
+    },
+    {
+      "path": "custom/legacy_npc/bai_jian_fei.c",
+      "origin": "additive_copy",
+      "sha256": "16e686a4d7df2bccd0926336e7942a645357bfb88af6f30638f06873fb12fc02"
+    },
+    {
+      "path": "custom/legacy_npc/bai_yu.c",
+      "origin": "additive_copy",
+      "sha256": "164e1bf5569a0a1408d8b5dcd00061978ab28147708465954c46afffcba300c9"
+    },
+    {
+      "path": "custom/legacy_npc/barbarian_chief.c",
+      "origin": "additive_copy",
+      "sha256": "96661b50c876f30336f64108f49171dfb60430c1ee931cda7cb5a7759e19839a"
+    },
+    {
+      "path": "custom/legacy_npc/black_hell_agent.c",
+      "origin": "additive_copy",
+      "sha256": "7c2620c66ae2255998016088dc0b9bc7587c9bb7430321aa32f100432a06a14a"
+    },
+    {
+      "path": "custom/legacy_npc/blade_man.c",
+      "origin": "additive_copy",
+      "sha256": "90ef73812faecdcd5a22e6cf78de73df9bf2cc8e0489702b4201909d1a5c583a"
+    },
+    {
+      "path": "custom/legacy_npc/captain_huang.c",
+      "origin": "additive_copy",
+      "sha256": "6f190053ee9547964d4bfe5e33fd7035265cf115216eae543925f951a3658f30"
+    },
+    {
+      "path": "custom/legacy_npc/chang_ba.c",
+      "origin": "additive_copy",
+      "sha256": "866bba6427f31584a3b65a4ca35730964a03ad6713fb816cd2455453ebb09423"
+    },
+    {
+      "path": "custom/legacy_npc/checker.c",
+      "origin": "additive_copy",
+      "sha256": "9804e9b4413a7515a469eb8c7e12a737011451f16827d71893c4953f2372cd68"
+    },
+    {
+      "path": "custom/legacy_npc/cheng_huai.c",
+      "origin": "additive_copy",
+      "sha256": "b2f97b2769600aa145cb3cc417e74921f7510e9b18a0c1f6c32170d9fc80700f"
+    },
+    {
+      "path": "custom/legacy_npc/chin_chao_tian.c",
+      "origin": "additive_copy",
+      "sha256": "5f608dcc340bda53f72d3a181a17e4d009b4ff25b2b27058800d630d2908fad1"
+    },
+    {
+      "path": "custom/legacy_npc/chong_bai_hu.c",
+      "origin": "additive_copy",
+      "sha256": "f3847c5849cf0fc5f75369b448aa322d84394e5d521383ce4a0610753067dc76"
+    },
+    {
+      "path": "custom/legacy_npc/chu_xang_when.c",
+      "origin": "additive_copy",
+      "sha256": "10f20ff75a7889a338b8fa6077cb45329c45975efc701bd89daa482b9a9d4a55"
+    },
+    {
+      "path": "custom/legacy_npc/dong_fang_gu_ming.c",
+      "origin": "additive_copy",
+      "sha256": "65bfa331c3d2b24c1d2c7e64e0a23cc4e780bac65c0e45c3fe4edc3a143f51a8"
+    },
+    {
+      "path": "custom/legacy_npc/du_feng_ling.c",
+      "origin": "additive_copy",
+      "sha256": "b6a9de6dbe6dba278903e2bc0632d8404ed57b5c2e4dd72827165d40c141eef7"
+    },
+    {
+      "path": "custom/legacy_npc/evil_spirit_of_storm.c",
+      "origin": "additive_copy",
+      "sha256": "a419bf13fbed24b142ac0719d6735e44b39908b8d6d66f0c031ebf2c522d537b"
+    },
+    {
+      "path": "custom/legacy_npc/ghost_lord.c",
+      "origin": "additive_copy",
+      "sha256": "43f4867a35ce777c5e49c0643b691bad36f22f8a8ff1b021ed1725a1d4ddf0a8"
+    },
+    {
+      "path": "custom/legacy_npc/ghost_yaksa.c",
+      "origin": "additive_copy",
+      "sha256": "7a72cb2e6970c4899b27420c29aca709478d279f6f51a780137c1bfc9211a1cc"
+    },
+    {
+      "path": "custom/legacy_npc/gong_sun_wei.c",
+      "origin": "additive_copy",
+      "sha256": "80bdee0bb527ac55eb13c97513270d0eb46625cb2dbdab9de4c1b8cc8a13f4fd"
+    },
+    {
+      "path": "custom/legacy_npc/gong_sun_zhi.c",
+      "origin": "additive_copy",
+      "sha256": "c8e7bc27d272ab968d0e8429c97e2782282670d8d0835b6dcd64953813488105"
+    },
+    {
+      "path": "custom/legacy_npc/guard.c",
+      "origin": "additive_copy",
+      "sha256": "9c879872622462ececdc7bcf6536ed0309da808d891d6b9943be24fec5a0407f"
+    },
+    {
+      "path": "custom/legacy_npc/guard_of_hell.c",
+      "origin": "additive_copy",
+      "sha256": "f939e6789f67ad95ee96ccd02e41148b3bd842f12660990e13f4eac7d8dca2c7"
+    },
+    {
+      "path": "custom/legacy_npc/han_jiang_hong.c",
+      "origin": "additive_copy",
+      "sha256": "9d9c624b1bd0a477d3a4aa2e2f7bcf8a6f0ddb9821a6db3f1bfb650bf5f5d65a"
+    },
+    {
+      "path": "custom/legacy_npc/han_long.c",
+      "origin": "additive_copy",
+      "sha256": "68f587ce1cf5b8131860fa33a5c845a9bf66f74ca834f885029c643b333c370c"
+    },
+    {
+      "path": "custom/legacy_npc/han_xiao.c",
+      "origin": "additive_copy",
+      "sha256": "6cdc3751bc1513eb8df793725be3f60d62b182617622ad88c11cad0067fddde4"
+    },
+    {
+      "path": "custom/legacy_npc/hell_soldier.c",
+      "origin": "additive_copy",
+      "sha256": "2b15f91b60eee393e807f12acd6508f6636ae70e3343c687979907fe1309c6d9"
+    },
+    {
+      "path": "custom/legacy_npc/hsu_yen_chih.c",
+      "origin": "additive_copy",
+      "sha256": "c98c8d465beea0a7be67a6914996f0f33af4dbf4e35ca9a02421e76d4ce29832"
+    },
+    {
+      "path": "custom/legacy_npc/hua_xing.c",
+      "origin": "additive_copy",
+      "sha256": "8310fafa8653fb0aefa321f792af2c6d3d240b2223c22e4526a2b30c95a36c34"
+    },
+    {
+      "path": "custom/legacy_npc/huang.c",
+      "origin": "additive_copy",
+      "sha256": "543c339d2844d717f5ce56e9e68047c65ca21d4bc1ec91af9207c6acb0ccc871"
+    },
+    {
+      "path": "custom/legacy_npc/huang_tien_ba.c",
+      "origin": "additive_copy",
+      "sha256": "b8b53be660e5dbac7e47ba7684590ac478e5d400d20147a4f77805aa96b54033"
+    },
+    {
+      "path": "custom/legacy_npc/island_master.c",
+      "origin": "additive_copy",
+      "sha256": "cf2c0f58d3c7e68ccfd8ce8a18cfb860e1500d76231f4500661463906f8a64d1"
+    },
+    {
+      "path": "custom/legacy_npc/jen_commando.c",
+      "origin": "additive_copy",
+      "sha256": "d269bc9d960d7a86d3a2e0120f4e781c6fca18135df1bc2a16a178ce39eeaa5f"
+    },
+    {
+      "path": "custom/legacy_npc/jia_qiu_yu.c",
+      "origin": "additive_copy",
+      "sha256": "9589fc14584c2a758c241b2df486ddca8074afefe40ed7702081d5926351f05d"
+    },
+    {
+      "path": "custom/legacy_npc/jing_yu_tao.c",
+      "origin": "additive_copy",
+      "sha256": "5f7e64018e488e70a3ccfdc50cba96716e41a771333796ea7c28fa945673a03c"
+    },
+    {
+      "path": "custom/legacy_npc/kao_fon.c",
+      "origin": "additive_copy",
+      "sha256": "249399499d49730cfeb37970506cce0046ede306065f6023aae306a7245d80d4"
+    },
+    {
+      "path": "custom/legacy_npc/ku_wu_wang.c",
+      "origin": "additive_copy",
+      "sha256": "59562c39841327eb673a01e8c08efa264050c4eb2e27a3afd6963b9d312bd87d"
+    },
+    {
+      "path": "custom/legacy_npc/lady.c",
+      "origin": "additive_copy",
+      "sha256": "a922338d4e62b3890ca4ce06d7c93f69cb66b3c3dde27314b243227d1824ce4d"
+    },
+    {
+      "path": "custom/legacy_npc/lay_ton.c",
+      "origin": "additive_copy",
+      "sha256": "10a2b8a73ac9eacab593740f2e0d6b483c11908404066c28f2157fefe3099e37"
+    },
+    {
+      "path": "custom/legacy_npc/lee_fong_chen.c",
+      "origin": "additive_copy",
+      "sha256": "8b813fca717b8faa71fe9c1c74bcc593832ad9c6ff57fc7dca1a598d4445dd62"
+    },
+    {
+      "path": "custom/legacy_npc/lee_fong_hwa.c",
+      "origin": "additive_copy",
+      "sha256": "74e669f1c61c454fecea811c642d1d4a66d7963b5687097e51d670752cd94fa6"
+    },
+    {
+      "path": "custom/legacy_npc/lee_hon_yun.c",
+      "origin": "additive_copy",
+      "sha256": "050405f666b088095bebf87153fe0a5d7abc3acc729748d1bb262f51e3782b0b"
+    },
+    {
+      "path": "custom/legacy_npc/leng_yin_yue.c",
+      "origin": "additive_copy",
+      "sha256": "7d4203457aed16f27478e392d4d1ecc35a59fe3d6a90f46bef0d02acba89ab29"
+    },
+    {
+      "path": "custom/legacy_npc/li_ru.c",
+      "origin": "additive_copy",
+      "sha256": "cc76067548512096f9252200d056cf2c3a13098315df13dc12ba6334e2847fe9"
+    },
+    {
+      "path": "custom/legacy_npc/lieutenant.c",
+      "origin": "additive_copy",
+      "sha256": "9218198ddb8470c188817711f6749ec8eb6ec41c07a6798f92c640a8f5d1b3e1"
+    },
+    {
+      "path": "custom/legacy_npc/lin_yu_lun.c",
+      "origin": "additive_copy",
+      "sha256": "0a08b1260fd512192ebe3afbdf4e134a6a1b3d2c5e7be5a88a528209a987382d"
+    },
+    {
+      "path": "custom/legacy_npc/ling_yue_heng.c",
+      "origin": "additive_copy",
+      "sha256": "b09276c25607ca4579201860c98c5098f2ec2ac0c4ade04e58cd9127c2a00981"
+    },
+    {
+      "path": "custom/legacy_npc/ling_yun_yu.c",
+      "origin": "additive_copy",
+      "sha256": "2ed01f0070c8b55ea03d9f4de0bc47f8be138f359d3fdebfc70fafa631c9f0be"
+    },
+    {
+      "path": "custom/legacy_npc/liu_feng.c",
+      "origin": "additive_copy",
+      "sha256": "c135ca475ccd13c153e776dbd17901d129e705cdbd21561a448e20892fb60768"
+    },
+    {
+      "path": "custom/legacy_npc/liu_kei.c",
+      "origin": "additive_copy",
+      "sha256": "3c964ae2235e6ad097e335015672dfa89e2e847fd387752cce65fe693adf5166"
+    },
+    {
+      "path": "custom/legacy_npc/liu_ko.c",
+      "origin": "additive_copy",
+      "sha256": "ab772afd88170a10a5fce415bc9b3a986f1f997b614cd987603080f3669678d6"
+    },
+    {
+      "path": "custom/legacy_npc/liu_shang_min.c",
+      "origin": "additive_copy",
+      "sha256": "59233db662565e12fba9922e4143bb10b89cd093f4200e59841927e9604fb7d9"
+    },
+    {
+      "path": "custom/legacy_npc/liuh_chuen_fon.c",
+      "origin": "additive_copy",
+      "sha256": "374855fde73b3680e00633beeb7ceea0a232a6a77a1bf9c5a62d876c58ac08d2"
+    },
+    {
+      "path": "custom/legacy_npc/liuh_hui_xin.c",
+      "origin": "additive_copy",
+      "sha256": "549cb63617c4782e31af3b12bcd9dcf25a8401f2e3ed657e153d7810a69703b1"
+    },
+    {
+      "path": "custom/legacy_npc/liuh_xin_yu.c",
+      "origin": "additive_copy",
+      "sha256": "db06038ecf884fbe644c397a041d8d87250689a1a373ec88b6b66e2d4a01d54f"
+    },
+    {
+      "path": "custom/legacy_npc/liuye_the_master_of_grimace.c",
+      "origin": "additive_copy",
+      "sha256": "a43b6e6eea15e2e759c71f9115b7e9867fdbe4722e47aaee55283542bf468a34"
+    },
+    {
+      "path": "custom/legacy_npc/lu_fei.c",
+      "origin": "additive_copy",
+      "sha256": "7d4d6bafa4aebae545c11e973f0365a7dbdd49b6b6fb732310c7221c3c93c673"
+    },
+    {
+      "path": "custom/legacy_npc/lu_jing.c",
+      "origin": "additive_copy",
+      "sha256": "a5d37a196fa0cb1dccdac432ae8197dc0a73836ee4586dee87970a9afbe0aadb"
+    },
+    {
+      "path": "custom/legacy_npc/ma_zhong_shen.c",
+      "origin": "additive_copy",
+      "sha256": "e05cf17841edf5c3daebbd2b01278e7fa2738ae986620cae0c36ee7f0076f65c"
+    },
+    {
+      "path": "custom/legacy_npc/madam_han.c",
+      "origin": "additive_copy",
+      "sha256": "dbba42e8bc8809429646f666d0d4d46503333f3763c7773f3c2d1c3053fcf641"
+    },
+    {
+      "path": "custom/legacy_npc/man_in_black.c",
+      "origin": "additive_copy",
+      "sha256": "8db54fe718b2c1f111133f95c3bd19ac7fd7632567f1d6f3e5b1b162694d913e"
+    },
+    {
+      "path": "custom/legacy_npc/may_lan_wu.c",
+      "origin": "additive_copy",
+      "sha256": "3d701c0d6d67499d07d791224a965286682f2b643560e1370a6f11c4ca093758"
+    },
+    {
+      "path": "custom/legacy_npc/meng_jiang_hong.c",
+      "origin": "additive_copy",
+      "sha256": "437182d788c3bc9c39b2c0e4c20a84d44124d3b8450641e29e2dcb647e065a80"
+    },
+    {
+      "path": "custom/legacy_npc/mie_xin.c",
+      "origin": "additive_copy",
+      "sha256": "6a197933690ca399ad8b8c5ff4db9f1ea0a7b10a5101c8258ee57316e6d7e625"
+    },
+    {
+      "path": "custom/legacy_npc/mie_yu.c",
+      "origin": "additive_copy",
+      "sha256": "cd85f5f7f21fdf365e9b6448132bb1c2da05aa3b9a35d0bea3686992e0276607"
+    },
+    {
+      "path": "custom/legacy_npc/ming_ling_zi.c",
+      "origin": "additive_copy",
+      "sha256": "d6755f5389e5cf29e1f07d0400913e7902e6b294baa6b11ae66ee1d6e69cf389"
+    },
+    {
+      "path": "custom/legacy_npc/mountain_god.c",
+      "origin": "additive_copy",
+      "sha256": "be35f2ace780dd816edaf86a2d14d67199d1acbf762564125b0a7b3ca07f9b43"
+    },
+    {
+      "path": "custom/legacy_npc/o_yan_zhi.c",
+      "origin": "additive_copy",
+      "sha256": "4b27d0191c783c32c9dcb4471b369ec4374bcc1a781fd3d6967a8fb2d85b1617"
+    },
+    {
+      "path": "custom/legacy_npc/old_taoist.c",
+      "origin": "additive_copy",
+      "sha256": "4f7c57d4ca5a14b9ff5905ae0c541fabbb9862326ff3f58849ab84256bedc3ad"
+    },
+    {
+      "path": "custom/legacy_npc/ou_yan_wu_ji.c",
+      "origin": "additive_copy",
+      "sha256": "45697ce0c2c9128f951a183bc5aea33bbc2d9deb7da06b49980e28a6076e5b91"
+    },
+    {
+      "path": "custom/legacy_npc/ou_yan_wu_ji_2.c",
+      "origin": "additive_copy",
+      "sha256": "01f5dceda28aab41f457b49b1bed5213214743393b18d4e482954385fb2dbecf"
+    },
+    {
+      "path": "custom/legacy_npc/phoxin.c",
+      "origin": "additive_copy",
+      "sha256": "5c2aea3599614fd1a6126719fba3097a7325448c87ad775ba7ca20fe0d61b9b5"
+    },
+    {
+      "path": "custom/legacy_npc/red_lady.c",
+      "origin": "additive_copy",
+      "sha256": "263d5910aabc15d1ec911d30db037a896c103aee09eaa9081ead06c9ba53304a"
+    },
+    {
+      "path": "custom/legacy_npc/ren_xiao_xiao.c",
+      "origin": "additive_copy",
+      "sha256": "9c88e8f037b18ac804f3db460c3d83c12f1ace50053c3978fe0364735795a6d0"
+    },
+    {
+      "path": "custom/legacy_npc/ro_yi.c",
+      "origin": "additive_copy",
+      "sha256": "a8ff48c6062cc465dcf706c993b3d03eb8dbd3cb754d7a79194af05e3a560b81"
+    },
+    {
+      "path": "custom/legacy_npc/rong_shi_guo.c",
+      "origin": "additive_copy",
+      "sha256": "cc7c587762d214fc2e297814293d0ed031b5a1ee053a119708bb1047e6c4b8ce"
+    },
+    {
+      "path": "custom/legacy_npc/senkun_tez.c",
+      "origin": "additive_copy",
+      "sha256": "d3e0f36a723cdeaa3eb4f66ee890351cb7c46395654a7c301c080829c5e1047f"
+    },
+    {
+      "path": "custom/legacy_npc/shao_chu_san.c",
+      "origin": "additive_copy",
+      "sha256": "68bc03e40ae0898607c1dd4b3b3e197bb56baf499ac6b39fd6f17e4f17c1030d"
+    },
+    {
+      "path": "custom/legacy_npc/si_ma_cheng_du.c",
+      "origin": "additive_copy",
+      "sha256": "96ad0c95053b3640e54f1b86bffabd446e67f0cf28b8737aee873eed0414970b"
+    },
+    {
+      "path": "custom/legacy_npc/si_ma_lei.c",
+      "origin": "additive_copy",
+      "sha256": "ab997f59de5c0175e76cbee82fac40227ad03f532dbfa8d438ce8d566af543b5"
+    },
+    {
+      "path": "custom/legacy_npc/si_ma_wei.c",
+      "origin": "additive_copy",
+      "sha256": "883a70989dd617568bcb97225e8f0435ba45cc1434dcc0d29bf0047dfe84dda3"
+    },
+    {
+      "path": "custom/legacy_npc/soldier_leader.c",
+      "origin": "additive_copy",
+      "sha256": "c7fad45f5d741fd85bca4fca36bf27272e59c6ba4b78b5f841ae14fa15a211d7"
+    },
+    {
+      "path": "custom/legacy_npc/stone_ghost.c",
+      "origin": "additive_copy",
+      "sha256": "078bcc8fa6d8dc1baf041b28716eaf3793961d64af4226aa4233613181fbe307"
+    },
+    {
+      "path": "custom/legacy_npc/su_xiao.c",
+      "origin": "additive_copy",
+      "sha256": "7504f9fbd0a9ac6f6888603d5e713937843f14ae5e8505304f8604a1e6ad3873"
+    },
+    {
+      "path": "custom/legacy_npc/sun_yi.c",
+      "origin": "additive_copy",
+      "sha256": "239eb7f3385a51b7dc0e0dcfa3e86126c1fec30edba0bdffe0f93f19df120d57"
+    },
+    {
+      "path": "custom/legacy_npc/taoist_leader.c",
+      "origin": "additive_copy",
+      "sha256": "30b003a902f0466a3d2138bd826f7b6aeb4f1303d263f457ccda7ac607ebe9ab"
+    },
+    {
+      "path": "custom/legacy_npc/taoist_master.c",
+      "origin": "additive_copy",
+      "sha256": "31dcf9820aca762d9445ab786a08894d82a6a54b026fb8095221b2dcf3ea71c2"
+    },
+    {
+      "path": "custom/legacy_npc/tian_long.c",
+      "origin": "additive_copy",
+      "sha256": "7f3660e951cc3936cac759a018559521429889155281b31ea1e5ec9cd7f8a9b4"
+    },
+    {
+      "path": "custom/legacy_npc/tian_yu.c",
+      "origin": "additive_copy",
+      "sha256": "19ee89ce74d73ac277f2c6d8d9c3cb3f045e06eb33684317adabbbaf20712be5"
+    },
+    {
+      "path": "custom/legacy_npc/tiger_trainer.c",
+      "origin": "additive_copy",
+      "sha256": "60370e0b396dba70c22a68a2c795390a15de33982ed3fc557baff6c5232cad6a"
+    },
+    {
+      "path": "custom/legacy_npc/wang_yean.c",
+      "origin": "additive_copy",
+      "sha256": "6f25e78b3f56583dcd478ff0e17fb52e51483fe046d90e635ddc859eb7c58623"
+    },
+    {
+      "path": "custom/legacy_npc/white_hell_agent.c",
+      "origin": "additive_copy",
+      "sha256": "338366238979ea1985f00e33bcd2cb49ce7a271235d37455bbdd328d0ff2e3b9"
+    },
+    {
+      "path": "custom/legacy_npc/wu_changuei.c",
+      "origin": "additive_copy",
+      "sha256": "07935aadb120cef905a8d57a1ef674fd482abe2f212bb1678a1285d0580870b5"
+    },
+    {
+      "path": "custom/legacy_npc/wu_dauton.c",
+      "origin": "additive_copy",
+      "sha256": "c3268af2c552f407a782f82e4ccb4bdbda0ed7a239283db12f6c3a539e01af96"
+    },
+    {
+      "path": "custom/legacy_npc/xiao_li_ying.c",
+      "origin": "additive_copy",
+      "sha256": "5c77bb92796c485d4918a4ff06ce8a846d1a9965a07713c2914c7bd4fd2569b1"
+    },
+    {
+      "path": "custom/legacy_npc/xiao_yin.c",
+      "origin": "additive_copy",
+      "sha256": "5c71c9102216ee2736065f2d081aa6b46c69ca39167a4b4d5d290b32ad415f29"
+    },
+    {
+      "path": "custom/legacy_npc/xie_qing_xiang.c",
+      "origin": "additive_copy",
+      "sha256": "c1cea4f364b9c073354f5ffe22d94ee2a0eeacf8de19ca70fbe4f4166da45d23"
+    },
+    {
+      "path": "custom/legacy_npc/xing_long.c",
+      "origin": "additive_copy",
+      "sha256": "877b0630086948db604154689c7dd4ce3c9de00f66a0fb089c989f8a484b659c"
+    },
+    {
+      "path": "custom/legacy_npc/xu_xiao_e.c",
+      "origin": "additive_copy",
+      "sha256": "a83d9d93b48e420adac6288a792f8738089935a6e6d2c13050839bd797d4c18f"
+    },
+    {
+      "path": "custom/legacy_npc/xun_yuan_jian_yue.c",
+      "origin": "additive_copy",
+      "sha256": "68861a7d3015997d6c2cec5ad95543d987eef94089085f461b21e11a87e79e85"
+    },
+    {
+      "path": "custom/legacy_npc/yaksa.c",
+      "origin": "additive_copy",
+      "sha256": "a52ed86a52e73a70994bf456fc0f89c79476049b732dd983f0e9af56f2c5fb19"
+    },
+    {
+      "path": "custom/legacy_npc/yaksa_king.c",
+      "origin": "additive_copy",
+      "sha256": "565c015f8a6b21ca5c055f6c3b9793575d0dd9e2d2f83927eef83882dbbffd56"
+    },
+    {
+      "path": "custom/legacy_npc/yan_kuang_phon.c",
+      "origin": "additive_copy",
+      "sha256": "f105d641e86e0ee030461ab4dfe6d6c49dd1c2ea96caf12ebecd5ef7580fc4bc"
+    },
+    {
+      "path": "custom/legacy_npc/yan_she.c",
+      "origin": "additive_copy",
+      "sha256": "82601bce4c1adf8921d05b05fda325380cc830b235894b61f45e417eeb8c26f5"
+    },
+    {
+      "path": "custom/legacy_npc/yen_hong.c",
+      "origin": "additive_copy",
+      "sha256": "219bda4a25215a9ad3f76f6f5996c1aa26577692751ba0ff95b92b312b17a236"
+    },
+    {
+      "path": "custom/legacy_npc/ying_xiao_tian.c",
+      "origin": "additive_copy",
+      "sha256": "2d12acc672122d42b125b22d3be8c2a4e4061337ac432f9ad1bb2a46726e3b70"
+    },
+    {
+      "path": "custom/legacy_npc/yu_lan_jian_yi.c",
+      "origin": "additive_copy",
+      "sha256": "208dbabe477de03f400ce8fbb0ecf83d3233ef24097264dbe6c8aa0614af2f3a"
+    },
+    {
+      "path": "custom/legacy_npc/yu_pingyin.c",
+      "origin": "additive_copy",
+      "sha256": "fb7b9d34df2335e76d8c2c3a6260944c7ed179148879a249d527497541335700"
+    },
+    {
+      "path": "custom/legacy_npc/yu_shao_me.c",
+      "origin": "additive_copy",
+      "sha256": "524004ac26de4a1eedf92c9eb22bd4d619833c1cf7c9a643a1b4ab0caebe59f1"
+    },
+    {
+      "path": "custom/legacy_npc/yu_tieshan.c",
+      "origin": "additive_copy",
+      "sha256": "477a6e3554771247fd64dd74213b1b314c9859fbc665dfad948d6e637212b139"
+    },
+    {
+      "path": "custom/legacy_npc/yu_wen.c",
+      "origin": "additive_copy",
+      "sha256": "bc9c892c9391c3c4b8ef131aa2ab5551cc686ef729fecbec5d339caa03af77fb"
+    },
+    {
+      "path": "custom/legacy_npc/zhang_jun_ren.c",
+      "origin": "additive_copy",
+      "sha256": "3468d26479094c09007fc347d320fa74afd241a6cae56af49ac10043a25ddef1"
+    },
+    {
+      "path": "custom/legacy_npc/zhang_xiao_qian.c",
+      "origin": "additive_copy",
+      "sha256": "12c40c2fd859a6cda0129a5ab40e95de28fcb3c01b131320e25d3af88dd0288f"
+    },
+    {
+      "path": "custom/legacy_npc/zhang_yun.c",
+      "origin": "additive_copy",
+      "sha256": "e46c99c89c7bdf2939088ba182935493f33cecc6c4c4a2f33c49458769b9e1b7"
+    },
+    {
+      "path": "custom/legacy_npc/zhao_hong_chun.c",
+      "origin": "additive_copy",
+      "sha256": "b89ba612affbfbeaeace4849fdb895f8a60e2b5022600f6978602d39dd9da24a"
+    },
+    {
+      "path": "custom/legacy_npc/zhao_xiao_jiu.c",
+      "origin": "additive_copy",
+      "sha256": "27c3c0ad2125a4cbfb602750f3234dd8f03ef65014c213fdd79cb9311189ea33"
+    },
+    {
+      "path": "custom/legacy_npc/zhong_chu.c",
+      "origin": "additive_copy",
+      "sha256": "cff7f3e950bc178fc18078abc1b286fe1bc3af4aa59506011689cb9a35741e0a"
+    },
+    {
+      "path": "custom/legacy_npc/zhong_hao.c",
+      "origin": "additive_copy",
+      "sha256": "380cff1dd19d57d530dc26c44b630a1edd87ee0b793c14a28418a70031f9b9a9"
+    },
+    {
+      "path": "custom/legacy_npc/zombie_warrior.c",
+      "origin": "additive_copy",
+      "sha256": "413a55cb19f9e74648e2f34d886fb50754dd8ffb47e6eba0a51a9294a81fdf93"
+    },
+    {
+      "path": "custom/legacy_npc/zuo_guo_yi.c",
+      "origin": "additive_copy",
+      "sha256": "89e3d6bfc9ae756d1a574863cbf1795c6479502be2c5f3bd8ea57d76d00f0689"
+    },
+    {
+      "path": "custom/test/obj/infinite_100_gold.c",
+      "origin": "additive_copy",
+      "sha256": "9a9e2ac26d5cc8f9fa81f0180c1b1adcae3468da48dbbca775ca57283c31c1dc"
+    },
+    {
+      "path": "custom/wizroom/w/windstory/npc/gammer.c",
+      "origin": "additive_copy",
+      "sha256": "012dc359cfab07cdced862fced1131b3d48adb09eabd16ab905bfcd9dfa93148"
+    },
+    {
+      "path": "custom/wizroom/w/windstory/room/dragon_inn.c",
+      "origin": "additive_copy",
+      "sha256": "d0f6e0f65e9d3194948d367ed9a153f66ccabedb53f8bc863b18d54449a9d3ed"
+    },
+    {
+      "path": "custom/wizroom/w/windstory/room/home.c",
+      "origin": "additive_copy",
+      "sha256": "168a21dec950aa096aa88ad73d181d4befad5ad4eb3b147178c6e64952479eaf"
+    },
+    {
+      "path": "custom/wizroom/w/windstory/room/inn_w.c",
+      "origin": "additive_copy",
+      "sha256": "317192b992978243085b1e7adebe844fbf5871ab43846fad5925d2afaa42cf7a"
+    },
+    {
+      "path": "d/snow/bazar.c",
+      "origin": "source_replaced",
+      "sha256": "131ed28bf316ae8f55dd4ed19f04b39b7dab29811ada82ab32dd6fe6ed52aa3b"
+    },
+    {
+      "path": "d/snow/bug_room.c",
+      "origin": "source_replaced",
+      "sha256": "e7e67a2b8e80d89c79fa81ab836e3e410e46a63c7728839956a39cc7f35b5ce2"
+    },
+    {
+      "path": "d/snow/court.c",
+      "origin": "source_replaced",
+      "sha256": "50b04c2e123f6cb8a82a2090e81428411d287c2f21cc57dde3ab39928c81c7ae"
+    },
+    {
+      "path": "d/snow/ebridge.c",
+      "origin": "source_replaced",
+      "sha256": "05c1e5352a3c2f536f90a82e34363823363edb4ccbe4c12a217b44e41e5ad719"
+    },
+    {
+      "path": "d/snow/epath.c",
+      "origin": "source_replaced",
+      "sha256": "e692eec776a08ef9ba6abc3353203ddc722525788b633d75b15fc9eaf88997ff"
+    },
+    {
+      "path": "d/snow/fireplace.c",
+      "origin": "source_replaced",
+      "sha256": "e75a477c704f404d7cc63e99933b51135dbf88aeb7440a060b2279aac24fd0e0"
+    },
+    {
+      "path": "d/snow/herb_shop.c",
+      "origin": "source_replaced",
+      "sha256": "82dbd759852ed49105b1ac5a87fd0f495d62bc2bae0444f44bd69d0c5b0c46e2"
+    },
+    {
+      "path": "d/snow/inn_hall.c",
+      "origin": "source_replaced",
+      "sha256": "bd7f9a4789b04175223df84f1491049558ee5f0f25711f3e4ab1b5d0a5c53e40"
+    },
+    {
+      "path": "d/snow/inn_kitchen.c",
+      "origin": "source_replaced",
+      "sha256": "6c3916a541a7d9b970221cddc01ca4ff0312b5410e4b57933cfd6ea685fc4dfd"
+    },
+    {
+      "path": "d/snow/inn_staff_room.c",
+      "origin": "source_replaced",
+      "sha256": "d7030308b400eac864d306730643184b7facd0364ab4e0379df1149b69a3cc59"
+    },
+    {
+      "path": "d/snow/kitchen.c",
+      "origin": "source_replaced",
+      "sha256": "8619fb5d9e707acf25c61d8cc95e84f7772b2b9f11ae2edcf140c5d8c0bd7354"
+    },
+    {
+      "path": "d/snow/lane1.c",
+      "origin": "source_replaced",
+      "sha256": "55d2015c235cddd458f3f43dd9a5674587f3a7f311dde7bb7764f68e755356e3"
+    },
+    {
+      "path": "d/snow/lane2.c",
+      "origin": "source_replaced",
+      "sha256": "8dbd6a6b2873e0f97350a754284a16f633912272e7d5e39e66dfcb173a4d6fbc"
+    },
+    {
+      "path": "d/snow/mill.c",
+      "origin": "source_replaced",
+      "sha256": "c365c4264a2bfc51ca777dc2598cf54af199d4ec62e739b268864f083f976da9"
+    },
+    {
+      "path": "d/snow/ngate.c",
+      "origin": "source_replaced",
+      "sha256": "5903df295080290f6533725cbe4c92d81a373ee325d8474ef561a4a448493ae8"
+    },
+    {
+      "path": "d/snow/npath1.c",
+      "origin": "source_replaced",
+      "sha256": "bfe9d255ab93fb12c912f6657db41f81c8f12d007eaaf1e17d6ff132ab814d7a"
+    },
+    {
+      "path": "d/snow/npath2.c",
+      "origin": "source_replaced",
+      "sha256": "24c2c88a61dcabe28567611280f55e5af60ea0d43a8bb637099dba4823e189e7"
+    },
+    {
+      "path": "d/snow/npath3.c",
+      "origin": "source_replaced",
+      "sha256": "f4d4191842443bce7ea5e772c8e57e50543905dfd14b87906fce87055e7fcaf5"
+    },
+    {
+      "path": "d/snow/npc/alchemist.c",
+      "origin": "source_replaced",
+      "sha256": "04baa58ba80ca1342534851fbb464510bee69407166d8cebbf0d8008f018aebb"
+    },
+    {
+      "path": "d/snow/npc/child.c",
+      "origin": "source_replaced",
+      "sha256": "837392461a900ebb06eee8425244270c6034f38f2e41cb10fa7beb5698f2d73d"
+    },
+    {
+      "path": "d/snow/npc/child1.c",
+      "origin": "source_replaced",
+      "sha256": "c32bab1dacb1e5fea9d482a1dbe786ba4dcd50ebe0181999daa4860cadc375b9"
+    },
+    {
+      "path": "d/snow/npc/child2.c",
+      "origin": "source_replaced",
+      "sha256": "e4102ea1a692210576125a46e722adaec751a2e6d9fa3572c0b4b2da8fea79dc"
+    },
+    {
+      "path": "d/snow/npc/child3.c",
+      "origin": "source_replaced",
+      "sha256": "c6479e7188447a40c807870f24efb6c1c8f17ebbb4f61585301a508e84b35544"
+    },
+    {
+      "path": "d/snow/npc/child4.c",
+      "origin": "source_replaced",
+      "sha256": "963d9fa3e76c4df27469b7544530f44ebe8fd5ee37fafa4774d46de15628cff0"
+    },
+    {
+      "path": "d/snow/npc/gammer.c",
+      "origin": "source_replaced",
+      "sha256": "86f897701aa237f0e93a98eb9b5f302b58436b2e3c3c60667a11c2089a7a2dc4"
+    },
+    {
+      "path": "d/snow/npc/garrison.c",
+      "origin": "source_replaced",
+      "sha256": "b36d879737346792f41182fdc27bfcefe257d31716a33d6711805b4bb63ed614"
+    },
+    {
+      "path": "d/snow/npc/girl.c",
+      "origin": "source_replaced",
+      "sha256": "508de843998ac11b4006c5f0c8e096cff226807cb4e6c4bc4b684013362fad5a"
+    },
+    {
+      "path": "d/snow/npc/guard.c",
+      "origin": "source_replaced",
+      "sha256": "8e982d622dfa167420797c28843f1c4caa483a66d888c3d749df3c2108635dac"
+    },
+    {
+      "path": "d/snow/npc/herbalist.c",
+      "origin": "source_replaced",
+      "sha256": "a4653148ef53ea73151c1f2f868899155d5633ad41020417c5c52fda39ab9ec6"
+    },
+    {
+      "path": "d/snow/npc/innkeeper.c",
+      "origin": "source_replaced",
+      "sha256": "ea0c3580f0a8a7a49f54da08c9bf812496ba0e5201c0eb7c856a97277de114d9"
+    },
+    {
+      "path": "d/snow/npc/junkman.c",
+      "origin": "source_replaced",
+      "sha256": "154c04dfacce65ea1b5562789208ee3d5abab7a998af318acd74983ca59d8c47"
+    },
+    {
+      "path": "d/snow/npc/lieutenant.c",
+      "origin": "source_replaced",
+      "sha256": "6ce5c39eefa1047671a120a130a0dc726246c1a034c38b93537a2a67fa8342b5"
+    },
+    {
+      "path": "d/snow/npc/miller.c",
+      "origin": "source_replaced",
+      "sha256": "235dcf4dec93a388443124d05094bc9659bff52c866540a39411f696256eefc9"
+    },
+    {
+      "path": "d/snow/npc/obj/wagon.c",
+      "origin": "source_replaced",
+      "sha256": "1a0510c35e00e94d4e3d09fb4fe16a62057753d99f15570b05c4897c3824408e"
+    },
+    {
+      "path": "d/snow/npc/oldman.c",
+      "origin": "source_replaced",
+      "sha256": "b794f098a74b3d7a9a530c766181cfacabb20393ed1a366ca197f6e31c37345a"
+    },
+    {
+      "path": "d/snow/npc/patrol.c",
+      "origin": "source_replaced",
+      "sha256": "2c3cae58e42b8f27e6abf2f557b9638f47f5e8954692ea1077d282fda9a19eb3"
+    },
+    {
+      "path": "d/snow/npc/smith.c",
+      "origin": "source_replaced",
+      "sha256": "2b0fabe8884a285b5f4cc61ae0f22bb8135d54b865f91545c68c7c40ade371f6"
+    },
+    {
+      "path": "d/snow/npc/woman.c",
+      "origin": "source_replaced",
+      "sha256": "8be5e0dc6226dbbb610c104308e422f5def5a2adbfb9bfc148db9c709a9e6de9"
+    },
+    {
+      "path": "d/snow/npc/yu.c",
+      "origin": "source_replaced",
+      "sha256": "6ea6b1476e6936d966c6b7c8fbe3a755385433039be6ef669fa530b20a03f18c"
+    },
+    {
+      "path": "d/snow/nstreet1.c",
+      "origin": "source_replaced",
+      "sha256": "cf44fae36af1533312b7230f83f8961e0b1fa609ef2be6eeaa92cc74362c6f54"
+    },
+    {
+      "path": "d/snow/nstreet2.c",
+      "origin": "source_replaced",
+      "sha256": "76f2fe0a47e11961bc47b30ee8e4b7370fa37264d7c55884dff86aead9385013"
+    },
+    {
+      "path": "d/snow/post_office.c",
+      "origin": "source_replaced",
+      "sha256": "cea1a87b84f68e40af037e1ebed4aded876e921111f8f84ed52a69c2c5976fd2"
+    },
+    {
+      "path": "d/snow/river1.c",
+      "origin": "source_replaced",
+      "sha256": "43fcb153265afe061cc1b24b3717dee26324337f613fb18a843882a274df27de"
+    },
+    {
+      "path": "d/snow/riverbank.c",
+      "origin": "source_replaced",
+      "sha256": "f4d9a1a543bcc59249a5f1ee2c8518d15e0134a525f2d2512b3d60feabad4b23"
+    },
+    {
+      "path": "d/snow/ruin1.c",
+      "origin": "source_replaced",
+      "sha256": "7bc1fdc6e98dfa6005698a373d5940b9ca07da0cc1bf9c78d77fb168862fb606"
+    },
+    {
+      "path": "d/snow/ruin2.c",
+      "origin": "source_replaced",
+      "sha256": "bc2a652f6fa6d9c8e1423160a22837c757dc5014e147fd9371dc942c3f02c8ca"
+    },
+    {
+      "path": "d/snow/school.c",
+      "origin": "source_replaced",
+      "sha256": "b362accf876ac32a394f21cf479885f9da14fb4a5835bac62d919ca62ba25342"
+    },
+    {
+      "path": "d/snow/skill/dragon_force.c",
+      "origin": "merged",
+      "sha256": "8ddbfaaf0280608374a1346c6335650ef4febbac294fa20e95120fc3ad6449c6"
+    },
+    {
+      "path": "d/snow/small_temple.c",
+      "origin": "source_replaced",
+      "sha256": "1c919078711f351ae21215e32c0e197634e5242a44f586d3e9f68d3bd3a46bd2"
+    },
+    {
+      "path": "d/snow/smithy.c",
+      "origin": "source_replaced",
+      "sha256": "6b14b8cca5a0df7589569b4c3adee92512d88d35be516ac2f1499a766eec0a38"
+    },
+    {
+      "path": "d/snow/square.c",
+      "origin": "source_replaced",
+      "sha256": "a062895743d341d8ddb35ba9cacce8e08f84009cf83150294dac09e33dc3324d"
+    },
+    {
+      "path": "d/snow/square_e.c",
+      "origin": "source_replaced",
+      "sha256": "41b32bb22c4dad860dc593e448c87d314dc002971496b0b5f9576f3f95bddce5"
+    },
+    {
+      "path": "d/snow/square_n.c",
+      "origin": "source_replaced",
+      "sha256": "2710e8ea0bb2536865d1ee62ded0fa5bffca5d3e74fbfab1f6c3772c9cbed205"
+    },
+    {
+      "path": "d/snow/square_s.c",
+      "origin": "source_replaced",
+      "sha256": "6f135fe09185cab7f7f8038d39f045ccd48f85f489b1eab6be91040ffa4d2379"
+    },
+    {
+      "path": "d/snow/square_sw.c",
+      "origin": "source_replaced",
+      "sha256": "af17e49d846a49622c9e3449eaed3d794672c5db61d22b9d99973a54fa0455b4"
+    },
+    {
+      "path": "d/snow/sstreet1.c",
+      "origin": "source_replaced",
+      "sha256": "bcd48d928b26f05e47583b123918c699ab477aa3b01039cdc133bad75f2e74c7"
+    },
+    {
+      "path": "d/snow/store.c",
+      "origin": "source_replaced",
+      "sha256": "dffa0d435b1184147423de8f7c17e912e7edb4fe72979e1f23de3455c4f926cb"
+    },
+    {
+      "path": "d/snow/tree.c",
+      "origin": "source_replaced",
+      "sha256": "74e559a66231816cd81476a620e8737a63685498117827ed43e7a8bfe086e7b9"
+    },
+    {
+      "path": "d/snow/wgate.c",
+      "origin": "source_replaced",
+      "sha256": "9690854c428990e0b4f8b19b26539908e99ef2f4a0baa2c17f8afa19b8422f72"
+    },
+    {
+      "path": "d/snow/wstreet1.c",
+      "origin": "source_replaced",
+      "sha256": "ba9b6904d759137439c84f01a7c3646ed63c590e7a653e10bc4021fc9c42d73f"
+    },
+    {
+      "path": "d/snow/wstreet2.c",
+      "origin": "source_replaced",
+      "sha256": "be3d3e9f35366e0c0c4145872411b20f68e8f77abaa853daf4714bf832c5ff37"
+    },
+    {
+      "path": "d/snow/wstreet3.c",
+      "origin": "source_replaced",
+      "sha256": "6446254d5619eeeacec4e625781d04b2c9f5151fd2ee61e45b4c5ba2daa174a0"
+    },
+    {
+      "path": "daemon/board/celestial_board.c",
+      "origin": "additive_copy",
+      "sha256": "87bfdf7fe0952e7a8c52c1ba605cb470be94574aa6073c1198d3b7fcbe28cc0d"
+    },
+    {
+      "path": "daemon/condition/blue_venom.c",
+      "origin": "additive_copy",
+      "sha256": "424d4491cc11b080608a59893b7ec347b48348e0e6aecbcf862fdfb827261669"
+    },
+    {
+      "path": "daemon/condition/hundred_poison.c",
+      "origin": "additive_copy",
+      "sha256": "73cc027676556cf9b23414bbb2d739917f1b1f62367d21f1b226f413335a6de7"
+    },
+    {
+      "path": "daemon/condition/maggot_poison.c",
+      "origin": "additive_copy",
+      "sha256": "3eb3d57eea399865b0ed9c1627bcab90163ecdaee738e3b0be5328b1007f505e"
+    },
+    {
+      "path": "daemon/condition/phoenix_poison.c",
+      "origin": "additive_copy",
+      "sha256": "803c764d15580cc849d0c1d3a65866a2ae0a0e43efa5e0020d6800fbea766e62"
+    },
+    {
+      "path": "daemon/condition/rain_blessing.c",
+      "origin": "additive_copy",
+      "sha256": "839713fae09b4f9bd9afa6fe373bb24f2a5b98fadd4830c234e68983ca36abc5"
+    },
+    {
+      "path": "daemon/condition/rain_poison.c",
+      "origin": "additive_copy",
+      "sha256": "520537fdb91eed2f2e2122c2a9b43ba552695e1c43aa135825dcc0f5e1d42741"
+    },
+    {
+      "path": "daemon/condition/skull_heart_poison.c",
+      "origin": "additive_copy",
+      "sha256": "de076ce41b2f88f0e716942c0671d2be474c28df6b26f44a3597040f3f78294e"
+    },
+    {
+      "path": "daemon/condition/wraith_poison.c",
+      "origin": "additive_copy",
+      "sha256": "2c69b404a8fada3bea9115d7b1e9ddacf24604ba5a12fefa053da744999e8ca9"
+    },
+    {
+      "path": "daemon/misc/npc_skill.c",
+      "origin": "additive_copy",
+      "sha256": "c377ed84a0f9b2086e9e4ad2d81862463bd7d6683861300d279f9bf0e49d0248"
+    },
+    {
+      "path": "daemon/race/beast.c",
+      "origin": "additive_copy",
+      "sha256": "da949d551004d390185d2ac60d0d0fb982083addc5c4cf7ea4bbba814e8c12f4"
+    },
+    {
+      "path": "daemon/race/human.c",
+      "origin": "merged",
+      "sha256": "7d91ab34565a4b6bc1bbc1b5f59129659445bf5ec5cc1e9048c8d0d5e78e11ef"
+    },
+    {
+      "path": "daemon/skill/absorption.c",
+      "origin": "additive_copy",
+      "sha256": "78422c1464f353b8910b35d62c7cb4d3423a38b1ff1c32525934d4b1d0a1f33a"
+    },
+    {
+      "path": "daemon/skill/berserk.c",
+      "origin": "additive_copy",
+      "sha256": "3882ca3b504768a796eab52d9cdd43aef9dcaa4253c570761862cfbb695d9a0d"
+    },
+    {
+      "path": "daemon/skill/heavy_parry.c",
+      "origin": "additive_copy",
+      "sha256": "a13c4cb5977ff09443e0618fd306af64a2fc9c95e028977e01f349a89d683eda"
+    },
+    {
+      "path": "daemon/skill/kee_anatomy.c",
+      "origin": "additive_copy",
+      "sha256": "11f7f5f7b9dfef16852012c9417bd70cabaef298e919feb644cdc433a1cb1f1c"
+    },
+    {
+      "path": "daemon/skill/ksanmando.c",
+      "origin": "additive_copy",
+      "sha256": "1f55e3b3e95d1bfceca8294ef10360cded12e06f24a155c7e5db5b7a574a2dd4"
+    },
+    {
+      "path": "daemon/skill/powerblow.c",
+      "origin": "additive_copy",
+      "sha256": "9313b96dc64ad37a5bad76e230301607c973afe16e02b094e872f5f667341d7d"
+    },
+    {
+      "path": "daemon/skill/tiger_force.c",
+      "origin": "additive_copy",
+      "sha256": "2f7f72191a902b41818528a0859090e76f434fbe167b7cd4cf244698a1dd903f"
+    },
+    {
+      "path": "docs/help/character.txt",
+      "origin": "additive_copy",
+      "sha256": "49fcb49ab004579fe64b7960ea7f61c34a4c663544186d96553935f5fbd268a7"
+    },
+    {
+      "path": "docs/help/combat.txt",
+      "origin": "additive_copy",
+      "sha256": "87901aa7e2819f0a4cd99035dd1cc878d472b82940fbd3aa5255f70da7a695ad"
+    },
+    {
+      "path": "docs/help/combat_cmds.txt",
+      "origin": "additive_copy",
+      "sha256": "e9e29e1b62b3818f03b8451a30f52c86b260b1be5b71fea544ea7de08502ce34"
+    },
+    {
+      "path": "docs/help/commands.txt",
+      "origin": "additive_copy",
+      "sha256": "6a632cb5b1aad13fe1ae0598865916994eab79fff5e01185675f217ca3a44676"
+    },
+    {
+      "path": "docs/help/communication.txt",
+      "origin": "additive_copy",
+      "sha256": "336f82a2992b022310ecde9b7548e9186fb2150a409ba819df96eba613208244"
+    },
+    {
+      "path": "docs/help/death.txt",
+      "origin": "additive_copy",
+      "sha256": "58f6052ac114031dbe8497ba27c296f204d7e2f256798b5ccfa3100458883248"
+    },
+    {
+      "path": "docs/help/home_help.txt",
+      "origin": "additive_copy",
+      "sha256": "52d410391deea7b4cc11655a407ac778b74e60d611dc50cb9ce720e1374e0543"
+    },
+    {
+      "path": "docs/help/inn.txt",
+      "origin": "additive_copy",
+      "sha256": "512a9ffb40d2d50c3ebc9da4740a037d777672ddf2288171a83beaaa6c757b5b"
+    },
+    {
+      "path": "docs/help/items.txt",
+      "origin": "additive_copy",
+      "sha256": "4a9961e8cb4293c30601c263315bb4e74f1db4428f31e7ff7fc1ba0667cc2ccf"
+    },
+    {
+      "path": "docs/help/master.txt",
+      "origin": "additive_copy",
+      "sha256": "ec7664011b8b2badb78e0d2caff26da1ce2a1016924df52e5ca6be354a8c9186"
+    },
+    {
+      "path": "docs/help/movement.txt",
+      "origin": "additive_copy",
+      "sha256": "b51df868672782d653b5d0658b68705f97d1e3b320062c62e072134c854043dc"
+    },
+    {
+      "path": "docs/help/newbie.txt",
+      "origin": "additive_copy",
+      "sha256": "c1fc8d06a900f374f77d11a732e24f8e614fece6f834d372d9a057c3c5b0a0d6"
+    },
+    {
+      "path": "docs/help/recall.txt",
+      "origin": "additive_copy",
+      "sha256": "86a9442a525883778126df1a5ecf54ce84c874d5df7300163324186c710f809a"
+    },
+    {
+      "path": "docs/help/rules.txt",
+      "origin": "additive_copy",
+      "sha256": "56e7dc04dbaa1b733eff8cb91986835707ee39eac8d04f902c8573fc87df83a5"
+    },
+    {
+      "path": "docs/help/skill_help.txt",
+      "origin": "additive_copy",
+      "sha256": "b26ed123fb9f482b15634707c6a4f776432158d83015a00bff9826ba2121c010"
+    },
+    {
+      "path": "docs/help/snowkeep.txt",
+      "origin": "additive_copy",
+      "sha256": "3a4ae06e9ff4bb42de80726a7bff6ddc9d1ee4ef237d6a7927e5e2a5f08b2610"
+    },
+    {
+      "path": "docs/help/tiger.txt",
+      "origin": "additive_copy",
+      "sha256": "dae1038bb6b613fddafa0cf1f49d5192bef6c01a6c7d4a995b0d4ce12d6bb7bc"
+    },
+    {
+      "path": "docs/help/topics.txt",
+      "origin": "source_replaced",
+      "sha256": "b6752927cebb347afe8fb546206296c54b536249bf44a2fb4f7c32bf376d1d9f"
+    },
+    {
+      "path": "docs/help/web.txt",
+      "origin": "additive_copy",
+      "sha256": "423d46209111eed3abff2db8453ccd420d533381b48f3cb88bb6d8afbad7a508"
+    },
+    {
+      "path": "docs/help/wizard_help.txt",
+      "origin": "additive_copy",
+      "sha256": "e93640e6d03dadaab45debba7f93f60f56872a66c70375ddd83299cd1b851acc"
+    },
+    {
+      "path": "docs/help/world.txt",
+      "origin": "additive_copy",
+      "sha256": "142d22b84e7618bb4c962268dc3cca6b666cc6c6eb6c7b51f732a885a31445b1"
+    },
+    {
+      "path": "docs/help/zmud.txt",
+      "origin": "additive_copy",
+      "sha256": "207b0581db6d64d9ed1210ac39b2af275143b18f4c6aa71d3777176e36c856a1"
+    },
+    {
+      "path": "feature/char/attack.c",
+      "origin": "source_replaced",
+      "sha256": "3aeed7b176c64dd8d2d87c5d4a24bec64172ba720415013b1e7ad2f9e8c10b0b"
+    },
+    {
+      "path": "feature/char/finance.c",
+      "origin": "source_replaced",
+      "sha256": "390f96dfa9aff540a07656559909c8330e4b682d11477182f7e042fcc7b26182"
+    },
+    {
+      "path": "feature/save.c",
+      "origin": "source_replaced",
+      "sha256": "6fc49f6651ce867fc435e90603566e74461ea01a491a9253fe44dd829a055f64"
+    },
+    {
+      "path": "feature/statistic.c",
+      "origin": "source_replaced",
+      "sha256": "f5b068f457581ada0a7a17ebbff56bb61858f169ea403eef60cff7fa5ddac42b"
+    },
+    {
+      "path": "feature/study.c",
+      "origin": "source_replaced",
+      "sha256": "208b0e140c838db798b2884e6db193bfd251af2667f6c1c2daff0b332d5c2130"
+    },
+    {
+      "path": "feature/user/autoload.c",
+      "origin": "source_replaced",
+      "sha256": "7b8bacb27c3afd066813627f37dea306690c995e4e45f3b604da9a4a100a82ad"
+    },
+    {
+      "path": "feature/user/edit.c",
+      "origin": "source_replaced",
+      "sha256": "e31ae953371e6207b365ae0579cfdee1a827eeb5f76ca611619c0cff8ab0e449"
+    },
+    {
+      "path": "feature/user/input.c",
+      "origin": "source_replaced",
+      "sha256": "54c6a66477d4eb8bf1a3bcbfc577791112ecd689bd5a2858f8688e2ffb1e4b9b"
+    },
+    {
+      "path": "feature/user/more.c",
+      "origin": "source_replaced",
+      "sha256": "96ee850a728170847a362281fd420338d55fac33eed3f91a2c3b6b2754db7df1"
+    },
+    {
+      "path": "include/command.h",
+      "origin": "source_replaced",
+      "sha256": "325a92dcf0c445b09b50bae743a44a31e8c12b053d908d97047fc3ae1e8a555b"
+    },
+    {
+      "path": "include/globals.h",
+      "origin": "source_replaced",
+      "sha256": "aadd1b6dfd0c83c5ceb37f7113ab5be30570904d6828ce8ddcf7e8cd3b7c4463"
+    },
+    {
+      "path": "include/help.h",
+      "origin": "source_replaced",
+      "sha256": "80749f339db92059bd58cce942eb1a3af4fae1dd4556d7fc494d58f1e396b5af"
+    },
+    {
+      "path": "include/skill.h",
+      "origin": "source_replaced",
+      "sha256": "d6925a4c9a35ac3fb79e5775f64079141482284b08d5f0611fda38311fcce4f6"
+    },
+    {
+      "path": "obj/area/obj/cloth.c",
+      "origin": "source_replaced",
+      "sha256": "ddbc99d8699d896c30c2826e3a6e820c0b2f281ae9324e874da1b38442c4284c"
+    },
+    {
+      "path": "obj/bankbond.c",
+      "origin": "source_replaced",
+      "sha256": "0993d3aa6137442b520b9e41af2119276b8373555cb49781d002108fd516558e"
+    },
+    {
+      "path": "obj/books/book_of_afterlife.c",
+      "origin": "additive_copy",
+      "sha256": "8ce1cb70bfe34fb1efa2a09bbf79358dd6e94a1dde2e36fce3930d49f9466979"
+    },
+    {
+      "path": "obj/books/book_of_almsdeed_story.c",
+      "origin": "additive_copy",
+      "sha256": "439a4ae7e31c1d227337364a30d2f27cb03267391c6bd4e7a29e785e73211339"
+    },
+    {
+      "path": "obj/books/book_of_anatomy.c",
+      "origin": "additive_copy",
+      "sha256": "c1a5f7f206ab51df8c38dac67eaeea4f709a95e26be20a54649b4e581ac0333b"
+    },
+    {
+      "path": "obj/books/book_of_assault.c",
+      "origin": "additive_copy",
+      "sha256": "abc60d642aba9eb63b4f6565b8e0d1240bed97a9435fcceb130fff2731ddf99b"
+    },
+    {
+      "path": "obj/books/book_of_buddha.c",
+      "origin": "additive_copy",
+      "sha256": "5a5b394ac37a569ec27891bf7ef3b384dc82baac65885cd03a90066abd971f23"
+    },
+    {
+      "path": "obj/books/book_of_eight_meridians.c",
+      "origin": "additive_copy",
+      "sha256": "089108c65ab0689f41a844a51b74d5ff7d6b5e3ea9ee555341b538f2605b88e5"
+    },
+    {
+      "path": "obj/books/book_of_five_meridians.c",
+      "origin": "additive_copy",
+      "sha256": "f6cfd4a6ac00a703363d5dba552a72fe0532b469d72b0a1a54f6178541039889"
+    },
+    {
+      "path": "obj/books/book_of_herbal_meridians.c",
+      "origin": "additive_copy",
+      "sha256": "8bd703aba4878e22c87dfaaf532aa07a9d3601fb3bcfdbad42a92dcfcebe5789"
+    },
+    {
+      "path": "obj/books/book_of_mercy.c",
+      "origin": "additive_copy",
+      "sha256": "5b4b9781a5d80f9d55a2e2023418306155297f1a2a528d30f7d63283bfe7f459"
+    },
+    {
+      "path": "obj/books/book_of_wordless_sutra.c",
+      "origin": "additive_copy",
+      "sha256": "37dd4f0dba7e2aeb8fc3e208efb279831517189c1fc9d69d80a7b704917c5038"
+    },
+    {
+      "path": "obj/money/coin.c",
+      "origin": "source_replaced",
+      "sha256": "9163dae241ec2c2c9b6ddb0d03b186b9148982d081a8e3cf9a1c91e539cd1544"
+    },
+    {
+      "path": "obj/money/gold.c",
+      "origin": "source_replaced",
+      "sha256": "50a6bbf45fd7f2f1f4998d4c7ce00bd2a96fcb766b4a93a8e2f87d1b33c2e1ae"
+    },
+    {
+      "path": "obj/money/silver.c",
+      "origin": "source_replaced",
+      "sha256": "39fcf886f245702744b5aed749e881ad6851cfe5aad3e0ff0910ca95dda96385"
+    },
+    {
+      "path": "obj/user.c",
+      "origin": "merged",
+      "sha256": "bcc158fd27e3a25a5cb2e2b5c754ef5e7c915c08017f29643622d3fc50fdeffb"
+    },
+    {
+      "path": "std/char.c",
+      "origin": "source_replaced",
+      "sha256": "cf4ace7e359cc78c02336f9bdbee23d7a41b913bae454769789d78fb97522955"
+    },
+    {
+      "path": "std/race/humanoid.c",
+      "origin": "merged",
+      "sha256": "ff41543a43cd1e1946b069ab9be972e089a1296a5d33622a4cea6b23ad2d0c1b"
+    },
+    {
+      "path": "std/room.c",
+      "origin": "source_replaced",
+      "sha256": "9a96ab8e7b2c4e4c92d5ea1f2ed0335e3f7aae6a8c66439eee8bb49f34871ada"
+    },
+    {
+      "path": "std/room/bank.c",
+      "origin": "source_replaced",
+      "sha256": "245dcf5e2ed4ae1ebb2d02353ffa6418c52117c32765b501082f781f59d346c9"
+    }
+  ],
+  "excluded_conflict_count": 379
+}
