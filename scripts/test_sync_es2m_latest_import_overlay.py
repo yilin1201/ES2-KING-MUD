@@ -62,6 +62,28 @@ class PersistentOverlayTests(unittest.TestCase):
             self.assertEqual((overlay / "zone.c").read_text(encoding="utf-8"), "merged-safe\n")
             self.run_cli("apply", "--overlay-root", overlay, "--runtime", runtime)
 
+    def test_persist_allows_safe_additive_extension(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            runtime, additive, merge = self.fixture(root)
+            export = root / "export"
+            overlay = root / "repo" / "es2m_snapshot/latest_import_overlay/71693beb/mudlib"
+            self.run_cli("export", "--runtime", runtime, "--additive-report", additive,
+                         "--merge-report", merge, "--output", export)
+            self.run_cli("persist", "--export-root", export, "--overlay-root", overlay)
+
+            (runtime / "extra.c").write_text("extra-safe\\n", encoding="utf-8")
+            data = json.loads(additive.read_text(encoding="utf-8"))
+            data["copied"].append("extra.c")
+            additive.write_text(json.dumps(data), encoding="utf-8")
+            self.run_cli("export", "--runtime", runtime, "--additive-report", additive,
+                         "--merge-report", merge, "--output", export)
+            self.run_cli("persist", "--export-root", export, "--overlay-root", overlay)
+
+            manifest = json.loads((overlay.parent / "manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["file_count"], 3)
+            self.assertEqual((overlay / "extra.c").read_text(encoding="utf-8"), "extra-safe\\n")
+
     def test_persist_refuses_to_overwrite_existing_king_overlay(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
