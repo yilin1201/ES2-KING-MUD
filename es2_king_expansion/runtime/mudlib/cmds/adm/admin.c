@@ -107,6 +107,9 @@ ES2-KING ADMIN GM 使用教學（King 管理角色）
 
 【一、玩家管理】
   admin inspect                 查看自己的角色資料
+HELP
+    );
+    write(@HELP
   admin inspect <玩家>          查看在線玩家資料
   admin list                    列出在線玩家
   admin goto <玩家>             傳送到玩家所在房間
@@ -124,27 +127,42 @@ HELP
   admin stats <數值> [玩家]     同時設定精、氣、神
 
 【三、八大屬性（ES2-KING 正式中文對照）】
+HELP
+    );
+    write(@HELP
   admin str <數值> [玩家]       膂力（原版範圍 1～50）
   admin cor <數值> [玩家]       膽識（原版範圍 1～50）
   admin int <數值> [玩家]       悟性（原版範圍 1～50）
   admin spi <數值> [玩家]       靈性（原版範圍 1～50）
   admin cps <數值> [玩家]       定力（原版範圍 1～50）
+HELP
+    );
+    write(@HELP
   admin dex <數值> [玩家]       機敏（原版範圍 1～50）
   admin con <數值> [玩家]       根骨（原版範圍 1～50）
   admin wis <數值> [玩家]       慧根（原版範圍 1～50）
   admin attrs <數值> [玩家]     一次設定八大屬性（八項均為相同數值）
 
   【King 管理角色操作範例】
+HELP
+    );
+    write(@HELP
   admin attrs 50                將八大屬性全部設定為 50
   admin str 50                  單獨設定自己的膂力為 50
   admin cor 50                  單獨設定自己的膽識為 50
   admin int 50                  單獨設定自己的悟性為 50
   admin spi 50                  單獨設定自己的靈性為 50
+HELP
+    );
+    write(@HELP
   admin cps 50                  單獨設定自己的定力為 50
   admin dex 50                  單獨設定自己的機敏為 50
   admin con 50                  單獨設定自己的根骨為 50
   admin wis 50                  單獨設定自己的慧根為 50
   admin inspect                 核對八大屬性是否已更新
+HELP
+    );
+    write(@HELP
   admin save                    保存 King 角色資料
 HELP
     );
@@ -158,6 +176,9 @@ HELP
   admin learn <技能> [玩家]     設定為已學會
   admin unlearn <技能> [玩家]   取消學習並解除對應
 
+HELP
+    );
+    write(@HELP
   【參考核心技能（固定排列順序）】
   blade
   force
@@ -171,6 +192,9 @@ HELP
   admin hp <數值> [玩家]        設定目前 HP
   admin maxhp <數值> [玩家]     設定最大 HP，並補滿 HP
   admin heal                    恢復自己的 HP／精／氣／神
+HELP
+    );
+    write(@HELP
   admin heal <玩家>             恢復指定在線玩家
 HELP
     );
@@ -186,6 +210,9 @@ HELP
   /custom/weapon/blade/tiger_blade
 
   生成虎紋刀：
+HELP
+    );
+    write(@HELP
   admin give /custom/weapon/blade/tiger_blade
 
   裝備虎紋刀：
@@ -202,6 +229,9 @@ HELP
                                 設定技能對應（請以實際遊戲結果確認）
 
 【八、角色等級】
+HELP
+    );
+    write(@HELP
   admin level <等級> [玩家]      設定角色等級（原版 1～999）
 
 【常用操作範例】
@@ -213,6 +243,9 @@ HELP
   admin learn tiger-blade
   admin skill tiger-blade 200
   admin give /custom/weapon/blade/tiger_blade
+HELP
+    );
+    write(@HELP
   admin wield tiger blade
   admin heal
   admin save
@@ -227,6 +260,9 @@ HELP
   2. 指定玩家必須在線，離線角色不能由這些指令直接修改。
   3. 技能等級與 learn 狀態是不同設定；需要時兩者都要設定。
   4. 修改後請使用 admin save 保存角色資料。
+HELP
+    );
+    write(@HELP
   5. 原 ES2 指令與一般 help 主題不應被此教學取代。
   6. 此教學只列出目前 admin 指令的使用方式；實際效果仍須在遊戲內驗證。
 
