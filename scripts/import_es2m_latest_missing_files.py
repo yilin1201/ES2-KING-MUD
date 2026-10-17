@@ -17,7 +17,7 @@ TIMESTAMP_BACKUP = re.compile(r"\.\d{10,}$")
 def git_blob_sha(path: Path) -> str:
     """計算 Git blob SHA-1；manifest 的 40 位 sha 是 Git blob ID，不是 SHA-256。"""
     data = path.read_bytes()
-    return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\\0" + data).hexdigest()
+    return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest()
 
 def excluded(relative: str) -> str | None:
     """不複製執行期狀態、編譯物件或帶時間戳的編輯備份。"""
