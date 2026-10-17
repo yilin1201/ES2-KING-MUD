@@ -96,7 +96,7 @@ done
 # Readiness gate／只讀核心 TCP listener 狀態，不建立後立即中斷的探測連線。
 # 部分 Driver 對啟動期短連線的處理會觸發異常；不可用 connect-and-close 來判斷 ready。
 port_listening(){
-  awk -v port=":$PORT_HEX" 'NR > 1 && $2 ~ (port "$\") && $4 == "0A" { found=1 } END { exit !found }' \
+  awk -v port=":$PORT_HEX" 'NR > 1 && $2 ~ (port "$") && $4 == "0A" { found=1 } END { exit !found }' \
     /proc/net/tcp /proc/net/tcp6 2>/dev/null
 }
 driver_ready=0
