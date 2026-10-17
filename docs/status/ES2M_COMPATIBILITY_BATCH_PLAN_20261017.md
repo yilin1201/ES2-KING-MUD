@@ -39,7 +39,7 @@
 - 帳號／中文名稱長度政策：`HOLD / POLICY NOT DECIDED`。使用者提供的版本證據顯示固定原版 `cc45c06a` 僅接受 `a–z`、3–18 位元組；ES2M `71693beb79ced81d51719ea1ccf7c02c641ca9b0` 接受英文字母與數字、1–18 位元組；Phase 2 Runtime 目前仍是僅接受 `a–z`、3–18 位元組。這是兩項玩家可見行為差異，不可只處理數字帳號而忽略中文名稱長度。現有 E2E 的 `7probe` 案例必須保留，並明確標示為政策決策閘門；政策未決前，不得把它改成預期成功、移除案例，或宣稱 ES2M 創角相容性已通過。現有 Runtime 拒絕 `7probe` 僅代表觀察到的基線行為，不等於已核定採用原版政策。
 - 低成本整合語法／來源契約閘門：GitHub Actions run `38974801566`（`ES2-KING Integration Look Gate`）已成功；涵蓋 Bash、Python、Node 語法，假人來源契約、12 種族／出生屬性契約與數字帳號拒絕政策。此結果不代表 Docker／Neolith Runtime PASS。
 - Docker builder 驗證：已在整合工作流程加入明確 opt-in 的完整 builder job；本次提交會要求執行 `docker build --progress=plain --target builder`，只建置、不推送、不部署。結果待 Actions 回報。
-- 全量／範圍式來源盤點：程式與唯讀工作流程已放入整合分支，但尚未有成功執行產生的 `UPSTREAM_HEAD.txt`、`IMPORT_PLAN.json` 證據。
+- ES2M 最新來源固定與全量盤點：已將 `wolfer168/es2-webmud@71693beb79ced81d51719ea1ccf7c02c641ca9b0` 固定為 Git submodule（子模組：以固定上游 commit 連結完整來源，不複製或覆蓋 KING Runtime），路徑 `source/es2m_updates/20261017_71693beb/upstream-es2-webmud`；完整 1,678 個 `source/upstream/mudlib` 檔案清單寫入 `docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json`。與現有 `es2m_snapshot/mudlib` 比對：981 個檔案內容相同、160 個檔案不同、537 個上游檔案未出現在目前快照、3 個快照檔案未出現在上游，合計 700 個差異路徑需審核。此統計是「完整上游與目前快照」比較，不等同於先前以不同基準得到的 293 路徑差異。非相同檔案全部先標記 `HOLD_REVIEW`；這代表來源證據已固定與清單化，不代表 700 個檔案已寫入正式 Runtime。已另將上游戰鬥流程說明保存至 `docs/es2m_reference/ES2M_戰鬥流程說明_71693beb.md`，並加上外部證據標記。新增 `scripts/test_es2m_source_sync_manifest.py`，由低成本 GitHub Actions 驗證來源 commit、檔案數量、差異統計、HOLD 閘門與 submodule commit。
 - PR #13 保持 OPEN / NOT MERGED。
 
 ## 71693beb 變更範圍的初步相容性判定（只盤點，不代表已移植）
@@ -75,3 +75,32 @@
 3. 在生成後的實際 Runtime 中確認兩項檢查的最短／最長長度、字元集、提示文字、登入／註冊流程與存檔副作用。
 4. 由專案政策明確選定：A 採 ES2M 兩項規則並走正式相容性移植；或 B 保留原版規則並將兩項差異記錄為刻意偏離。選定前禁止改動正式行為。
 5. 政策決定後，同步更新 Runtime、E2E 預期、提示文字、相容性文件與回歸案例；通過實際登入／創角測試後才可解除 HOLD。
+
+
+## ES2M 最新來源全量匯入進度（2026-10-17）
+
+### 已完成
+
+- 上游來源固定：`wolfer168/es2-webmud@71693beb79ced81d51719ea1ccf7c02c641ca9b0`，透過 `.gitmodules` 與 gitlink 固定；來源可由 Git 子模組取回，沒有把上游內容誤當成 Original ES2。
+- 全量清單：`docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json`，逐檔記錄路徑、上游 blob SHA、大小、目前快照 SHA、差異狀態與匯入狀態。
+- 上游參考文件：`docs/es2m_reference/ES2M_戰鬥流程說明_71693beb.md`，標記為 ES2M 外部證據，不是 KING 正式 Runtime 規格。
+- 驗證腳本：`scripts/test_es2m_source_sync_manifest.py`，並已加入低成本整合閘門。
+
+### 全量比較結果
+
+| 狀態 | 數量 | 處理規則 |
+|---|---:|---|
+| 與目前快照逐字相同 | 981 | 保留現有資料；相同不代表已完成 Runtime 相容性測試 |
+| 上游有修改 | 160 | `HOLD_REVIEW`，逐檔分析後才可移植 |
+| 上游新增／目前快照缺少 | 537 | `HOLD_REVIEW`，先檢查路徑、依賴、出口／呼叫端與衝突 |
+| KING 快照獨有 | 3 | `KING_SNAPSHOT_ONLY_REVIEW`，不得因上游不存在而刪除 |
+
+以上共 700 個差異路徑。此為來源快照比對數量，不是已匯入 Runtime 的數量。
+
+### Runtime 匯入限制
+
+- 不整目錄覆蓋、不刪除 KING 獨有檔案、不將 700 個差異直接複製到正式 Runtime。
+- 逐檔分類為 `COMPATIBLE`、`ADAPTER_REQUIRED`、`CONFLICT` 或 `UNKNOWN`，記錄依賴、驗證、回復方式；只有取得證據並通過對應測試後才匯入。
+- 創角帳號字元／長度及中文名稱最短長度仍為 `HOLD / POLICY NOT DECIDED`；不能用整批同步繞過政策閘門。
+- 職業經驗／等級與技能成長仍為 `HOLD`；戰鬥核心須分批做 API／數值／存檔與 Runtime 驗證。
+- PR #13 保持 OPEN / NOT MERGED；Phase 2 固定基線不變。
