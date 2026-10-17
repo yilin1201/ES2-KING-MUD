@@ -91,28 +91,28 @@ async function testEs2mLoginPolicy(){
   assert.equal(await exists(login),false); assert.equal(await exists(user),false);
   const s=session();
   await s.wait("您的使用者代號");
-  s.send(id+"\\r\\n");
+  s.send(id+"\r\n");
   await s.wait("您確定嗎");
   await choice(s,"yes");
-  await s.wait("請設定您的密碼"); s.send(password+"\\r\\n");
-  await s.wait("請再輸入一次您的密碼"); s.send(password+"\\r\\n");
-  await s.wait("您的電子郵件地址"); s.send("none\\r\\n");
+  await s.wait("請設定您的密碼"); s.send(password+"\r\n");
+  await s.wait("請再輸入一次您的密碼"); s.send(password+"\r\n");
+  await s.wait("您的電子郵件地址"); s.send("none\r\n");
   await s.wait("Human（人類）");
   const raceOffset=s.output().length;
   await choice(s,"human");
   await s.wait("您要扮演的哪種性別",raceOffset);
   await choice(s,"male");
-  await s.wait("您的顯示名稱"); s.send("熊\\r\\n");
+  await s.wait("您的顯示名稱"); s.send("熊\r\n");
   await s.wait("您確定要創造這個角色嗎"); await choice(s,"yes");
   await s.wait("目前權限: (player)"); await s.wait("客棧大堂"); await s.wait("> ");
-  s.send("save\\r\\n"); await s.wait("檔案儲存完畢");
+  s.send("save\r\n"); await s.wait("檔案儲存完畢");
   assert.equal(await exists(login),true); assert.equal(await exists(user),true);
   const saved=await readFile(user,"utf8");
-  assert.match(saved,/"race"\\s*:\\s*"human"/);
-  assert.match(saved,/"name"\\s*:\\s*"熊"/);
+  assert.match(saved,/"race"\s*:\s*"human"/);
+  assert.match(saved,/"name"\s*:\s*"熊"/);
   console.log("ES2M_PLAYER_CREATION_NUMERIC_ID_ACCEPTED_PASS");
   console.log("ES2M_SINGLE_CHARACTER_DISPLAY_NAME_PASS");
-  s.send("quit\\r\\n"); await s.wait("歡迎下次再來"); s.close();
+  s.send("quit\r\n"); await s.wait("歡迎下次再來"); s.close();
 }
 
 const races = [
