@@ -72,7 +72,7 @@ class PersistentOverlayTests(unittest.TestCase):
                          "--merge-report", merge, "--output", export)
             self.run_cli("persist", "--export-root", export, "--overlay-root", overlay)
 
-            (runtime / "extra.c").write_text("extra-safe\\n", encoding="utf-8")
+            (runtime / "extra.c").write_text("extra-safe\n", encoding="utf-8")
             data = json.loads(additive.read_text(encoding="utf-8"))
             data["copied"].append("extra.c")
             additive.write_text(json.dumps(data), encoding="utf-8")
@@ -82,7 +82,7 @@ class PersistentOverlayTests(unittest.TestCase):
 
             manifest = json.loads((overlay.parent / "manifest.json").read_text(encoding="utf-8"))
             self.assertEqual(manifest["file_count"], 3)
-            self.assertEqual((overlay / "extra.c").read_text(encoding="utf-8"), "extra-safe\\n")
+            self.assertEqual((overlay / "extra.c").read_text(encoding="utf-8"), "extra-safe\n")
 
     def test_persist_refuses_to_overwrite_existing_king_overlay(self):
         with tempfile.TemporaryDirectory() as td:
