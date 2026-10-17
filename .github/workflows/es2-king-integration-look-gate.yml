@@ -18,6 +18,8 @@ on:
       - "es2m_snapshot/mudlib/**"
       - "docs/es2m_reference/ES2M_戰鬥流程說明_71693beb.md"
       - "scripts/test_es2m_source_sync_manifest.py"
+      - "scripts/import_es2m_latest_missing_files.py"
+      - "scripts/test_import_es2m_latest_missing_files.py"
       - ".gitmodules"
       - ".github/workflows/es2-king-integration-look-gate.yml"
   workflow_dispatch:
@@ -59,6 +61,9 @@ jobs:
 
       - name: ES2M full source inventory and pin gate
         run: python3 scripts/test_es2m_source_sync_manifest.py
+
+      - name: Safe latest ES2M additive importer unit tests
+        run: python3 -m unittest -v scripts/test_import_es2m_latest_missing_files.py
 
       - name: Race and birth attribute source contracts
         run: |
