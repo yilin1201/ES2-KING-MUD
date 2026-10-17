@@ -17,6 +17,20 @@ cleanup(){
         tail -n 100 "$log" >&2 || true
       fi
     done
+    if [[ -n "$driver_pid" ]]; then
+      if kill -0 "$driver_pid" 2>/dev/null; then
+        echo "診斷：Neolith driver process still alive at E2E failure (pid=$driver_pid)." >&2
+      else
+        echo "診斷：Neolith driver process exited before E2E completed." >&2
+      fi
+    fi
+    if [[ -d "$TEMP_ROOT/mudlib/log" ]]; then
+      while IFS= read -r -d '' log; do
+        echo "----- MUD Runtime log：$log（最後 80 行）-----" >&2
+        tail -n 80 "$log" >&2 || true
+      done < <(find "$TEMP_ROOT/mudlib/log" -maxdepth 2 -type f -print0)
+    fi
+    find "$TEMP_ROOT" -maxdepth 2 -type f -name 'core*' -printf '診斷：core dump file %p (%s bytes)\\n' >&2 || true
   fi
   [[ -z "$bridge_pid" ]] || kill "$bridge_pid" 2>/dev/null || true
   [[ -z "$driver_pid" ]] || kill "$driver_pid" 2>/dev/null || true
