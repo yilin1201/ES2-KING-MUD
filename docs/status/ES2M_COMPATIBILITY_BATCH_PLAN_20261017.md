@@ -36,7 +36,7 @@
 - 293 路徑差異的逐檔清單與稽核報告保留在整合分支；不留在 PR #13 phase2 分支。
 - 職業經驗／等級批次：`HOLD`，等待差異分析，特別是 `score.c` 及四類職業的經驗規則。
 - `look.c` Docker 阻塞：根因已由使用者本機重播 `beb9e673` 確認；Expansion 的 Python replacement 把字面反斜線 n 寫進 LPC 原始碼。已修正為真正換行，加入輸出防呆，並在 Dockerfile 加入 Neolith 實際載入 `/cmds/std/look` 的 gate。狀態：`FIX COMMITTED / RUNTIME PRELOAD PENDING`。第一次完整 Docker builder 驗證 run `38974855888` 在 Docker Step 21/73 因載入測試未回報 PASS 而失敗；該測試未顯示獨立 DebugLogFile，因此無法從 stdout 判定是 app 未啟動或 LPC 載入錯誤。已修正測試設定，使用獨立 `neolith.look-preload.conf`、停用測試 Port，並擷取 stdout 與 `mudlib/log/look-preload-debug.log`。第二次完整 Docker builder 驗證 run `38975123264` 已失敗；獨立 DebugLogFile 證實只有 `Console EOF detected`，未出現 `look.c` 編譯錯誤。根因是 Docker 非互動環境下 console app 的 stdin 立即 EOF，測試在載入檢查前結束。已改用 FIFO writer 在測試期間維持 stdin 開啟，並啟動第三次完整 Docker builder 驗證 run `38975300719`；結果待回報。
-- 數字開頭帳號：Pinned Original ES2 `logind.c` 的 `check_legal_id()` 明確只接受 3–12 個小寫英文字母，數字會被拒絕。依 preserve Original ES2 原則，保留登入規則；E2E 改為驗證數字開頭 ID 被拒絕且不產生存檔，不修改 `logind.c`。
+- 帳號／中文名稱長度政策：`HOLD / POLICY NOT DECIDED`。使用者提供的版本證據顯示固定原版 `cc45c06a` 僅接受 `a–z`、3–18 位元組；ES2M `71693beb79ced81d51719ea1ccf7c02c641ca9b0` 接受英文字母與數字、1–18 位元組；Phase 2 Runtime 目前仍是僅接受 `a–z`、3–18 位元組。這是兩項玩家可見行為差異，不可只處理數字帳號而忽略中文名稱長度。現有 E2E 的 `7probe` 案例必須保留，並明確標示為政策決策閘門；政策未決前，不得把它改成預期成功、移除案例，或宣稱 ES2M 創角相容性已通過。現有 Runtime 拒絕 `7probe` 僅代表觀察到的基線行為，不等於已核定採用原版政策。
 - 低成本整合語法／來源契約閘門：GitHub Actions run `38974801566`（`ES2-KING Integration Look Gate`）已成功；涵蓋 Bash、Python、Node 語法，假人來源契約、12 種族／出生屬性契約與數字帳號拒絕政策。此結果不代表 Docker／Neolith Runtime PASS。
 - Docker builder 驗證：已在整合工作流程加入明確 opt-in 的完整 builder job；本次提交會要求執行 `docker build --progress=plain --target builder`，只建置、不推送、不部署。結果待 Actions 回報。
 - 全量／範圍式來源盤點：程式與唯讀工作流程已放入整合分支，但尚未有成功執行產生的 `UPSTREAM_HEAD.txt`、`IMPORT_PLAN.json` 證據。
@@ -55,3 +55,23 @@
 | `cmds/std/conjure.c`、`cmds/usr/praise.c`、`daemon/class/taoist.c`、`daemon/skill/absorption.c`、`archaic_attainment.c`、`literate.c`、`taoism-spells.c` | `PROGRESSION BATCH HOLD` | 涉及 magic、alchemy、martial fame、negative fame、buddhology、literature mastery、literature、spell mastery 等累計公式與觸發條件；新舊等級補發可能造成重複計分。 | 逐一核對 KING score 儲存／顯示鍵、既有升級回呼、舊角色補差額邏輯與數值邊界測試。此來源差異清單中沒有 `score.c` 變更，不代表 KING 的 score 顯示與存檔相容性已驗證。 |
 
 以上均為來源差異盤點與初步分類，不是 Runtime 移植。職業經驗／等級批次仍維持 HOLD；所有程式變更必須在本次 look.c/Docker 閘門與既有回歸驗證完成後，另以獨立批次執行。
+
+
+## 創角政策決策閘門（新增，2026-10-17）
+
+目前不選擇 A 或 B；兩項差異均維持 `HOLD`，避免把 Runtime 既有行為誤認成正式政策。
+
+| 項目 | 固定原版 `cc45c06a` | ES2M `71693beb` | Phase 2 Runtime 現況 | 決策狀態 |
+|---|---|---|---|---|
+| 帳號字元 | 僅 `a–z` | 英文字母及 `0–9` | 僅 `a–z` | `HOLD` |
+| 帳號長度 | 3–18 位元組 | 1–18 位元組 | 3–18 位元組 | `HOLD` |
+| 中文名稱長度 | 3–18 位元組 | 1–18 位元組 | 尚待 Runtime 實測確認 | `HOLD` |
+| `7probe` 測試 | 預期拒絕 | 預期允許 | 目前觀察為拒絕 | 保留案例，不先裁定預期 |
+
+政策選擇前的必做事項：
+
+1. 保留 `7probe` E2E 案例，不刪除、不改成成功預期；將其視為待核定政策的差異案例，而非一般測試故障。
+2. 查明 E2M 來源 `logind.c` 中帳號檢查與中文名稱檢查的完整呼叫鏈，並與 KING 創角補丁比較；不得整檔覆蓋。
+3. 在生成後的實際 Runtime 中確認兩項檢查的最短／最長長度、字元集、提示文字、登入／註冊流程與存檔副作用。
+4. 由專案政策明確選定：A 採 ES2M 兩項規則並走正式相容性移植；或 B 保留原版規則並將兩項差異記錄為刻意偏離。選定前禁止改動正式行為。
+5. 政策決定後，同步更新 Runtime、E2E 預期、提示文字、相容性文件與回歸案例；通過實際登入／創角測試後才可解除 HOLD。
