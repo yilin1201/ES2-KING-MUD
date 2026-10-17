@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 RUNTIME_DIR="${ES2_RUNTIME_DIR:-/opt/es2-king/runtime}"
 DRIVER_BIN="${ES2_DRIVER_BIN:-/opt/es2-king/bin/neolith}"
 WEBTELNET_DIR="${ES2_WEBTELNET_DIR:-/opt/es2-king/webtelnet}"
-INTERNAL_PORT="${ES2_PORT:-4000}"
+INTERNAL_PORT="${ES2_PORT:-4001}"
 export ES2_HOST="${ES2_HOST:-127.0.0.1}"
 export ES2_PORT="$INTERNAL_PORT"
 export PORT="${PORT:-8080}"
@@ -13,6 +13,15 @@ export PORT="${PORT:-8080}"
 test -x "$DRIVER_BIN" || { echo "START FAIL：Neolith 不可執行：$DRIVER_BIN" >&2; exit 1; }
 test -f "$RUNTIME_DIR/neolith.conf" || { echo "START FAIL：缺少 neolith.conf" >&2; exit 1; }
 test -f "$WEBTELNET_DIR/server.mjs" || { echo "START FAIL：缺少 WebSocket/Telnet Bridge" >&2; exit 1; }
+
+# ES2M Port Contract／固定來源連接埠契約：globals.h、neolith.conf 與 Bridge 必須一致。
+SOURCE_MUD_PORT="$(awk '$1 == "#define" && $2 == "MUD_PORT" { print $3; exit }' "$RUNTIME_DIR/mudlib/include/globals.h")"
+CONFIG_MUD_PORT="$(awk '$1 == "Port" { split($2, p, ":"); print p[1]; exit }' "$RUNTIME_DIR/neolith.conf")"
+if [[ ! "$SOURCE_MUD_PORT" =~ ^[0-9]+$ || "$SOURCE_MUD_PORT" != "$CONFIG_MUD_PORT" || "$SOURCE_MUD_PORT" != "$INTERNAL_PORT" ]]; then
+  echo "START FAIL：ES2M 連接埠設定不一致（globals.h=$SOURCE_MUD_PORT, neolith.conf=$CONFIG_MUD_PORT, bridge=$INTERNAL_PORT）。" >&2
+  exit 1
+fi
+echo "ES2M_PORT_CONTRACT_PASS: mudlib=$SOURCE_MUD_PORT config=$CONFIG_MUD_PORT bridge=$INTERNAL_PORT"
 
 "$SCRIPT_DIR/prepare_es2_persistence.sh"
 
@@ -65,7 +74,7 @@ graceful_shutdown() {
 trap cleanup EXIT
 trap graceful_shutdown INT TERM
 
-# Neolith（MUD 遊戲執行引擎）只供同一容器的 bridge 使用；部署不得映射 4000。
+# Neolith（MUD 遊戲執行引擎）只供同一容器的 bridge 使用；部署不得映射 MUD Telnet port。
 (
   cd "$RUNTIME_DIR"
   exec "$DRIVER_BIN" -f neolith.conf
@@ -106,7 +115,7 @@ bridge_pid=$!
 
 # WebSocket Runtime Smoke／WebSocket 執行期煙霧測試：
 # 從容器內走與 iPhone 相同的 /mud Bridge 路徑，必須收到 Original ES2 登入提示。
-# 不送帳號或密碼，只驗證 Browser-facing WebSocket -> WebTelnet -> Neolith:4000。
+# 不送帳號或密碼，只驗證 Browser-facing WebSocket -> WebTelnet -> Neolith:$INTERNAL_PORT。
 node --input-type=module -e '
   import WebSocket from "ws";
   const port = Number(process.env.PORT);
@@ -127,7 +136,7 @@ node --input-type=module -e '
       output += Buffer.from(data).toString("utf8");
       if (/使用者代號|東 方 故 事/.test(output)) {
         clearTimeout(timer);
-        console.log("WEBSOCKET RUNTIME PASS：/mud -> WebTelnet -> Neolith:4000 已收到 ES2 登入提示。");
+        console.log("WEBSOCKET RUNTIME PASS：/mud -> WebTelnet -> Neolith:$INTERNAL_PORT 已收到 ES2 登入提示。");
         ws.close();
         process.exit(0);
       }
