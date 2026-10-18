@@ -14,7 +14,16 @@ function session(){
   return {socket, output:()=>output, send:s=>socket.send(s), close:()=>socket.close(),
     wait:(m,o=0,t=30000)=>new Promise((res,rej)=>{const st=Date.now(),iv=setInterval(()=>{const x=output.slice(o);if((typeof m==="string"?x.includes(m):m.test(x))){clearInterval(iv);res(x)}else if(Date.now()-st>t){clearInterval(iv);rej(new Error("PLAYER CREATE timeout: "+m+"\n"+x.slice(-1400)))}},25)})};
 }
-async function choice(s,value){const p=prepareCharacterChoice(s.output().slice(-512),value);assert.ok(p);s.send(p.bytes)}
+async function choice(s,value){
+  const outputTail=s.output().slice(-512);
+  const p=prepareCharacterChoice(outputTail,value);
+  // 選項提示解析失敗時先輸出實際畫面尾端，保留 E2E 根因證據再讓測試失敗。
+  if(!p){
+    console.error("E2E choice parse failed; requested choice="+JSON.stringify(value)+"; last 512 output characters:\n"+outputTail);
+    assert.ok(p,"無法從最近 512 字元解析角色建立選項；以上已輸出實際畫面。");
+  }
+  s.send(p.bytes);
+}
 
 async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   const shard=id[0], login=`${saveDir}/login/${shard}/${id}.o`, user=`${saveDir}/user/${shard}/${id}.o`;
