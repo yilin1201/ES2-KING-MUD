@@ -32,7 +32,10 @@ COPY . .
 RUN test -f /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/source/upstream/neolith.conf \
     && test -f /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/source/upstream/mudlib/include/globals.h \
     && test -d /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/source/upstream/mudlib/d/qiaoyin \
-    && grep -Eq '^[[:space:]]*Port[[:space:]]+4001:telnet[[:space:]]*RUN python3 -m py_compile scripts/import_es2m_latest_missing_files.py scripts/merge_es2m_latest_changes_safe.py scripts/sync_es2m_latest_import_overlay.py scripts/classify_es2m_latest_conflicts.py
+    && grep -Eq '^[[:space:]]*Port[[:space:]]+4001:telnet[[:space:]]*$' /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/source/upstream/neolith.conf \
+    && grep -Eq '^[[:space:]]*#define[[:space:]]+MUD_PORT[[:space:]]+4001[[:space:]]*$' /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webmud/source/upstream/mudlib/include/globals.h \
+    && echo "ES2M_SUBMODULE_CONTENT_PASS: expected_pin=71693beb79ced81d51719ea1ccf7c02c641ca9b0 source_port=4001"
+RUN python3 -m py_compile scripts/import_es2m_latest_missing_files.py scripts/merge_es2m_latest_changes_safe.py scripts/sync_es2m_latest_import_overlay.py scripts/classify_es2m_latest_conflicts.py
 RUN python3 -m unittest -v scripts/test_sync_es2m_latest_import_overlay.py scripts/test_classify_es2m_latest_conflicts.py
 
 # ES2M Birth Attribute Contract Gate／防止 E2E 出生屬性範圍與保存的 ES2M race daemon 不一致。
