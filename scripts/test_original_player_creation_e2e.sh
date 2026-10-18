@@ -40,7 +40,7 @@ cleanup(){
     while IFS= read -r -d '' log; do
       echo "----- MUD debug.log／執行紀錄：$log（最後 80 行）-----" >&2
       tail -n 80 "$log" >&2 || true
-    done < <(find "$TEMP_ROOT" -maxdepth 5 -type f \\( -iname 'debug.log' -o -path '*/mudlib/log/*' \\) -print0 2>/dev/null)
+    done < <(find "$TEMP_ROOT" -maxdepth 5 -type f \( -iname 'debug.log' -o -path '*/mudlib/log/*' \) -print0 2>/dev/null)
     if [[ -d "$TEMP_ROOT/mudlib/log" ]]; then
       while IFS= read -r -d '' log; do
         echo "----- MUD Runtime log：$log（最後 80 行）-----" >&2
