@@ -6,11 +6,23 @@ DRIVER_BIN="$(realpath "${ES2_DRIVER_BIN:-$SOURCE_RUNTIME/neolith/out/build/linu
 TEMP_ROOT="$(mktemp -d)"
 WEB_PORT="$((49000 + $$ % 700))"
 TEST_PASSWORD="$(openssl rand -hex 16)"
+# Port Contract 診斷值先初始化，確保任何早期失敗都能輸出完整設定。
+MUD_PORT=""
+CONFIG_PORT=""
 driver_pid=""; bridge_pid=""
 cleanup(){
   status=$?
   if ((status)); then
     echo "ORIGINAL PLAYER CREATION E2E FAIL：暫存 Runtime 保留於 $TEMP_ROOT" >&2
+    # 逾時診斷須列出實際 Port Contract 與連線目標，不能只看最後的 core dump。
+    echo "診斷：globals.h MUD_PORT=${MUD_PORT:-UNKNOWN}；neolith.conf Port=${CONFIG_PORT:-UNKNOWN}。" >&2
+    echo "診斷：Driver host=127.0.0.1 port=${MUD_PORT:-UNKNOWN}；WebSocket URL=ws://127.0.0.1:${WEB_PORT}/mud。" >&2
+    echo "診斷：globals.h 存在=$([[ -f "$TEMP_ROOT/mudlib/include/globals.h" ]] && echo yes || echo no)；neolith.conf 存在=$([[ -f "$TEMP_ROOT/neolith.conf" ]] && echo yes || echo no)。" >&2
+    if [[ -d "$REPO_ROOT/source/es2m_updates/20261017_71693beb/upstream-es2-webmud" ]]; then
+      echo "診斷：Checkout 中 ES2M 子模組目錄存在；本容器 Runtime 設定與來源快照的檔案檢查結果以上方 Docker Gate 為準。" >&2
+    else
+      echo "診斷：Checkout 中未找到 ES2M 子模組目錄（可能是建置容器未帶入來源樹）。" >&2
+    fi
     for log in "$TEMP_ROOT/driver.stdout" "$TEMP_ROOT/bridge.stdout" "$TEMP_ROOT/player-creation.log"; do
       if [[ -r "$log" ]]; then
         echo "----- 診斷日誌：$log（最後 100 行）-----" >&2
@@ -19,11 +31,16 @@ cleanup(){
     done
     if [[ -n "$driver_pid" ]]; then
       if kill -0 "$driver_pid" 2>/dev/null; then
+        echo "診斷：Driver 在 E2E 失敗清理前仍存活；清理程序即將終止它。若之後出現 Aborted/core dump，不能單獨視為啟動崩潰證據。" >&2
         echo "診斷：Neolith driver process still alive at E2E failure (pid=$driver_pid)." >&2
       else
         echo "診斷：Neolith driver process exited before E2E completed." >&2
       fi
     fi
+    while IFS= read -r -d '' log; do
+      echo "----- MUD debug.log／執行紀錄：$log（最後 80 行）-----" >&2
+      tail -n 80 "$log" >&2 || true
+    done < <(find "$TEMP_ROOT" -maxdepth 5 -type f \\( -iname 'debug.log' -o -path '*/mudlib/log/*' \\) -print0 2>/dev/null)
     if [[ -d "$TEMP_ROOT/mudlib/log" ]]; then
       while IFS= read -r -d '' log; do
         echo "----- MUD Runtime log：$log（最後 80 行）-----" >&2
@@ -56,10 +73,13 @@ else
 fi
 
 # ES2M Port Contract／依實際 mudlib globals.h 核對 Driver 設定，避免 4000/4001 混用。
+test -f "$TEMP_ROOT/mudlib/include/globals.h" || { echo 'ORIGINAL PLAYER CREATION E2E BLOCKED：缺少 globals.h。' >&2; exit 1; }
+test -f "$TEMP_ROOT/neolith.conf" || { echo 'ORIGINAL PLAYER CREATION E2E BLOCKED：缺少 neolith.conf。' >&2; exit 1; }
 MUD_PORT="$(awk '$1 == "#define" && $2 == "MUD_PORT" { print $3; exit }' "$TEMP_ROOT/mudlib/include/globals.h")"
 CONFIG_PORT="$(awk '$1 == "Port" { split($2, p, ":"); print p[1]; exit }' "$TEMP_ROOT/neolith.conf")"
 if [[ ! "$MUD_PORT" =~ ^[0-9]+$ || "$CONFIG_PORT" != "$MUD_PORT" ]]; then
   echo "ORIGINAL PLAYER CREATION E2E BLOCKED：連接埠不一致（globals.h=$MUD_PORT, neolith.conf=$CONFIG_PORT）。" >&2
+  echo "診斷：MUD_PORT 實值='$MUD_PORT'；neolith.conf Port 實值='$CONFIG_PORT'；Driver host=127.0.0.1。" >&2
   exit 1
 fi
 PORT_HEX="$(printf '%04X' "$MUD_PORT")"
