@@ -76,3 +76,23 @@ Run `39039333422` 的來源匯入階段、overlay 持久化及靜態檢查均成
 4. ES2M 帳號英數字與 1 字元顯示名稱政策已建立獨立 Runtime adapter 及測試；仍須以實際創角／存檔／重新登入 E2E 證實。
 5. PR #13 維持 OPEN / NOT MERGED；Phase 2 固定基線不修改。
 
+
+
+## ES2M 上游更新候選快照（2026-10-19）
+
+本次重新檢查上游 `wolfer168/es2-webmud`，最新 HEAD 為 `8baf4c9d39feafd56804194b282cea60e3f166ac`，相對原固定來源 `71693beb79ced81d51719ea1ccf7c02c641ca9b0` 前進 40 個提交、82 個差異路徑（28 modified、39 added、9 removed、6 renamed）。
+
+最新上游的 73 個現行檔案已逐檔保存到獨立候選快照 `es2m_snapshot/latest_source_candidate/8baf4c9d/`，並以 Git blob SHA 對照上游 tree；核對結果為 73/73 一致，SHA mismatch = 0。9 個上游刪除路徑只記錄在 manifest，沒有刪除 KING 檔案。
+
+完整稽核：`docs/status/ES2M_UPDATE_20261019_AUDIT.md`。
+逐檔清冊：`es2m_snapshot/latest_source_candidate/8baf4c9d/manifest.json`。
+
+本次只建立可追溯來源候選快照，**不等於已套用到生成 Runtime，也不代表遊戲驗證通過**。分類結果：
+- 39 個煉丹／藥草相關來源：候選審查，未套用 Runtime。
+- 4 個新增技能：HOLD，依既定順序逐項驗證。
+- 2 個戰鬥核心檔案：HOLD。
+- `d/snow/npc/teacher.c`：保留 KING 自訂版本。
+- 15 個其他修改檔：相容性審查 HOLD。
+- 9 個上游刪除路徑：只記錄，不對 KING 執行刪除。
+
+下一步應先檢查候選檔案的依賴與 KING 同名衝突，再將可獨立驗證的新增內容分批匯入；Docker、E2E 與相關回歸閘門未通過前，不移植戰鬥核心或技能。PR #13 維持 OPEN / NOT MERGED；Original ES2 Phase 2 分支未修改；Render 未部署。
