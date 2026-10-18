@@ -8,6 +8,9 @@ DRIVER_BIN="$(realpath "${ES2_DRIVER_BIN:-$SOURCE_RUNTIME/neolith/out/build/linu
 TEMP_ROOT="$(mktemp -d)"
 WEB_PORT="$((50000 + $$ % 500))"
 TEST_PASSWORD="$(openssl rand -hex 16)"
+# Port Contract 診斷值先初始化，避免失敗清理階段因未設定變數而中斷。
+MUD_PORT=""
+CONFIG_PORT=""
 driver_pid=""
 bridge_pid=""
 
@@ -19,6 +22,19 @@ cleanup() {
   wait "$driver_pid" 2>/dev/null || true
   if (( status != 0 )); then
     echo "PLAYER OPEN ALPHA FAIL：暫存 Runtime 保留於 $TEMP_ROOT" >&2
+    # 失敗時輸出實際設定、連線目標與可取得的日誌；避免把清理階段終止誤判為啟動崩潰。
+    echo "診斷：globals.h MUD_PORT=${MUD_PORT:-UNKNOWN}；neolith.conf Port=${CONFIG_PORT:-UNKNOWN}。" >&2
+    echo "診斷：Driver host=127.0.0.1 port=${MUD_PORT:-UNKNOWN}；WebSocket URL=ws://127.0.0.1:${WEB_PORT}/mud。" >&2
+    for log in "$TEMP_ROOT/driver.stdout" "$TEMP_ROOT/bridge.stdout" "$TEMP_ROOT/player-open-alpha.log"; do
+      if [[ -r "$log" ]]; then
+        echo "----- 診斷日誌：$log（最後 100 行）-----" >&2
+        tail -n 100 "$log" >&2 || true
+      fi
+    done
+    while IFS= read -r -d '' log; do
+      echo "----- MUD debug/runtime log：$log（最後 80 行）-----" >&2
+      tail -n 80 "$log" >&2 || true
+    done < <(find "$TEMP_ROOT" -maxdepth 5 -type f \( -iname 'debug.log' -o -path '*/mudlib/log/*' \) -print0 2>/dev/null)
   else
     rm -rf -- "$TEMP_ROOT"
   fi
@@ -38,6 +54,18 @@ else
 fi
 
 # Fresh Data／全新資料：此 E2E 不複製任何 login/user fixture。
+# ES2M Port Contract／從隔離 Runtime 讀取實際連接埠，不得硬編碼舊版 4000。
+test -f "$TEMP_ROOT/mudlib/include/globals.h" || { echo 'PLAYER OPEN ALPHA BLOCKED：缺少 globals.h。' >&2; exit 1; }
+test -f "$TEMP_ROOT/neolith.conf" || { echo 'PLAYER OPEN ALPHA BLOCKED：缺少 neolith.conf。' >&2; exit 1; }
+MUD_PORT="$(awk '$1 == "#define" && $2 == "MUD_PORT" { print $3; exit }' "$TEMP_ROOT/mudlib/include/globals.h")"
+CONFIG_PORT="$(awk '$1 == "Port" { split($2, p, ":"); print p[1]; exit }' "$TEMP_ROOT/neolith.conf")"
+if [[ ! "$MUD_PORT" =~ ^[0-9]+$ || "$CONFIG_PORT" != "$MUD_PORT" ]]; then
+  echo "PLAYER OPEN ALPHA BLOCKED：連接埠不一致（globals.h=$MUD_PORT, neolith.conf=$CONFIG_PORT）。" >&2
+  exit 1
+fi
+PORT_HEX="$(printf '%04X' "$MUD_PORT")"
+echo "PLAYER OPEN ALPHA PORT CONTRACT PASS: mudlib=$MUD_PORT config=$CONFIG_PORT driver_host=127.0.0.1 driver_port=$MUD_PORT"
+
 rm -rf -- "$TEMP_ROOT/mudlib/data"
 mkdir -p "$TEMP_ROOT/mudlib/data/login"/{a..z} "$TEMP_ROOT/mudlib/data/user"/{a..z} "$TEMP_ROOT/mudlib/log"
 
@@ -48,8 +76,26 @@ done
 
 (cd "$TEMP_ROOT"; exec "$DRIVER_BIN" -f neolith.conf) >"$TEMP_ROOT/driver.stdout" 2>&1 &
 driver_pid=$!
-ES2_TEST_PORT=4000 node -e 'const n=require("net"),d=Date.now()+30000;(function p(){const s=n.createConnection({host:"127.0.0.1",port:+process.env.ES2_TEST_PORT});s.once("connect",()=>{s.destroy();process.exit(0)});s.once("error",()=>{s.destroy();Date.now()<d?setTimeout(p,100):process.exit(1)})})()'
-(cd "$REPO_ROOT/webtelnet"; ES2_HOST=127.0.0.1 ES2_PORT=4000 PORT="$WEB_PORT" exec node server.mjs) >"$TEMP_ROOT/bridge.stdout" 2>&1 &
+# Readiness Gate／以核心 listener 狀態確認 Driver 就緒，避免 connect-and-close 探測造成額外副作用。
+driver_ready=0
+for _ in {1..300}; do
+  if ! kill -0 "$driver_pid" 2>/dev/null; then
+    echo 'PLAYER OPEN ALPHA BLOCKED：Neolith 在 listener ready 前已退出。' >&2
+    tail -n 100 "$TEMP_ROOT/driver.stdout" >&2 || true
+    exit 1
+  fi
+  if awk -v port=":$PORT_HEX" 'NR > 1 && $2 ~ (port "$") && $4 == "0A" { found=1 } END { exit !found }' /proc/net/tcp /proc/net/tcp6 2>/dev/null; then
+    driver_ready=1
+    break
+  fi
+  sleep 0.1
+done
+if (( driver_ready == 0 )); then
+  echo "PLAYER OPEN ALPHA BLOCKED：等待 Neolith listener timeout（host=127.0.0.1 port=$MUD_PORT）。" >&2
+  tail -n 100 "$TEMP_ROOT/driver.stdout" >&2 || true
+  exit 1
+fi
+(cd "$REPO_ROOT/webtelnet"; ES2_HOST=127.0.0.1 ES2_PORT="$MUD_PORT" PORT="$WEB_PORT" exec node server.mjs) >"$TEMP_ROOT/bridge.stdout" 2>&1 &
 bridge_pid=$!
 ES2_TEST_PORT="$WEB_PORT" node -e 'const h=require("http"),d=Date.now()+10000;(function p(){h.get({host:"127.0.0.1",port:+process.env.ES2_TEST_PORT,path:"/health"},r=>{r.resume();r.statusCode===200?process.exit(0):Date.now()<d?setTimeout(p,100):process.exit(1)}).on("error",()=>Date.now()<d?setTimeout(p,100):process.exit(1))})()'
 
