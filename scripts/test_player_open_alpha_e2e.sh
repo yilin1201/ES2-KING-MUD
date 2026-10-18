@@ -38,7 +38,7 @@ cleanup() {
     while IFS= read -r -d '' log; do
       echo "----- MUD debug/runtime log：$log（最後 80 行）-----" >&2
       tail -n 80 "$log" >&2 || true
-    done < <(find "$TEMP_ROOT" -maxdepth 5 -type f \\( -iname 'debug.log' -o -path '*/mudlib/log/*' \\) -print0 2>/dev/null)
+    done < <(find "$TEMP_ROOT" -maxdepth 5 -type f \( -iname 'debug.log' -o -path '*/mudlib/log/*' \) -print0 2>/dev/null)
   fi
   [[ -z "$bridge_pid" ]] || kill "$bridge_pid" 2>/dev/null || true
   [[ -z "$driver_pid" ]] || kill "$driver_pid" 2>/dev/null || true
