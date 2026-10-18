@@ -16,15 +16,19 @@ bridge_pid=""
 
 cleanup() {
   status=$?
-  [[ -z "$bridge_pid" ]] || kill "$bridge_pid" 2>/dev/null || true
-  [[ -z "$driver_pid" ]] || kill "$driver_pid" 2>/dev/null || true
-  wait "$bridge_pid" 2>/dev/null || true
-  wait "$driver_pid" 2>/dev/null || true
   if (( status != 0 )); then
     echo "PLAYER OPEN ALPHA FAIL：暫存 Runtime 保留於 $TEMP_ROOT" >&2
-    # 失敗時輸出實際設定、連線目標與可取得的日誌；避免把清理階段終止誤判為啟動崩潰。
+    # 先記錄清理前的程序狀態，再送出終止訊號，避免將清理造成的 core dump 當成根因。
+    if [[ -n "$driver_pid" ]]; then
+      if kill -0 "$driver_pid" 2>/dev/null; then
+        echo "診斷：E2E 失敗時 Driver 仍存活；清理程序現在才會終止它，後續 Aborted/core dump 不單獨視為啟動崩潰證據。" >&2
+      else
+        echo "診斷：Driver 在清理前已退出；需依 driver.stdout/debug.log 判斷是否為真正啟動失敗。" >&2
+      fi
+    fi
     echo "診斷：globals.h MUD_PORT=${MUD_PORT:-UNKNOWN}；neolith.conf Port=${CONFIG_PORT:-UNKNOWN}。" >&2
-    echo "診斷：Driver host=127.0.0.1 port=${MUD_PORT:-UNKNOWN}；WebSocket URL=ws://127.0.0.1:${WEB_PORT}/mud。" >&2
+    echo "診斷：Driver host=127.0.0.1 port=${MUD_PORT:-UNKNOWN}；Bridge upstream=127.0.0.1:${MUD_PORT:-UNKNOWN}；WebSocket URL=ws://127.0.0.1:${WEB_PORT}/mud。" >&2
+    echo "診斷：globals.h 存在=$([[ -f "$TEMP_ROOT/mudlib/include/globals.h" ]] && echo yes || echo no)；neolith.conf 存在=$([[ -f "$TEMP_ROOT/neolith.conf" ]] && echo yes || echo no)。" >&2
     for log in "$TEMP_ROOT/driver.stdout" "$TEMP_ROOT/bridge.stdout" "$TEMP_ROOT/player-open-alpha.log"; do
       if [[ -r "$log" ]]; then
         echo "----- 診斷日誌：$log（最後 100 行）-----" >&2
@@ -34,10 +38,13 @@ cleanup() {
     while IFS= read -r -d '' log; do
       echo "----- MUD debug/runtime log：$log（最後 80 行）-----" >&2
       tail -n 80 "$log" >&2 || true
-    done < <(find "$TEMP_ROOT" -maxdepth 5 -type f \( -iname 'debug.log' -o -path '*/mudlib/log/*' \) -print0 2>/dev/null)
-  else
-    rm -rf -- "$TEMP_ROOT"
+    done < <(find "$TEMP_ROOT" -maxdepth 5 -type f \\( -iname 'debug.log' -o -path '*/mudlib/log/*' \\) -print0 2>/dev/null)
   fi
+  [[ -z "$bridge_pid" ]] || kill "$bridge_pid" 2>/dev/null || true
+  [[ -z "$driver_pid" ]] || kill "$driver_pid" 2>/dev/null || true
+  wait "$bridge_pid" 2>/dev/null || true
+  wait "$driver_pid" 2>/dev/null || true
+  if (( status == 0 )); then rm -rf -- "$TEMP_ROOT"; fi
   return "$status"
 }
 trap cleanup EXIT INT TERM
