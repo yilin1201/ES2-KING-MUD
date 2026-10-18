@@ -118,8 +118,14 @@ done
 # Readiness gate／只讀核心 TCP listener 狀態，不建立後立即中斷的探測連線。
 # 部分 Driver 對啟動期短連線的處理會觸發異常；不可用 connect-and-close 來判斷 ready。
 port_listening(){
-  awk -v port=":$PORT_HEX" 'NR > 1 && $2 ~ (port "$") && $4 == "0A" { found=1 } END { exit !found }' \
-    /proc/net/tcp /proc/net/tcp6 2>/dev/null
+  # IPv6 停用時 /proc/net/tcp6 可能不存在；只讀取實際存在的核心 TCP 表。
+  if [[ -r /proc/net/tcp6 ]]; then
+    awk -v port=":$PORT_HEX" 'NR > 1 && $2 ~ (port "$") && $4 == "0A" { found=1 } END { exit !found }' \
+      /proc/net/tcp /proc/net/tcp6 2>/dev/null
+  else
+    awk -v port=":$PORT_HEX" 'NR > 1 && $2 ~ (port "$") && $4 == "0A" { found=1 } END { exit !found }' \
+      /proc/net/tcp 2>/dev/null
+  fi
 }
 driver_ready=0
 for _ in {1..300}; do
