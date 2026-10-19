@@ -16,9 +16,9 @@ function testCharacterPromptCompatibility() {
   assert.equal(prepareCharacterChoice(originalGender, "unknown")?.bytes, "N");
 
   const es2mGender = "您要扮演的哪種性別(外觀)的角色?\n1. 女性\n2. 男性\n3. 無法判斷\n請輸入選項數字:";
-  assert.equal(prepareCharacterChoice(es2mGender, "female")?.bytes, "1\\r\n");
-  assert.equal(prepareCharacterChoice(es2mGender, "male")?.bytes, "2\\r\n");
-  assert.equal(prepareCharacterChoice(es2mGender, "unknown")?.bytes, "3\\r\n");
+  assert.equal(prepareCharacterChoice(es2mGender, "female")?.bytes, "1\r\n");
+  assert.equal(prepareCharacterChoice(es2mGender, "male")?.bytes, "2\r\n");
+  assert.equal(prepareCharacterChoice(es2mGender, "unknown")?.bytes, "3\r\n");
 
   const originalConfirm = "您確定要創造這個角色嗎?";
   const es2mConfirm = "使用 7probe 這個代號將會創造一個新的人物﹐您確定嗎? (Yes / No)";
