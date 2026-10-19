@@ -95,20 +95,20 @@
 | 註冊新來源於 `.gitmodules` | PASS：新增 `20261019_63e932a2` |
 | 新增固定 gitlink | PASS：提交 `cb44648573a5895d52bfb1efb1eabc071e861455` |
 | 舊證據 pin | PRESERVED：`71693beb` 未替換 |
-| 新全量 source blob manifest | NOT DONE |
-| 新來源三方差異清冊 | NOT DONE |
+| 新全量 source blob manifest | PASS：`docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261019.json`，1,709 個 source blob entries |
+| 新來源三方差異清冊 | PARTIAL：manifest 已依新上游、舊 snapshot、固定 Original 的 Git blob SHA 分類；Runtime 實體內容與依賴仍待驗證 |
 | 寫入新 Runtime overlay | NOT DONE：等待差異與依賴驗證 |
 | Docker／Runtime／E2E | NOT RUN：沒有把來源 pin 或文件提交冒充遊戲通過證據 |
 
 ## 5. 下一步執行順序
 
 1. 透過 checkout/submodule update 確認新 gitlink 實際下載至 `source/es2m_updates/20261019_63e932a2/upstream-es2-webmud`，核對 HEAD 必須等於 `63e932a2e46aa745a741df14e108df76bcd30f84`。
-2. 由新來源產生完整檔案清冊與 blob SHA manifest；另存新版本檔案，不覆寫 `ES2M_SOURCE_SYNC_MANIFEST_20261017.json`。
-3. 比對 Original ES2、舊 ES2M snapshot、新 ES2M snapshot、KING Runtime 四方差異，分類新增、相同、修改、刪除、改名與 KING-only。
-4. 先處理低風險、缺檔且依賴明確的世界／NPC／物件資料；同名異動全部保留 KING 並列為 HOLD。
+2. 已建立完整 source blob manifest：`docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261019.json`，包含 1,709 個檔案條目；舊 manifest 保持不變。
+3. 依 manifest 分類：963 個與舊 ES2M snapshot 相同、163 個修改、583 個新增、18 個舊 snapshot-only；共 764 個路徑需審查。這是 Git blob metadata 分類，不代表 Runtime 已驗證。
+4. 下一步比對 KING Runtime 實體內容與依賴，先處理低風險、缺檔且依賴明確的世界／NPC／物件資料；同名異動全部保留 KING 並列為 HOLD。
 5. 核心戰鬥、角色生命週期、UTF-8 與技能批次維持 HOLD，直到相關建置與 E2E 閘門通過。
 6. 僅把無衝突、來源可驗證的內容輸出至新版本 overlay；不可用舊 overlay 覆蓋新內容。
-7. 執行最小必要測試，回報新增、相同、衝突、排除與未解依賴數量。未實測項目不得標示 PASS。
+7. 執行最小必要測試，回報新增、相同、衝突、排除與未解依賴數量。未實測項目不得標示 PASS.
 
 ## 6. 專案保護規則
 
