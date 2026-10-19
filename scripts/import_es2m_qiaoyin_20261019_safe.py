@@ -12,6 +12,11 @@ from pathlib import Path
 
 EXPECTED_SOURCE_COMMIT = "63e932a2e46aa745a741df14e108df76bcd30f84"
 SAFE_ZONE = Path("d/qiaoyin")
+# 上游 compare 71693beb...63e932a2 明確顯示這兩個同名 NPC 有修改；先保留 Runtime 舊版，待三方審查。
+HELD_UPSTREAM_CHANGES = {
+    Path("d/qiaoyin/npc/keeper.c"): "modified_between_pins_keep_existing_runtime",
+    Path("d/qiaoyin/npc/old_ho.c"): "modified_between_pins_keep_existing_runtime",
+}
 LITERAL_LOCAL = re.compile(r'__DIR__\s*"([^"]+)"')
 LITERAL_ABSOLUTE = re.compile(r'"(/(?:d|custom|obj)/[^"\s]+)"')
 
@@ -71,6 +76,7 @@ def stage_import(source_root: Path, runtime: Path, manifest_path: Path, output_p
         if path.startswith("d/qiaoyin/")
         and path.endswith(".c")
         and row.get("status") == "NEW_TO_EXISTING_ES2M_SNAPSHOT"
+        and Path(path) not in HELD_UPSTREAM_CHANGES
     )
     if not seeds:
         raise ImportBlocked("ES2M_QIAOYIN_IMPORT_FAIL：manifest 找不到新增橋隱區房間")
@@ -99,6 +105,12 @@ def stage_import(source_root: Path, runtime: Path, manifest_path: Path, output_p
         verified.add(rel)
         return candidate
 
+    held_upstream_changes = []
+    for rel, reason in HELD_UPSTREAM_CHANGES.items():
+        # 即使不匯入，也核對新來源的實際 blob SHA，保留可追溯證據。
+        source_file(rel)
+        held_upstream_changes.append({"path": rel.as_posix(), "reason": reason})
+
     while queue:
         rel = queue.pop(0)
         src = source_file(rel)
@@ -126,6 +138,7 @@ def stage_import(source_root: Path, runtime: Path, manifest_path: Path, output_p
                 and dep.as_posix().startswith("d/qiaoyin/")
                 and dep_entry
                 and dep_entry.get("status") == "NEW_TO_EXISTING_ES2M_SNAPSHOT"
+                and dep not in HELD_UPSTREAM_CHANGES
             ):
                 if dep not in planned:
                     planned.add(dep)
@@ -166,6 +179,7 @@ def stage_import(source_root: Path, runtime: Path, manifest_path: Path, output_p
         "staged": sorted(staged),
         "identical": sorted(identical),
         "conflicts_review": sorted(conflicts),
+        "held_upstream_changes": held_upstream_changes,
         "resolved_dependencies": resolved,
         "unresolved_dependencies": unresolved,
         "gameplay_runtime_pass": False,
@@ -177,6 +191,7 @@ def stage_import(source_root: Path, runtime: Path, manifest_path: Path, output_p
         "seed_files": len(seeds),
         "staged": len(staged),
         "identical": len(identical),
+        "held_upstream_changes": len(held_upstream_changes),
         "resolved_dependencies": len(resolved),
         "gameplay_runtime_pass": False,
     }, ensure_ascii=False))
