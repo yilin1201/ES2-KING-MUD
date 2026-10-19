@@ -5,10 +5,13 @@
 - KING Repository：`yilin1201/ES2-KING-MUD`
 - KING 工作分支：`integration/es2m-audit-import-20261017`
 - ES2M 上游：`https://github.com/wolfer168/es2-webmud`
-- KING 目前固定的 ES2M 證據 pin：`71693beb79ced81d51719ea1ccf7c02c641ca9b0`
-- 本輪查到 ES2M 上游 `main`：`63e932a2e46aa745a741df14e108df76bcd30f84`
-- GitHub compare 結果：上游 `main` 比固定 pin 領先 **45 commits**，merge-base 仍是固定 pin。
-- 這表示上游有新資料可考證，但**不表示這些差異已匯入 KING Runtime**。
+- 舊證據 pin（保留不變）：`71693beb79ced81d51719ea1ccf7c02c641ca9b0`
+- 新增獨立上游證據 pin：`63e932a2e46aa745a741df14e108df76bcd30f84`
+- GitHub compare 結果：上游 `main` 比舊 pin 領先 **45 commits**，merge-base 仍是舊 pin。
+- 新來源已註冊於 ` .gitmodules `，並新增 gitlink：
+  `source/es2m_updates/20261019_63e932a2/upstream-es2-webmud`
+- 新來源 pin 提交：`cb44648573a5895d52bfb1efb1eabc071e861455`
+- 新來源的註冊只保存可重現的上游證據，不表示這些差異已匯入 KING Runtime。
 
 ## 2. 新資料分類
 
@@ -69,38 +72,39 @@
 
 **處理狀態：CORE HOLD。** 不可將上游戰鬥規則、UTF-8、角色生命週期或物件路徑差異直接覆蓋到 KING。必須以 Original ES2 為基底做三方差異分析，衝突保留 KING，並建立獨立測試。
 
-## 3. 已知固定來源與匯入管線限制
+## 3. 現有 Runtime 匯入管線仍固定於舊 pin
 
-目前 KING Dockerfile 與匯入腳本仍明確引用：
+目前 Dockerfile 與匯入腳本仍引用舊來源：
 
-- 固定來源目錄：`source/es2m_updates/20261017_71693beb/upstream-es2-webmud`
-- 固定 manifest：`docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json`
-- 固定 source commit：`71693beb79ced81d51719ea1ccf7c02c641ca9b0`
-- 既有持久 overlay：`es2m_snapshot/latest_import_overlay/71693beb/mudlib`
+- 舊來源目錄：`source/es2m_updates/20261017_71693beb/upstream-es2-webmud`
+- 舊 manifest：`docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261017.json`
+- 舊 source commit：`71693beb79ced81d51719ea1ccf7c02c641ca9b0`
+- 舊持久 overlay：`es2m_snapshot/latest_import_overlay/71693beb/mudlib`
 
-匯入腳本 `import_es2m_latest_missing_files.py` 與 `merge_es2m_latest_changes_safe.py` 也會驗證固定 commit 與 manifest blob SHA。**只更新 submodule 指標、卻不同步更新 manifest、驗證腳本與 overlay 版本，會使建置失敗或造成來源／清冊不一致。**
+匯入腳本 `import_es2m_latest_missing_files.py` 與 `merge_es2m_latest_changes_safe.py` 會驗證固定 commit 與 manifest blob SHA。**不可只把 Dockerfile 路徑換成新來源，也不可把舊 manifest 的 source_commit 改成新 SHA；這會讓來源與 blob 清冊不一致。**
 
-因此本輪不擅自移動固定 pin，也不改寫舊 manifest 假裝它代表最新上游。
+新證據 pin 已保存，但全量 manifest、三方比較與新 overlay 尚未產生；因此本輪沒有宣稱 Runtime 資料已更新。
 
 ## 4. 本輪寫入 KING 的內容與實際狀態
-
-本文件把 2026-10-19 上游更新線索、主要變更分類、保護規則及後續匯入條件保存至 KING Repository，供下一輪工作直接接續。
 
 | 項目 | 狀態 |
 |---|---|
 | 讀取上游最新 main 與 compare | PASS：確認 45 commits ahead |
 | 上游更新類別初步整理 | PASS：技能、煉丹／藥物、世界／NPC、核心系統 |
-| 寫入 KING 版本庫稽核文件 | 本次提交完成後以 commit SHA 確認 |
-| 更新 submodule 固定 pin | NOT DONE：需先建立新版本快照與新 manifest |
-| 更新全量 source blob manifest | NOT DONE |
-| 寫入 Runtime overlay | NOT DONE：尚未完成新來源三方差異及依賴驗證 |
-| Docker／Runtime／E2E | NOT RUN：本文件不是遊戲通過證據 |
+| 寫入 KING 稽核文件 | PASS：`docs/status/ES2M_UPSTREAM_UPDATE_AUDIT_20261019.md` |
+| 註冊新來源於 `.gitmodules` | PASS：新增 `20261019_63e932a2` |
+| 新增固定 gitlink | PASS：提交 `cb44648573a5895d52bfb1efb1eabc071e861455` |
+| 舊證據 pin | PRESERVED：`71693beb` 未替換 |
+| 新全量 source blob manifest | NOT DONE |
+| 新來源三方差異清冊 | NOT DONE |
+| 寫入新 Runtime overlay | NOT DONE：等待差異與依賴驗證 |
+| Docker／Runtime／E2E | NOT RUN：沒有把來源 pin 或文件提交冒充遊戲通過證據 |
 
 ## 5. 下一步執行順序
 
-1. 保持既有 `71693beb` 證據快照不可變。
-2. 建立獨立的新上游快照，固定至 `63e932a2e46aa745a741df14e108df76bcd30f84`，並記錄 commit/tree/blob 證據。
-3. 產生與新快照一致的全量 manifest，重新核對 Original、舊 ES2M snapshot 與 KING Runtime 三方差異。
+1. 透過 checkout/submodule update 確認新 gitlink 實際下載至 `source/es2m_updates/20261019_63e932a2/upstream-es2-webmud`，核對 HEAD 必須等於 `63e932a2e46aa745a741df14e108df76bcd30f84`。
+2. 由新來源產生完整檔案清冊與 blob SHA manifest；另存新版本檔案，不覆寫 `ES2M_SOURCE_SYNC_MANIFEST_20261017.json`。
+3. 比對 Original ES2、舊 ES2M snapshot、新 ES2M snapshot、KING Runtime 四方差異，分類新增、相同、修改、刪除、改名與 KING-only。
 4. 先處理低風險、缺檔且依賴明確的世界／NPC／物件資料；同名異動全部保留 KING 並列為 HOLD。
 5. 核心戰鬥、角色生命週期、UTF-8 與技能批次維持 HOLD，直到相關建置與 E2E 閘門通過。
 6. 僅把無衝突、來源可驗證的內容輸出至新版本 overlay；不可用舊 overlay 覆蓋新內容。
