@@ -33,7 +33,22 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   await s.wait("請設定您的密碼"); s.send(password+"\r\n"); await s.wait("請再輸入一次您的密碼"); s.send(password+"\r\n");
   await s.wait("您的電子郵件地址"); s.send("none\r\n"); await s.wait(raceLabel);
   const ro=s.output().length; await choice(s,raceChoice); await s.wait("您要扮演的哪種性別",ro); await choice(s,"male");
-  await s.wait("您的顯示名稱"); s.send(name+"\r\n"); await s.wait("您確定要創造這個角色嗎"); await choice(s,"yes");
+  await s.wait("您的顯示名稱");
+  // E2E 診斷：只記錄顯示名稱輸入的 UTF-8 bytes（十六進位），確認是否含 CR/LF 控制字元。
+  // 顯示名稱不是密碼；禁止在這裡記錄帳號密碼或其他認證資料。
+  const displayNameInput = name + "\r\n";
+  const displayNameBytesHex = [...Buffer.from(displayNameInput, "utf8")]
+    .map(byte => byte.toString(16).padStart(2, "0"))
+    .join(" ");
+  console.error("E2E display-name input bytes (hex): " + displayNameBytesHex);
+  s.send(displayNameInput);
+  try {
+    await s.wait("您確定要創造這個角色嗎");
+  } catch (error) {
+    console.error("E2E display-name confirmation failed; last 512 output characters:\\n" + s.output().slice(-512));
+    throw error;
+  }
+  await choice(s, "yes");
   await s.wait("目前權限: (player)"); await s.wait("客棧大堂"); await s.wait("> ");
   await new Promise(r=>setTimeout(r,1200));
   for(const cmd of ["look","score","skills","inventory"]){const o=s.output().length;s.send(cmd+"\r\n");await s.wait("> ",o)}
