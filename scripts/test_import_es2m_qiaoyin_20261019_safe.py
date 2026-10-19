@@ -90,6 +90,11 @@ class Qiaoyin20261019ImportTests(unittest.TestCase):
         self.assertEqual((self.runtime / "d/qiaoyin/inn.c").read_bytes(), room)
         self.assertIn("KING-preserved", npc_runtime.read_text(encoding="utf-8"))
         self.assertEqual(report["resolved_dependencies"][0]["location"], "existing_runtime_preserved")
+        self.assertIn(
+            "d/qiaoyin/npc/keeper.c",
+            [row["path"] for row in report["held_upstream_changes"]],
+        )
+        self.assertNotIn("d/qiaoyin/npc/keeper.c", report["staged"])
 
     def test_wrong_source_pin_is_rejected(self) -> None:
         data = self.write_source("d/qiaoyin/inn.c", "void create() {}\n")
