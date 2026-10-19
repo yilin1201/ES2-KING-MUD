@@ -308,6 +308,8 @@ RUN cp /build/repository/source/es2m_updates/20261017_71693beb/upstream-es2-webm
 # 只修改建置產生的 logind，不回寫 Original ES2；三個精確錨點或政策後置條件不符即停止。
 RUN cd scripts && python3 -m unittest -v test_apply_es2m_login_policy_runtime
 RUN python3 scripts/apply_es2m_login_policy_runtime.py --runtime /opt/es2-king/runtime/mudlib
+# ES2M account policy A／驗證生成 Runtime 確實接受英數帳號與 1–18 字元顯示名稱；這是靜態來源閘門。
+RUN python3 scripts/test_numeric_id_policy_runtime.py --runtime /opt/es2-king/runtime
 
 # Release Candidate Gameplay Gates／候選版本實際玩法閘門：
 # 直接使用剛編譯完成的 Driver，在全新隔離 data 上執行 12 種族創角與普通玩家完整旅程。
