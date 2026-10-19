@@ -1,0 +1,815 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-19",
+  "source_repository": "https://github.com/wolfer168/es2-webmud",
+  "base_commit": "71693beb79ced81d51719ea1ccf7c02c641ca9b0",
+  "head_commit": "63e932a2e46aa745a741df14e108df76bcd30f84",
+  "compare": {
+    "status": "ahead",
+    "ahead_by": 45,
+    "behind_by": 0,
+    "total_commits": 45,
+    "changed_paths": 88,
+    "counts_by_status": {
+      "modified": 29,
+      "added": 44,
+      "removed": 9,
+      "renamed": 6
+    }
+  },
+  "policy": "This is the actual old-pin to new-pin delta, separate from the 2026-10-19 manifest which compares new upstream against the older es2m_snapshot/mudlib. It is an evidence inventory, not permission to overwrite Runtime. Deletions never delete Runtime files; same-path changes and core behavior remain HOLD.",
+  "files": [
+    {
+      "path": "CLAUDE.md",
+      "status": "modified",
+      "changes": 14,
+      "additions": 14,
+      "deletions": 0,
+      "classification": "EVIDENCE_OR_TEST_DOCS",
+      "policy": "NO_RUNTIME_IMPORT"
+    },
+    {
+      "path": "docs/catalog/es2_catalog.html",
+      "status": "modified",
+      "changes": 2,
+      "additions": 1,
+      "deletions": 1,
+      "classification": "EVIDENCE_OR_TEST_DOCS",
+      "policy": "NO_RUNTIME_IMPORT"
+    },
+    {
+      "path": "docs/martial_arts/ksanmando_三門刀法.md",
+      "status": "modified",
+      "changes": 10,
+      "additions": 5,
+      "deletions": 5,
+      "classification": "EVIDENCE_OR_TEST_DOCS",
+      "policy": "NO_RUNTIME_IMPORT"
+    },
+    {
+      "path": "docs/martial_arts/冷梅莊_劍士武功.md",
+      "status": "modified",
+      "changes": 14,
+      "additions": 7,
+      "deletions": 7,
+      "classification": "EVIDENCE_OR_TEST_DOCS",
+      "policy": "NO_RUNTIME_IMPORT"
+    },
+    {
+      "path": "docs/martial_arts/天師道法_四破重製.md",
+      "status": "added",
+      "changes": 226,
+      "additions": 226,
+      "deletions": 0,
+      "classification": "EVIDENCE_OR_TEST_DOCS",
+      "policy": "NO_RUNTIME_IMPORT"
+    },
+    {
+      "path": "docs/martial_arts/封山派_封山劍法與倒亂七星步法.md",
+      "status": "added",
+      "changes": 198,
+      "additions": 198,
+      "deletions": 0,
+      "classification": "EVIDENCE_OR_TEST_DOCS",
+      "policy": "NO_RUNTIME_IMPORT"
+    },
+    {
+      "path": "docs/martial_arts/戰鬥流程說明.md",
+      "status": "modified",
+      "changes": 16,
+      "additions": 13,
+      "deletions": 3,
+      "classification": "EVIDENCE_OR_TEST_DOCS",
+      "policy": "NO_RUNTIME_IMPORT"
+    },
+    {
+      "path": "docs/martial_arts/武俠敘述風格指南.md",
+      "status": "added",
+      "changes": 113,
+      "additions": 113,
+      "deletions": 0,
+      "classification": "EVIDENCE_OR_TEST_DOCS",
+      "policy": "NO_RUNTIME_IMPORT"
+    },
+    {
+      "path": "docs/martial_arts/道士_清河映星劍與奇門步法.md",
+      "status": "added",
+      "changes": 106,
+      "additions": 106,
+      "deletions": 0,
+      "classification": "EVIDENCE_OR_TEST_DOCS",
+      "policy": "NO_RUNTIME_IMPORT"
+    },
+    {
+      "path": "docs/martial_arts/門派武功對照表.md",
+      "status": "modified",
+      "changes": 2,
+      "additions": 1,
+      "deletions": 1,
+      "classification": "EVIDENCE_OR_TEST_DOCS",
+      "policy": "NO_RUNTIME_IMPORT"
+    },
+    {
+      "path": "adm/daemons/combatd.c",
+      "status": "modified",
+      "changes": 15,
+      "additions": 11,
+      "deletions": 4,
+      "classification": "CORE_RUNTIME",
+      "policy": "CORE_HOLD"
+    },
+    {
+      "path": "adm/simul_efun/utf8.c",
+      "status": "modified",
+      "changes": 7,
+      "additions": 6,
+      "deletions": 1,
+      "classification": "CORE_RUNTIME",
+      "policy": "CORE_HOLD"
+    },
+    {
+      "path": "cmds/std/acquire.c",
+      "status": "modified",
+      "changes": 7,
+      "additions": 4,
+      "deletions": 3,
+      "classification": "COMMAND_BEHAVIOR",
+      "policy": "DEPENDENCY_AND_RUNTIME_TEST_REQUIRED"
+    },
+    {
+      "path": "cmds/std/drop.c",
+      "status": "modified",
+      "changes": 9,
+      "additions": 8,
+      "deletions": 1,
+      "classification": "COMMAND_BEHAVIOR",
+      "policy": "DEPENDENCY_AND_RUNTIME_TEST_REQUIRED"
+    },
+    {
+      "path": "cmds/std/get.c",
+      "status": "modified",
+      "changes": 8,
+      "additions": 7,
+      "deletions": 1,
+      "classification": "COMMAND_BEHAVIOR",
+      "policy": "DEPENDENCY_AND_RUNTIME_TEST_REQUIRED"
+    },
+    {
+      "path": "cmds/std/prepare.c",
+      "status": "added",
+      "changes": 11,
+      "additions": 11,
+      "deletions": 0,
+      "classification": "COMMAND_BEHAVIOR",
+      "policy": "DEPENDENCY_AND_RUNTIME_TEST_REQUIRED"
+    },
+    {
+      "path": "cmds/std/put.c",
+      "status": "modified",
+      "changes": 9,
+      "additions": 8,
+      "deletions": 1,
+      "classification": "COMMAND_BEHAVIOR",
+      "policy": "DEPENDENCY_AND_RUNTIME_TEST_REQUIRED"
+    },
+    {
+      "path": "custom/legacy_npc/liuh_don_lu.c",
+      "status": "modified",
+      "changes": 78,
+      "additions": 75,
+      "deletions": 3,
+      "classification": "WORLD_OR_NPC",
+      "policy": "THREE_WAY_REVIEW_REQUIRED"
+    },
+    {
+      "path": "d/lee/herb_shop.c",
+      "status": "modified",
+      "changes": 5,
+      "additions": 3,
+      "deletions": 2,
+      "classification": "WORLD_OR_NPC",
+      "policy": "THREE_WAY_REVIEW_REQUIRED"
+    },
+    {
+      "path": "d/lee/npc/lee_yen.c",
+      "status": "modified",
+      "changes": 8,
+      "additions": 4,
+      "deletions": 4,
+      "classification": "WORLD_OR_NPC",
+      "policy": "THREE_WAY_REVIEW_REQUIRED"
+    },
+    {
+      "path": "d/lee/obj/bronze_furnace.c",
+      "status": "removed",
+      "changes": 10,
+      "additions": 0,
+      "deletions": 10,
+      "classification": "WORLD_ITEM_REMOVAL",
+      "policy": "DO_NOT_DELETE_RUNTIME"
+    },
+    {
+      "path": "d/lee/obj/bronze_reactor.c",
+      "status": "removed",
+      "changes": 10,
+      "additions": 0,
+      "deletions": 10,
+      "classification": "WORLD_ITEM_REMOVAL",
+      "policy": "DO_NOT_DELETE_RUNTIME"
+    },
+    {
+      "path": "d/lee/obj/firewood.c",
+      "status": "removed",
+      "changes": 11,
+      "additions": 0,
+      "deletions": 11,
+      "classification": "WORLD_ITEM_REMOVAL",
+      "policy": "DO_NOT_DELETE_RUNTIME"
+    },
+    {
+      "path": "d/qiaoyin/npc/keeper.c",
+      "status": "modified",
+      "changes": 10,
+      "additions": 5,
+      "deletions": 5,
+      "classification": "NPC_SAME_PATH_CHANGE",
+      "policy": "PRESERVE_EXISTING_HOLD"
+    },
+    {
+      "path": "d/qiaoyin/npc/old_ho.c",
+      "status": "modified",
+      "changes": 6,
+      "additions": 3,
+      "deletions": 3,
+      "classification": "NPC_SAME_PATH_CHANGE",
+      "policy": "PRESERVE_EXISTING_HOLD"
+    },
+    {
+      "path": "d/snow/npc/herbalist.c",
+      "status": "modified",
+      "changes": 2,
+      "additions": 1,
+      "deletions": 1,
+      "classification": "WORLD_OR_NPC",
+      "policy": "THREE_WAY_REVIEW_REQUIRED"
+    },
+    {
+      "path": "d/snow/npc/teacher.c",
+      "status": "modified",
+      "changes": 24,
+      "additions": 21,
+      "deletions": 3,
+      "classification": "KING_CUSTOM_PROTECTED",
+      "policy": "PRESERVE_KING_HOLD"
+    },
+    {
+      "path": "d/wutang/npc/guo_boo.c",
+      "status": "modified",
+      "changes": 75,
+      "additions": 75,
+      "deletions": 0,
+      "classification": "WORLD_OR_NPC",
+      "policy": "THREE_WAY_REVIEW_REQUIRED"
+    },
+    {
+      "path": "daemon/misc/heat_b.h",
+      "status": "added",
+      "changes": 13,
+      "additions": 13,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "daemon/misc/heat_commands.c",
+      "status": "added",
+      "changes": 250,
+      "additions": 250,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "daemon/misc/heat_d.c",
+      "status": "added",
+      "changes": 469,
+      "additions": 469,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "daemon/misc/heat_recipes.c",
+      "status": "added",
+      "changes": 24,
+      "additions": 24,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "daemon/misc/herb_catalog.c",
+      "status": "added",
+      "changes": 122,
+      "additions": 122,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "daemon/misc/herb_cycle.c",
+      "status": "added",
+      "changes": 64,
+      "additions": 64,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "daemon/misc/herb_d.c",
+      "status": "added",
+      "changes": 371,
+      "additions": 371,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "daemon/misc/herb_qualification.c",
+      "status": "added",
+      "changes": 51,
+      "additions": 51,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "daemon/skill/alchemy-medication.c",
+      "status": "added",
+      "changes": 145,
+      "additions": 145,
+      "deletions": 0,
+      "classification": "MARTIAL_OR_SKILL",
+      "policy": "SKILL_HOLD"
+    },
+    {
+      "path": "daemon/skill/chaos-steps.c",
+      "status": "added",
+      "changes": 108,
+      "additions": 108,
+      "deletions": 0,
+      "classification": "MARTIAL_OR_SKILL",
+      "policy": "SKILL_HOLD"
+    },
+    {
+      "path": "daemon/skill/eight_steps.c",
+      "status": "added",
+      "changes": 82,
+      "additions": 82,
+      "deletions": 0,
+      "classification": "MARTIAL_OR_SKILL",
+      "policy": "SKILL_HOLD"
+    },
+    {
+      "path": "daemon/skill/fonxan_force.c",
+      "status": "added",
+      "changes": 192,
+      "additions": 192,
+      "deletions": 0,
+      "classification": "MARTIAL_OR_SKILL",
+      "policy": "SKILL_HOLD"
+    },
+    {
+      "path": "daemon/skill/fonxansword.c",
+      "status": "added",
+      "changes": 185,
+      "additions": 185,
+      "deletions": 0,
+      "classification": "MARTIAL_OR_SKILL",
+      "policy": "SKILL_HOLD"
+    },
+    {
+      "path": "daemon/skill/ksanmando.c",
+      "status": "modified",
+      "changes": 10,
+      "additions": 5,
+      "deletions": 5,
+      "classification": "MARTIAL_OR_SKILL",
+      "policy": "SKILL_HOLD"
+    },
+    {
+      "path": "daemon/skill/liuh-ken.c",
+      "status": "added",
+      "changes": 57,
+      "additions": 57,
+      "deletions": 0,
+      "classification": "MARTIAL_OR_SKILL",
+      "policy": "SKILL_HOLD"
+    },
+    {
+      "path": "daemon/skill/magic_steps.c",
+      "status": "added",
+      "changes": 78,
+      "additions": 78,
+      "deletions": 0,
+      "classification": "MARTIAL_OR_SKILL",
+      "policy": "SKILL_HOLD"
+    },
+    {
+      "path": "daemon/skill/reflecting_star_sword.c",
+      "status": "added",
+      "changes": 55,
+      "additions": 55,
+      "deletions": 0,
+      "classification": "MARTIAL_OR_SKILL",
+      "policy": "SKILL_HOLD"
+    },
+    {
+      "path": "daemon/skill/seven.c",
+      "status": "modified",
+      "changes": 14,
+      "additions": 7,
+      "deletions": 7,
+      "classification": "MARTIAL_OR_SKILL",
+      "policy": "SKILL_HOLD"
+    },
+    {
+      "path": "daemon/skill/sun_force.c",
+      "status": "added",
+      "changes": 212,
+      "additions": 212,
+      "deletions": 0,
+      "classification": "MARTIAL_OR_SKILL",
+      "policy": "SKILL_HOLD"
+    },
+    {
+      "path": "daemon/skill/taoism-spells.c",
+      "status": "modified",
+      "changes": 487,
+      "additions": 301,
+      "deletions": 186,
+      "classification": "MARTIAL_OR_SKILL",
+      "policy": "SKILL_HOLD"
+    },
+    {
+      "path": "feature/char/combat.c",
+      "status": "modified",
+      "changes": 15,
+      "additions": 12,
+      "deletions": 3,
+      "classification": "CORE_RUNTIME",
+      "policy": "CORE_HOLD"
+    },
+    {
+      "path": "include/room.h",
+      "status": "modified",
+      "changes": 1,
+      "additions": 1,
+      "deletions": 0,
+      "classification": "CORE_RUNTIME",
+      "policy": "CORE_HOLD"
+    },
+    {
+      "path": "obj/alchemist/aquapill.c",
+      "status": "added",
+      "changes": 63,
+      "additions": 63,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/black_pill.c",
+      "status": "added",
+      "changes": 63,
+      "additions": 63,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/green_pill.c",
+      "status": "renamed",
+      "changes": 44,
+      "additions": 29,
+      "deletions": 15,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/heat_ash.c",
+      "status": "added",
+      "changes": 44,
+      "additions": 44,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/heat_firewood.c",
+      "status": "added",
+      "changes": 88,
+      "additions": 88,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/heat_furnace.c",
+      "status": "added",
+      "changes": 19,
+      "additions": 19,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/heat_reactor.c",
+      "status": "added",
+      "changes": 54,
+      "additions": 54,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/lavage_pill.c",
+      "status": "added",
+      "changes": 28,
+      "additions": 28,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/major_heal_pill.c",
+      "status": "added",
+      "changes": 65,
+      "additions": 65,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mana_pill.c",
+      "status": "added",
+      "changes": 64,
+      "additions": 64,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/minor_heal_pill.c",
+      "status": "renamed",
+      "changes": 44,
+      "additions": 28,
+      "deletions": 16,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mix_recipe.c",
+      "status": "renamed",
+      "changes": 0,
+      "additions": 0,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mixture_aquapill.c",
+      "status": "added",
+      "changes": 112,
+      "additions": 112,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mixture_blackpill.c",
+      "status": "added",
+      "changes": 112,
+      "additions": 112,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mixture_greenpill.c",
+      "status": "added",
+      "changes": 112,
+      "additions": 112,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mixture_lavagepill.c",
+      "status": "added",
+      "changes": 112,
+      "additions": 112,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mixture_majorpill.c",
+      "status": "added",
+      "changes": 112,
+      "additions": 112,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mixture_manapill.c",
+      "status": "added",
+      "changes": 112,
+      "additions": 112,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mixture_minorpill.c",
+      "status": "added",
+      "changes": 112,
+      "additions": 112,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mixture_refreshpill.c",
+      "status": "added",
+      "changes": 112,
+      "additions": 112,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mixture_relaxpill.c",
+      "status": "added",
+      "changes": 112,
+      "additions": 112,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mixture_unknown.c",
+      "status": "added",
+      "changes": 111,
+      "additions": 111,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mjp_1.c",
+      "status": "renamed",
+      "changes": 0,
+      "additions": 0,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mjp_2.c",
+      "status": "renamed",
+      "changes": 0,
+      "additions": 0,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/mjp_3.c",
+      "status": "renamed",
+      "changes": 0,
+      "additions": 0,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/refresh_pill.c",
+      "status": "added",
+      "changes": 59,
+      "additions": 59,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/alchemist/relax_pill.c",
+      "status": "added",
+      "changes": 60,
+      "additions": 60,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/drug/black_pill.c",
+      "status": "removed",
+      "changes": 35,
+      "additions": 0,
+      "deletions": 35,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/medication/alchemist/aquapill.c",
+      "status": "removed",
+      "changes": 50,
+      "additions": 0,
+      "deletions": 50,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/medication/alchemist/black_pill.c",
+      "status": "removed",
+      "changes": 49,
+      "additions": 0,
+      "deletions": 49,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/medication/alchemist/major_heal_pill.c",
+      "status": "removed",
+      "changes": 34,
+      "additions": 0,
+      "deletions": 34,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/medication/alchemist/refresh_pill.c",
+      "status": "removed",
+      "changes": 45,
+      "additions": 0,
+      "deletions": 45,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/medication/black_pill.c",
+      "status": "removed",
+      "changes": 35,
+      "additions": 0,
+      "deletions": 35,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "obj/user.c",
+      "status": "modified",
+      "changes": 3,
+      "additions": 3,
+      "deletions": 0,
+      "classification": "CORE_RUNTIME",
+      "policy": "CORE_HOLD"
+    },
+    {
+      "path": "std/char.c",
+      "status": "modified",
+      "changes": 2,
+      "additions": 2,
+      "deletions": 0,
+      "classification": "CORE_RUNTIME",
+      "policy": "CORE_HOLD"
+    },
+    {
+      "path": "std/room/herb.c",
+      "status": "added",
+      "changes": 24,
+      "additions": 24,
+      "deletions": 0,
+      "classification": "ALCHEMY_MEDICATION",
+      "policy": "DEPENDENCY_AUDIT_REQUIRED"
+    },
+    {
+      "path": "tests/test_custom_reference_batch1.py",
+      "status": "modified",
+      "changes": 4,
+      "additions": 3,
+      "deletions": 1,
+      "classification": "EVIDENCE_OR_TEST_DOCS",
+      "policy": "NO_RUNTIME_IMPORT"
+    },
+    {
+      "path": "tests/test_v32059_skill_boundaries.py",
+      "status": "modified",
+      "changes": 9,
+      "additions": 7,
+      "deletions": 2,
+      "classification": "EVIDENCE_OR_TEST_DOCS",
+      "policy": "NO_RUNTIME_IMPORT"
+    }
+  ]
+}
