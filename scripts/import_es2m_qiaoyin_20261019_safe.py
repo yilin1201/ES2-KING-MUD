@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""安全匯入 2026-10-19 ES2M 新增橋隱房間；不覆蓋 KING 或既有 Runtime 檔案。"""
+"""核對並只補入固定 2026-10-19 ES2M 橋隱區缺檔；兩個跨 pin 修改 NPC 明確 HOLD。"""
 from __future__ import annotations
 
 import argparse
