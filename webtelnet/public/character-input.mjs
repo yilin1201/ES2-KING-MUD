@@ -1,8 +1,8 @@
-// Character Creation Compatibility／角色建立相容：Race 使用整行文字；Gender／Confirm 保留 Original get_char 單鍵。
-// 不變更 Original 種族資料與後續創角邏輯；只避開 Public iPhone 對 Race 單鍵輸入的不穩定。
-export const RACE_PROMPT = /(?:選擇你的角色所屬的種族[\s\S]*請輸入編號 1-12 或種族 ID|請輸入編號 1-12 或種族 ID)[：:]?\s*(?:>\s*)*$/;
-export const GENDER_PROMPT = /您要扮演的哪種性別\(外觀\)的角色[?？]?\s*$/;
-export const CONFIRM_PROMPT = /(?:使用 .+ 這個代號將會創造一個新的人物﹐您確定嗎|您確定要創造這個角色嗎|您要重新創造這個角色嗎|您要將另一個連線中的相同人物趕出去﹐取而代之嗎)[?？]?\s*$/;
+// Character Creation Compatibility／角色建立相容：同時保留 Original ES2 單鍵格式與 ES2M 新式提示格式。
+// 不變更 Original 種族資料與後續創角邏輯；只依畫面協定選擇正確輸入格式。
+export const RACE_PROMPT = /(?:選擇你的角色所屬的種族[\\s\\S]*請輸入編號 1-12 或種族 ID|請輸入編號 1-12 或種族 ID)[：:]?\\s*(?:>\\s*)*$/;
+export const GENDER_PROMPT = /您要扮演的哪種性別\\(外觀\\)的角色[?？]?\\s*(?:\\((?:Male|男)\\s*\\/\\s*(?:Female|女)\\)\\s*|[\\s\\S]*請輸入選項數字[:：]?\\s*)?$/;
+export const CONFIRM_PROMPT = /(?:使用 .+ 這個代號將會創造一個新的人物﹐您確定嗎|您確定要創造這個角色嗎|您要重新創造這個角色嗎|您要將另一個連線中的相同人物趕出去﹐取而代之嗎)[?？]?\\s*(?:\\((?:Yes|是)\\s*\\/\\s*(?:No|否)\\)\\s*)?$/;
 
 const menus = {
   race: [
@@ -50,9 +50,11 @@ export function prepareCharacterChoice(outputTail, rawValue) {
     if (extra[value]) return { bytes: `ES2RACE:${extra[value]}`, followup: null };
   }
   if (menu.type === "gender") {
-    if (["female", "f", "女性", "女"].includes(value)) return { bytes: "F", followup: null };
-    if (["male", "m", "男性", "男"].includes(value)) return { bytes: "M", followup: null };
-    if (["unknown", "n", "無法判斷", "未知"].includes(value)) return { bytes: "N", followup: null };
+    // ES2M 數字選單：1=女性、2=男性、3=無法判斷；必須整行輸入並送出 Enter。
+    const numbered = /請輸入選項數字[:：]?\\s*$/.test(outputTail);
+    if (["female", "f", "女性", "女"].includes(value)) return { bytes: numbered ? "1\\r\\n" : "F", followup: null };
+    if (["male", "m", "男性", "男"].includes(value)) return { bytes: numbered ? "2\\r\\n" : "M", followup: null };
+    if (["unknown", "n", "無法判斷", "未知"].includes(value)) return { bytes: numbered ? "3\\r\\n" : "N", followup: null };
   }
   if (menu.type === "confirm") {
     if (["yes", "y", "是"].includes(value)) return { bytes: "Y", followup: null };
