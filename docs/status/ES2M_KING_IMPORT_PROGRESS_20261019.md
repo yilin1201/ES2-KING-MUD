@@ -4,7 +4,7 @@
 
 - ES2-KING Repository：`yilin1201/ES2-KING-MUD`
 - 工作分支：`integration/es2m-audit-import-20261017`
-- 本輪最新提交：`14d9d2b74e476ab4813291198d3979018a556277`
+- 本輪上游差異清冊提交：`14d9d2b74e476ab4813291198d3979018a556277`
 - 新 ES2M 固定來源：`63e932a2e46aa745a741df14e108df76bcd30f84`
 - 新來源 manifest：`docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261019.json`
 - manifest 規模：1,709 檔；963 與舊快照相同、163 修改、583 新增、18 舊快照獨有；764 個路徑需要審查。
@@ -25,7 +25,7 @@
 
 ## 尚未宣稱完成的項目
 
-- 新橋隱區匯入器、Docker build、Runtime 與 E2E **尚未實際執行驗證**；以上是程式與建置流程已寫入 Repository，不代表遊戲已通過。
+- 新橋隱區匯入器、Docker build、Runtime 與 E2E **尚未實際執行驗證**；以上是程式與建置流程已寫入 Repository，不代表遊戲已通過。\n- 最近的保護修正提交：`69121f2b`（保留跨 pin 修改 NPC）、`fa010d21`／`9a0fc987`（匯入測試與 fixture 修正）。
 - 兩個上游 pin 的實際差異中，橋隱區只有 `d/qiaoyin/npc/keeper.c` 與 `d/qiaoyin/npc/old_ho.c` 為修改項；這兩個同名變更仍 HOLD。其餘橋隱區房間即使可核對或補缺，也不能誤稱為 2026-10-19 新增的上游差異。
 - 新橋隱區匯入器只有在所有候選來源 SHA、同名衝突與字面相依均通過時才會複製檔案；任何未知相依或衝突都應阻止建置，不得放寬條件。
 - 新版來源目前只接入獨立的橋隱區增量匯入；尚未把 1,709 個來源檔案整批匯入 Runtime。
