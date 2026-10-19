@@ -38,6 +38,13 @@ class Qiaoyin20261019ImportTests(unittest.TestCase):
         return data
 
     def write_manifest(self, rows: list[dict], commit: str = importer.EXPECTED_SOURCE_COMMIT) -> None:
+        # 測試資料同步建立兩個已知 HOLD 的上游 NPC，驗證它們只核對 SHA、不會被匯入。
+        known_paths = {row["path"] for row in rows}
+        for held_path in importer.HELD_UPSTREAM_CHANGES:
+            rel = held_path.as_posix()
+            if rel not in known_paths:
+                data = self.write_source(rel, "void create() { /* held fixture */ }\\n")
+                rows.append(manifest_row(rel, data))
         self.manifest_path.write_text(json.dumps({
             "source_commit": commit,
             "files": rows,
