@@ -4,10 +4,11 @@
 
 - ES2-KING Repository：`yilin1201/ES2-KING-MUD`
 - 工作分支：`integration/es2m-audit-import-20261017`
-- 本輪最新提交：`d1daea2731c4f639e6226c87949e3c89234e6da7`
+- 本輪最新提交：`14d9d2b74e476ab4813291198d3979018a556277`
 - 新 ES2M 固定來源：`63e932a2e46aa745a741df14e108df76bcd30f84`
 - 新來源 manifest：`docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261019.json`
 - manifest 規模：1,709 檔；963 與舊快照相同、163 修改、583 新增、18 舊快照獨有；764 個路徑需要審查。
+- 另已直接比對舊 pin → 新 pin 的 45 個上游提交：88 個路徑有變更（44 新增、29 修改、9 刪除、6 改名）；清冊位於 `docs/status/ES2M_UPSTREAM_DELTA_71693_TO_63E932A2.json`。此清冊才是兩個上游 pin 之間的實際差異。
 - 舊來源 pin `71693beb79ced81d51719ea1ccf7c02c641ca9b0` 保留，未以新 SHA 覆蓋。
 
 ## 已寫入 KING Repository 的更新
@@ -16,13 +17,16 @@
 |---|---|---|
 | 2026-10-19 橋隱區安全匯入器 | `740f5fbc` | 已新增；只處理 manifest 標記為新檔的 `d/qiaoyin/*.c`，逐檔驗證 Git blob SHA，不覆蓋既有 Runtime。 |
 | 橋隱區匯入單元測試 | `e5b076a9` | 已新增；涵蓋來源 pin、SHA、同名衝突、未解相依及保留既有 Runtime 相依。 |
-| Docker build 匯入接線 | `80934af0` | 已加入新 pin 的獨立匯入步驟，舊 2026-10-17 匯入步驟保留。 |
+| Docker build 匯入接線 | `80934af0` | 已加入新 pin 的獨立橋隱區核對／缺檔補入步驟，舊 2026-10-17 匯入步驟保留。 |
+| 上游實際差異清冊 | `14d9d2b7` | 已將舊 pin → 新 pin 的 88 個變更路徑寫入 JSON，並依風險分類。 |
+| 橋隱區 NPC 差異保護 | `69121f2b`、`fa010d21` | `keeper.c`、`old_ho.c` 在兩個上游 pin 間有修改，已明確 HOLD，保留既有 Runtime，不自動覆蓋。
 | 顯示名稱 E2E 診斷 | `60d0d007`、`ff38f859` | 已加入送出位元組十六進位與失敗時最近 512 字元輸出。 |
 | ES2M 帳號規則 A 靜態閘門 | `06041063`、`d1daea27` | 已將數字帳號測試改為驗證 ES2M 英數帳號與顯示名稱 1–18 字元規則，並接入 Docker build。 |
 
 ## 尚未宣稱完成的項目
 
 - 新橋隱區匯入器、Docker build、Runtime 與 E2E **尚未實際執行驗證**；以上是程式與建置流程已寫入 Repository，不代表遊戲已通過。
+- 兩個上游 pin 的實際差異中，橋隱區只有 `d/qiaoyin/npc/keeper.c` 與 `d/qiaoyin/npc/old_ho.c` 為修改項；這兩個同名變更仍 HOLD。其餘橋隱區房間即使可核對或補缺，也不能誤稱為 2026-10-19 新增的上游差異。
 - 新橋隱區匯入器只有在所有候選來源 SHA、同名衝突與字面相依均通過時才會複製檔案；任何未知相依或衝突都應阻止建置，不得放寬條件。
 - 新版來源目前只接入獨立的橋隱區增量匯入；尚未把 1,709 個來源檔案整批匯入 Runtime。
 - 新增技能、煉丹／藥物、戰鬥核心、UTF-8、角色生命週期維持 HOLD。
