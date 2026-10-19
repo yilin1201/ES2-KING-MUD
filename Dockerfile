@@ -200,6 +200,17 @@ RUN python3 scripts/import_es2m_world_zones_safe.py \
     --output /build/es2m-latest-qiaoyin-stage.json \
     --zones d/qiaoyin
 # 檔案補入不等於地圖可玩；後續批次需另驗證出口連通、NPC/商店/任務依賴及實際玩家路徑。
+
+# ES2M 2026-10-19 上游增量／橋隱區：使用新固定 pin 與對應 blob manifest，不覆蓋舊 71693beb 證據。
+# 僅匯入 manifest 標記為新增的 d/qiaoyin 檔案；同名衝突、來源 SHA 不符或未解相依均阻止建置。
+RUN test -d /build/repository/source/es2m_updates/20261019_63e932a2/upstream-es2-webmud/source/upstream/mudlib/d/qiaoyin \
+    && cd scripts && python3 -m unittest -v test_import_es2m_qiaoyin_20261019_safe
+RUN python3 scripts/import_es2m_qiaoyin_20261019_safe.py \
+    --source-root /build/repository/source/es2m_updates/20261019_63e932a2/upstream-es2-webmud/source/upstream/mudlib \
+    --runtime /opt/es2-king/runtime/mudlib \
+    --manifest /build/repository/docs/status/ES2M_SOURCE_SYNC_MANIFEST_20261019.json \
+    --output /build/es2m-qiaoyin-20261019-stage.json
+
 # ES2M 2026-10-08 安全世界增量：只套用留言板與李家村非戰區，遇到同名異動即阻止建置。
 RUN python3 scripts/test_apply_es2m_20261008_world_delta.py
 RUN python3 scripts/apply_es2m_20261008_world_delta.py \
