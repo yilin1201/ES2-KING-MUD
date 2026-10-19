@@ -45,7 +45,7 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   try {
     await s.wait("您確定要創造這個角色嗎");
   } catch (error) {
-    console.error("E2E display-name confirmation failed; last 512 output characters:\\n" + s.output().slice(-512));
+    console.error("E2E display-name confirmation failed; last 512 output characters:\n" + s.output().slice(-512));
     throw error;
   }
   await choice(s, "yes");
