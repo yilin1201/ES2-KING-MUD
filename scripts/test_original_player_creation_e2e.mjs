@@ -6,6 +6,27 @@ import { prepareCharacterChoice } from "../webtelnet/public/character-input.mjs"
 
 const url=process.env.ES2_E2E_WS_URL, saveDir=process.env.ES2_E2E_SAVE_DIR, password=process.env.ES2_E2E_PASSWORD;
 assert.ok(url && saveDir && password);
+
+// Character Prompt Contract／登入介面協定回歸：同一解析器須同時支援 Original ES2 與 ES2M。
+// 先在啟動 Driver 前驗證格式與實際輸入 bytes，避免只靠後段 timeout 才發現介面不相容。
+function testCharacterPromptCompatibility() {
+  const originalGender = "您要扮演的哪種性別(外觀)的角色?";
+  assert.equal(prepareCharacterChoice(originalGender, "female")?.bytes, "F");
+  assert.equal(prepareCharacterChoice(originalGender, "male")?.bytes, "M");
+  assert.equal(prepareCharacterChoice(originalGender, "unknown")?.bytes, "N");
+
+  const es2mGender = "您要扮演的哪種性別(外觀)的角色?\\n1. 女性\\n2. 男性\\n3. 無法判斷\\n請輸入選項數字:";
+  assert.equal(prepareCharacterChoice(es2mGender, "female")?.bytes, "1\\r\\n");
+  assert.equal(prepareCharacterChoice(es2mGender, "male")?.bytes, "2\\r\\n");
+  assert.equal(prepareCharacterChoice(es2mGender, "unknown")?.bytes, "3\\r\\n");
+
+  const originalConfirm = "您確定要創造這個角色嗎?";
+  const es2mConfirm = "使用 7probe 這個代號將會創造一個新的人物﹐您確定嗎? (Yes / No)";
+  assert.equal(prepareCharacterChoice(originalConfirm, "yes")?.bytes, "Y");
+  assert.equal(prepareCharacterChoice(es2mConfirm, "yes")?.bytes, "Y");
+  console.log("CHARACTER_PROMPT_COMPATIBILITY_PASS: Original ES2 + ES2M");
+}
+testCharacterPromptCompatibility();
 const exists=async p=>{try{await access(p,constants.F_OK);return true}catch{return false}};
 
 function session(){
