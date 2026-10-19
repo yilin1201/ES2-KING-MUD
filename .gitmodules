@@ -2,3 +2,8 @@
 [submodule "source/es2m_updates/20261017_71693beb/upstream-es2-webmud"]
 	path = source/es2m_updates/20261017_71693beb/upstream-es2-webmud
 	url = https://github.com/wolfer168/es2-webmud.git
+
+# 2026-10-19 上游更新證據快照／保留舊 pin 不變，新增獨立的最新來源 pin。
+[submodule "source/es2m_updates/20261019_63e932a2/upstream-es2-webmud"]
+	path = source/es2m_updates/20261019_63e932a2/upstream-es2-webmud
+	url = https://github.com/wolfer168/es2-webmud.git
