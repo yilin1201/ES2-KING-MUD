@@ -10,6 +10,8 @@ import re
 import subprocess
 from pathlib import Path
 
+from es2m_latest_import_exclusions import ES2M_LATEST_IMPORT_EXCLUSIONS
+
 EXPECTED_COMMIT = "71693beb79ced81d51719ea1ccf7c02c641ca9b0"
 TIMESTAMP_BACKUP = re.compile(r"\.\d{10,}$")
 
@@ -99,6 +101,11 @@ def main() -> None:
             raise SystemExit(f"ES2M_THREE_WAY_FAIL: ES2M source blob mismatch: {relative}")
         if base_sha != expected_base_sha:
             raise SystemExit(f"ES2M_THREE_WAY_FAIL: {base_label} baseline blob mismatch: {relative}")
+        # 排除檔仍須通過來源與 base SHA 驗證，之後才禁止修改 Runtime。
+        protocol_exclusion = ES2M_LATEST_IMPORT_EXCLUSIONS.get(relative)
+        if protocol_exclusion:
+            report["excluded"].append({"path": relative, **protocol_exclusion})
+            continue
         report["eligible_files"] += 1
         if not target.exists():
             target.parent.mkdir(parents=True, exist_ok=True)
