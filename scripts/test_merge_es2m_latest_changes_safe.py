@@ -45,6 +45,44 @@ class ThreeWayMergeTest(unittest.TestCase):
             self.assertEqual(len(conflicts),1)
             self.assertGreaterEqual(conflicts[0].get("conflict_count",0),2)
 
+    def test_excludes_ui_protocol_files_and_merges_other_paths(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            original = root / "original"; source = root / "source"; runtime = root / "runtime"
+            excluded = {
+                "feature/user/input.c",
+                "adm/simul_efun/cursor.c",
+                "feature/user/more.c",
+            }
+            paths = sorted(excluded | {"safe/room.c"})
+            entries = []
+            for path in paths:
+                base = ("base-" + path + "\\n").encode()
+                upstream = ("source-" + path + "\\n").encode()
+                for folder, data in ((original, base), (source, upstream), (runtime, base)):
+                    target = folder / path
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_bytes(data)
+                entries.append({
+                    "path": path, "sha": blob(upstream), "original_sha": blob(base),
+                    "original_status": "CHANGED_FROM_PINNED_ORIGINAL",
+                    "status": "CHANGED_FROM_EXISTING_ES2M_SNAPSHOT",
+                })
+            manifest = root / "manifest.json"
+            manifest.write_text(json.dumps({"source_commit": COMMIT, "files": entries}), encoding="utf-8")
+            report = root / "report.json"
+            proc = subprocess.run([
+                sys.executable, str(SCRIPT), "--source-root", str(source),
+                "--original-root", str(original), "--runtime", str(runtime),
+                "--manifest", str(manifest), "--output", str(report)
+            ], capture_output=True, text=True)
+            self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+            data = json.loads(report.read_text(encoding="utf-8"))
+            self.assertEqual({item["path"] for item in data["excluded"]}, excluded)
+            self.assertEqual((runtime / "safe/room.c").read_bytes(), b"source-safe/room.c\\n")
+            for path in excluded:
+                self.assertEqual((runtime / path).read_bytes(), ("base-" + path + "\\n").encode())
+
     def test_binary_nul_file_is_held_without_text_merge(self):
         with tempfile.TemporaryDirectory() as td:
             base=b"base=0\x00tail\n"
