@@ -11,6 +11,8 @@ import re
 import shutil
 from pathlib import Path
 
+from es2m_latest_import_exclusions import ES2M_LATEST_IMPORT_EXCLUSIONS
+
 EXPECTED_COMMIT = "71693beb79ced81d51719ea1ccf7c02c641ca9b0"
 TIMESTAMP_BACKUP = re.compile(r"\.\d{10,}$")
 
@@ -66,6 +68,11 @@ def main() -> None:
         actual_source_sha = git_blob_sha(src)
         if actual_source_sha != entry.get("sha"):
             raise SystemExit(f"ES2M_LATEST_IMPORT_FAIL: source SHA mismatch: {relative}")
+        # UI 協定排除仍先驗證固定來源 SHA；只阻止寫入 Runtime，不跳過證據檢查。
+        protocol_exclusion = ES2M_LATEST_IMPORT_EXCLUSIONS.get(relative)
+        if protocol_exclusion:
+            report["excluded"].append({"path": relative, **protocol_exclusion})
+            continue
         dst = runtime / rel
         if not dst.resolve(strict=False).is_relative_to(runtime):
             raise SystemExit(f"ES2M_LATEST_IMPORT_FAIL: runtime path escaped root: {relative}")
