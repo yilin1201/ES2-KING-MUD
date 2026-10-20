@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "batch": "登入 UI 協定批次",
+  "policy": "本批只阻止清單內檔案進入 KING Runtime；不得刪除 ES2M snapshot、原始來源或證據清冊。",
+  "files": [
+    {
+      "path": "feature/user/input.c",
+      "reason": "登入提示、性別選單與輸入行尾協定，需另批完整適配。"
+    },
+    {
+      "path": "adm/simul_efun/cursor.c",
+      "reason": "與 input.c 配對的數字選單映射，避免新舊協定混搭。"
+    },
+    {
+      "path": "feature/user/more.c",
+      "reason": "HELP 翻頁鍵行為改變，屬網頁互動協定，需另批測試。"
+    }
+  ]
+}
