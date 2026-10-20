@@ -62,6 +62,35 @@ class PersistentOverlayTests(unittest.TestCase):
             self.assertEqual((overlay / "zone.c").read_text(encoding="utf-8"), "merged-safe\n")
             self.run_cli("apply", "--overlay-root", overlay, "--runtime", runtime)
 
+    def test_export_marks_ui_protocol_exclusions_and_preserves_other_hashes(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            runtime, additive, merge = self.fixture(root)
+            excluded = {
+                "feature/user/input.c",
+                "adm/simul_efun/cursor.c",
+                "feature/user/more.c",
+            }
+            for path in excluded:
+                target = runtime / path
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text("deferred-ui\\n", encoding="utf-8")
+            add = json.loads(additive.read_text(encoding="utf-8"))
+            add["copied"].extend(sorted(excluded))
+            additive.write_text(json.dumps(add), encoding="utf-8")
+            merged = json.loads(merge.read_text(encoding="utf-8"))
+            merged["merged"].extend(sorted(excluded))
+            merge.write_text(json.dumps(merged), encoding="utf-8")
+            export = root / "export"
+            self.run_cli("export", "--runtime", runtime, "--additive-report", additive,
+                         "--merge-report", merge, "--output", export)
+            manifest = json.loads((export / "manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["file_count"], 2)
+            self.assertEqual({item["path"] for item in manifest["files"]}, {"new.c", "zone.c"})
+            self.assertEqual({item["path"] for item in manifest["excluded"]}, excluded)
+            for item in manifest["files"]:
+                self.assertEqual(sha(export / "mudlib" / item["path"]), item["sha256"])
+
     def test_persist_allows_safe_additive_extension(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
