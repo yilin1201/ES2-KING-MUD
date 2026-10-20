@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "batch": "登入 UI 協定批次",
+  "excluded": [
+    {
+      "path": "feature/user/input.c",
+      "reason": "改變登入提示、確認與性別輸入協定；本批採用 Original ES2 輸入流程。"
+    },
+    {
+      "path": "adm/simul_efun/cursor.c",
+      "reason": "與 ES2M input.c 數字選單規則成對，避免新舊輸入協定混搭。"
+    },
+    {
+      "path": "feature/user/more.c",
+      "reason": "改變 HELP 翻頁控制鍵；歸入 UI 協定批次，待獨立翻頁測試後再評估。"
+    }
+  ]
+}
