@@ -1,7 +1,7 @@
 {
   "source_commit": "71693beb79ced81d51719ea1ccf7c02c641ca9b0",
   "status": "CONFLICT_FREE_IMPORTS_ONLY",
-  "file_count": 392,
+  "file_count": 389,
   "files": [
     {
       "path": "adm/daemons/channeld.c",
@@ -27,11 +27,6 @@
       "path": "adm/etc/welcome",
       "origin": "source_replaced",
       "sha256": "fb72afef43c87ca81921205bfb3ca23b58124a9109b39c07f1633c2e8ad803c1"
-    },
-    {
-      "path": "adm/simul_efun/cursor.c",
-      "origin": "source_replaced",
-      "sha256": "7e0c45064e7fca180feac7ced099d194895369a94502b8355434dc4a7f6e76b7"
     },
     {
       "path": "cmds/adm/restart.c",
@@ -1804,16 +1799,6 @@
       "sha256": "e31ae953371e6207b365ae0579cfdee1a827eeb5f76ca611619c0cff8ab0e449"
     },
     {
-      "path": "feature/user/input.c",
-      "origin": "source_replaced",
-      "sha256": "54c6a66477d4eb8bf1a3bcbfc577791112ecd689bd5a2858f8688e2ffb1e4b9b"
-    },
-    {
-      "path": "feature/user/more.c",
-      "origin": "source_replaced",
-      "sha256": "96ee850a728170847a362281fd420338d55fac33eed3f91a2c3b6b2754db7df1"
-    },
-    {
       "path": "include/command.h",
       "origin": "source_replaced",
       "sha256": "325a92dcf0c445b09b50bae743a44a31e8c12b053d908d97047fc3ae1e8a555b"
@@ -1964,5 +1949,25 @@
       "sha256": "245dcf5e2ed4ae1ebb2d02353ffa6418c52117c32765b501082f781f59d346c9"
     }
   ],
-  "excluded_conflict_count": 381
-}
+  "excluded_conflict_count": 381,
+  "excluded": [
+    {
+      "path": "adm/simul_efun/cursor.c",
+      "batch": "登入 UI 協定批次",
+      "reason": "與 input.c 配對的數字選單映射，避免新舊協定混搭。",
+      "previous_overlay_sha256": "7e0c45064e7fca180feac7ced099d194895369a94502b8355434dc4a7f6e76b7"
+    },
+    {
+      "path": "feature/user/input.c",
+      "batch": "登入 UI 協定批次",
+      "reason": "登入提示、性別選單與輸入行尾協定，需另批完整適配。",
+      "previous_overlay_sha256": "54c6a66477d4eb8bf1a3bcbfc577791112ecd689bd5a2858f8688e2ffb1e4b9b"
+    },
+    {
+      "path": "feature/user/more.c",
+      "batch": "登入 UI 協定批次",
+      "reason": "HELP 翻頁鍵行為改變，屬網頁互動協定，需另批測試。",
+      "previous_overlay_sha256": "96ee850a728170847a362281fd420338d55fac33eed3f91a2c3b6b2754db7df1"
+    }
+  ]
+}\n
