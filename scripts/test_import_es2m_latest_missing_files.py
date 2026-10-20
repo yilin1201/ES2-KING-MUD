@@ -62,6 +62,35 @@ class LatestAdditiveImportTest(unittest.TestCase):
             self.assertFalse((runtime / "custom/room.c.1789329689").exists())
             self.assertEqual(len(report["excluded"]), 3)
 
+    def test_excludes_only_ui_protocol_batch_and_keeps_389_files(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            excluded = {
+                "feature/user/input.c",
+                "adm/simul_efun/cursor.c",
+                "feature/user/more.c",
+            }
+            entries = []
+            for i in range(389):
+                path = f"safe/room_{i:03}.c"
+                data = f"source-{i}\\n".encode()
+                entries.append(({"path": path, "sha": git_blob_sha(data)}, data))
+            for path in sorted(excluded):
+                data = ("deferred-" + path + "\\n").encode()
+                entries.append(({"path": path, "sha": git_blob_sha(data)}, data))
+            proc, runtime, output = self.run_import(root, entries)
+            self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+            report = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(len(report["copied"]), 389)
+            self.assertEqual({item["path"] for item in report["excluded"]}, excluded)
+            for entry, data in entries:
+                target = runtime / entry["path"]
+                if entry["path"] in excluded:
+                    self.assertFalse(target.exists(), entry["path"])
+                else:
+                    self.assertEqual(git_blob_sha(target.read_bytes()), entry["sha"])
+                    self.assertEqual(target.read_bytes(), data)
+
     def test_source_hash_mismatch_fails(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td); data = b"real bytes"
