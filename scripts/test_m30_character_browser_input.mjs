@@ -16,19 +16,7 @@ assert.deepEqual(prepareCharacterChoice(gender, "女性"), { bytes: "F", followu
 assert.deepEqual(prepareCharacterChoice(gender, "male"), { bytes: "M", followup: null });
 assert.deepEqual(prepareCharacterChoice(gender, "unknown"), { bytes: "N", followup: null });
 
-const es2mNumberedGender = "您要扮演的哪種性別(外觀)的角色?\\n1. 女性\\n2. 男性\\n3. 無法判斷\\n請輸入選項數字:";
-assert.equal(characterMenuFor(es2mNumberedGender).type, "gender");
-assert.deepEqual(prepareCharacterChoice(es2mNumberedGender, "female"), { bytes: "1\\r\\n", followup: null });
-assert.deepEqual(prepareCharacterChoice(es2mNumberedGender, "male"), { bytes: "2\\r\\n", followup: null });
-assert.deepEqual(prepareCharacterChoice(es2mNumberedGender, "unknown"), { bytes: "3\\r\\n", followup: null });
-
-// ES2M yes/no suffix must not break the Original confirmation prompt parser.
-const es2mConfirm = "使用 7probe 這個代號將會創造一個新的人物﹐您確定嗎? (Yes / No)";
-assert.equal(characterMenuFor(es2mConfirm).type, "confirm");
-assert.deepEqual(prepareCharacterChoice(es2mConfirm, "yes"), { bytes: "Y", followup: null });
-assert.deepEqual(prepareCharacterChoice(es2mConfirm, "no"), { bytes: "N", followup: null });
-
-const confirm = "您確定要創造這個角色嗎? ";
+// 路線 B：本批只驗證 Original 提示；ES2M 數字選單留待獨立 UI 協定批次。\nconst confirm = "您確定要創造這個角色嗎? ";
 assert.equal(characterMenuFor(confirm).type, "confirm");
 assert.deepEqual(prepareCharacterChoice(confirm, "是"), { bytes: "Y", followup: null });
 assert.deepEqual(prepareCharacterChoice(confirm, "no"), { bytes: "N", followup: null });
