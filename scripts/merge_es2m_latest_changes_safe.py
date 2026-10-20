@@ -12,6 +12,14 @@ from pathlib import Path
 
 EXPECTED_COMMIT = "71693beb79ced81d51719ea1ccf7c02c641ca9b0"
 TIMESTAMP_BACKUP = re.compile(r"\.\d{10,}$")
+# 共用排除清單：登入 UI 協定檔案本批保留在證據來源，不進入 Runtime。
+_UI_EXCLUSION_CONFIG = json.loads(
+    (Path(__file__).with_name("es2m_ui_protocol_exclusions.json")).read_text(encoding="utf-8")
+)
+UI_PROTOCOL_EXCLUSIONS = {
+    item["path"]: {"batch": _UI_EXCLUSION_CONFIG["batch"], "reason": item["reason"]}
+    for item in _UI_EXCLUSION_CONFIG.get("files", [])
+}
 
 def git_blob_sha_bytes(data: bytes) -> str:
     """計算 Git blob SHA-1，與固定 manifest 的 40 位 blob ID 比對。"""
@@ -21,6 +29,9 @@ def git_blob_sha(path: Path) -> str:
     return git_blob_sha_bytes(path.read_bytes())
 
 def excluded(relative: str) -> str | None:
+    ui_entry = UI_PROTOCOL_EXCLUSIONS.get(relative)
+    if ui_entry:
+        return f"{ui_entry['batch']}: {ui_entry['reason']}"
     parts = Path(relative).parts
     if parts and parts[0] in {"data", "log"}:
         return "runtime_state_or_compiled_data"
