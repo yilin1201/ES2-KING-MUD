@@ -11,6 +11,8 @@ import json
 import shutil
 from pathlib import Path
 
+from es2m_latest_import_exclusions import ES2M_LATEST_IMPORT_EXCLUSIONS
+
 SOURCE_COMMIT = "71693beb79ced81d51719ea1ccf7c02c641ca9b0"
 
 
@@ -69,6 +71,9 @@ def main() -> None:
                 if not relative:
                     raise SystemExit(f"ES2M_OVERLAY_FAIL: malformed {key} entry")
                 paths[relative] = key
+        # 匯出清冊只包含允許寫入 Runtime 的檔案；排除項目仍明列於 manifest。
+        for relative in ES2M_LATEST_IMPORT_EXCLUSIONS:
+            paths.pop(relative, None)
         out = args.output.resolve()
         if out.exists():
             shutil.rmtree(out)
@@ -89,6 +94,10 @@ def main() -> None:
             "status": "CONFLICT_FREE_IMPORTS_ONLY",
             "file_count": len(files),
             "files": files,
+            "excluded": [
+                {"path": path, **details}
+                for path, details in sorted(ES2M_LATEST_IMPORT_EXCLUSIONS.items())
+            ],
             "excluded_conflict_count": len(merge.get("preserved_conflicts", []))
                 + len(additive.get("preserved_conflicts", [])),
         }
@@ -105,7 +114,19 @@ def main() -> None:
         if manifest.get("source_commit") != SOURCE_COMMIT or manifest.get("status") != "CONFLICT_FREE_IMPORTS_ONLY":
             raise SystemExit("ES2M_OVERLAY_FAIL: export manifest pin/status mismatch")
         root.mkdir(parents=True, exist_ok=True)
+        # 清理舊版持久 Overlay 中明確排除的三個輸出檔；原始快照不在此目錄，不受影響。
+        for relative in ES2M_LATEST_IMPORT_EXCLUSIONS:
+            dst = safe(root, relative)
+            if dst.exists():
+                if not dst.is_file() or dst.is_symlink():
+                    raise SystemExit(f"ES2M_OVERLAY_HOLD: excluded overlay target is not a regular file: {relative}")
+                dst.unlink()
+        declared_exclusions = {item.get("path") for item in manifest.get("excluded", [])}
+        if declared_exclusions != set(ES2M_LATEST_IMPORT_EXCLUSIONS):
+            raise SystemExit("ES2M_OVERLAY_FAIL: export exclusion manifest differs from shared policy")
         for item in manifest.get("files", []):
+            if item.get("path") in ES2M_LATEST_IMPORT_EXCLUSIONS:
+                raise SystemExit(f"ES2M_OVERLAY_FAIL: excluded path appears in active files: {item.get('path')}")
             relative = item["path"]
             src = safe(export_root / "mudlib", relative)
             dst = safe(root, relative)
@@ -120,13 +141,18 @@ def main() -> None:
         # 允許安全擴充既有 overlay：舊檔必須仍與既有 manifest hash 相符；
         # 新增路徑可追加，但同一路徑內容不同時立即 HOLD，絕不覆寫 KING。
         persisted_manifest = root.parent / "manifest.json"
-        combined = {item["path"]: item for item in manifest.get("files", [])}
+        combined = {
+            item["path"]: item for item in manifest.get("files", [])
+            if item["path"] not in ES2M_LATEST_IMPORT_EXCLUSIONS
+        }
         if persisted_manifest.exists():
             old = json.loads(persisted_manifest.read_text(encoding="utf-8"))
             if old.get("source_commit") != SOURCE_COMMIT or old.get("status") != "CONFLICT_FREE_IMPORTS_ONLY":
                 raise SystemExit("ES2M_OVERLAY_HOLD: existing overlay manifest pin/status mismatch")
             for item in old.get("files", []):
                 relative = item["path"]
+                if relative in ES2M_LATEST_IMPORT_EXCLUSIONS:
+                    continue
                 dst = safe(root, relative)
                 if not dst.is_file() or digest(dst) != item.get("sha256"):
                     raise SystemExit(f"ES2M_OVERLAY_HOLD: existing persisted file hash mismatch: {relative}")
@@ -135,6 +161,10 @@ def main() -> None:
                     raise SystemExit(f"ES2M_OVERLAY_HOLD: existing path changed in new export: {relative}")
                 combined.setdefault(relative, item)
         manifest["files"] = [combined[key] for key in sorted(combined)]
+        manifest["excluded"] = [
+            {"path": path, **details}
+            for path, details in sorted(ES2M_LATEST_IMPORT_EXCLUSIONS.items())
+        ]
         manifest["file_count"] = len(manifest["files"])
         persisted_manifest.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print("ES2M_OVERLAY_PERSISTED", manifest.get("file_count", 0))
@@ -148,6 +178,15 @@ def main() -> None:
     manifest = json.loads(fresh_manifest.read_text(encoding="utf-8"))
     if manifest.get("source_commit") != SOURCE_COMMIT or manifest.get("status") != "CONFLICT_FREE_IMPORTS_ONLY":
         raise SystemExit("ES2M_OVERLAY_FAIL: persisted overlay pin/status mismatch")
+    declared_exclusions = {item.get("path") for item in manifest.get("excluded", [])}
+    if declared_exclusions != set(ES2M_LATEST_IMPORT_EXCLUSIONS):
+        raise SystemExit("ES2M_OVERLAY_FAIL: persisted exclusion manifest differs from shared policy")
+    for item in manifest.get("files", []):
+        if item.get("path") in ES2M_LATEST_IMPORT_EXCLUSIONS:
+            raise SystemExit(f"ES2M_OVERLAY_FAIL: excluded path appears in active files: {item.get('path')}")
+    for relative in ES2M_LATEST_IMPORT_EXCLUSIONS:
+        if safe(root, relative).exists():
+            raise SystemExit(f"ES2M_OVERLAY_FAIL: excluded file still exists in persisted overlay: {relative}")
     runtime = args.runtime.resolve()
     for item in manifest.get("files", []):
         relative = item["path"]
