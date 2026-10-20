@@ -13,6 +13,15 @@ from pathlib import Path
 
 SOURCE_COMMIT = "71693beb79ced81d51719ea1ccf7c02c641ca9b0"
 
+# 與加法補檔、三方合併共用同一份 UI 協定排除設定。
+_UI_EXCLUSION_CONFIG = json.loads(
+    (Path(__file__).with_name("es2m_ui_protocol_exclusions.json")).read_text(encoding="utf-8")
+)
+UI_PROTOCOL_EXCLUSIONS = {
+    item["path"]: {"batch": _UI_EXCLUSION_CONFIG["batch"], "reason": item["reason"]}
+    for item in _UI_EXCLUSION_CONFIG.get("files", [])
+}
+
 
 def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -50,6 +59,7 @@ def main() -> None:
     ap.add_argument("--overlay-root", type=Path, required=True)
     ap.add_argument("--runtime", type=Path, required=True)
     args = parser.parse_args()
+    exclusions = UI_PROTOCOL_EXCLUSIONS
 
     if args.mode == "export":
         additive = read_report(args.additive_report)
@@ -62,12 +72,16 @@ def main() -> None:
         for item in additive.get("copied", []):
             if not isinstance(item, str):
                 raise SystemExit("ES2M_OVERLAY_FAIL: malformed additive copied entry")
+            if item in exclusions:
+                continue
             paths[item] = "additive_copy"
         for key in ("source_replaced", "merged", "added_missing_runtime"):
             for item in merge.get(key, []):
                 relative = item if isinstance(item, str) else item.get("path", "")
                 if not relative:
                     raise SystemExit(f"ES2M_OVERLAY_FAIL: malformed {key} entry")
+                if relative in exclusions:
+                    continue
                 paths[relative] = key
         out = args.output.resolve()
         if out.exists():
@@ -89,6 +103,10 @@ def main() -> None:
             "status": "CONFLICT_FREE_IMPORTS_ONLY",
             "file_count": len(files),
             "files": files,
+            "excluded": [
+                {"path": path, "batch": entry["batch"], "reason": entry["reason"]}
+                for path, entry in sorted(exclusions.items())
+            ],
             "excluded_conflict_count": len(merge.get("preserved_conflicts", []))
                 + len(additive.get("preserved_conflicts", [])),
         }
@@ -128,6 +146,12 @@ def main() -> None:
             for item in old.get("files", []):
                 relative = item["path"]
                 dst = safe(root, relative)
+                if relative in exclusions:
+                    # 只移除清單內、且雜湊與舊 manifest 完全相符的 Overlay 檔；來源快照不動。
+                    if not dst.is_file() or digest(dst) != item.get("sha256"):
+                        raise SystemExit(f"ES2M_OVERLAY_HOLD: excluded overlay hash mismatch: {relative}")
+                    dst.unlink()
+                    continue
                 if not dst.is_file() or digest(dst) != item.get("sha256"):
                     raise SystemExit(f"ES2M_OVERLAY_HOLD: existing persisted file hash mismatch: {relative}")
                 fresh = combined.get(relative)
@@ -136,6 +160,10 @@ def main() -> None:
                 combined.setdefault(relative, item)
         manifest["files"] = [combined[key] for key in sorted(combined)]
         manifest["file_count"] = len(manifest["files"])
+        manifest["excluded"] = [
+            {"path": path, "batch": entry["batch"], "reason": entry["reason"]}
+            for path, entry in sorted(exclusions.items())
+        ]
         persisted_manifest.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print("ES2M_OVERLAY_PERSISTED", manifest.get("file_count", 0))
         return
@@ -149,6 +177,11 @@ def main() -> None:
     if manifest.get("source_commit") != SOURCE_COMMIT or manifest.get("status") != "CONFLICT_FREE_IMPORTS_ONLY":
         raise SystemExit("ES2M_OVERLAY_FAIL: persisted overlay pin/status mismatch")
     runtime = args.runtime.resolve()
+    if any(item.get("path") in exclusions for item in manifest.get("files", [])):
+        raise SystemExit("ES2M_OVERLAY_FAIL: excluded UI protocol path appears in persisted file list")
+    for relative in exclusions:
+        if safe(root, relative).exists():
+            raise SystemExit(f"ES2M_OVERLAY_FAIL: excluded UI protocol file remains in overlay: {relative}")
     for item in manifest.get("files", []):
         relative = item["path"]
         src = safe(root, relative)
