@@ -91,6 +91,40 @@ class PersistentOverlayTests(unittest.TestCase):
             for item in manifest["files"]:
                 self.assertEqual(sha(export / "mudlib" / item["path"]), item["sha256"])
 
+    def test_checked_in_overlay_manifest_matches_route_b_exclusion_contract(self):
+        # Repository-level regression: validate the persisted import, not only temporary fixtures.
+        repo_root = Path(__file__).resolve().parents[1]
+        manifest_path = repo_root / "es2m_snapshot/latest_import_overlay/71693beb/manifest.json"
+        overlay_root = repo_root / "es2m_snapshot/latest_import_overlay/71693beb/mudlib"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(manifest["source_commit"], PIN)
+        self.assertEqual(manifest["status"], "CONFLICT_FREE_IMPORTS_ONLY")
+        self.assertEqual(manifest["file_count"], 389)
+        self.assertEqual(manifest["file_count"], len(manifest["files"]))
+
+        expected_exclusions = {
+            "feature/user/input.c",
+            "adm/simul_efun/cursor.c",
+            "feature/user/more.c",
+        }
+        imported_paths = [item["path"] for item in manifest["files"]]
+        self.assertEqual(len(imported_paths), len(set(imported_paths)), "duplicate paths in overlay manifest")
+        self.assertFalse(expected_exclusions.intersection(imported_paths))
+        self.assertEqual(
+            {item["path"] for item in manifest["excluded"]},
+            expected_exclusions,
+        )
+        for item in manifest["excluded"]:
+            self.assertEqual(item["batch"], "登入 UI 協定批次")
+            self.assertTrue(item["reason"].strip())
+
+        # Every one of the 389 manifest entries must exist and match its recorded SHA-256.
+        for item in manifest["files"]:
+            target = overlay_root / item["path"]
+            self.assertTrue(target.is_file(), f"overlay file missing: {item['path']}")
+            self.assertEqual(sha(target), item["sha256"], f"overlay SHA mismatch: {item['path']}")
+
     def test_persist_allows_safe_additive_extension(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
