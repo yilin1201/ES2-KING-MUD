@@ -302,7 +302,7 @@
   // 使用 textContent，避免把指令當成 HTML；呼叫端必須先排除密碼與秘密認領欄位。
   function appendLocalCommand(value) {
     const echo = document.createElement("span");
-    echo.textContent = `\\n> ${value}\\n`;
+    echo.textContent = `\n> ${value}\n`;
     echo.style.color = "#93c5fd";
     terminal.append(echo);
     terminal.scrollTop = terminal.scrollHeight;
@@ -453,6 +453,8 @@
         }
         socket.send(command.value + "\r\n");
       }
+      // 密碼與 Owner Claim 只在送出前短暫留在欄位；成功送出後立即清除，避免秘密殘留。
+      if (isSecretPrompt) command.value = "";
     }
     // 保留上一筆已送出的指令在輸入欄；可直接修改重送，也可用 ↑ 重新載入上一筆。
   });
