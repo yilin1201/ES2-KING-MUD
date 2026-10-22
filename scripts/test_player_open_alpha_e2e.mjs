@@ -404,6 +404,16 @@ async function exerciseLeeVillageJourney(p) {
   console.log(`PLAYER_ES2M_LEE_MAP_NPC_PASS:${p.id}:snow-egate-lee-roundtrip`);
 }
 
+// ES2M 經濟規則（來源：ES2M feature/char/finance.c，標示 CUSTOM ECONOMY CONVENIENCE PATCH）：
+// 付款以價值計算並自動找零成標準面額，玩家不必為了換零錢去錢莊。
+// 因此 190 文會顯示為「一兩碎銀＋九十文錢」，而不是「一百九十文錢」。
+// 本函式同時驗證兩種面額都存在，並確認舊式全銅錢顯示不會殘留；總值與面額都必須精確相符。
+function assertCanonicalChange(inventory, silverPattern, coinPattern, legacyAllCoinPattern) {
+  assert.match(inventory, silverPattern);
+  assert.match(inventory, coinPattern);
+  assert.doesNotMatch(inventory, legacyAllCoinPattern);
+}
+
 async function exerciseShopQuantityJourney(p) {
   // Source-backed Money／來源支持的金錢：普通玩家自行拾取木刀並到李記當鋪賣出，
   // 不使用 clone、call、KING 或直接修改存檔來提供測試貨幣。
@@ -449,7 +459,7 @@ async function exerciseShopQuantityJourney(p) {
   assert.match(await command(p, "buy 1 fur hat from yu"), /買下一頂毛皮帽/);
   assert.match(await command(p, "wear fur hat"), /戴上.*毛皮帽|穿上.*毛皮帽|裝備.*毛皮帽/);
   assert.match(await command(p, "remove fur hat"), /脫了下來|卸除/);
-  assert.match(await command(p, "inventory"), /一百九十文錢/);
+  assertCanonicalChange(await command(p, "inventory"), /一兩碎銀/, /九十文錢/, /一百九十文錢/);
   assert.match(await command(p, "west"), /街道/);
   assert.match(await command(p, "north"), /廣場/);
   assert.match(await command(p, "north"), /廣場中央/);
@@ -466,7 +476,7 @@ async function exerciseShopQuantityJourney(p) {
   assert.match(await command(p, "buy 31 chicken from waiter"), /只剩下三十隻/);
   assert.match(await command(p, "buy 1 chicken from waiter"), /錢不夠/);
   inventory = await command(p, "inventory");
-  assert.match(inventory, /一百九十文錢/);
+  assertCanonicalChange(inventory, /一兩碎銀/, /九十文錢/, /一百九十文錢/);
 
   // Delivery Failure／交貨失敗：點餐後立刻離房，店小二取消交貨且不得扣款。
   const leaveBuyOffset = p.output.length;
@@ -479,7 +489,7 @@ async function exerciseShopQuantityJourney(p) {
   await waitForAfter(p, leaveOffset, /廣場的西邊/);
   await delay(3500);
   const unchanged = await command(p, "inventory");
-  assert.match(unchanged, /一百九十文錢/);
+  assertCanonicalChange(unchanged, /一兩碎銀/, /九十文錢/, /一百九十文錢/);
   assert.doesNotMatch(unchanged, /牛肉包子/);
   assert.match(await command(p, "west"), /客棧大堂/);
 
@@ -492,7 +502,7 @@ async function exerciseShopQuantityJourney(p) {
   await waitForAfter(p, singleOffset, /正忙著招呼其他客人/);
   await waitForAfter(p, singleOffset, /買下一個牛肉包子/, 30000);
   inventory = await command(p, "inventory");
-  assert.match(inventory, /一百八十文錢/);
+  assertCanonicalChange(inventory, /一兩碎銀/, /八十文錢/, /一百八十文錢/);
   assert.match(inventory, /牛肉包子/);
   assert.equal((inventory.match(/牛肉包子/g) || []).length, 1);
   assert.match(await command(p, "buy 50 dumpling from waiter"), /只剩下四十九個/);
