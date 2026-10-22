@@ -10,7 +10,7 @@
 1. 新檔不存在才建立；同名不同內容直接 FAIL。
 2. 既有房間只做精確字串插入，不做整檔覆蓋。
 3. 已套用過的內容視為 PASS / NO-OP。
-4. 不修改戰鬥、武功、裝備、Vendor、Save 或 WebSocket 核心。
+4. 不修改戰鬥、武功、裝備、Vendor、Save 或網路傳輸核心。
 """
 
 from __future__ import annotations
