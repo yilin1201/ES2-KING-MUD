@@ -8,16 +8,19 @@
   <style>
     :root { --terminal-font: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Noto Sans Mono CJK TC", "PingFang TC", "Microsoft JhengHei", monospace; }
     * { box-sizing: border-box; }
-    html { -webkit-text-size-adjust: 100%; }
-    body { margin: 0; background: #080b10; color: #e8edf2; font: 16px/1.45 var(--terminal-font); }
-    main { width: 100%; max-width: 960px; margin: auto; padding: 1rem max(1rem, env(safe-area-inset-right)) 1rem max(1rem, env(safe-area-inset-left)); }
-    #terminal-shell { width: 100%; max-width: 100%; }
+    html { height: 100%; -webkit-text-size-adjust: 100%; }
+    /* 手機終端固定在可視頁面中；不讓 body 跟著鍵盤彈出而整頁重排。 */
+    body { height: 100%; overflow: hidden; margin: 0; background: #080b10; color: #e8edf2; font: 16px/1.45 var(--terminal-font); }
+    main { height: 100svh; min-height: 0; display: flex; flex-direction: column; width: 100%; max-width: 960px; margin: auto; padding: 1rem max(1rem, env(safe-area-inset-right)) 1rem max(1rem, env(safe-area-inset-left)); }
+    #terminal-shell { height: 100%; min-height: 0; display: flex; flex-direction: column; width: 100%; max-width: 100%; }
+    #status { flex: 0 0 auto; }
     #terminal {
-      min-height: 72vh;
+      flex: 1 1 auto;
+      min-height: 0;
       margin: 0;
       white-space: pre;
       overflow-x: auto;
-      overflow-y: visible;
+      overflow-y: auto;
       overflow-wrap: normal;
       word-break: normal;
       font: 15px/1.35 var(--terminal-font);
@@ -38,7 +41,8 @@
     .ansi-90 { color: #6b7280; } .ansi-91 { color: #ff5a5f; } .ansi-92 { color: #4ade80; }
     .ansi-93 { color: #fde047; } .ansi-94 { color: #60a5fa; } .ansi-95 { color: #e879f9; }
     .ansi-96 { color: #67e8f9; } .ansi-97 { color: #ffffff; }
-    form { display: flex; gap: .5rem; position: sticky; bottom: 0; background: #080b10; padding: .75rem 0 max(.75rem, env(safe-area-inset-bottom)); }
+    /* 輸入列留在終端容器底部；鍵盤遮住畫面時由 visualViewport 將輸入列移到鍵盤上方。 */
+    form { display: flex; flex: 0 0 auto; gap: .5rem; position: relative; bottom: auto; background: #080b10; padding: .75rem 0 max(.75rem, env(safe-area-inset-bottom)); }
     input { min-width: 0; flex: 1; padding: .7rem; font-size: 16px; background: #151b24; color: white; border: 1px solid #52606d; }
     button { padding: .7rem 1rem; font-size: 16px; }
     /* Character Choice／角色選項：以足夠大的按鈕送出 Original get_char 單鍵，不改動原始創角邏輯。 */
@@ -51,7 +55,7 @@
     @media (max-width: 600px) {
       main { padding-top: .5rem; padding-left: max(.5rem, env(safe-area-inset-left)); padding-right: max(.5rem, env(safe-area-inset-right)); }
       /* 只縮放終端輸出；輸入框與按鈕維持 16px，避免 Safari 自動放大與觸控區過小。 */
-      #terminal { min-height: 70vh; font-size: var(--mobile-terminal-font-size, 14px); }
+      #terminal { min-height: 0; font-size: var(--mobile-terminal-font-size, 14px); }
     }
   </style>
 </head>
@@ -70,7 +74,10 @@
   const status = document.querySelector("#status");
   const terminal = document.querySelector("#terminal");
   const command = document.querySelector("#command");
+  const commandForm = document.querySelector("form");
   const characterChoices = document.querySelector("#character-choices");
+  // 上一筆一般遊戲指令只保存在目前頁面記憶體；絕不將密碼或 Owner Claim 存進歷史。
+  let lastSentCommand = "";
   const protocol = location.protocol === "https:" ? "wss:" : "ws:";
   // Resume Token／續接權杖：只保存 Bridge 登入成功後核發的隨機權杖，不保存帳號或密碼。
   // Token 透過 WSS 第一個控制訊息傳送，不放進 URL、Cookie 或一般終端輸出。
@@ -190,6 +197,24 @@
   if (document.fonts) document.fonts.ready.then(scheduleMobileFit);
   scheduleMobileFit();
 
+  // iOS Safari 的虛擬鍵盤可能只縮小 Visual Viewport（可視視窗），不改變版面視窗。
+  // 保持終端高度不跟鍵盤一起縮水，僅將輸入列移到鍵盤上緣，避免輸入欄被遮住。
+  function keepInputAboveMobileKeyboard() {
+    const viewport = window.visualViewport;
+    if (!viewport || !mobileLayout.matches) {
+      commandForm.style.transform = "";
+      return;
+    }
+    const keyboardHeight = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+    commandForm.style.transform = keyboardHeight > 80 ? `translateY(-${keyboardHeight}px)` : "";
+  }
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", keepInputAboveMobileKeyboard, { passive: true });
+    window.visualViewport.addEventListener("scroll", keepInputAboveMobileKeyboard, { passive: true });
+  }
+  window.addEventListener("resize", keepInputAboveMobileKeyboard, { passive: true });
+  keepInputAboveMobileKeyboard();
+
   // Claim Input Observability／認領輸入可觀測性：只顯示 UTF-8 位元組長度，不顯示內容或指紋。
   function updateOwnerClaimLength() {
     if (!ownerClaimPrompt.test(outputTail)) return;
@@ -273,6 +298,16 @@
     }
     emit(raw.slice(last));
   }
+  // Local Command Echo（本機指令回顯）：Telnet 不一定會回傳玩家輸入，因此在畫面本地顯示。
+  // 使用 textContent，避免把指令當成 HTML；呼叫端必須先排除密碼與秘密認領欄位。
+  function appendLocalCommand(value) {
+    const echo = document.createElement("span");
+    echo.textContent = `\\n> ${value}\\n`;
+    echo.style.color = "#93c5fd";
+    terminal.append(echo);
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+
   const append = data => {
     const decoded = decoder.decode(data, { stream: true });
     // Prompt 辨識仍使用純文字；畫面則保留 SGR 色彩。
@@ -289,7 +324,8 @@
       clearTimeout(pendingCharacterFollowupTimer);
       socket.send(followup);
     }
-    window.scrollTo(0, document.body.scrollHeight);
+    // 只捲動終端輸出區，不捲動整個網頁，避免手機鍵盤開啟時畫面跳位。 
+    terminal.scrollTop = terminal.scrollHeight;
   };
   function handleSocketMessage(data) {
     if (typeof data === "string" && data.startsWith(resumeControlPrefix)) {
@@ -366,7 +402,14 @@
   window.addEventListener("pageshow", () => {
     if (!socket || socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) connect();
   });
-  const commandForm = document.querySelector("form");
+  command.addEventListener("keydown", event => {
+    // ArrowUp（上方向鍵）快速取回上一筆已送出的普通遊戲指令。
+    if (event.key === "ArrowUp" && lastSentCommand) {
+      event.preventDefault();
+      command.value = lastSentCommand;
+      command.setSelectionRange(command.value.length, command.value.length);
+    }
+  });
   commandForm.addEventListener("submit", event => {
     event.preventDefault();
     // Mobile Paste Barrier／手機貼上屏障：等待 Safari 完成 paste／composition 後再送出。
@@ -376,6 +419,8 @@
     }
     if (socket.readyState === WebSocket.OPEN) {
       const choice = command.value.trim().toLowerCase();
+      const isSecretPrompt = passwordPrompt.test(outputTail) || ownerClaimPrompt.test(outputTail);
+      const activeMenu = characterMenuFor(outputTail);
       if (choice === "quit") {
         // Explicit Logout／明確登出：瀏覽器與 Bridge 都立即丟棄 Resume Token。
         resumeToken = null;
@@ -383,7 +428,6 @@
       }
       // Race Line Input／種族整行輸入：Runtime 已改成 input_to，因此直接送完整 human/avatar + LF。
       // 使用單一 LF（換行）避免 Telnet/Neolith 將 CRLF 拆成「Race 輸入 + 下一狀態空輸入」。
-      const activeMenu = characterMenuFor(outputTail);
       if (activeMenu?.type === "race" && ["1", "2", "human", "人類", "avatar", "克隆人"].includes(choice)) {
         const raceChoice = choice === "人類" ? "1" : choice === "human" ? "1" : choice === "avatar" ? "2" : choice === "克隆人" ? "2" : choice;
         socket.send("ES2RACE:" + raceChoice);
@@ -401,9 +445,15 @@
         status.textContent = `KING Claim 安全傳輸：HEX-V1 已送出；輸入長度=${prepared.byteLength} bytes`;
         socket.send(prepared.transport + "\r\n");
       } else {
+        // 一般遊戲指令才回顯與保留；登入識別資料、密碼、創角選項及 Claim 秘密不進歷史。
+        const loginPrompt = /(代號|帳號|使用者名稱|username|login)/i.test(outputTail);
+        if (!isSecretPrompt && !activeMenu && !loginPrompt && command.value.trim()) {
+          appendLocalCommand(command.value);
+          lastSentCommand = command.value;
+        }
         socket.send(command.value + "\r\n");
       }
     }
-    command.value = "";
+    // 保留上一筆已送出的指令在輸入欄；可直接修改重送，也可用 ↑ 重新載入上一筆。
   });
 </script></body></html>
