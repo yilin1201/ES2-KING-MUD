@@ -128,7 +128,7 @@ GitHub compare API 回報：從舊基準 `70cbf3c...` 到新基準 `d013a64...`�
 
 ## 8. 本輪最新進度更新
 
-- 最新已知本輪寫入 Commit：`a7fa02ae1c20ebf721ad87b659394a6775ac26b4`
+- 最新稽核文件 Commit：`ca677360fb02b0bb926105b36b088288b49c25cb`；8 個快照檔案最後一筆 Commit：`a7fa02ae1c20ebf721ad87b659394a6775ac26b4`
 - 新增快照數：8（5 份文件、3 份 LPC）
 - 遊戲 Runtime 匯入數：0（本輪刻意未直接覆蓋 Runtime）
 - 全量差異清單：仍未完成
