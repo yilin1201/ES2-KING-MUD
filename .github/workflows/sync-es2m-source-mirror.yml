@@ -51,7 +51,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add es2m_source_mirror
+          git add -f es2m_source_mirror  # 強制納入上游已追蹤但被 KING 忽略規則排除的檔案
           if git diff --cached --quiet; then
             echo "ES2M source mirror is already current."
             exit 0
