@@ -1,0 +1,119 @@
+{
+  "schema": "original-es2-historical-race-registry-v2",
+  "status": "evidence_registry_plus_es2_king_runtime_policy",
+  "rules": {
+    "no_invented_original_initializers": true,
+    "no_invented_original_race_effects": true,
+    "original_and_expansion_separated": true
+  },
+  "attribute_labels": {
+    "str": "臂力",
+    "cps": "定力",
+    "int": "悟性",
+    "spi": "靈性",
+    "cor": "膽識",
+    "dex": "機敏",
+    "con": "根骨",
+    "wis": "慧根"
+  },
+  "es2_king_temporary_birth_policy": {
+    "evidence": "ES2-KING Design / project owner directive",
+    "m6_m9_priority_races": {
+      "ids": [
+        "headless",
+        "yaksa",
+        "ashura",
+        "rainnar"
+      ],
+      "all_eight_base_attributes": 50
+    },
+    "other_historical_races": {
+      "ids": [
+        "blackteeth",
+        "human",
+        "yenhold",
+        "woochan",
+        "dingling",
+        "jiaojao",
+        "malik"
+      ],
+      "all_eight_base_attributes": 25
+    },
+    "note": "50/25 are temporary ES2-KING runtime baselines and are not claimed as recovered Original ES2 formulas."
+  },
+  "races": [
+    {
+      "id": "blackteeth",
+      "zh": "黑齒",
+      "karma": 5,
+      "evidence": "player_record_2014"
+    },
+    {
+      "id": "human",
+      "zh": "人類",
+      "karma": 5,
+      "evidence": "player_record_2014+current_source"
+    },
+    {
+      "id": "yenhold",
+      "zh": "厭火",
+      "karma": 5,
+      "evidence": "player_record_2014"
+    },
+    {
+      "id": "woochan",
+      "zh": "無腸",
+      "karma": 5,
+      "evidence": "player_record_2014"
+    },
+    {
+      "id": "dingling",
+      "zh": "釘靈",
+      "karma": 10,
+      "evidence": "player_record_2014"
+    },
+    {
+      "id": "jiaojao",
+      "zh": "焦僥",
+      "karma": 10,
+      "evidence": "player_record_2014"
+    },
+    {
+      "id": "rainnar",
+      "zh": "雨師妾",
+      "karma": 25,
+      "evidence": "player_record_2014"
+    },
+    {
+      "id": "ashura",
+      "zh": "阿修羅",
+      "karma": 30,
+      "evidence": "player_record_2014"
+    },
+    {
+      "id": "headless",
+      "zh": "形天",
+      "karma": 25,
+      "evidence": "player_record_2014+confirmed_chinese_dictionary"
+    },
+    {
+      "id": "yaksa",
+      "zh": "夜叉",
+      "karma": 30,
+      "evidence": "player_record_2014"
+    },
+    {
+      "id": "malik",
+      "zh": "巫首",
+      "karma": 30,
+      "evidence": "player_record_2014"
+    }
+  ],
+  "notes": [
+    "2014 archived gameplay record shows all 11 selectable races after reincarnation and their karma costs.",
+    "Historical wizard index independently lists nine race help topics; who.c preserves historical filters including malik.",
+    "Confirmed source dictionary maps headless to 形天; preserve this spelling in Original ES2 data.",
+    "Exact missing historical race initializer formulas and special effects remain unresolved; temporary 50/25 values are explicitly ES2-KING Design.",
+    "Owner-confirmed Original attribute mapping: cor=膽識, cps=定力."
+  ]
+}

@@ -1,0 +1,37 @@
+// /d/arena/yanwujie.c
+// ES2-KING Expansion：獨立沙盒戰鬥空間「競技場：演武界」。
+// Original ES2 戰鬥資源使用 Statistic API；未驗證的死亡 Hook 不在此冒充有效機制。
+
+#include <ansi.h>
+inherit ROOM;
+
+void create()
+{
+    set("short", HIW "【競技場：演武界】" NOR);
+    set("long", @LONG
+此處乃創世天神於虛數維度中開闢的獨立神魔戰鬥空間。
+
+四方被堅不可摧的太初界壁所籠罩，縱有毀天滅地之威，亦無法撼動此界分毫。
+腳下鋪陳著萬劫不移的黑曜神石，冷冽幽光沿著古老神紋緩緩流動。
+此方天地與現世生死因果隔絕，交戰者可傾盡畢生所學，在此印證武道。
+
+演武界不改寫角色的永久修為、經驗、門派、技能與裝備；戰鬥仍使用 Original ES2 的 Combat／Statistic 系統；演武界只在已確認的敗北邊界介入，
+不改寫角色永久成長資料。
+
+身後的太初神光凝而不散，形成一道通往現世的界門；若欲離開演武界，可循此門返回【天神殿・無極之境】。
+LONG
+    );
+
+    set("exits", ([
+        "out" : "/d/king/wuji_realm",
+    ]));
+
+    // Arena Metadata／競技場標記：供後續經 Original Death call chain 驗證的保護層辨識。
+    set("arena_zone", 1);
+    set("es2_king_expansion", 1);
+    set("objects", ([
+        "/d/arena/npc/mei_hanshuang" : 1,
+    ]));
+    set("no_clean_up", 1);
+    setup();
+}

@@ -1,0 +1,49 @@
+name: ES2-KING M30 Alpha
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths: ['ROADMAP_M0_M30.md', 'original_es2/**', 'es2_king_expansion/**', 'king_library/**', 'scripts/test_m30_*', 'scripts/test_m*', 'scripts/test_admin_gm_*', 'scripts/test_es2m_cold_plum_*', 'scripts/test_es2m_training_dummy.py', 'scripts/test_es2m_skill_import.py', 'scripts/test_es2m_skill_commands.py', 'scripts/test_es2m_latest_martial_updates.py', 'es2m_snapshot/**', 'Dockerfile', '.github/workflows/es2-king-m30-alpha.yml']
+  pull_request:
+    paths: ['ROADMAP_M0_M30.md', 'original_es2/**', 'es2_king_expansion/**', 'king_library/**', 'scripts/test_m30_*', 'scripts/test_m*', 'scripts/test_admin_gm_*', 'scripts/test_es2m_cold_plum_*', 'scripts/test_es2m_training_dummy.py', 'scripts/test_es2m_skill_import.py', 'scripts/test_es2m_skill_commands.py', 'scripts/test_es2m_latest_martial_updates.py', 'es2m_snapshot/**', 'Dockerfile', '.github/workflows/es2-king-m30-alpha.yml']
+  workflow_dispatch:
+jobs:
+  m30-alpha:
+    name: ES2-KING Alpha 整合驗收
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Static Gate／完成矩陣與邊界
+        run: bash scripts/test_m30_alpha_static.sh
+      - name: Bootstrap／建立獨立 Expansion Runtime
+        run: bash scripts/bootstrap_original_es2.sh .runtime/es2-king
+      - name: Apply Expansion／套用 M26-M29 overlay
+        run: bash scripts/apply_es2_king_expansion.sh .runtime/es2-king
+      # ES2M Training Dummy／實際生成 Runtime 的假人戰鬥與私塾更新閘門。
+      - name: ES2M training dummy and teacher／練武假人與私塾整合
+        run: python3 scripts/test_es2m_training_dummy.py --runtime .runtime/es2-king
+      # ES2M Snapshot／Expansion consistency gates；只驗來源／生成檔案完整性。
+      - name: ES2M Cold Plum Static + Runtime Overlay Gate／冷梅莊靜態與 Runtime 檔案閘門
+        run: python3 scripts/test_es2m_cold_plum_overlay.py --runtime .runtime/es2-king
+      # Skill Commands Gate／驗證 ES2M 停用、恢復及中止學習指令。
+      - name: ES2M Skill Commands／技能指令 Runtime 閘門
+        run: python3 scripts/test_es2m_skill_commands.py --runtime .runtime/es2-king
+      # M30 overlay-only pipeline 不匯入 ES2M snapshot-only skill；完整生成 Runtime 檢查由 Dockerfile 的 apply_race_phase2_runtime 後 Gate 負責。
+      - name: ES2M Latest Martial Updates／最新武學來源契約
+        run: python3 scripts/test_es2m_latest_martial_updates.py
+      - name: Damage Formula Runtime Gate／生成 Runtime 傷害參數核對
+        run: python3 scripts/test_king_martial_damage_formula.py --runtime .runtime/es2-king/mudlib
+      - name: Runtime Gate／Original 與 Expansion 相容性
+        run: bash scripts/test_m30_alpha_runtime_gate.sh .runtime/es2-king
+      - name: Install build prerequisites／安裝建置依賴
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build bison libcmark-dev cmark
+          python -m pip install --upgrade cmake
+      - name: Driver Build／建置 Driver
+        working-directory: .runtime/es2-king/neolith
+        run: cmake --preset linux-gcc -DBUILD_TESTING=OFF && cmake --build --preset dev-linux-gcc
+      # LPC Load Gate／以真實 Driver 載入新武學、NPC 強度及五堂鎮 NPC。
+      - name: ES2M Cold Plum LPC Load／冷梅莊載入驗證
+        run: bash scripts/test_es2m_cold_plum_lpc_load.sh .runtime/es2-king
+      - name: ADMIN GM LPC Load Gate／實際載入管理員指令
+        run: bash scripts/test_admin_gm_lpc_boot.sh .runtime/es2-king

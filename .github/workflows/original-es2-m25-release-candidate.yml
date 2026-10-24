@@ -1,0 +1,31 @@
+name: Original ES2 M25 Release Candidate
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths: ['original_es2/research/m25_*', 'original_es2/runtime/m25_*', 'scripts/test_m25_*', '.github/workflows/original-es2-m25-release-candidate.yml']
+  pull_request:
+    paths: ['original_es2/research/m25_*', 'original_es2/runtime/m25_*', 'scripts/test_m25_*', '.github/workflows/original-es2-m25-release-candidate.yml']
+  workflow_dispatch:
+jobs:
+  m25-release-candidate:
+    name: M25 Original ES2 候選版完整閘門
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得程式
+        uses: actions/checkout@v5
+      - name: Static regression／驗證候選版邊界與本機證據
+        run: bash scripts/test_m25_release_candidate_static.sh
+      - name: Bootstrap／建立乾淨 Original 執行樹
+        run: bash scripts/bootstrap_original_es2.sh
+      - name: M21-M24 regression／重跑完整化階段回歸
+        run: |
+          bash scripts/test_m21_world_static.sh
+          bash scripts/test_m21_world_runtime_gate.sh .runtime/original-es2
+          bash scripts/test_m22_npc_item_static.sh
+          bash scripts/test_m22_npc_item_runtime_gate.sh .runtime/original-es2
+          bash scripts/test_m23_core_gameplay_static.sh
+          bash scripts/test_m23_core_gameplay_runtime_gate.sh .runtime/original-es2
+          bash scripts/test_m24_data_integrity_static.sh
+          bash scripts/test_m24_data_integrity_runtime_gate.sh .runtime/original-es2
+      - name: M25 Runtime Gate／驗證候選版核心旅程介面
+        run: bash scripts/test_m25_release_candidate_runtime_gate.sh .runtime/original-es2

@@ -1,0 +1,15 @@
+/adm/daemons/securityd
+/adm/daemons/virtuald
+/adm/daemons/logind
+/adm/daemons/realipd
+/adm/daemons/cmd_d
+/adm/daemons/chinesed
+/adm/daemons/emoted
+/adm/daemons/aliasd
+/adm/daemons/fingerd
+/adm/daemons/channeld
+/adm/daemons/natured
+/adm/daemons/enterd
+/daemon/misc/npc_power
+/daemon/misc/npc_skill
+#/adm/daemons/network/dns_master

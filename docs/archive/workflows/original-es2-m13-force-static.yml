@@ -1,0 +1,31 @@
+name: Original ES2 M13 Force Static
+
+# GitHub Actions／GitHub 自動化測試：鎖定 Original force、專用內功映射與 exert 架構。
+on:
+  workflow_dispatch:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths:
+      - '.github/workflows/original-es2-m13-force-static.yml'
+      - 'original_es2/research/original_martial_force_m13.md'
+      - 'scripts/test_martial_force_m13_static.sh'
+      - 'scripts/bootstrap_original_es2.sh'
+  pull_request:
+    paths:
+      - '.github/workflows/original-es2-m13-force-static.yml'
+      - 'original_es2/research/original_martial_force_m13.md'
+      - 'scripts/test_martial_force_m13_static.sh'
+      - 'scripts/bootstrap_original_es2.sh'
+
+jobs:
+  m13-force-static:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v4
+
+      - name: Bootstrap runtime／建立 Original ES2 執行環境
+        run: bash scripts/bootstrap_original_es2.sh
+
+      - name: Force static regression／內功架構靜態回歸
+        run: bash scripts/test_martial_force_m13_static.sh

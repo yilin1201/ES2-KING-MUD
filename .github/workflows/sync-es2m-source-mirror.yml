@@ -1,0 +1,60 @@
+name: ES2M Full Source Mirror
+
+on:
+  push:
+    branches:
+      - build/original-es2-races-phase2
+    paths:
+      - ".github/workflows/sync-es2m-source-mirror.yml"
+      - "scripts/sync_es2m_source_mirror.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: es2m-source-mirror-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ES2-KING branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 1
+
+      - name: Checkout pinned ES2M source
+        uses: actions/checkout@v4
+        with:
+          repository: wolfer168/es2-webmud
+          ref: d013a64cc9e5e5a9e148732bc58f6f7264219fcc
+          path: source/upstream/es2-webmud
+          fetch-depth: 1
+
+      - name: Stage full source mirror
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p source/upstream
+          rm -rf source/upstream/mudlib
+          cp -a source/upstream/es2-webmud/source/upstream/mudlib source/upstream/mudlib
+          python3 scripts/sync_es2m_source_mirror.py
+
+      - name: Commit full mirror without overwriting working snapshot
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f es2m_source_mirror  # 強制納入上游已追蹤但被 KING 忽略規則排除的檔案
+          if git diff --cached --quiet; then
+            echo "ES2M source mirror is already current."
+            exit 0
+          fi
+          git commit -m "Mirror complete pinned ES2M upstream mudlib"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

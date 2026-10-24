@@ -1,0 +1,23 @@
+name: Original ES2 M21 World Content
+
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths: ['original_es2/research/m21_world_*', 'scripts/test_m21_world_*', 'scripts/bootstrap_original_es2.sh', '.github/workflows/original-es2-m21-world-content.yml']
+  pull_request:
+    paths: ['original_es2/research/m21_world_*', 'scripts/test_m21_world_*', 'scripts/bootstrap_original_es2.sh', '.github/workflows/original-es2-m21-world-content.yml']
+  workflow_dispatch:
+
+jobs:
+  m21-world-content:
+    name: M21 世界內容完整化驗證
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v5
+      - name: Static regression／驗證世界證據邊界
+        run: bash scripts/test_m21_world_static.sh
+      - name: Bootstrap Original ES2／建立乾淨執行樹
+        run: bash scripts/bootstrap_original_es2.sh
+      - name: Runtime Gate／驗證區域、房間與出口基線
+        run: bash scripts/test_m21_world_runtime_gate.sh .runtime/original-es2
