@@ -8,11 +8,11 @@ import json
 import shutil
 from pathlib import Path
 
-# 這個腳本只更新 ES2M_SOURCE_MIRROR，不覆寫 es2m_snapshot 工作快照。
+# 此鏡像只保存上游原始碼，不覆寫 KING Runtime 或工作快照。
 SOURCE_ROOT = Path("source/upstream/mudlib")
 MIRROR_ROOT = Path("es2m_source_mirror/mudlib")
 SOURCE_REPO = "wolfer168/es2-webmud"
-SOURCE_COMMIT = "ee12e717e2d3d88728607a01c2c2f1d634bf9616"
+SOURCE_COMMIT = "d013a64cc9e5e5a9e148732bc58f6f7264219fcc"
 
 
 def sha256_file(path: Path) -> str:
@@ -25,7 +25,7 @@ def sha256_file(path: Path) -> str:
 
 
 def main() -> int:
-    # 來源資料由 workflow 在固定 commit checkout 後提供，避免追隨浮動 main。
+    # workflow 必須先 checkout 與 SOURCE_COMMIT 相同的固定來源版本。
     if not SOURCE_ROOT.is_dir():
         raise SystemExit(f"找不到 ES2M 來源目錄：{SOURCE_ROOT}")
 
@@ -65,6 +65,7 @@ def main() -> int:
         encoding="utf-8",
     )
     print(f"ES2M mirror files: {len(entries)}")
+    print(f"Source commit: {SOURCE_COMMIT}")
     print(f"Manifest: {manifest_path}")
     return 0
 
