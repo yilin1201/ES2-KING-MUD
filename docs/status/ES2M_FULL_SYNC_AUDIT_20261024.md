@@ -134,3 +134,13 @@ GitHub compare API 回報：從舊基準 `70cbf3c...` 到新基準 `d013a64...`�
 - 全量差異清單：仍未完成
 - 全量整合：仍未完成
 - PR #13：必須維持 OPEN / NOT MERGED
+
+
+## 9. 完整上游鏡像與逐檔差異（2026-10-24）
+
+- 已將 `sync-es2m-source-mirror.yml` 與 `scripts/sync_es2m_source_mirror.py` 固定至 ES2M commit `d013a64cc9e5e5a9e148732bc58f6f7264219fcc`。
+- GitHub Actions 已將上游 `source/upstream/mudlib/` 完整鏡像到 `es2m_source_mirror/mudlib/`；Manifest 顯示 1791 個檔案，Git Tree 實際也已核對 1791 個檔案，包含原先被 .gitignore 排除的兩個 `.o` 檔。
+- 每檔 SHA-256 清單位於 `es2m_source_mirror/MANIFEST.json`；完整差異清單位於 `docs/status/ES2M_TREE_DIFF_20261024.md`。
+- 與現有 `es2m_snapshot/mudlib/` 比較：SAME 940、MODIFIED_UPSTREAM 184、NEW_UPSTREAM 667、KING_SNAPSHOT_ONLY 18。
+- 與 `es2_king_expansion/runtime/mudlib/` 比較：SAME 11、MODIFIED 23、上游尚未進入 Runtime 1757、KING-only 66。
+- 上述結果只證明完整來源鏡像與差異盤點已落地；未經審核的上游檔案仍未自動覆蓋 Runtime。Runtime／Docker／E2E 驗證需按分類分批執行。
