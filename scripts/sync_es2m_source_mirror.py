@@ -12,7 +12,7 @@ from pathlib import Path
 SOURCE_ROOT = Path("source/upstream/mudlib")
 MIRROR_ROOT = Path("es2m_source_mirror/mudlib")
 SOURCE_REPO = "wolfer168/es2-webmud"
-SOURCE_COMMIT = "d013a64cc9e5e5a9e148732bc58f6f7264219fcc"
+SOURCE_COMMIT = "88e23bfde225d4d27904533ee606da9b5b20aabb"
 
 
 def sha256_file(path: Path) -> str:

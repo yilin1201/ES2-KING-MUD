@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: wolfer168/es2-webmud
-          ref: d013a64cc9e5e5a9e148732bc58f6f7264219fcc
+          ref: 88e23bfde225d4d27904533ee606da9b5b20aabb
           path: source/upstream/es2-webmud
           fetch-depth: 1
 
