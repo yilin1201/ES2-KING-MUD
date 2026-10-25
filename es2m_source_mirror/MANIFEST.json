@@ -1,7 +1,7 @@
 {
   "purpose": "ES2M 原始 Mudlib 完整唯讀鏡像；不得直接當成 KING runtime overlay。",
   "source_repository": "wolfer168/es2-webmud",
-  "source_commit": "d013a64cc9e5e5a9e148732bc58f6f7264219fcc",
+  "source_commit": "88e23bfde225d4d27904533ee606da9b5b20aabb",
   "source_path": "source/upstream/mudlib/",
   "mirror_path": "es2m_source_mirror/mudlib/",
   "file_count": 1791,
@@ -6864,8 +6864,8 @@
     },
     {
       "path": "daemon/misc/heat_commands.c",
-      "size": 12143,
-      "sha256": "8a0759ea998e85522cac9ab5b766dd1ad072e32118abdc6d47704fd0b8acfdf1"
+      "size": 12387,
+      "sha256": "9627f50ec14f31fadf4e5c59412c76e00d55982a0d93c7e58f523c3f6e8b7e9e"
     },
     {
       "path": "daemon/misc/heat_d.c",
@@ -7044,13 +7044,13 @@
     },
     {
       "path": "daemon/skill/alchemy-medication.c",
-      "size": 5239,
-      "sha256": "b5a248d878c76ccaff75ee5ed880945ad60a0dd08d11687c33fde1f155e323d8"
+      "size": 5997,
+      "sha256": "0a3a0e8655d308d5cbfb7bcee604e12145f7c0c848fc9cf4e10ef8a4cf92fd3c"
     },
     {
       "path": "daemon/skill/alchemy-wealth.c",
-      "size": 7269,
-      "sha256": "13aec676bc74ac540b35086e7536d7641301b247ab20ff1c52b45a394ed54338"
+      "size": 8027,
+      "sha256": "5a3a619f4871181439fc2f333e5005699035d4657b874c60b658ffd46b15bf30"
     },
     {
       "path": "daemon/skill/archaic_attainment.c",
@@ -7404,13 +7404,13 @@
     },
     {
       "path": "docs/help/alchemy-medication.txt",
-      "size": 1733,
-      "sha256": "54784d8cd91bda90b04aac5be589c74b3a24bed73cad08b1d6ba821aa2c6419f"
+      "size": 1800,
+      "sha256": "1451ab13eb2fc4b79ee1b2da77f1ad08783dafc90df3d01bf26bd34fe198ecb7"
     },
     {
       "path": "docs/help/alchemy-wealth.txt",
-      "size": 1086,
-      "sha256": "a414caffee892f26252c107ab4370405bf35f9b95a103f86eba64a29c490de98"
+      "size": 1153,
+      "sha256": "5388228aa18e6064a6d744116d6f8d995dddc75db85f8265ebb821e56ee6eca6"
     },
     {
       "path": "docs/help/ashura.txt",
@@ -8139,8 +8139,8 @@
     },
     {
       "path": "obj/alchemist/heat_furnace.c",
-      "size": 4585,
-      "sha256": "45f4c745afeed252667b35c08c251f1ad03ac3d28cfa4a3186cde64337e355ee"
+      "size": 5029,
+      "sha256": "324b478477d414e8a5b15408bb3651317b6858754818e721d4af87a2c9ec1c73"
     },
     {
       "path": "obj/alchemist/heat_reactor.c",
