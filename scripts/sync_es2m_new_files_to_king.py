@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Copy only ES2M files that are new relative to pinned Original ES2 and KING overlay.
+"""Sync ES2M source files into the KING runtime overlay, overwriting same-path KING files.
 
-Never overwrite an Original ES2 path or an existing KING overlay path.
+The pinned Original ES2 checkout is read-only reference data; this script only writes
+inside the dedicated KING runtime overlay. ES2M is authoritative for every path it has.
 """
 from __future__ import annotations
 import argparse, hashlib, json, shutil
@@ -17,7 +18,7 @@ def digest(path: Path) -> str:
 def main() -> int:
     ap=argparse.ArgumentParser()
     ap.add_argument("--source", required=True, type=Path, help="latest ES2M mirror mudlib")
-    ap.add_argument("--original", required=True, type=Path, help="pinned Original ES2 mudlib")
+    ap.add_argument("--original", required=True, type=Path, help="pinned Original ES2 mudlib, read-only comparison")
     ap.add_argument("--overlay", required=True, type=Path, help="KING runtime overlay destination")
     ap.add_argument("--report", required=True, type=Path)
     a=ap.parse_args()
@@ -25,34 +26,37 @@ def main() -> int:
         if not p.is_dir(): raise SystemExit(f"FAIL: required directory missing: {p}")
     a.overlay.mkdir(parents=True,exist_ok=True)
     source_files=sorted(p for p in a.source.rglob("*") if p.is_file())
-    copied=[]; already=[]; original_conflicts=[]; king_conflicts=[]
+    copied_new=[]; overwritten=[]; unchanged=[]; original_conflicts=[]
     for src in source_files:
         rel=src.relative_to(a.source)
         original=a.original/rel
         dest=a.overlay/rel
-        if original.exists():
-            if digest(src)==digest(original): already.append({"path":rel.as_posix(),"status":"already-in-original","sha256":digest(src)})
-            else: original_conflicts.append({"path":rel.as_posix(),"status":"same-path-original-differs","source_sha256":digest(src),"original_sha256":digest(original)})
-            continue
+        src_hash=digest(src)
+        if original.exists() and src_hash!=digest(original):
+            original_conflicts.append({"path":rel.as_posix(),"status":"ES2M-differs-from-pinned-original","source_sha256":src_hash,"original_sha256":digest(original)})
         if dest.exists():
-            king_conflicts.append({"path":rel.as_posix(),"status":"preserved-existing-king-overlay","source_sha256":digest(src),"king_sha256":digest(dest)})
-            continue
-        dest.parent.mkdir(parents=True,exist_ok=True)
-        shutil.copy2(src,dest)
-        copied.append({"path":rel.as_posix(),"status":"copied-new-path","sha256":digest(dest)})
+            dest_hash=digest(dest)
+            if dest_hash==src_hash:
+                unchanged.append({"path":rel.as_posix(),"status":"already-matches-ES2M","sha256":src_hash})
+                continue
+            dest.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copy2(src,dest)
+            overwritten.append({"path":rel.as_posix(),"status":"overwritten-existing-KING-file","previous_king_sha256":dest_hash,"source_sha256":src_hash})
+        else:
+            dest.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copy2(src,dest)
+            copied_new.append({"path":rel.as_posix(),"status":"copied-new-path","sha256":src_hash})
     report={
-      "policy":"copy-only-new-paths; never overwrite pinned Original ES2 or existing KING overlay",
-      "source_root":str(a.source),"original_root":str(a.original),"overlay_root":str(a.overlay),
-      "source_file_count":len(source_files),"copied_count":len(copied),
-      "already_in_original_count":len(already),"original_same_path_conflict_count":len(original_conflicts),
-      "existing_king_overlay_preserved_count":len(king_conflicts),
-      "copied":copied,"already_in_original":already,
-      "original_same_path_conflicts":original_conflicts,
-      "existing_king_overlay_preserved":king_conflicts,
+      "policy":"ES2M-source-authoritative-for-all-matching-paths-in-KING-runtime-overlay; overwrite same-path overlay files; pinned Original ES2 checkout is never modified",
+      "source_root":str(a.source),"original_reference_root":str(a.original),"overlay_root":str(a.overlay),
+      "source_file_count":len(source_files),"copied_new_count":len(copied_new),
+      "overwritten_existing_king_count":len(overwritten),"already_matching_count":len(unchanged),
+      "source_differs_from_pinned_original_count":len(original_conflicts),
+      "copied_new":copied_new,"overwritten_existing_king":overwritten,
+      "already_matching":unchanged,"source_differs_from_pinned_original":original_conflicts,
     }
     a.report.parent.mkdir(parents=True,exist_ok=True)
     a.report.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({k:v for k,v in report.items() if not isinstance(v,list)},ensure_ascii=False,indent=2))
-    if len(copied)==0: print("No new files to copy.")
     return 0
 if __name__=="__main__": raise SystemExit(main())
