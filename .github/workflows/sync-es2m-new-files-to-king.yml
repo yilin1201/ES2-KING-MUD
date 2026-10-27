@@ -1,0 +1,56 @@
+name: Sync ES2M New Files Into KING Overlay
+
+on:
+  push:
+    branches:
+      - build/original-es2-races-phase2
+    paths:
+      - .github/workflows/sync-es2m-new-files-to-king.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: es2m-new-files-to-king-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  copy-new-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout KING branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout pinned Original ES2 baseline
+        env:
+          ORIGINAL_ES2_COMMIT: cc45c06af4852380e5148dad3c9d53ff06854f2c
+        run: |
+          git clone --no-checkout https://github.com/taedlar/es2_mudlib.git /tmp/original-es2
+          git -C /tmp/original-es2 checkout --detach "$ORIGINAL_ES2_COMMIT"
+
+      - name: Copy only new ES2M paths into KING overlay
+        run: |
+          python3 scripts/sync_es2m_new_files_to_king.py \
+            --source es2m_source_mirror/mudlib \
+            --original /tmp/original-es2/mudlib \
+            --overlay es2_king_expansion/runtime/mudlib \
+            --report docs/research/ES2M_NEW_FILES_IMPORT_REPORT.json
+
+      - name: Commit copied files and import report
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add es2_king_expansion/runtime/mudlib docs/research/ES2M_NEW_FILES_IMPORT_REPORT.json
+          if git diff --cached --quiet; then
+            echo "No new ES2M files to commit."
+            exit 0
+          fi
+          git commit -m "sync: copy new ES2M paths into KING overlay"
+          git push origin "HEAD:refs/heads/$TARGET_BRANCH"
