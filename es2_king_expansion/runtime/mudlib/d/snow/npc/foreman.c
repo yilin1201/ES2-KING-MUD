@@ -1,19 +1,17 @@
+// foreman.c
+
 #include <npc.h>
 
 inherit F_VILLAGER;
 
 void new_crate();
 
+
 void create()
 {
 	set_name("工頭", ({ "foreman" }) );
-	set_race("human");
+	set_race("human"); set_class("commoner");
 	set_level(8);
-	set_stat_maximum("kee", 60);
-	set_attr("str", 18);
-	set_attr("cor", 19);
-	set_attr("cps", 15);
-	set_attr("dex", 16);
 
 	set("age", 48);
 	set("long",
@@ -27,7 +25,8 @@ void create()
 		"工頭說道﹕誰再去多找些人手﹐唉﹐忙死了。\n",
 		"工頭說道﹕要算工錢的一個個來 ... 別急 ...\n"
 	}) );
-
+		
+	set_power("C");
 	setup();
 	carry_money("coin", 220);
 }
@@ -43,20 +42,35 @@ void relay_say(object me, string msg)
 	if( is_fighting() || is_chatting() ) return;
 
 	if( strsrch(msg, "工錢") >= 0 ) {
-		int amount;
+		int amount, crates;
 		object money;
 
-		if( amount = me->query_temp("wage_deserved") ) {
+		/* Pay by delivered crate count: 25 coins per crate. */
+		crates = me->query_temp("wage_crates");
+		amount = crates > 0 ? crates * 25 : me->query_temp("wage_deserved");
+
+		if( amount > 0 ) {
 			money = new("/obj/money/coin");
 			money->set_amount(amount);
-			command("say 好﹐好 ... 總共是" + chinese_number(amount) + "文錢﹐哪﹐給你。");
-			me->delete_temp("wage_deserved");
 
-			// ES2-KING Original compatibility／原作相容修復：
-			// crate 明定 wage=25，且本段訊息也明示 amount；若先 move 到工頭，
-			// COMBINED_ITEM 會和工頭既有 220 文合併，原來的 `give coin` 因而
-			// 實際交出 245 文。直接交付剛建立的 reward，保留原始數值與語意。
-			if( !money->move(me) ) money->move(environment(me));
+			/*
+			 * CUSTOM WebMUD fix:
+			 * Never put wages into the foreman's inventory before paying.
+			 * Combined money objects auto-merge, so the old flow merged the
+			 * 25-coin wage with his carried 220 coins and `give coin` handed
+			 * the whole 245-coin stack to the player. Pay the freshly-created
+			 * wage object directly to the worker instead.
+			 */
+			if( !money->move(me) ) {
+				destruct(money);
+				command("say 你身上東西太多了﹐先騰出些地方再來領工錢。");
+				return;
+			}
+
+			command("say 好﹐好 ... 總共搬了" + chinese_number(crates > 0 ? crates : amount / 25)
+				+ "個箱子﹐工錢是" + chinese_number(amount) + "文錢﹐哪﹐給你。");
+			me->delete_temp("wage_crates");
+			me->delete_temp("wage_deserved");
 		}
 		else do_chat("工頭說道﹕搬一個箱子二十五文錢﹐損壞的賠三倍。\n");
 		return;
@@ -66,7 +80,7 @@ void relay_say(object me, string msg)
 void new_crate()
 {
 	object ob;
-
+	
 	if( !environment()
 	||	sizeof(all_inventory(environment())) >= 15 ) return;
 

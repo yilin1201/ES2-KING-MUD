@@ -1,13 +1,9 @@
-/* 虎紋刀 — ES2-KDS 參考來源複製檔。
- * 來源：https://github.com/kds121tw/ES2-KDS/blob/rebuild/es2-game/source/upstream/mudlib/custom/weapon/blade/tiger_blade.c
- * 上游 Blob SHA：3e8585337c4bb327021b0277982e762063c754a0。
- * 分類：ES2-KING Expansion Runtime 相容覆蓋；來源屬 KDS 參考版本，尚不單憑此檔認定為 Annihilator Original ES2 Confirmed。
- * 本檔位於獨立 Expansion overlay，不回寫 Original ES2 保存來源。
- */
+/* 虎紋刀 — ES2 原始武器資料。所屬 NPC 另行設定。 */
 #include <ansi.h>
 #include <weapon.h>
 
- // 唯一性：保留參考來源 F_UNIQUE 行為，避免同一 Runtime 重複生成多把虎紋刀。
+// 唯一性：世上（玩家身上、容器、地上、當鋪）只會有一把；NPC 重生時
+// 若這把刀還在，NPC 就不會拿到，也沒有替代品。
 inherit F_UNIQUE;
 inherit F_BLADE;
 

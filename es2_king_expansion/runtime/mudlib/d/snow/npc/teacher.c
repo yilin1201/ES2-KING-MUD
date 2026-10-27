@@ -1,3 +1,4 @@
+#include <ansi.h>
 // teacher.c
 
 #include <npc.h>
@@ -26,13 +27,23 @@ void teach_literate();
 void pick_student(object ob);
 void cancel_pick(object ob);
 
+/* 成為書生的條件（使用者指定，2026-10-17）：平民、讀書識字 5～29。
+ * 被挑中時與答應時各檢查一次。 */
+int can_be_scholar(object ob)
+{
+    int lv;
+
+    if( !ob || ob->query_class() != "commoner" ) return 0;
+    lv = ob->query_skill("literate", 1);
+    return lv >= 5 && lv <= 29;
+}
+
 void create()
 {
     set_name("王懷芝", ({ "wang whaiz", "wang", "whaiz" }) );
     set_race("human"); set_class("scholar");
     set_level(5);
 
-    set_skill("literate", 60);
     set("long",
         "王懷芝是鎮上王員外的獨子﹐前幾年上京考試落第﹐碰巧王太夫人過世\n"
         "﹐因此留在家鄉服喪﹐閒暇無事﹐便開了間私塾教鎮上孩子讀書。\n");
@@ -60,7 +71,7 @@ int do_sit(string arg)
 	
     if( this_player()->query_temp("pending/sit_learning_literate") )
         return notify_fail("你已經坐著專心聽講了。\n");
-    message_vision("$N找了一個空位坐了下來﹐開始跟著王老師唸書。\n",
+    message_vision(CYN + "$N找了一個空位坐了下來﹐開始跟著王老師唸書。\n" NOR,
         this_player() );
     this_player()->set_temp("pending/sit_learning_literate", 1);
     return 1;
@@ -89,16 +100,15 @@ void teach_literate()
 	/* 每句得到 智力 × random(智力) 的讀書識字點數。 */
 	ob->improve_skill_exact("literate",
 	    ob->query_attr("int") * random(ob->query_attr("int")));
-	message_vision("$N跟著念道﹕" + txt + "。\n", ob);
+	message_vision(CYN + "$N跟著念道﹕" + txt + "。\n" NOR, ob);
 
 	/* 挑選書生的條件 */
 	// 加個random, 不然每講一句就問 -Dragoon
 	if( interactive(ob) && random(10) > 7 
-	&&  ob->query_class()=="commoner"
-	&&  ob->query_skill("literate") >= 5
+	&&  can_be_scholar(ob)
+	&&  !ob->query_temp("pending/picked_by_whaiz")
 	&&  member_array(ob->query_race(), ({
-        // ES2-KING 種族代碼相容：Original ES2 使用 rainnar，ES2M 快照的 rainner 不直接沿用。
-		"avatar", "human", "rainnar", "malik", "woochan", "jiaojao", "yaksa"
+		"avatar", "human", "rainner", "malik", "woochan", "jiaojao", "yaksa"
 	    })) != -1
 	&&  ob->query_attr("int") > random(20) )
 	    do_chat( (: pick_student, ob :) );
@@ -153,6 +163,8 @@ void pick_student(object ob)
 void cancel_pick(object ob)
 {
     if( ! ob ) return;
+    /* 已經回答過了（pending 已清掉），不再多說。 */
+    if( ! ob->query_temp("pending/picked_by_whaiz") ) return;
 
     ob->delete_temp("pending/picked_by_whaiz");
     if( present(ob) ) {
@@ -165,16 +177,29 @@ void make_new_scholar(object ob)
 {
     if( !ob || !present(ob) || !interactive(ob)) return;
 
+    if( !can_be_scholar(ob) ) {
+	command("say 罷了，這事以後再說吧。");
+	return;
+    }
     ob->set_class("scholar");
     command("smile");
-    tell_object(ob, "( 你成為一位書生 )\n");
+    command("say 好好念書吧，我看你資質不錯，將來必有成就！");
+    tell_object(ob, CYN + "( 你成為一位書生 )\n" NOR);
 }
 
 void relay_say(object who, string msg)
 {
+    string word;
+
     if( ! who->query_temp("pending/picked_by_whaiz") ) return;
-    if( member_array(msg[0..1], ({"想", "是", "好"})) != -1 ) {
-	do_chat((: make_new_scholar, who :));
-	who->delete_temp("pending/picked_by_whaiz");
+    if( !stringp(msg) ) return;
+    // 回答以「想」「是」「好」開頭就答應。中文字在 UTF-8 裡一個字佔 3 個位元組，
+    // 原本只比對前 2 個位元組（舊 Big5 一字 2 位元組的寫法），所以永遠不會成立。
+    foreach(word in ({ "想", "是", "好" })) {
+	if( msg[0..strlen(word)-1] == word ) {
+	    who->delete_temp("pending/picked_by_whaiz");
+	    do_chat((: make_new_scholar, who :));
+	    return;
+	}
     }
 }

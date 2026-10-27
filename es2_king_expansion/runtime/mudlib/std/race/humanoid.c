@@ -246,20 +246,17 @@ statistic_destroyed(object ob, mapping flag)
 {
 
     if( flag["gin"] ) {
-	if( ob->query_stat_maximum("gin") > ob->query_attr("dex") )
-	    ob->advance_stat("gin", -1);
+	// 重傷（有效值歸零）不再扣最大值，只回復一點並昏迷（使用者核准的調整）。
 	ob->heal_stat("gin", ob->query_attr("dex"));
     }
 
     if( flag["kee"] ) {
-	if( ob->query_stat_maximum("kee") > ob->query_attr("con") )
-	    ob->advance_stat("kee", -1);
+	// 重傷（有效值歸零）不再扣最大值，只回復一點並昏迷（使用者核准的調整）。
 	ob->heal_stat("kee", ob->query_attr("con"));
     }
 
     if( flag["sen"] ) {
-	if( ob->query_stat_maximum("sen") > ob->query_attr("spi") )
-	    ob->advance_stat("sen", -1);
+	// 重傷（有效值歸零）不再扣最大值，只回復一點並昏迷（使用者核准的調整）。
 	ob->heal_stat("sen", ob->query_attr("spi"));
     }
 
@@ -288,48 +285,6 @@ statistic_exhausted(object ob, mapping flag)
     // and die at the same heart beat.
     if( flag["HP"] )
     {
-        // ES2-KING Yanwujie Defeat Boundary／演武界敗北邊界：
-        // Original ES2 的 HP exhausted 是進入 die()／ghost／corpse 的唯一直接死亡分支。
-        // 只在明確標記 arena_zone 的 Expansion 房間攔截；不修改 score、level、skill、
-        // inventory、maximum statistic 或任何永久存檔欄位。
-        if (environment(ob) && environment(ob)->query("arena_zone")) {
-            int max;
-
-            ob->remove_all_enemy();
-            ob->clear_condition();
-
-            // Original CHAR_D setup 明確建立 HP；Human/Avatar Race 明確建立 gin/kee/sen。
-            // 敗北只回復這四個 Original combat/health statistics 的 effective/current，
-            // 不碰 maximum，因此不會形成永久成長或損耗。
-            max = ob->query_stat_maximum("HP");
-            ob->set_stat_effective("HP", max);
-            ob->set_stat_current("HP", max);
-            max = ob->query_stat_maximum("gin");
-            if (max) {
-                ob->set_stat_effective("gin", max);
-                ob->set_stat_current("gin", max);
-            }
-            max = ob->query_stat_maximum("kee");
-            if (max) {
-                ob->set_stat_effective("kee", max);
-                ob->set_stat_current("kee", max);
-            }
-            max = ob->query_stat_maximum("sen");
-            if (max) {
-                ob->set_stat_effective("sen", max);
-                ob->set_stat_current("sen", max);
-            }
-            ob->clear_statistic_flags();
-
-            message("system", HIY
-                "\n【演武界法則引動】太初神光自虛空傾瀉而下，你潰散的形神於神光中重新凝聚。\n"
-                "此戰勝負已分，然而生死不入輪迴；片刻之後，你再次睜開雙眼。\n\n" NOR,
-                ob);
-            message("vision", HIY "\n演武界太初神光驟然亮起，$N的形神於光芒中重新凝聚。\n\n" NOR,
-                environment(ob), ob);
-            return 1;
-        }
-
 	ob->die();
 	if( !userp(ob) ) {
 	    destruct(ob);

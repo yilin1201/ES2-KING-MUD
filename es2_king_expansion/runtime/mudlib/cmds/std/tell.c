@@ -1,7 +1,6 @@
 
 
 #include <ansi.h>
-// [ES2-KING Reconstruction] Original 跨 MUD DNS/GTELL Source 未保存；只恢復可證明的本地 tell。
 
 #define MIN_TELL_INTERVAL	3
 #define MAX_TELL_MESSAGE	1024
@@ -26,10 +25,14 @@ int main(object me, string arg)
     if( strlen(msg) > MAX_TELL_MESSAGE )
 	return notify_fail("你的訊息太長了，請長話短說。\n");
 
+#ifdef GTELL
     if( sscanf(target, "%s@%s", target, mud)==2 ) {
-	// 跨站傳送所需 daemon/header 已遺失；不可自行補造通訊協定。
-	return notify_fail("跨站網路訊息 Source 尚未保存，目前無法使用。\n");
+	GTELL->send_gtell(mud, target, me, msg);
+	write("網路訊息已送出，可能要稍候才能得到回應。\n");
+	return 1;
     }
+#endif
+
 
     obj = find_player(target);
     if( !obj
@@ -113,3 +116,4 @@ HELP
     );
     return 1;
 }
+

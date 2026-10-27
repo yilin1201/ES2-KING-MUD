@@ -1,7 +1,16 @@
 /*
- * ES2-KING Expansion overlay for Original ES2 attribute handling.
- * 一般角色維持 Original／ES2M 的 1..50；授權 KING 管理服務可設定 1..99。
+ *  Package: Attributes
+ *  Summary: An entity's attributes, such as strength, intelligence, etc.
+ *
+ *      If the entity is a character (living object), then the attributes will be used to
+ *      calculate the character's abilities, such as attack, defense, magic power, etc.
+ *      Character's attributes can be modified by various means, such as conditions, equipments,
+ *      magical effects, etc.
+ *
+ *      If the entity is not a character, the attributes will be used for calculation when
+ *      a character interacts with it.
  */
+
 #include <dbase.h>
 #include <attribute.h>
 
@@ -9,53 +18,42 @@ mapping attribute = ([]);
 
 mapping query_attribute() { return attribute; }
 
-varargs int query_attr(string what, int raw)
-{
+varargs int query_attr (string what, int raw) {
     int a;
     if (!mapp(attribute) || undefinedp(a = attribute[what]))
         return 0;
+
     if (raw)
         return a;
-    return a + (int)query_temp("apply/" + what);
+
+    return a + (int)query_temp ("apply/" + what);
 }
 
-int set_attr(string what, int value)
-{
-    object caller;
-    string caller_name;
-    int king_admin;
-
+int set_attr (string what, int value) {
     if (!mapp(attribute))
         attribute = ([]);
 
-    // Original 初始化規則保留；只允許兩個受權限保護的 KING 管理 daemon 突破一般上限。
-    caller = previous_object();
-    caller_name = objectp(caller) ? file_name(caller) : "";
-    king_admin = caller_name == "/adm/daemons/kingd";
-
-    // 八大屬性：一般角色上限 ATTRVAL_MAX；KING 管理 API 上限 99；所有角色均不得低於 ATTRVAL_MIN。
+    // For user characters, the attribute must be initialized in init_attribute() and
+    // the value must be between ATTRVAL_MIN and ATTRVAL_MAX.
     if (userp(this_object())
-    && (undefinedp(attribute[what])
-        || value < ATTRVAL_MIN
-        || (value > ATTRVAL_MAX && (!king_admin || value > 99))))
+    && (undefinedp(attribute[what]) || value < ATTRVAL_MIN || value > ATTRVAL_MAX))
         return 0;
 
     return (attribute[what] = value);
 }
 
-varargs void init_attribute(mapping base)
-{
+varargs void init_attribute (mapping base) {
     mapping attr;
     string name;
     int value;
 
-    if (mapp(attr = query("attribute"))) {
+    if (mapp (attr = query("attribute"))) {
         attribute = attr;
         delete("attribute");
     }
 
     if (!mapp(attribute))
-        attribute = allocate_mapping(NUM_ATTRIBUTES);
+        attribute = allocate_mapping (NUM_ATTRIBUTES);
 
     if (!mapp(base) || !sizeof(base))
         return;
