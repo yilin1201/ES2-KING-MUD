@@ -74,7 +74,7 @@ jobs:
               ]
           }
           Path("es2m_source_mirror/MANIFEST.json").write_text(
-              json.dumps(manifest, ensure_ascii=False, indent=2) + "\\n",
+              json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
               encoding="utf-8"
           )
           print(json.dumps({
@@ -85,10 +85,10 @@ jobs:
 
       - name: Sync all latest ES2M files into KING overlay and overwrite same-path files
         run: |
-          python3 scripts/sync_es2m_new_files_to_king.py \\
-            --source es2m_source_mirror/mudlib \\
-            --original /tmp/original-es2/mudlib \\
-            --overlay es2_king_expansion/runtime/mudlib \\
+          python3 scripts/sync_es2m_new_files_to_king.py \
+            --source es2m_source_mirror/mudlib \
+            --original /tmp/original-es2/mudlib \
+            --overlay es2_king_expansion/runtime/mudlib \
             --report docs/research/ES2M_NEW_FILES_IMPORT_REPORT.json
 
       - name: Commit synchronized mirror, KING overlay and import report
