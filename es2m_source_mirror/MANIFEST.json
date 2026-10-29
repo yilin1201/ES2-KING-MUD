@@ -2,10 +2,10 @@
   "purpose": "ES2M 最新原始 Mudlib 唯讀鏡像；不得直接視為 Original ES2，也不直接取代 KING 專屬資料。",
   "source_repository": "wolfer168/es2-webmud",
   "source_branch": "main",
-  "source_commit": "33e41d6657a891135a64f9a2f114d17138446a72",
+  "source_commit": "acfec9cec270cee28349c56d9fde7247d5e8267e",
   "source_path": "source/upstream/mudlib/",
   "mirror_path": "es2m_source_mirror/mudlib/",
-  "file_count": 1819,
+  "file_count": 1823,
   "hash_algorithm": "SHA-256",
   "files": [
     {
@@ -40,8 +40,8 @@
     },
     {
       "path": "adm/daemons/chard.c",
-      "size": 13268,
-      "sha256": "8156a1361c3f3ee7ace761ae454bb6e87123c8919bdb93a33a85e2a4b0652f59"
+      "size": 14099,
+      "sha256": "550ef621397576584adbbb2cedd2e144ac3398dbfd8f92ea9acd45ebb17702dc"
     },
     {
       "path": "adm/daemons/chinesed.c",
@@ -105,8 +105,8 @@
     },
     {
       "path": "adm/daemons/realipd.c",
-      "size": 5128,
-      "sha256": "3a29c4f3e747a686266caead60231181a3657e857689bb0566d817b50fca1dad"
+      "size": 5814,
+      "sha256": "b1862575144edfc09a24ab186351e391b35613d2865ec3623f9bad55fd24bdbe"
     },
     {
       "path": "adm/daemons/securityd.c",
@@ -286,7 +286,7 @@
     {
       "path": "cmds/adm/iplimit.c",
       "size": 4616,
-      "sha256": "3986d80000305699af93bd78278285e076161ea257697614d0bf50282c9a5ed4"
+      "sha256": "c8ee2c85a29930ebc119a68173fea46340e013e5d2077b50f18d8fb47ca3f0a3"
     },
     {
       "path": "cmds/adm/profile.c",
@@ -2910,8 +2910,8 @@
     },
     {
       "path": "custom/legacy_npc/liuh_don_lu.c",
-      "size": 6832,
-      "sha256": "d0f4a11ec6488a92059404cbddb4fea054f9acd663cfb8f6836efc65769172e5"
+      "size": 8460,
+      "sha256": "c3a0243a7eda2a345358bc54eb9da3ce2d64ced83519cd80704157d00ffa49ec"
     },
     {
       "path": "custom/legacy_npc/liuh_hui_xin.c",
@@ -3115,8 +3115,8 @@
     },
     {
       "path": "custom/legacy_npc/wu_dauton.c",
-      "size": 4701,
-      "sha256": "f0ef61bc77de7e852bc63e60c3e1c04da5097261bca635177436a0c626e3cd7c"
+      "size": 7453,
+      "sha256": "bbf014bb08c2d688ba4ff0e5ba557de4a85875896019b0c40c02bf0d3e7aded3"
     },
     {
       "path": "custom/legacy_npc/wu_yu_nun.c",
@@ -3525,8 +3525,8 @@
     },
     {
       "path": "custom/weapon/blade/large_blade.c",
-      "size": 568,
-      "sha256": "d7e13422a99217f229dad997dac1e6a3092f4e99b225ce6935c05a86396b8b78"
+      "size": 567,
+      "sha256": "c84c7d5beb332312a0042cb4f6f102b459774a068c0db8646a6679fc058746e8"
     },
     {
       "path": "custom/weapon/blade/moon_blade.c",
@@ -3805,8 +3805,8 @@
     },
     {
       "path": "custom/weapon/needle/silver_needle.c",
-      "size": 541,
-      "sha256": "95e45eaaef7da1002b8320c787a12b3a72d9c7f62f27b55029b34aa95a37c6ad"
+      "size": 539,
+      "sha256": "99ce090446856616e966f17b6a10e3b28690d80c28e1025c3b37adf099e6928d"
     },
     {
       "path": "custom/weapon/needle/steel_needle.c",
@@ -4930,8 +4930,8 @@
     },
     {
       "path": "d/lee/npc/lee_zhong.c",
-      "size": 931,
-      "sha256": "f4c22df9dba082c55009afa9b80ac2081178aa4047ba1d4c2522c039466971b8"
+      "size": 995,
+      "sha256": "4bf64b787c307edd1fcf3b035a4e84abb00208664695d8b07cfb69bd5639dcfd"
     },
     {
       "path": "d/lee/npc/li_ban_xian.c",
@@ -5140,13 +5140,13 @@
     },
     {
       "path": "d/lee/watermelon_n1.c",
-      "size": 1718,
-      "sha256": "54f81f4116134d9a6d82f620b69c3f21a47746dcf6613ce55aaaa7153da26a3f"
+      "size": 2129,
+      "sha256": "6b11b0c80efec14c09146125557bbf0c839bdb1d457b5e5cda02ea755e0b6e02"
     },
     {
       "path": "d/lee/watermelon_n2.c",
-      "size": 1968,
-      "sha256": "34bd6bade9844a8fdd4f6c5ed8336fcdacc68e40efe819608306b3908bc061e8"
+      "size": 2379,
+      "sha256": "66ee2917a58dc18397d41cce94563734f6a44a3742f1af761485d21af585826f"
     },
     {
       "path": "d/lee/watermelon_n3.c",
@@ -5695,8 +5695,8 @@
     },
     {
       "path": "d/qiaoyin/npc/jiang_hsuren.c",
-      "size": 3901,
-      "sha256": "35288bd78842d202fb1f02a0a8eea943e498b58a4d82316bf9e69c06d5f353f6"
+      "size": 5265,
+      "sha256": "63a21c47d99a3fc0f1835f38205cb307350435b28ff6a308f34d95309431ef50"
     },
     {
       "path": "d/qiaoyin/npc/keeper.c",
@@ -5900,8 +5900,8 @@
     },
     {
       "path": "d/snow/npc/alchemist.c",
-      "size": 4929,
-      "sha256": "122b02b6ba7ae7bd4019c9d0273640ccc62413dc7f5b33f884703d6515448b5e"
+      "size": 5097,
+      "sha256": "83ddfa27d7e59286e886e33c676385a4c1fe0e43e71b12865a15f2acf6997e81"
     },
     {
       "path": "d/snow/npc/child.c",
@@ -6540,8 +6540,8 @@
     },
     {
       "path": "d/wutang/npc/may_yin_fong.c",
-      "size": 6493,
-      "sha256": "555c1e5e8045dc6275fef629fc827f332e34253f60093894b044dce9ea7c827c"
+      "size": 7984,
+      "sha256": "65089e5dfb874613813e8da115865e74f56e07483c0e3dd696d19e69ff02f577"
     },
     {
       "path": "d/wutang/npc/old_fire.c",
@@ -6895,8 +6895,8 @@
     },
     {
       "path": "daemon/misc/heat_commands.c",
-      "size": 12387,
-      "sha256": "9627f50ec14f31fadf4e5c59412c76e00d55982a0d93c7e58f523c3f6e8b7e9e"
+      "size": 12363,
+      "sha256": "0b7fd270917646c59b52f2ef30e2d486cbee779e015b702a804192a58ffb2b91"
     },
     {
       "path": "daemon/misc/heat_d.c",
@@ -6920,8 +6920,8 @@
     },
     {
       "path": "daemon/misc/herb_d.c",
-      "size": 13851,
-      "sha256": "abd8c2416e055815fec827037cebbc708c43cc4e1e8f2fad721e1cf204081a0a"
+      "size": 14069,
+      "sha256": "f9289b0696e45823e156b7663ce82aa309cd94ef8d443f10ea96e661701ac8b6"
     },
     {
       "path": "daemon/misc/herb_qualification.c",
@@ -6940,8 +6940,8 @@
     },
     {
       "path": "daemon/misc/npc_skill.c",
-      "size": 12959,
-      "sha256": "cebdef2c743a322cc8fcb946f3d90dee17db2d192eaf2e8b967236a0b5ebb64e"
+      "size": 13071,
+      "sha256": "84f9514c924251d164568c6b22b5e8f6d82c9443f2d8773a8399a404e96cefdf"
     },
     {
       "path": "daemon/misc/traveler.c",
@@ -7085,8 +7085,8 @@
     },
     {
       "path": "daemon/skill/amazing-needle.c",
-      "size": 5018,
-      "sha256": "71b59003883d56d64c568e51f7566c58ad512b72a5a69c0d8d675e1282fc1490"
+      "size": 5095,
+      "sha256": "9b30f94490bed41b34c7246448e22f407af30c2727033fe3b916242eaacd3248"
     },
     {
       "path": "daemon/skill/archaic_attainment.c",
@@ -7160,8 +7160,8 @@
     },
     {
       "path": "daemon/skill/fonxansword.c",
-      "size": 8847,
-      "sha256": "c3d4666071f5bb06fe14380bbdb09d4372055b209115014f776ab60da9b60073"
+      "size": 9168,
+      "sha256": "9f97a6899b0d805836dd5a18777b3d8621afe647b0617b8777468e28fd028164"
     },
     {
       "path": "daemon/skill/hainmay_force.c",
@@ -7175,8 +7175,8 @@
     },
     {
       "path": "daemon/skill/kee_anatomy.c",
-      "size": 1631,
-      "sha256": "24c18bc93bea8ccbf6cbaf6f627bbcd77a0b82e23425596e8f26a99710fd31f9"
+      "size": 1862,
+      "sha256": "fe4a6c392e8aad881203759fd87b59281be334beddc8a0b0f45cc160f0cc6524"
     },
     {
       "path": "daemon/skill/ksanmando.c",
@@ -7235,8 +7235,8 @@
     },
     {
       "path": "daemon/skill/potency-needle.c",
-      "size": 5428,
-      "sha256": "544a7e42e97a439deba95581081ba6d3058a7b0a3c7e4841953cb5b5fb511e48"
+      "size": 5505,
+      "sha256": "2681fc475b1403e9e8ebd26864137fa3b54e2e69175b8d7c92d4b7d0e91ec029"
     },
     {
       "path": "daemon/skill/powerblow.c",
@@ -7245,8 +7245,8 @@
     },
     {
       "path": "daemon/skill/recovery-needle.c",
-      "size": 2960,
-      "sha256": "c454adf8470478b7193414a3d0ea410a3f4a3369683e91b879d97bf3f3907e31"
+      "size": 3037,
+      "sha256": "e1c2b7cfa16c3f9e93e97405fb4e92f7a278d9cdfbb00a7e88f0ee8f31983ba6"
     },
     {
       "path": "daemon/skill/reflecting_star_sword.c",
@@ -7370,8 +7370,8 @@
     },
     {
       "path": "daemon/skill/taoism_of_dunja.c",
-      "size": 8362,
-      "sha256": "8a0b486bede6ae7e217a556cdc9f2b6fe1b42727e80ee05b8d2c8c8af8bf1e28"
+      "size": 8566,
+      "sha256": "da43bb438537f67dd4daadadc5601ef8c6d05d8d2e5e20d97203d6e3a52a4faf"
     },
     {
       "path": "daemon/skill/taoism_of_nature.c",
@@ -7435,18 +7435,18 @@
     },
     {
       "path": "daemon/skill/wuto-needle.c",
-      "size": 6271,
-      "sha256": "5eecbbcc6420a71f804c7a95345bac286ea862eb3367de3c88969b8dee690a0e"
+      "size": 6818,
+      "sha256": "06ed184c8bb31fed98178e9d6addfa992a66afa94e89fd2eae9cda8d797b0a14"
     },
     {
       "path": "daemon/skill/wuto_needle.h",
-      "size": 3050,
-      "sha256": "0f5120f1fba8c00e0193540be41f18e96011ddfd27cd6fe7e042805fb943902f"
+      "size": 3432,
+      "sha256": "a5d9cf4bf89281b7736ff54665324a6e1bc2267ffa82ac50a7eab7123239a535"
     },
     {
       "path": "daemon/skill/zushang.c",
-      "size": 3378,
-      "sha256": "1ca869cd1a91c28dbb8e5b3d25b4d85ddc04805d1cb7dd43e49bf751cc3ab297"
+      "size": 4454,
+      "sha256": "090211a66556a3a45a0fb4f6745d85815830fe8921e4a0c3e1ba88fbb37070a4"
     },
     {
       "path": "daemon/virtual/field.c",
@@ -7485,23 +7485,23 @@
     },
     {
       "path": "docs/help/alchemist.dragon.txt",
-      "size": 2179,
-      "sha256": "4d15dcc5fd674aebeb860ce03ad73c0f3c44ac9fd1e2c218065687e9a5a1d9aa"
+      "size": 2260,
+      "sha256": "c9f9993f3243ff1abddcceb4e67331046deafd24999b58016936483d32d1c4d7"
     },
     {
       "path": "docs/help/alchemist.wuto.txt",
-      "size": 2430,
-      "sha256": "7088c7056411c0a70ed6189fbcd577806a5379814814270f70076abc19d10736"
+      "size": 4579,
+      "sha256": "bd872126ce253ccb1a878414db4945cb6d82af80b3425ed6831a2ca46c58ac0f"
     },
     {
       "path": "docs/help/alchemy-medication.txt",
-      "size": 1800,
-      "sha256": "1451ab13eb2fc4b79ee1b2da77f1ad08783dafc90df3d01bf26bd34fe198ecb7"
+      "size": 1882,
+      "sha256": "1d07ededc6d0c0b58a7b89363cce9edd9c3ecf885d248b8ed6f43e4d6d815532"
     },
     {
       "path": "docs/help/alchemy-wealth.txt",
-      "size": 1153,
-      "sha256": "5388228aa18e6064a6d744116d6f8d995dddc75db85f8265ebb821e56ee6eca6"
+      "size": 1174,
+      "sha256": "ff1c34c394ede0a44bf6102408300dd7be7dc219bc7eefd092611860d7f8af87"
     },
     {
       "path": "docs/help/amazing-needle.txt",
@@ -7525,8 +7525,8 @@
     },
     {
       "path": "docs/help/books.txt",
-      "size": 7256,
-      "sha256": "1db008be739351e5ccc2bc4b9b8359dd1c320a9b2cf82e1e8f588b777de7a7fd"
+      "size": 7788,
+      "sha256": "16bfeaf92e695a0b53fea8a3a870794bfde3d5b5fdaa0db826df7b7213df2554"
     },
     {
       "path": "docs/help/cauterization.txt",
@@ -7629,9 +7629,19 @@
       "sha256": "6d2f5b29d477b6cc3c8b42f544540509de567a7e3b9fc9b10ca09a7a306cca0a"
     },
     {
+      "path": "docs/help/kee_anatomy.txt",
+      "size": 1074,
+      "sha256": "265705371a61af7b43eb84e1c40100c52507890ee01793874b5b74d6374fc0ae"
+    },
+    {
       "path": "docs/help/malik.txt",
       "size": 869,
       "sha256": "74440c74b704b53f0a41972f8e5e85fc001a9701b76d639203543556578bf908"
+    },
+    {
+      "path": "docs/help/mao-shan_magic.txt",
+      "size": 1229,
+      "sha256": "06611aaa69c7e40361f4cf8341c41913f253b615b5273f3f9fc817b61a0f7c93"
     },
     {
       "path": "docs/help/mao-shan_mysticism.txt",
@@ -7694,6 +7704,16 @@
       "sha256": "17b2a082906301df8ee48f0bcf2acfe5f736f0238b1ed26c35e15369d0e380d4"
     },
     {
+      "path": "docs/help/taoism_of_dunja.txt",
+      "size": 1690,
+      "sha256": "20c76b1b608332604dd9dff291e2fb8f98105ce487ed328ad34ab1c04c0a0235"
+    },
+    {
+      "path": "docs/help/taoism_of_nature.txt",
+      "size": 1626,
+      "sha256": "50dc759710cb4d7229442a4f0f81b1f2212d5f1fe89cacee9ec8e5397f61559c"
+    },
+    {
       "path": "docs/help/taoist.fire.txt",
       "size": 1491,
       "sha256": "969ddc1333c4d0c696d9f43dc3d74c61a142f34470946e81988270602f10ee09"
@@ -7710,8 +7730,8 @@
     },
     {
       "path": "docs/help/taoist.wind.txt",
-      "size": 1830,
-      "sha256": "4d70563567e889fa29c9df7c80f87ee591efaaae38006838aeaab81ab94e96ab"
+      "size": 3248,
+      "sha256": "0c339a3fd9dbbd97ca8b1ba94be110adb21015497c0909e6961c3e34559bac62"
     },
     {
       "path": "docs/help/tiger.txt",
@@ -7720,8 +7740,8 @@
     },
     {
       "path": "docs/help/topics.txt",
-      "size": 2184,
-      "sha256": "a28c866a662793a72160d86c842a1a97dda6dc8fa4a61222d22cc9f6f0ce07a5"
+      "size": 2454,
+      "sha256": "72f9c0ad601226ad3b518eb676d609657fbe2f1ca49f92fe12cb330325179126"
     },
     {
       "path": "docs/help/web.txt",
@@ -7745,8 +7765,8 @@
     },
     {
       "path": "docs/help/wuto-needle.txt",
-      "size": 1235,
-      "sha256": "015c71a4030334c6085f0433b418fbc098094476ce0fdd5f805a58582ccff29a"
+      "size": 1411,
+      "sha256": "438f19157a84cb76e98b9ce7fd9da7b7eb741387facec5aa5e4fa15c4092b009"
     },
     {
       "path": "docs/help/yaksa.txt",
@@ -7765,8 +7785,8 @@
     },
     {
       "path": "docs/help/zushang.txt",
-      "size": 746,
-      "sha256": "63732b71b251f7aed1a59caa3e34fcc6e204bafd4822da9e5fe24e5eb763ccdb"
+      "size": 785,
+      "sha256": "c4a81af305e433d32bde368d28cf92e5ebb7780a3015c28ba7aa82dd4350599b"
     },
     {
       "path": "feature/README.md",
@@ -8590,8 +8610,8 @@
     },
     {
       "path": "obj/books/book_of_anatomy.c",
-      "size": 551,
-      "sha256": "c1a5f7f206ab51df8c38dac67eaeea4f709a95e26be20a54649b4e581ac0333b"
+      "size": 571,
+      "sha256": "2229073eb484708056c7ffcf3576dc2f485cf3d194560d5600ffd67ac43ff06d"
     },
     {
       "path": "obj/books/book_of_assault.c",
@@ -8610,18 +8630,18 @@
     },
     {
       "path": "obj/books/book_of_eight_meridians.c",
-      "size": 628,
-      "sha256": "089108c65ab0689f41a844a51b74d5ff7d6b5e3ea9ee555341b538f2605b88e5"
+      "size": 648,
+      "sha256": "ee6568156a03d86a404d186b617ac39aeecffb5b40dfb09305c564f14afb2fc8"
     },
     {
       "path": "obj/books/book_of_five_meridians.c",
-      "size": 638,
-      "sha256": "f6cfd4a6ac00a703363d5dba552a72fe0532b469d72b0a1a54f6178541039889"
+      "size": 658,
+      "sha256": "2a5ab41d093ae17f7b82b4f944159a6900fd8f2dcc3b8fa4723dfbc24c886055"
     },
     {
       "path": "obj/books/book_of_herbal_meridians.c",
-      "size": 687,
-      "sha256": "8bd703aba4878e22c87dfaaf532aa07a9d3601fb3bcfdbad42a92dcfcebe5789"
+      "size": 707,
+      "sha256": "ef48423136ba3ec3639666b6f7bc0d738e027d90dac4df37e98ff7bc71296087"
     },
     {
       "path": "obj/books/book_of_life.c",
@@ -8990,8 +9010,8 @@
     },
     {
       "path": "std/char.c",
-      "size": 11158,
-      "sha256": "0d9bc89c561c0302692fa0fe5f29cf41d9ec51b41e86ca5212a0b3a291bcea42"
+      "size": 11332,
+      "sha256": "e0340cf6dc85834e972d948d418ccce988c8d37628fa0215fcfe87b0c2987c66"
     },
     {
       "path": "std/condition.c",
