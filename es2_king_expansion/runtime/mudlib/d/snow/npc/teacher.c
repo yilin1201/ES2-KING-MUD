@@ -108,7 +108,8 @@ void teach_literate()
 	&&  can_be_scholar(ob)
 	&&  !ob->query_temp("pending/picked_by_whaiz")
 	&&  member_array(ob->query_race(), ({
-		"avatar", "human", "rainner", "malik", "woochan", "jiaojao", "yaksa"
+		/* Original ES2 Race ID 為 rainnar；修正 ES2M 此處拼寫差異，避免雨師妾無法入選書生。 */
+		"avatar", "human", "rainnar", "malik", "woochan", "jiaojao", "yaksa"
 	    })) != -1
 	&&  ob->query_attr("int") > random(20) )
 	    do_chat( (: pick_student, ob :) );
