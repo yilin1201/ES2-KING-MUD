@@ -98,6 +98,16 @@ int main(object me, string arg)
     return 1;
 }
 
+
+// ES2-KING ES2M SNEAK ADAPTER／沿用 ES2M 智力經驗公式，但不依賴 Original combatd 未提供的函式。
+private int es2_king_sneak_int_formula_exp(object me)
+{
+    int i;
+    i = (int)me->query_attr("int");
+    if( i < 1 ) i = 1;
+    return (random(i) + 1) * (random(i) + 1) + random(i);
+}
+
 int do_sneak(object me, object obj, string dir, string exit_dir, int type)
 {
     int rating;
@@ -125,7 +135,7 @@ int do_sneak(object me, object obj, string dir, string exit_dir, int type)
         tell_object(me, "看起來，似乎還沒有人發覺你的行動。\n");
 	me->set_temp("pending/hidden", rating);
         // 潛行成功：基本公式 (random(悟性)+1)×(random(悟性)+1)+random(悟性)。
-        me->improve_skill("sneak", COMBAT_D->int_formula_exp(me));
+        me->improve_skill("sneak", es2_king_sneak_int_formula_exp(me));
         if( !me->move(obj) ) me->set_temp("pending/hidden", 0);
         break;
     }
