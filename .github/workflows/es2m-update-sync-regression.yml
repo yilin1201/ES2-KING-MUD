@@ -26,6 +26,8 @@ on:
       - 'scripts/test_es2m_update_snapshot.py'
       - 'scripts/test_es2m_latest_martial_updates.py'
       - 'scripts/test_es2m_latest_martial_lpc_load.sh'
+      # 同步程式異動時，也執行 ES2M／KING 既有相容性回歸測試。
+      - 'scripts/sync_es2m_new_files_to_king.py'
       - 'Dockerfile'
   pull_request:
     paths:
@@ -50,6 +52,8 @@ on:
       - 'scripts/test_es2m_update_snapshot.py'
       - 'scripts/test_es2m_latest_martial_updates.py'
       - 'scripts/test_es2m_latest_martial_lpc_load.sh'
+      # 同步程式異動時，也執行 ES2M／KING 既有相容性回歸測試。
+      - 'scripts/sync_es2m_new_files_to_king.py'
       - 'Dockerfile'
 
 permissions:
