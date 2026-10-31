@@ -123,7 +123,7 @@ int accept_apprentice(object me)
         command("say 閣下的志向相當明確，又何必來糾纏老朽呢？");
         return 0;
     }
-    if( member_array(me->query_race(), ({ "ashura", "malik", "rainner" })) != -1 ) {
+    if( member_array(me->query_race(), ({ "ashura", "malik", "rainnar" })) != -1 ) {
         command("say 閣下似乎不適合修習本門武功。");
         return 0;
     }
@@ -150,11 +150,13 @@ int init_apprentice(object me)
 
 int acquire_skill(object me, string skill)
 {
+    int entry_level;
+
     if( me->query("custom_faction") != FACTION ) return 0;
 
     switch( skill ) {
     case "lunmay":
-        return notify_fail("梅影風說道：「冷梅劍法的要訣需要自行體會，等你能夠一劍七環時就算有所小成了。」\n");
+        return notify_fail("梅影風說道：「冷梅劍法的要訣需要自行體會，等你能夠一劍七環時就算有所小成了。」\\n");
     case "mayin":
     case "seven":
     case "sword":
@@ -167,20 +169,23 @@ int acquire_skill(object me, string skill)
     case "hainmay force":
     case "force":
         if( me->query_level() < 15 )
-            return notify_fail("梅影風搖頭道：你根基尚淺，還承受不住本門的清冷真氣。\n");
+            return notify_fail("梅影風搖頭道：你根基尚淺，還承受不住本門的清冷真氣。\\n");
         break;
     case "advance_lunmay":
         if( me->query_level() < 30 || me->query_skill("hainmay force", 1) < 100 )
-            return notify_fail("梅影風搖頭道：你的寒梅心法尚未大成，傲梅暗劍訣還不是你能碰的。\n");
+            return notify_fail("梅影風搖頭道：你的寒梅心法尚未大成，傲梅暗劍訣還不是你能碰的。\\n");
         break;
     default:
         return 0;
     }
 
-    if( me->query_learn(skill) >= me->skill_threshold(skill, 1) )
-        return notify_fail("梅影風淡淡說道：入門的要訣已經傳給你了，往後全看你自己。\n");
+    /* 依技能真正的入門級別補足學成點數，避免一律以 1 級門檻計算。 */
+    entry_level = me->skill_entry_level(skill);
+    if( entry_level < 1 ) entry_level = 1;
+    if( me->query_learn(skill) >= me->skill_threshold(skill, entry_level) )
+        return notify_fail("梅影風淡淡說道：入門的要訣已經傳給你了，往後全看你自己。\\n");
 
-    me->improve_skill_exact(skill, me->skill_threshold(skill, 1) - me->query_learn(skill));
-    tell_object(me, CYN + "梅影風將「" + to_chinese(skill) + "」的入門要訣傳授給你。\n" NOR);
+    me->improve_skill_exact(skill, me->skill_threshold(skill, entry_level) - me->query_learn(skill));
+    tell_object(me, CYN + "梅影風將「" + to_chinese(skill) + "」的入門要訣傳授給你。\\n" NOR);
     return 1;
 }
