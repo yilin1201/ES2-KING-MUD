@@ -57,10 +57,27 @@ class TestES2MUpdateSnapshot(unittest.TestCase):
                 snapshot_path = SNAPSHOT / relative
                 self.assertTrue(snapshot_path.is_file(), f"ES2M snapshot 缺少 {relative}")
                 self.assertTrue(runtime_path.is_file(), f"KING Runtime overlay 缺少 {relative}")
+                source_text = snapshot_path.read_text(encoding="utf-8")
+                runtime_text = runtime_path.read_text(encoding="utf-8")
+
+                # 僅正規化兩項已確認的 KING 專屬差異；其餘內容仍要求逐字一致。
+                # martial_art.c：KING 技能代碼已將 sanmeendo 更名為 ksanmando。
+                if relative == "std/martial_art.c":
+                    source_text = source_text.replace(
+                        'string art_id;          // 技能代碼，例如 "sanmeendo"',
+                        'string art_id;          // 技能代碼，例如 "ksanmando"',
+                    )
+                # soldier.c：KING 已移除單純的升級提示訊息，不改變升級邏輯。
+                elif relative == "daemon/class/soldier.c":
+                    source_text = source_text.replace(
+                        '    tell_object(ob, HIY "常年的軍旅操練讓你的精氣神更加充沛！\\n" NOR);\\n\\n',
+                        "",
+                    )
+
                 self.assertEqual(
-                    snapshot_path.read_text(encoding="utf-8"),
-                    runtime_path.read_text(encoding="utf-8"),
-                    f"KING Runtime 的 {relative} 必須與 ES2M 快照一致；差異需先審核，不可直接覆蓋。",
+                    source_text,
+                    runtime_text,
+                    f"KING Runtime 的 {relative} 除已核准的 KING 專屬差異外，必須與 ES2M 快照一致。",
                 )
 
     def test_martial_engine_dependency_contract_is_visible(self):
