@@ -70,7 +70,7 @@ class TestES2MUpdateSnapshot(unittest.TestCase):
                 # soldier.c：KING 已移除單純的升級提示訊息，不改變升級邏輯。
                 elif relative == "daemon/class/soldier.c":
                     source_text = source_text.replace(
-                        '    tell_object(ob, HIY "常年的軍旅操練讓你的精氣神更加充沛！\\n" NOR);\\n\\n',
+                        '    tell_object(ob, HIY "常年的軍旅操練讓你的精氣神更加充沛！\\n" NOR);\n\n',
                         "",
                     )
 
