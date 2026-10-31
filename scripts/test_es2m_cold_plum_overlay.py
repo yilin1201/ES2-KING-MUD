@@ -71,7 +71,8 @@ else:
 
 # 梅影風 NPC 與強度系統的隔離整合檢查。
 npc = OVERLAY / "d/wutang/npc/may_yin_fong.c"
-room = OVERLAY / "d/wutang/crossroad.c"
+# ES2M 2026-10-30 將梅影風移至冷梅莊正廳；不再由五堂鎮交叉路口生成。
+room = OVERLAY / "d/swaylan/lunmay/hall.c"
 power = OVERLAY / "daemon/misc/npc_power.c"
 npc_base = OVERLAY / "std/char/npc.c"
 daemon_header = OVERLAY / "include/daemon.h"
@@ -115,7 +116,7 @@ if RUNTIME is not None:
         "std/char/npc.c",
         "include/daemon.h",
         "d/wutang/npc/may_yin_fong.c",
-        "d/wutang/crossroad.c",
+        "d/swaylan/lunmay/hall.c",
     ] + [f"daemon/skill/{name}" for name in SKILL_FILES + FROZEN_SKILLS]
     for rel in runtime_paths:
         expected = OVERLAY / rel
