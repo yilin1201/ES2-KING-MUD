@@ -1,0 +1,113 @@
+name: Original ES2 M4 Combat and Skills
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [build/executable-mud-phase1]
+    paths: ['.github/workflows/original-es2-m4-combat.yml','scripts/bootstrap_original_es2.sh','original_es2/runtime/**']
+  pull_request:
+    paths: ['.github/workflows/original-es2-m4-combat.yml','scripts/bootstrap_original_es2.sh','original_es2/runtime/**']
+
+jobs:
+  m4-combat-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ES2-KING
+        uses: actions/checkout@v4
+      - name: Install build prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build bison netcat-openbsd
+          python -m pip install --upgrade cmake
+      - name: Bootstrap Original ES2 and Neolith
+        run: bash scripts/bootstrap_original_es2.sh
+      - name: Install M4 runtime-only combat fixture
+        run: |
+          mkdir -p .runtime/original-es2/mudlib/obj/es2king_test
+          cat > .runtime/original-es2/mudlib/obj/es2king_test/m4_dummy.c <<'LPC'
+          #include <npc.h>
+          inherit F_VILLAGER;
+          void create(){
+            // Runtime-only NPC／僅執行期測試角色：不修改保存用途的 Original ES2 原始碼。
+            set_name("木樁武者",({"m4dummy","dummy"}));
+            set_race("human"); set_class("commoner"); set_level(1);
+            set_attr("str",13); set_attr("cor",13); set_attr("int",13); set_attr("spi",13);
+            set_attr("cps",13); set_attr("dex",13); set_attr("con",18); set_attr("wis",13);
+            set("long","這是 M4 自動測試使用的臨時切磋對象。\n"); setup();
+          }
+          // accept_fight／接受切磋：留下明確訊號，證明 fight 指令真的解析到測試 NPC。
+          int accept_fight(object ob){ do_chat("M4FIGHT ACCEPTED: 木樁武者接受切磋。\n"); return 1; }
+          LPC
+          python - <<'PY'
+          from pathlib import Path
+          # Runtime overlay／執行期覆蓋：只把測試 NPC 掛進暫存廚房，不回寫 Original 原始檔。
+          p=Path('.runtime/original-es2/mudlib/d/snow/inn_kitchen.c')
+          s=p.read_text()
+          needle='\n\tsetup();\n'
+          assert needle in s
+          s=s.replace(needle,'\n\tset("objects", ([ "/obj/es2king_test/m4_dummy" : 1 ]));\n\tsetup();\n',1)
+          p.write_text(s)
+          print('M4 runtime-only fixture wired into /d/snow/inn_kitchen.c')
+          PY
+      - name: Configure Neolith
+        working-directory: .runtime/original-es2/neolith
+        run: cmake --preset linux -DBUILD_TESTING=OFF
+      - name: Build Neolith
+        working-directory: .runtime/original-es2/neolith
+        run: cmake --build --preset dev-linux
+      - name: Locate driver executable
+        run: |
+          DRIVER="$(find .runtime/original-es2/neolith/out -type f -name neolith -perm -111 | head -n 1)"; test -n "$DRIVER"; echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"
+      - name: Boot Original ES2 Mudlib
+        shell: bash
+        run: |
+          set -euo pipefail; cd .runtime/original-es2; DRIVER_ABS="$(realpath "$GITHUB_WORKSPACE/$DRIVER")"; "$DRIVER_ABS" -f neolith.conf -c > "$RUNNER_TEMP/es2-m4-boot.log" 2>&1 & PID=$!; echo "ES2_PID=$PID" >> "$GITHUB_ENV"
+          for i in $(seq 1 30); do kill -0 "$PID" 2>/dev/null || break; if nc -z 127.0.0.1 4000; then exit 0; fi; sleep 1; done; cat "$RUNNER_TEMP/es2-m4-boot.log"; exit 1
+      - name: M4 live skills and combat verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          # Telnet／文字連線協定：建立真實玩家並由玩家端送出 skills、fight、hp 指令。
+          import telnetlib,time,re,sys
+          ANSI=re.compile(r'\x1b\[[0-9;?]*[ -/]*[@-~]')
+          tn=telnetlib.Telnet('127.0.0.1',4000,timeout=5); b=bytearray()
+          def read(t=.8):
+            end=time.time()+t
+            while time.time()<end:
+              try:
+                d=tn.read_very_eager()
+                if d:b.extend(d)
+              except (EOFError,ConnectionResetError):break
+              time.sleep(.05)
+          def line(s,t=.8):tn.write(s.encode()+b'\r\n');read(t)
+          def key(s,t=.8):tn.write(s.encode());read(t)
+          read(1);line('mfour');key('Y');line('m4pass');line('m4pass');line('none');key('\r');key('M');line('戰鬥測試');key('Y',1.5)
+          line('skills',1.0); line('west',1.0); line('look',1.0); line('fight m4dummy',5.0); line('hp',1.0); line('skills',1.0)
+          out=ANSI.sub('',b.decode(errors='replace')); flat=re.sub(r'\s+',' ',out); print(out)
+          required=['戰鬥測試在天朝帝國的冒險開始了。','你目前並沒有學會任何技能。','廚房','木樁武者','M4FIGHT ACCEPTED']
+          miss=[x for x in required if x not in flat]
+          if miss:sys.exit('M4 FAIL: live combat/skills evidence missing: '+repr(miss))
+          if '這裡禁止戰鬥' in flat:sys.exit('M4 FAIL: selected room still prohibits combat')
+          if '你想攻擊誰' in flat:sys.exit('M4 FAIL: fight target was not resolved')
+          resource=re.search(r'形體\s+\d+/\d+\s+精\s+\d+/\d+\s+氣\s+\d+/\d+\s+神\s+\d+/\d+',flat)
+          if not resource:sys.exit('M4 FAIL: live resource output missing')
+          # Combat exchange／戰鬥交手：Original NPC 不保證每個心跳都反擊；
+          # fight 已被 accept_fight 接受後，只要求玩家在不同心跳持續產生至少兩次真實攻擊文字。
+          player_hits=len(re.findall(r'你[^。！？\n]{0,80}木樁武者[^。！？\n]{0,80}(?:踢|揮出|擊|拳)',out))
+          if player_hits < 2:sys.exit('M4 FAIL: continuous live combat text missing; player attack count='+str(player_hits))
+          print('M4 PASS SKILLS: fresh Human/Commoner/Lv.1 skills command returned live Original ES2 state.')
+          print('M4 PASS COMBAT: Original ES2 fight command was accepted and produced continuous live combat heartbeats against the runtime-only NPC.')
+          print('M4 PASS RESOURCES: hp command returned live HP/Gin/Kee/Sen resources after combat initiation.')
+          try: tn.write(b'quit\r\n'); time.sleep(.2)
+          except (EOFError,ConnectionResetError,BrokenPipeError,OSError): pass
+          try: tn.close()
+          except OSError: pass
+          PY
+      - name: Stop Original ES2
+        if: always()
+        run: |
+          if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi
+      - name: Record M4 result
+        run: |
+          echo 'M4 PASS: Original ES2 live skills command, accepted fight command, continuous combat heartbeat text, and resource command verified.'

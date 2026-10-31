@@ -1,0 +1,20 @@
+{
+  "schema": "es2m-source-evidence-v1",
+  "source_repository": "https://github.com/taedlar/es2_mudlib",
+  "source_commit": "cc45c06af4852380e5148dad3c9d53ff06854f2c",
+  "es2m_catalog": "https://github.com/wolfer168/es2-webmud/blob/main/catalog/generated/all.json",
+  "catalog_blob_sha": "e01a0f6555eea2e16de9096aaef348d1f26a34b2",
+  "entries": [
+    {
+      "path": "/adm/daemons/chard",
+      "file": "adm/daemons/chard.c",
+      "type": "daemon",
+      "sha256": "c583ed940d0c59e01af2e1b5c6eaddcfa1a222e3a14ef41cda45d6f9c178750d",
+      "indexed_functions": ["create", "hint_user_race", "make_corpse", "make_ghost", "make_living", "make_mist", "setup_char"],
+      "indexed_values": {"race": "human", "class": "commoner", "level": 1, "fatigue_maximum": 100},
+      "decision": "REFERENCE_ONLY",
+      "reason": "ES2M 另一 lineage 的索引值不得覆蓋 Target 原始碼；先比對既有角色建立流程。"
+    }
+  ],
+  "note": "此檔只收錄已直接讀取的 ES2M catalog 記錄，不表示程式碼已匯入或 Runtime PASS。"
+}

@@ -1,0 +1,80 @@
+name: ES2M Update Sync Regression
+
+on:
+  push:
+    branches:
+      - build/original-es2-races-phase2
+    paths:
+      - '.github/workflows/es2m-update-sync-regression.yml'
+      - 'docs/research/ES2M_UPDATE_SYNC_20261011.md'
+      - 'es2m_snapshot/mudlib/**'
+      - 'es2m_snapshot/king_frozen_baseline/**'
+      - 'es2_king_expansion/runtime/mudlib/cmds/usr/disable.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/usr/enable.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/usr/abandon.c'
+      - 'es2_king_expansion/runtime/mudlib/std/martial_art.c'
+      - 'es2_king_expansion/runtime/mudlib/daemon/skill/seven.c'
+      - 'es2_king_expansion/runtime/mudlib/daemon/skill/mayin.c'
+      - 'es2_king_expansion/runtime/mudlib/d/snow/npc/teacher.c'
+      - 'es2_king_expansion/runtime/mudlib/d/wutang/**'
+      - 'es2_king_expansion/runtime/mudlib/custom/zhenwu/npc/target_stake.c'
+      - 'es2_king_expansion/runtime/mudlib/feature/char/skill.c'
+      - 'scripts/apply_es2_king_expansion.sh'
+      - 'scripts/test_es2m_training_dummy.py'
+      - 'scripts/test_es2m_skill_commands.py'
+      - 'scripts/test_es2m_cold_plum_overlay.py'
+      - 'scripts/test_es2m_update_snapshot.py'
+      - 'scripts/test_es2m_latest_martial_updates.py'
+      - 'scripts/test_es2m_latest_martial_lpc_load.sh'
+      # 同步程式異動時，也執行 ES2M／KING 既有相容性回歸測試。
+      - 'scripts/sync_es2m_new_files_to_king.py'
+      - 'Dockerfile'
+  pull_request:
+    paths:
+      - '.github/workflows/es2m-update-sync-regression.yml'
+      - 'docs/research/ES2M_UPDATE_SYNC_20261011.md'
+      - 'es2m_snapshot/mudlib/**'
+      - 'es2m_snapshot/king_frozen_baseline/**'
+      - 'es2_king_expansion/runtime/mudlib/cmds/usr/disable.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/usr/enable.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/usr/abandon.c'
+      - 'es2_king_expansion/runtime/mudlib/std/martial_art.c'
+      - 'es2_king_expansion/runtime/mudlib/daemon/skill/seven.c'
+      - 'es2_king_expansion/runtime/mudlib/daemon/skill/mayin.c'
+      - 'es2_king_expansion/runtime/mudlib/d/snow/npc/teacher.c'
+      - 'es2_king_expansion/runtime/mudlib/d/wutang/**'
+      - 'es2_king_expansion/runtime/mudlib/custom/zhenwu/npc/target_stake.c'
+      - 'es2_king_expansion/runtime/mudlib/feature/char/skill.c'
+      - 'scripts/apply_es2_king_expansion.sh'
+      - 'scripts/test_es2m_training_dummy.py'
+      - 'scripts/test_es2m_skill_commands.py'
+      - 'scripts/test_es2m_cold_plum_overlay.py'
+      - 'scripts/test_es2m_update_snapshot.py'
+      - 'scripts/test_es2m_latest_martial_updates.py'
+      - 'scripts/test_es2m_latest_martial_lpc_load.sh'
+      # 同步程式異動時，也執行 ES2M／KING 既有相容性回歸測試。
+      - 'scripts/sync_es2m_new_files_to_king.py'
+      - 'Dockerfile'
+
+permissions:
+  contents: read
+
+jobs:
+  es2m-update-sync:
+    name: ES2M source, Expansion and runtime-contract regression
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout King branch
+        uses: actions/checkout@v4
+      - name: Verify training dummy and scholar runtime patch contract
+        run: python3 scripts/test_es2m_training_dummy.py
+      - name: Verify enable, disable and abandon source parity
+        run: python3 scripts/test_es2m_skill_commands.py
+      - name: Verify cold-plum skills and King-specific NPC guards
+        run: python3 scripts/test_es2m_cold_plum_overlay.py
+      - name: Verify latest ES2M martial progression and NPC update
+        run: python3 scripts/test_es2m_latest_martial_updates.py
+      - name: Validate true Driver LPC load gate shell syntax
+        run: bash -n scripts/test_es2m_latest_martial_lpc_load.sh
+      - name: Verify pinned ES2M snapshot contracts
+        run: python3 scripts/test_es2m_update_snapshot.py

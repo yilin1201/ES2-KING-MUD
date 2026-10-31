@@ -1,0 +1,107 @@
+name: Sync ES2M Files Into KING Overlay
+
+on:
+  push:
+    branches:
+      - build/original-es2-races-phase2
+    paths:
+      - .github/workflows/sync-es2m-new-files-to-king.yml
+      - scripts/sync_es2m_new_files_to_king.py
+      - es2m_source_mirror/MANIFEST.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: es2m-new-files-to-king-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync-es2m-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout KING branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout pinned Original ES2 baseline for comparison only
+        env:
+          ORIGINAL_ES2_COMMIT: cc45c06af4852380e5148dad3c9d53ff06854f2c
+        run: |
+          git clone --no-checkout https://github.com/taedlar/es2_mudlib.git /tmp/original-es2
+          git -C /tmp/original-es2 checkout --detach "$ORIGINAL_ES2_COMMIT"
+
+      - name: Fetch latest ES2M source and refresh read-only source mirror
+        id: es2m
+        run: |
+          git clone --depth 1 https://github.com/wolfer168/es2-webmud.git /tmp/es2m-latest
+          ES2M_COMMIT=$(git -C /tmp/es2m-latest rev-parse HEAD)
+          echo "commit=$ES2M_COMMIT" >> "$GITHUB_OUTPUT"
+          test -d /tmp/es2m-latest/source/upstream/mudlib
+          mkdir -p es2m_source_mirror/mudlib
+          rsync -a --delete /tmp/es2m-latest/source/upstream/mudlib/ es2m_source_mirror/mudlib/
+          ES2M_COMMIT="$ES2M_COMMIT" python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root = Path("es2m_source_mirror/mudlib")
+          files = []
+          for path in sorted(p for p in root.rglob("*") if p.is_file()):
+              raw = path.read_bytes()
+              files.append({
+                  "path": path.relative_to(root).as_posix(),
+                  "size": len(raw),
+                  "sha256": hashlib.sha256(raw).hexdigest(),
+              })
+          manifest = {
+              "purpose": "ES2M 最新原始 Mudlib 唯讀鏡像；不得直接視為 Original ES2，也不直接取代 KING 專屬資料。",
+              "source_repository": "wolfer168/es2-webmud",
+              "source_branch": "main",
+              "source_commit": os.environ["ES2M_COMMIT"],
+              "source_path": "source/upstream/mudlib/",
+              "mirror_path": "es2m_source_mirror/mudlib/",
+              "file_count": len(files),
+              "hash_algorithm": "SHA-256",
+              "files": files,
+              "policy": [
+                  "更新前以最新 ES2M main 為來源。",
+                  "鏡像只保留來源 Mudlib 當前存在的檔案。",
+                  "KING runtime overlay 依來源同路徑覆蓋；不刪除來源中不存在的 KING 專屬檔案。",
+                  "Pinned Original ES2 checkout 僅供比較，絕不修改。"
+              ]
+          }
+          Path("es2m_source_mirror/MANIFEST.json").write_text(
+              json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8"
+          )
+          print(json.dumps({
+              "source_commit": manifest["source_commit"],
+              "source_file_count": manifest["file_count"]
+          }, ensure_ascii=False))
+          PY
+
+      - name: Sync all latest ES2M files into KING overlay and overwrite same-path files
+        run: |
+          python3 scripts/sync_es2m_new_files_to_king.py \
+            --source es2m_source_mirror/mudlib \
+            --original /tmp/original-es2/mudlib \
+            --overlay es2_king_expansion/runtime/mudlib \
+            --report docs/research/ES2M_NEW_FILES_IMPORT_REPORT.json
+
+      - name: Commit synchronized mirror, KING overlay and import report
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+          ES2M_COMMIT: ${{ steps.es2m.outputs.commit }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A es2m_source_mirror es2_king_expansion/runtime/mudlib docs/research/ES2M_NEW_FILES_IMPORT_REPORT.json
+          if git diff --cached --quiet; then
+            echo "KING overlay already matches the latest ES2M source: $ES2M_COMMIT"
+            exit 0
+          fi
+          git commit -m "sync: import latest ES2M $ES2M_COMMIT and overwrite KING overlay"
+          git push origin "HEAD:refs/heads/$TARGET_BRANCH"

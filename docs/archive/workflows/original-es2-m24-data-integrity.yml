@@ -1,0 +1,21 @@
+name: Original ES2 M24 Data Integrity
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths: ['original_es2/research/m24_*', 'original_es2/runtime/m24_*', 'scripts/test_m24_*', '.github/workflows/original-es2-m24-data-integrity.yml']
+  pull_request:
+    paths: ['original_es2/research/m24_*', 'original_es2/runtime/m24_*', 'scripts/test_m24_*', '.github/workflows/original-es2-m24-data-integrity.yml']
+  workflow_dispatch:
+jobs:
+  m24-data-integrity:
+    name: M24 系統整合與資料完整性驗證
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得程式
+        uses: actions/checkout@v5
+      - name: Static regression／驗證資料邊界
+        run: bash scripts/test_m24_data_integrity_static.sh
+      - name: Bootstrap／建立乾淨 Original 執行樹
+        run: bash scripts/bootstrap_original_es2.sh
+      - name: Runtime Gate／驗證跨系統資料介面
+        run: bash scripts/test_m24_data_integrity_runtime_gate.sh .runtime/original-es2

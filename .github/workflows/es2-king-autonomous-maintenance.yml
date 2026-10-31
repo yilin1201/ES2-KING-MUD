@@ -1,0 +1,276 @@
+# ES2-KING 遠端自主維護：在 GitHub runner 執行，不依賴 iPhone App 持續開啟。
+name: ES2-KING Autonomous Maintenance
+
+on:
+  # 開發分支有相關程式／測試／狀態變更時啟動；機器人使用 GITHUB_TOKEN 的 push 不會自動再觸發下一輪。
+  push:
+    branches:
+      - build/original-es2-races-phase2
+    paths:
+      - ".github/workflows/es2-king-autonomous-maintenance.yml"
+      - "docs/automation/AUTONOMOUS_DEVELOPMENT_PROMPT.md"
+      - "es2_king_expansion/**"
+      - "scripts/**"
+      - "tests/**"
+      - "docs/status/**"
+      - "ROADMAP_M31.md"
+  workflow_dispatch:
+
+concurrency:
+  group: es2-king-autonomous-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  autonomous-maintenance:
+    # 絕不允許從 main 或其他分支直接自動修改；只在指定的未合併開發分支執行。
+    if: github.ref == 'refs/heads/build/original-es2-races-phase2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout 指定開發分支
+        uses: actions/checkout@v5
+        with:
+          ref: build/original-es2-races-phase2
+          persist-credentials: false
+
+      - name: 檢查 OpenAI API 憑證
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          # API Key 必須存在於 GitHub Actions Secret；不輸出或記錄金鑰本身。
+          if [[ -z "${OPENAI_API_KEY:-}" ]]; then
+            echo "::error::尚未設定 Repository Secret OPENAI_API_KEY。請到 Settings → Secrets and variables → Actions 新增；ChatGPT 訂閱不會自動提供 API Key。"
+            {
+              echo "## ES2-KING 自主開發未啟動"
+              echo ""
+              echo "缺少 Repository Secret OPENAI_API_KEY。請在 GitHub Repository Settings → Secrets and variables → Actions 新增 API Key，再由下一次開發分支 push 觸發。"
+              echo "本次沒有執行程式修改、測試或推送。"
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+      - name: 執行 Codex 遠端代理（最多處理 3 個小項）
+        id: codex
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          permission-profile: ":workspace"
+          prompt-file: docs/automation/AUTONOMOUS_DEVELOPMENT_PROMPT.md
+          output-file: ${{ runner.temp }}/es2-king-codex-final-message.md
+          codex-args: '["--ephemeral"]'
+
+      - name: 檢查代理結果與修改範圍
+        id: agent_status
+        shell: bash
+        run: |
+          set -euo pipefail
+          REPORT="docs/automation/last-run-report.md"
+          if [[ ! -f "$REPORT" ]]; then
+            echo "::error::代理沒有產生工作報告。"
+            exit 1
+          fi
+          if grep -qx 'AGENT_RESULT: BLOCKED' "$REPORT"; then
+            echo "result=BLOCKED" >> "$GITHUB_OUTPUT"
+            {
+              echo "## ES2-KING 自主開發已安全停止"
+              echo ""
+              cat "$REPORT"
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          if ! grep -qx 'AGENT_RESULT: PASS' "$REPORT"; then
+            echo "::error::報告缺少明確的 AGENT_RESULT: PASS／BLOCKED。"
+            exit 1
+          fi
+          echo "result=PASS" >> "$GITHUB_OUTPUT"
+          # 只允許 Expansion、工程腳本／測試、目前狀態與執行報告；禁止 Original ES2 與工作流程定義。
+          while IFS= read -r path; do
+            [[ -z "$path" ]] && continue
+            case "$path" in
+              es2_king_expansion/*|scripts/*|tests/*|docs/status/*|docs/automation/last-run-report.md|docs/automation/selected-tests.txt) ;;
+              *) echo "::error::禁止的修改路徑：$path"; exit 1 ;;
+            esac
+          done < <( { git diff --name-only; git ls-files --others --exclude-standard; } | sort -u )
+          git diff --check
+
+      - name: 獨立重跑選定測試（第一輪）
+        id: test1
+        if: steps.agent_status.outputs.result == 'PASS'
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          REPORT="docs/automation/last-run-report.md"
+          MANIFEST="docs/automation/selected-tests.txt"
+          LOG="${RUNNER_TEMP}/es2-king-selected-tests.log"
+          : > "$LOG"
+          [[ -f "$MANIFEST" ]] || { echo "::error::缺少 selected-tests.txt"; exit 1; }
+          mapfile -t TESTS < <(sed 's/\r$//' "$MANIFEST" | grep -vE '^[[:space:]]*(#|$)' || true)
+          (( ${#TESTS[@]} >= 1 && ${#TESTS[@]} <= 5 )) || { echo "::error::必須選擇 1～5 個相關測試"; exit 1; }
+          for test_file in "${TESTS[@]}"; do
+            [[ "$test_file" =~ ^scripts/test_[A-Za-z0-9_.-]+\.(sh|py|mjs)$ ]] || { echo "::error::不允許的測試路徑：$test_file"; exit 1; }
+            git ls-files --error-unmatch "$test_file" >/dev/null 2>&1 || { echo "::error::測試必須已存在於 Git：$test_file"; exit 1; }
+            git diff --quiet -- "$test_file" || { echo "::error::不能用本輪修改過的測試驗證自身：$test_file"; exit 1; }
+            [[ -f "$test_file" ]] || { echo "::error::測試檔不存在：$test_file"; exit 1; }
+            echo "===== TEST: $test_file =====" | tee -a "$LOG"
+            set +e
+            case "$test_file" in
+              *.sh)  bash "$test_file" 2>&1 | tee -a "$LOG" ;;
+              *.py)  python3 "$test_file" 2>&1 | tee -a "$LOG" ;;
+              *.mjs) node "$test_file" 2>&1 | tee -a "$LOG" ;;
+            esac
+            test_status=$?
+            set -e
+            if [[ "$test_status" -ne 0 ]]; then
+              {
+                echo ""
+                echo "## GitHub Actions 獨立測試失敗（第一輪）"
+                echo "測試檔：$test_file；exit code = $test_status"
+                echo "--- TEST LOG ---"
+                tail -n 200 "$LOG"
+                echo "--- END TEST LOG ---"
+              } >> "$REPORT"
+              exit "$test_status"
+            fi
+          done
+          echo "CI_SELECTED_TESTS_RESULT: PASS" | tee -a "$LOG"
+
+      - name: Codex 讀取真實錯誤並進行一次限界修復
+        id: repair
+        if: steps.agent_status.outputs.result == 'PASS' && steps.test1.outcome == 'failure'
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          permission-profile: ":workspace"
+          prompt: |
+            這是 ES2-KING 自主維護的獨立 GitHub Actions 測試失敗後修復輪。
+            請先讀 docs/automation/last-run-report.md 中「GitHub Actions 獨立測試失敗」的錯誤。
+            只修正有證據支持的程式問題；最多做一輪最小修復。不得修改 selected-tests.txt、測試檔、此 workflow、AGENTS.md、Original ES2 或任何禁止路徑。
+            修正後在此工作環境實際執行同一份 docs/automation/selected-tests.txt 所列測試。
+            如果無法安全修復，停止並在報告標示 AGENT_RESULT: BLOCKED；不可偽造 PASS。
+            不要 commit、push 或 merge。
+          output-file: ${{ runner.temp }}/es2-king-repair-final-message.md
+
+      - name: 獨立重跑選定測試（修復後）
+        id: test2
+        if: steps.agent_status.outputs.result == 'PASS' && steps.test1.outcome == 'failure' && steps.repair.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          REPORT="docs/automation/last-run-report.md"
+          MANIFEST="docs/automation/selected-tests.txt"
+          LOG="${RUNNER_TEMP}/es2-king-selected-tests-repair.log"
+          : > "$LOG"
+          [[ -f "$MANIFEST" ]] || { echo "::error::缺少 selected-tests.txt"; exit 1; }
+          mapfile -t TESTS < <(sed 's/\r$//' "$MANIFEST" | grep -vE '^[[:space:]]*(#|$)' || true)
+          (( ${#TESTS[@]} >= 1 && ${#TESTS[@]} <= 5 )) || { echo "::error::必須選擇 1～5 個相關測試"; exit 1; }
+          for test_file in "${TESTS[@]}"; do
+            [[ "$test_file" =~ ^scripts/test_[A-Za-z0-9_.-]+\.(sh|py|mjs)$ ]] || { echo "::error::不允許的測試路徑：$test_file"; exit 1; }
+            git ls-files --error-unmatch "$test_file" >/dev/null 2>&1 || { echo "::error::測試必須已存在於 Git：$test_file"; exit 1; }
+            git diff --quiet -- "$test_file" || { echo "::error::不能用本輪修改過的測試驗證自身：$test_file"; exit 1; }
+            [[ -f "$test_file" ]] || { echo "::error::測試檔不存在：$test_file"; exit 1; }
+            echo "===== TEST: $test_file =====" | tee -a "$LOG"
+            set +e
+            case "$test_file" in
+              *.sh)  bash "$test_file" 2>&1 | tee -a "$LOG" ;;
+              *.py)  python3 "$test_file" 2>&1 | tee -a "$LOG" ;;
+              *.mjs) node "$test_file" 2>&1 | tee -a "$LOG" ;;
+            esac
+            test_status=$?
+            set -e
+            if [[ "$test_status" -ne 0 ]]; then
+              {
+                echo ""
+                echo "## GitHub Actions 獨立測試失敗（修復後）"
+                echo "測試檔：$test_file；exit code = $test_status"
+                echo "--- TEST LOG ---"
+                tail -n 200 "$LOG"
+                echo "--- END TEST LOG ---"
+              } >> "$REPORT"
+              exit "$test_status"
+            fi
+          done
+          echo "CI_REPAIR_TESTS_RESULT: PASS" | tee -a "$LOG"
+
+      - name: 決定是否允許提交
+        id: gate
+        if: always() && steps.agent_status.outputs.result == 'PASS'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ steps.test1.outcome }}" == "success" || "${{ steps.test2.outcome }}" == "success" ]]; then
+            echo "passed=true" >> "$GITHUB_OUTPUT"
+            echo "## 獨立測試：PASS" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "passed=false" >> "$GITHUB_OUTPUT"
+            echo "::error::獨立測試未通過；不會 commit 或 push。"
+            exit 1
+          fi
+
+      - name: 最終檢查並寫入測試結果
+        if: steps.gate.outputs.passed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          REPORT="docs/automation/last-run-report.md"
+          while IFS= read -r path; do
+            [[ -z "$path" ]] && continue
+            case "$path" in
+              es2_king_expansion/*|scripts/*|tests/*|docs/status/*|docs/automation/last-run-report.md|docs/automation/selected-tests.txt) ;;
+              *) echo "::error::禁止的修改路徑：$path"; exit 1 ;;
+            esac
+          done < <( { git diff --name-only; git ls-files --others --exclude-standard; } | sort -u )
+          git diff --check
+          {
+            echo ""
+            echo "## GitHub Actions 獨立驗證"
+            echo "- 結果：PASS"
+            echo "- 驗證方式：重新執行 selected-tests.txt 內的既有測試，並通過 git diff --check。"
+            echo "- PR #13：維持 OPEN／NOT MERGED；本流程不執行 Merge。"
+          } >> "$REPORT"
+          git diff --check
+
+      - name: Commit 並推送到原開發分支（只在獨立測試通過後）
+        if: steps.gate.outputs.passed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # 選填：設定此 fine-grained PAT（Contents: Read and write）後，機器人 push 可觸發下一輪。
+          AUTOMATION_PUSH_TOKEN: ${{ secrets.AUTOMATION_PUSH_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- es2_king_expansion scripts tests docs/status docs/automation/last-run-report.md docs/automation/selected-tests.txt
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "沒有可提交的變更。"
+            exit 0
+          fi
+          git commit -m "ES2-KING: 自主維護修正與測試驗證"
+          # 優先使用專用 PAT 讓已驗證的提交可以啟動下一輪；未設定時退回 GITHUB_TOKEN（只跑本輪，避免宣稱可自動續跑）。
+          PUSH_TOKEN="${AUTOMATION_PUSH_TOKEN:-$GH_TOKEN}"
+          if [[ -z "${AUTOMATION_PUSH_TOKEN:-}" ]]; then
+            echo "未設定 AUTOMATION_PUSH_TOKEN：本輪可推送，但 GitHub 不會因 GITHUB_TOKEN 的 push 自動啟動下一輪。若要持續接續待辦，請新增有 Contents: Read and write 權限的 AUTOMATION_PUSH_TOKEN Secret。" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "已啟用遠端自動接續：本輪驗證通過的程式提交將觸發下一輪工作流程。" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          AUTH="$(printf 'x-access-token:%s' "$PUSH_TOKEN" | base64 -w0)"
+          git -c "http.extraheader=AUTHORIZATION: basic $AUTH" push origin "HEAD:build/original-es2-races-phase2"
+
+      - name: 上傳診斷資料（不推送失敗修改）
+        if: failure() || steps.agent_status.outputs.result == 'BLOCKED'
+        uses: actions/upload-artifact@v4
+        with:
+          name: es2-king-autonomous-diagnostics
+          if-no-files-found: warn
+          path: |
+            docs/automation/last-run-report.md
+            docs/automation/selected-tests.txt
+            ${{ runner.temp }}/es2-king-codex-final-message.md
+            ${{ runner.temp }}/es2-king-repair-final-message.md

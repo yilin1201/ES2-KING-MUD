@@ -1,0 +1,31 @@
+name: Original ES2 M16 NPC Item Static
+
+on:
+  push:
+    branches:
+      - build/original-es2-races-phase2
+    paths:
+      - 'original_es2/research/m16_npc_item_evidence_registry.md'
+      - 'original_es2/research/m16_npc_item_runtime_plan.md'
+      - 'scripts/test_m16_npc_item_static.sh'
+      - '.github/workflows/original-es2-m16-npc-item-static.yml'
+  pull_request:
+    paths:
+      - 'original_es2/research/m16_npc_item_evidence_registry.md'
+      - 'original_es2/research/m16_npc_item_runtime_plan.md'
+      - 'scripts/test_m16_npc_item_static.sh'
+      - '.github/workflows/original-es2-m16-npc-item-static.yml'
+  workflow_dispatch:
+
+jobs:
+  m16-npc-item-static:
+    name: M16 NPC／裝備／物品靜態回歸
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout（取得程式）：把目前分支內容放進 GitHub 測試主機。
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v5
+
+      # Static Regression（靜態回歸測試）：確認證據分級與 Original／Expansion 邊界。
+      - name: Static regression／執行 NPC 裝備物品靜態回歸
+        run: bash scripts/test_m16_npc_item_static.sh

@@ -1,0 +1,79 @@
+{
+  "schema": "es2m-recovery-input-v1",
+  "source": "wolfer168/es2-webmud",
+  "classification": "ES2M_REFERENCE",
+  "note": "ES2M docs explicitly distinguish its extension layer from canonical taedlar source when original implementation is absent.",
+  "races": [
+    [
+      "human",
+      "人類"
+    ],
+    [
+      "avatar",
+      "人類族"
+    ],
+    [
+      "blackteeth",
+      "黑齒"
+    ],
+    [
+      "yenhold",
+      "厭火"
+    ],
+    [
+      "jiaojao",
+      "焦僥"
+    ],
+    [
+      "woochan",
+      "無腸"
+    ],
+    [
+      "dingling",
+      "釘靈"
+    ],
+    [
+      "headless",
+      "刑天"
+    ],
+    [
+      "rainner",
+      "雨師妾"
+    ],
+    [
+      "malik",
+      "巫首"
+    ],
+    [
+      "yaksa",
+      "夜叉"
+    ],
+    [
+      "ashura",
+      "阿修羅"
+    ]
+  ],
+  "classes": [
+    "commoner",
+    "fighter",
+    "taoist",
+    "alchemist",
+    "soldier",
+    "scholar",
+    "monk",
+    "thief"
+  ],
+  "runtime_policy": {
+    "preserve_es2_king_avatar_display": false,
+    "do_not_claim_pinned_original": true,
+    "verify_original_when_available": true,
+    "avatar_display": "人類族",
+    "avatar_display_authority": "USER_DIRECTIVE_PLUS_ES2M"
+  },
+  "next_recovery": [
+    "race creation menu integration matrix",
+    "race daemon dependency audit",
+    "class cap compatibility",
+    "ordinary-player zero-save race E2E"
+  ]
+}

@@ -12,7 +12,7 @@ M2 以 Original ES2 人物模型為基礎進行實機重建與驗證；ES2-KING 
 
 `mudlib/daemon/race/human.c` 在 Human 初始化時建立八個 attribute：
 
-- `str` — 專案正式玩家標示：臂力；目前 upstream `score.c` 顯示「膂力」
+- `str` — 膂力（依 Original ES2M upstream `score.c` 顯示名稱）
 - `cor` — 膽識
 - `int` — 悟性
 - `spi` — 靈性
