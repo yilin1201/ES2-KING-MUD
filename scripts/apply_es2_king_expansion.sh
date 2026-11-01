@@ -637,16 +637,21 @@ import sys
 
 path = Path(sys.argv[1])
 text = path.read_text()
-needle = '''    user->setup();
-    increment_visitor_count();
-
-#ifdef SAVE_USER
-    // save newly created user
-    user->save();
-#endif
-'''
-replacement = '''    user->setup();
-    increment_visitor_count();
+setup_anchor = "user->setup();"
+visitor_anchor = "increment_visitor_count();"
+save_guard = "#ifdef SAVE_USER"
+save_call = "user->save();"
+setup_pos = text.find(setup_anchor)
+visitor_pos = text.find(visitor_anchor, setup_pos + len(setup_anchor))
+save_guard_pos = text.find(save_guard, visitor_pos + len(visitor_anchor))
+save_call_pos = text.find(save_call, save_guard_pos)
+save_end_pos = text.find("#endif", save_call_pos)
+if min(setup_pos, visitor_pos, save_guard_pos, save_call_pos, save_end_pos) < 0:
+    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original enter_world setup/save 區段，無法加入 KING Login Provisioning。")
+if not (setup_pos < visitor_pos < save_guard_pos < save_call_pos < save_end_pos):
+    raise SystemExit("EXPANSION APPLY FAIL：Original enter_world setup/save 順序異常，停止寫入 KING Login Provisioning。")
+insert_at = visitor_pos + len(visitor_anchor)
+provision = '''
 
     // ES2-KING OWNER LOGIN PROVISIONING／只有正式互動 admin KING 會進入此分支。
     // 使用與 kinghome 相同的 daemon API；一般玩家完全不受影響。
@@ -666,15 +671,9 @@ replacement = '''    user->setup();
         }
         write("KING 創世神配置已同步：人類族／武者、八項屬性 50、六項狀態 999、五件武器與神之戒已置入物品欄且不自動裝備、冷梅莊武學 300、易筋經 300、霸天煉體訣 300、如來神掌 300、大邪七損刀 300；可用 khome 前往天神殿・無極之境。\\n");
     }
-
-#ifdef SAVE_USER
-    // save newly created user；KING 正式配置也在此寫回 Original save data。
-    user->save();
-#endif
 '''
-if needle not in text:
-    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original enter_world setup/save 區段，無法加入 KING Login Provisioning。")
-path.write_text(text.replace(needle, replacement, 1))
+text = text[:insert_at] + provision + text[insert_at:]
+path.write_text(text)
 PY
 fi
 
