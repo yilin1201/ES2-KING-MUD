@@ -6,8 +6,8 @@
   "source_file_count": 1990,
   "copied_new_count": 2,
   "overwritten_existing_king_count": 0,
-  "already_matching_count": 1983,
-  "preserved_king_custom_count": 5,
+  "already_matching_count": 1982,
+  "preserved_king_custom_count": 6,
   "source_differs_from_pinned_original_count": 182,
   "copied_new": [
     {
@@ -7149,11 +7149,6 @@
       "sha256": "8d97ca62f99cd7bf27f3187bf991a887dee1123e0f80ea247252e6fbdaf37c1a"
     },
     {
-      "path": "d/wutang/npc/may_yin_fong.c",
-      "status": "already-matches-ES2M",
-      "sha256": "5a0dd5530fbf9ff5545c2dcd9f41ef6ed7e7064e221855b52976c166bb38b398"
-    },
-    {
       "path": "d/wutang/npc/old_fire.c",
       "status": "already-matches-ES2M",
       "sha256": "f651e569cced82a778651fe8db228a70aedea7308c68525b451bec296ce85628"
@@ -9945,6 +9940,12 @@
       "status": "preserved-KING-original-race-id-correction",
       "king_sha256": "75bd6a7b626f2a248d327692d212ea755ca2eb3fb2c521a6ae96b9b49b0cc633",
       "es2m_sha256": "73dfbdfaeaad62dd42171a5baa33b60eea766c39841a3865db4214bf663ce94a"
+    },
+    {
+      "path": "d/wutang/npc/may_yin_fong.c",
+      "status": "preserved-KING-cold-plum-NPC-progression-and-race",
+      "king_sha256": "fe28569a05eeb3d5e84804869be5dda61a306ef1703243e01b1b0187d51c29ca",
+      "es2m_sha256": "5a0dd5530fbf9ff5545c2dcd9f41ef6ed7e7064e221855b52976c166bb38b398"
     },
     {
       "path": "daemon/skill/advance_lunmay.c",
