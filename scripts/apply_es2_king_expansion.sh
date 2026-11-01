@@ -372,14 +372,22 @@ import sys
 
 path = Path(sys.argv[1])
 text = path.read_text()
+# ES2M 新版已使用 UTF-8 安全的完整字首比較；舊版才需要由 Big5 byte slice 改寫。
 needle = '''    if( member_array(msg[0..1], ({"想", "是", "好"})) != -1 ) {
 '''
-replacement = '''    // ES2-KING ORIGINAL SCHOLAR UTF-8 COMPATIBILITY
-    if( strsrch(msg, "想")==0 || strsrch(msg, "是")==0 || strsrch(msg, "好")==0 ) {
-'''
-if needle not in text:
-    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original Scholar 回答判斷，無法套用 UTF-8 相容修復。")
-path.write_text(text.replace(needle, replacement, 1))
+utf8_prefix = '    if( msg[0..strlen(word)-1] == word ) {'
+foreach_anchor = '    foreach(word in ({ "想", "是", "好" })) {'
+if foreach_anchor in text and utf8_prefix in text:
+    if SCHOLAR_UTF8_MARKER not in text:
+        text = text.replace(foreach_anchor,
+            "    // ES2-KING ORIGINAL SCHOLAR UTF-8 COMPATIBILITY／ES2M 已採 UTF-8 完整字首比較。\\n" + foreach_anchor, 1)
+elif needle in text:
+    replacement = '''    // ES2-KING ORIGINAL SCHOLAR UTF-8 COMPATIBILITY
+    if( strsrch(msg, "想")==0 || strsrch(msg, "是")==0 || strsrch(msg, "好")==0 ) {'''
+    text = text.replace(needle, replacement, 1)
+else:
+    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original Scholar 回答判斷，亦未發現 ES2M UTF-8 字首比較。")
+path.write_text(text)
 PY
 fi
 
