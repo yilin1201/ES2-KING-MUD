@@ -7,7 +7,7 @@
 - 李家村小旅店非戰區
 
 安全原則：
-1. 新檔不存在才建立；同名不同內容直接 FAIL。
+1. 新檔不存在才建立；同名不同內容必須符合留言板功能契約，否則 FAIL。
 2. 既有房間只做精確字串插入，不做整檔覆蓋。
 3. 已套用過的內容視為 PASS / NO-OP。
 4. 不修改戰鬥、武功、裝備、Vendor、Save 或 WebSocket 核心。
@@ -35,11 +35,30 @@ def require_file(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
+def board_is_compatible(path: Path) -> bool:
+    if not path.is_file():
+        return False
+    code = path.read_text(encoding="utf-8")
+    required = (
+        "inherit BULLETIN_BOARD;",
+        'set_name("雪亭鎮留言板"',
+        'set("location", "/d/snow/square_w");',
+        'set("board_id", "snow");',
+        'set("capacity", 100);',
+        'query_id() { return "Snow Town Board"; }',
+    )
+    return all(token in code for token in required)
+
+
 def write_if_missing(dst: Path, src: Path, result: dict) -> None:
     if dst.is_file():
-        if digest(dst) != digest(src):
+        if digest(dst) == digest(src):
+            result["identical"].append(str(dst))
+        elif board_is_compatible(dst):
+            # Runtime 已有同功能留言板；保留現有版本，不用僅註解／排版差異覆蓋。
+            result["compatible_existing"].append(str(dst))
+        else:
             raise SystemExit(f"ES2M_WORLD_DELTA_CONFLICT: {dst}")
-        result["identical"].append(str(dst))
         return
     dst.parent.mkdir(parents=True, exist_ok=True)
     dst.write_bytes(src.read_bytes())
@@ -73,6 +92,7 @@ def main() -> None:
         "identical": [],
         "patched": [],
         "already_applied": [],
+        "compatible_existing": [],
     }
 
     board_src = overlay / BOARD
@@ -87,25 +107,31 @@ def main() -> None:
 
     square = runtime / SQUARE
     code = require_file(square)
-    code = patch_once(
-        code,
-        '    // load_object("/daemon/board/common");',
-        '    load_object("/daemon/board/snow_board");   // ES2M 2026-10-08 雪亭鎮留言板',
-        square,
-        result,
-    )
-    square.write_text(code, encoding="utf-8")
+    if 'load_object("/daemon/board/snow_board")' in code:
+        result["already_applied"].append(str(square))
+    else:
+        code = patch_once(
+            code,
+            '    // load_object("/daemon/board/common");',
+            '    load_object("/daemon/board/snow_board");   // ES2M 2026-10-08 雪亭鎮留言板',
+            square,
+            result,
+        )
+        square.write_text(code, encoding="utf-8")
 
     lee = runtime / LEE_INN
     code = require_file(lee)
-    code = patch_once(
-        code,
-        '    setup();',
-        '    set("no_fight", 1);   // ES2M 2026-10-08：李家村小旅店為非戰區。\n    setup();',
-        lee,
-        result,
-    )
-    lee.write_text(code, encoding="utf-8")
+    if 'set("no_fight", 1);' in code:
+        result["already_applied"].append(str(lee))
+    else:
+        code = patch_once(
+            code,
+            '    setup();',
+            '    set("no_fight", 1);   // ES2M 2026-10-08：李家村小旅店為非戰區。\n    setup();',
+            lee,
+            result,
+        )
+        lee.write_text(code, encoding="utf-8")
 
     print("ES2M_WORLD_DELTA", result)
 
