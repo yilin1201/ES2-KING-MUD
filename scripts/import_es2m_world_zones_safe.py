@@ -87,6 +87,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--snapshot", type=Path, required=True)
     parser.add_argument("--runtime", type=Path, required=True)
+    parser.add_argument("--base", type=Path, help="Pinned Original ES2 mudlib baseline for three-way reconciliation")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
         "--zones",
@@ -98,6 +99,7 @@ def main() -> None:
 
     snapshot = args.snapshot.resolve()
     runtime = args.runtime.resolve()
+    base = args.base.resolve() if args.base else None
     zones = tuple(Path(z) for z in args.zones)
 
     queue = list(sorted(seed_files(snapshot, zones)))
@@ -109,6 +111,7 @@ def main() -> None:
         "identical": [],
         "conflicts_review": [],
         "preserved_existing": [],
+        "replaced_original": [],
         "resolved_dependencies": [],
         "unresolved_dependencies": [],
     }
@@ -124,17 +127,43 @@ def main() -> None:
             continue
 
         if dst.is_file():
-            if sha256(src) == sha256(dst):
+            source_sha = sha256(src)
+            runtime_sha = sha256(dst)
+            if source_sha == runtime_sha:
                 result["identical"].append(str(rel))
             elif rel in PRESERVE_EXISTING_CONFLICTS:
-                # 保留已存在的 KING 版本；記錄來源與 Runtime 指紋供後續人工比對。
+                # 已確認的 KING 專屬覆蓋一律保留，不以 ES2M 檔案覆蓋。
                 result["preserved_existing"].append({
                     "path": str(rel),
-                    "snapshot_sha256": sha256(src),
-                    "runtime_sha256": sha256(dst),
-                    "status": "PRESERVED_NOT_EQUIVALENT_NOT_GAMEPLAY_PASS",
+                    "snapshot_sha256": source_sha,
+                    "runtime_sha256": runtime_sha,
+                    "status": "PRESERVED_KING_OVERLAY_NOT_GAMEPLAY_PASS",
                 })
+            elif base is not None and (base / rel).is_file():
+                base_sha = sha256(base / rel)
+                if runtime_sha == base_sha:
+                    # Runtime 尚未修改，仍等於 Pinned Original；可安全更新為 ES2M 最新來源。
+                    result["replaced_original"].append({
+                        "path": str(rel),
+                        "base_sha256": base_sha,
+                        "snapshot_sha256": source_sha,
+                        "runtime_sha256": runtime_sha,
+                        "status": "SAFE_REPLACE_UNMODIFIED_ORIGINAL",
+                    })
+                elif source_sha == base_sha:
+                    # ES2M 來源等於 Original，但 Runtime 已有差異；視為 KING overlay，保留。
+                    result["preserved_existing"].append({
+                        "path": str(rel),
+                        "snapshot_sha256": source_sha,
+                        "runtime_sha256": runtime_sha,
+                        "base_sha256": base_sha,
+                        "status": "PRESERVED_RUNTIME_OVERLAY_NOT_GAMEPLAY_PASS",
+                    })
+                else:
+                    # 三方皆不同：不能判定哪一方應勝出，必須人工審核。
+                    result["conflicts_review"].append(str(rel))
             else:
+                # 沒有 Original 基準可證明安全時，不自動覆蓋未知差異。
                 result["conflicts_review"].append(str(rel))
         else:
             result["staged"].append(str(rel))
@@ -174,10 +203,11 @@ def main() -> None:
             )
         )
 
+    replace_original = {Path(row["path"]) for row in result["replaced_original"]}
     for rel in sorted(planned):
         src = snapshot / rel
         dst = runtime / rel
-        if dst.is_file():
+        if dst.is_file() and rel not in replace_original:
             continue
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dst)
