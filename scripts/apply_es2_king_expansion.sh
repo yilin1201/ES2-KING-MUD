@@ -715,37 +715,50 @@ private void get_race (string race, object ob) {
     else if (race == "11" || race == "夜叉") race = "yaksa";
     else if (race == "12" || race == "阿修羅") race = "ashura";
     switch (race) {'''
-import re
-opts_start = text.find("mapping opts = ([", text.find('ob->set ("karma", 0);'))
-if opts_start < 0:
-    opts_start = text.find("mapping opts = ([", text.find('ob->set("karma", 0);'))
-race_start = text.find("private void get_race", opts_start)
-switch_match = re.search(r'switch\s*\(\s*choice\s*\?\s*choice\s*:\s*race\s*\)\s*\{', text[race_start:]) if race_start >= 0 else None
-if opts_start < 0 or race_start < 0 or not switch_match:
-    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_email → get_race Race 區段。")
-switch_end = race_start + switch_match.end()
-text = text[:opts_start] + new + text[switch_end:]
-old_retry = '''        default:
-            get_char ("get_race", 1, opts, ob);
-            return;
-    }
-
-    int kar'''
-new_retry = '''        default:
-            write ("請輸入編號 1-12 或種族 ID: ");
-            input_to ("get_race", 0, ob);
-            return;
-    }
-
-    int kar'''
-start = text.index("// ES2-KING PUBLIC CHARACTER TEXT INPUT")
-tail = text[start:]
-if old_retry not in tail:
-    raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_race retry 區段。")
-tail = tail.replace(old_retry, new_retry, 1)
-text = text[:start] + tail
-text = text.replace('write ("\\r" CLR HIY "選擇 " + choice + " 這個種族會累積 " + kar + " 點業力。\\n" NOR);',
-                    'write ("\\r" CLR HIY "選擇 " + (race == "human" ? "Human（人類）" : "Avatar（人類族）") + " 這個種族會累積 " + kar + " 點業力。\\n" NOR);', 1)
+modern_race_flow = (
+    "private void show_race_menu (object ob)" in text
+    and 'input_to ("get_race", ob, list);' in text
+    and "private void get_race (string arg, object ob, string *list)" in text
+)
+if modern_race_flow:
+    # ES2M 最新版已具備 input_to 文字輸入與 race list callback；保留其業力選種族流程。
+    anchor = "private void show_race_menu (object ob) {"
+    if text.count(anchor) != 1:
+        raise SystemExit("EXPANSION APPLY FAIL：ES2M show_race_menu anchor 數量不符。")
+    text = text.replace(anchor,
+        "// ES2-KING PUBLIC CHARACTER TEXT INPUT／ES2M 已使用完整文字輸入與 race list callback。\n" + anchor, 1)
+else:
+    import re
+    opts_start = text.find("mapping opts = ([", text.find('ob->set ("karma", 0);'))
+    if opts_start < 0:
+        opts_start = text.find("mapping opts = ([", text.find('ob->set("karma", 0);'))
+    race_start = text.find("private void get_race", opts_start)
+    switch_match = re.search(r'switch\s*\(\s*choice\s*\?\s*choice\s*:\s*race\s*\)\s*\{', text[race_start:]) if race_start >= 0 else None
+    if opts_start < 0 or race_start < 0 or not switch_match:
+        raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_email → get_race Race 區段。")
+    switch_end = race_start + switch_match.end()
+    text = text[:opts_start] + new + text[switch_end:]
+    old_retry = '''        default:
+                get_char ("get_race", 1, opts, ob);
+                return;
+        }
+    
+        int kar'''
+    new_retry = '''        default:
+                write ("請輸入編號 1-12 或種族 ID: ");
+                input_to ("get_race", 0, ob);
+                return;
+        }
+    
+        int kar'''
+    start = text.index("// ES2-KING PUBLIC CHARACTER TEXT INPUT")
+    tail = text[start:]
+    if old_retry not in tail:
+        raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_race retry 區段。")
+    tail = tail.replace(old_retry, new_retry, 1)
+    text = text[:start] + tail
+    text = text.replace('write ("\\r" CLR HIY "選擇 " + choice + " 這個種族會累積 " + kar + " 點業力。\\n" NOR);',
+                        'write ("\\r" CLR HIY "選擇 " + (race == "human" ? "Human（人類）" : "Avatar（人類族）") + " 這個種族會累積 " + kar + " 點業力。\\n" NOR);', 1)
 path.write_text(text)
 PY
 fi
