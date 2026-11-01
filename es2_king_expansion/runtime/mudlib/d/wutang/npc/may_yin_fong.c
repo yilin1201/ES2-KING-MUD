@@ -119,11 +119,12 @@ int accept_info(object ob, string type)
 
 int accept_apprentice(object me)
 {
+    // Original ES2 Race ID 為 rainnar；保留 ES2-KING 正式種族代碼。
     if( me->query_class() != "commoner" ) {
         command("say 閣下的志向相當明確，又何必來糾纏老朽呢？");
         return 0;
     }
-    if( member_array(me->query_race(), ({ "ashura", "malik", "rainner" })) != -1 ) {
+    if( member_array(me->query_race(), ({ "ashura", "malik", "rainnar" })) != -1 ) {
         command("say 閣下似乎不適合修習本門武功。");
         return 0;
     }
