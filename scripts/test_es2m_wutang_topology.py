@@ -49,7 +49,7 @@ def validate_tree(mudlib: Path, require_runtime_link: bool) -> None:
     rooms = sorted(area.glob("*.c"))
     npcs = sorted((area / "npc").glob("*.c"))
     objects = sorted((area / "obj").glob("*.c"))
-    assert len(rooms) == 56, f"ES2M_WUTANG_ROOM_COUNT: {len(rooms)}"
+    assert len(rooms) == 58, f"ES2M_WUTANG_ROOM_COUNT: {len(rooms)} expected=58"
     # 2026-10-10 新增的 may_yin_fong.c 是已確認的 ES2M 來源 NPC，納入固定清冊。
     assert len(npcs) == 32, f"ES2M_WUTANG_NPC_COUNT: {len(npcs)}"
     assert (area / "npc" / "may_yin_fong.c").is_file(), "ES2M_WUTANG_MAY_YIN_FONG_MISSING"
@@ -87,7 +87,7 @@ def main() -> None:
     validate_tree(args.source, False)
     if args.runtime:
         validate_tree(args.runtime, True)
-    print("ES2M WUTANG TOPOLOGY PASS／56 房間、32 NPC（含 may_yin_fong）、2 物件及振武入口引用閉合。")
+    print("ES2M WUTANG TOPOLOGY PASS／58 房間、32 NPC（含 may_yin_fong）、2 物件及振武入口引用閉合。")
 
 
 if __name__ == "__main__":
