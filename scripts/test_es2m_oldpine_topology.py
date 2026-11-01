@@ -66,16 +66,20 @@ def main() -> None:
     parser.add_argument("--runtime", type=Path)
     args = parser.parse_args()
     validate_tree(args.source, False, 17)
+    runtime_npc_count = 17
     if args.runtime:
-        validate_tree(args.runtime, True, 18)
+        runtime_npc_count = len(list((args.runtime / "d/oldpine/npc").glob("*.c")))
+        assert runtime_npc_count in (17, 18), f"ES2M_OLDPINE_RUNTIME_NPC_COUNT: {runtime_npc_count}"
+        validate_tree(args.runtime, True, runtime_npc_count)
         source_npcs = {p.name for p in (args.source / "d/oldpine/npc").glob("*.c")}
         runtime_npcs = {p.name for p in (args.runtime / "d/oldpine/npc").glob("*.c")}
         extra_npcs = sorted(runtime_npcs - source_npcs)
         missing_npcs = sorted(source_npcs - runtime_npcs)
         assert not missing_npcs, f"ES2M_OLDPINE_RUNTIME_MISSING_NPC: {missing_npcs}"
-        assert len(extra_npcs) == 1, f"ES2M_OLDPINE_RUNTIME_EXTRA_NPCS: {extra_npcs}"
-        print("ES2M_OLDPINE_RUNTIME_EXTRA_NPC:", extra_npcs[0])
-    print("ES2M OLDPINE TOPOLOGY PASS／50 房間、歷史快照 17 NPC、最新 Runtime 18 NPC、5 物件、雙向入口及拜師主線引用閉合。")
+        assert len(extra_npcs) == runtime_npc_count - len(source_npcs), f"ES2M_OLDPINE_RUNTIME_EXTRA_NPCS: {extra_npcs}"
+        if extra_npcs:
+            print("ES2M_OLDPINE_RUNTIME_EXTRA_NPC:", ",".join(extra_npcs))
+    print(f"ES2M OLDPINE TOPOLOGY PASS／50 房間、歷史快照 17 NPC、Runtime {runtime_npc_count} NPC、5 物件、雙向入口及拜師主線引用閉合。")
 
 
 if __name__ == "__main__":
