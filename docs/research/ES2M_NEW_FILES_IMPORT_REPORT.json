@@ -6,8 +6,8 @@
   "source_file_count": 1990,
   "copied_new_count": 2,
   "overwritten_existing_king_count": 0,
-  "already_matching_count": 1982,
-  "preserved_king_custom_count": 6,
+  "already_matching_count": 1981,
+  "preserved_king_custom_count": 7,
   "source_differs_from_pinned_original_count": 182,
   "copied_new": [
     {
@@ -687,11 +687,6 @@
       "path": "cmds/std/shout.c",
       "status": "already-matches-ES2M",
       "sha256": "90d03ababfe352cf52561387ca2656b308c7d5e442c7df772b4640efeb0b6e7e"
-    },
-    {
-      "path": "cmds/std/sneak.c",
-      "status": "already-matches-ES2M",
-      "sha256": "69e847b4b8d38eec5e1abdf30088047bc9c272c59fdb070841ceddf41e0f2b15"
     },
     {
       "path": "cmds/std/steal.c",
@@ -9935,6 +9930,12 @@
     }
   ],
   "preserved_king_custom": [
+    {
+      "path": "cmds/std/sneak.c",
+      "status": "preserved-KING-ES2M-sneak-progression-adapter",
+      "king_sha256": "25b6a8c37cb98e674afc9676256275a7fc04207c4fcc972d17c5ff9e8221b429",
+      "es2m_sha256": "69e847b4b8d38eec5e1abdf30088047bc9c272c59fdb070841ceddf41e0f2b15"
+    },
     {
       "path": "d/snow/npc/teacher.c",
       "status": "preserved-KING-original-race-id-correction",
