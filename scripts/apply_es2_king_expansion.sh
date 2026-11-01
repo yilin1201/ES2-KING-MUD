@@ -79,11 +79,11 @@ string *dummy_hit_msg = ({
         anchor = '    me->set_temp("last_action", action);'
         if s.count(anchor) != 1:
             raise SystemExit("ES2M TRAINING DUMMY FAIL：combatd last_action anchor 數量不符。")
-        s = s.replace(anchor, anchor + "\\n" + assignment, 1)
+        s = s.replace(anchor, anchor + "\n" + assignment, 1)
     if "ES2M TRAINING DUMMY COMBAT" not in s:
         if s.count(assignment) != 1:
             raise SystemExit("ES2M TRAINING DUMMY FAIL：combatd dummy assignment 數量不符。")
-        s = s.replace(assignment, "    // ES2M TRAINING DUMMY COMBAT／只有明確標記的訓練假人套用必中規則。\\n" + assignment, 1)
+        s = s.replace(assignment, "    // ES2M TRAINING DUMMY COMBAT／只有明確標記的訓練假人套用必中規則。\n" + assignment, 1)
 
     old = "    ability -= random( victim->query_skill(skill) );"
     new = "    if( !dummy ) ability -= random( victim->query_skill(skill) );"
@@ -105,7 +105,7 @@ string *dummy_hit_msg = ({
         s = s.replace(anchor, "        if( !dummy ) strength -= (int)victim->absorb(ability, strength,", 1)
 
     if "if( dummy && stringp(msg) ) {" not in s:
-        anchor = '    msg = me->get_combat_message();\\n    if( stringp(msg) )'
+        anchor = '    msg = me->get_combat_message();\n    if( stringp(msg) )'
         replacement = '''    msg = me->get_combat_message();
     // ES2M TRAINING DUMMY COMBAT／假人只顯示出招與簡短命中，不輸出身體部位。
     if( dummy && stringp(msg) ) {
@@ -132,16 +132,15 @@ patch_once(combat, "ES2M TRAINING DUMMY COMBAT", patch_combat)
 fight = source_file("cmds/std/fight")
 def patch_fight(s):
     # ES2M 來源若已包含假人分流，只補上驗收標記，避免重複插入。
-    marker = "ES2M TRAINING DUMMY FIGHT"
     existing = '    if( obj->query("training_dummy") ) {'
     if existing in s:
-        return s.replace(existing, "    // ES2M TRAINING DUMMY FIGHT／假人是死物，不要求對話或雙方同意。\\n" + existing, 1)
+        return s.replace(existing, "    // ES2M TRAINING DUMMY FIGHT／假人是死物，不要求對話或雙方同意。\n" + existing, 1)
     anchor = '    if( obj->query("civilized") ) {'
     if s.count(anchor) != 1:
         raise SystemExit("ES2M TRAINING DUMMY FAIL：fight civilized anchor 數量不符。")
     return s.replace(anchor, '''    // ES2M TRAINING DUMMY FIGHT／假人是死物，不要求對話或雙方同意。
     if( obj->query("training_dummy") ) {
-        message_vision("\\\\n$N在$n前站定，擺開架勢練起招式來。\\\\n\\\\n", me, obj);
+        message_vision("\\n$N在$n前站定，擺開架勢練起招式來。\\n\\n", me, obj);
         me->fight_ob(obj);
         obj->fight_ob(me);
         return 1;
@@ -156,15 +155,15 @@ def patch_kill(s):
     # ES2M 來源若已處理假人喊話，保留既有邏輯並補驗收標記。
     branch = '    if( obj->query("training_dummy") ) {'
     if branch in s:
-        return s.replace(branch, "    // ES2M TRAINING DUMMY KILL／假人不喊話，只提示玩家開始練招。\\n" + branch, 1)
-    pattern = re.compile(r'(?m)^    if\\s*\\(\\s*! ?me->is_fighting\\(obj\\)\\s*\\|\\|\\s*! ?me->is_killing\\(obj\\)\\s*\\)\\s*\\{')
+        return s.replace(branch, "    // ES2M TRAINING DUMMY KILL／假人不喊話，只提示玩家開始練招。\n" + branch, 1)
+    pattern = re.compile(r'(?m)^    if\s*\(\s*! ?me->is_fighting\(obj\)\s*\|\|\s*! ?me->is_killing\(obj\)\s*\)\s*\{')
     matches = list(pattern.finditer(s))
     if len(matches) != 1:
         raise SystemExit("ES2M TRAINING DUMMY FAIL：kill 既有戰鬥訊息條件數量不符。")
     replacement = '''    // ES2M TRAINING DUMMY KILL／假人不喊話，只提示玩家開始練招。
     if( obj->query("training_dummy") ) {
         if( !me->is_fighting(obj) )
-            message_vision("\\\\n$N在$n前站定，擺開架勢練起招式來。\\\\n\\\\n", me, obj);
+            message_vision("\\n$N在$n前站定，擺開架勢練起招式來。\\n\\n", me, obj);
     }
     else if( ! me->is_fighting(obj) || ! me->is_killing(obj) ) {'''
     return s[:matches[0].start()] + replacement + s[matches[0].end():]
@@ -178,12 +177,12 @@ def patch_look(s):
         anchor = '    if ((string)obj->query("humanoid")'
         if s.count(anchor) != 1:
             raise SystemExit("ES2M TRAINING DUMMY FAIL：look 假人條件標記 anchor 數量不符。")
-        return s.replace(anchor, "    // ES2M TRAINING DUMMY LOOK／假人不顯示外貌與年齡。\\n" + anchor, 1)
-    pattern = re.compile(r'if\\s*\\(\\s*\\(string\\)obj->query\\("humanoid"\\)\\s*&&\\s*intp\\(age\\s*=\\s*obj->query\\("age"\\)\\)\\s*\\)\\s*\\{')
+        return s.replace(anchor, "    // ES2M TRAINING DUMMY LOOK／假人不顯示外貌與年齡。\n" + anchor, 1)
+    pattern = re.compile(r'if\s*\(\s*\(string\)obj->query\("humanoid"\)\s*&&\s*intp\(age\s*=\s*obj->query\("age"\)\)\s*\)\s*\{')
     matches = list(pattern.finditer(s))
     if len(matches) != 1:
         raise SystemExit("ES2M TRAINING DUMMY FAIL：look 外貌／年齡條件數量不符。")
-    replacement = '// ES2M TRAINING DUMMY LOOK／假人不顯示外貌與年齡。\\nif ((string)obj->query("humanoid") && intp(age = obj->query("age")) && !obj->query("training_dummy")) {'
+    replacement = '// ES2M TRAINING DUMMY LOOK／假人不顯示外貌與年齡。\nif ((string)obj->query("humanoid") && intp(age = obj->query("age")) && !obj->query("training_dummy")) {'
     return s[:matches[0].start()] + replacement + s[matches[0].end():]
 patch_once(look, "ES2M TRAINING DUMMY LOOK", patch_look)
 
