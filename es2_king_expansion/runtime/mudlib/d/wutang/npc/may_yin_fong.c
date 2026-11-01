@@ -151,6 +151,8 @@ int init_apprentice(object me)
 
 int acquire_skill(object me, string skill)
 {
+    int entry_level;
+
     if( me->query("custom_faction") != FACTION ) return 0;
 
     switch( skill ) {
@@ -178,10 +180,13 @@ int acquire_skill(object me, string skill)
         return 0;
     }
 
-    if( me->query_learn(skill) >= me->skill_threshold(skill, 1) )
+    /* 依技能真正的入門級別補足學成點數，避免一律以 1 級門檻計算。 */
+    entry_level = me->skill_entry_level(skill);
+    if( entry_level < 1 ) entry_level = 1;
+    if( me->query_learn(skill) >= me->skill_threshold(skill, entry_level) )
         return notify_fail("梅影風淡淡說道：入門的要訣已經傳給你了，往後全看你自己。\n");
 
-    me->improve_skill_exact(skill, me->skill_threshold(skill, 1) - me->query_learn(skill));
+    me->improve_skill_exact(skill, me->skill_threshold(skill, entry_level) - me->query_learn(skill));
     tell_object(me, CYN + "梅影風將「" + to_chinese(skill) + "」的入門要訣傳授給你。\n" NOR);
     return 1;
 }
