@@ -7,7 +7,7 @@ the newest ES2M progression implementation.
 
 本工具將最新 ES2M Mudlib 同步至 KING Runtime Overlay：
 同路徑覆蓋、缺少路徑新增、不刪除 KING-only 檔案。
-保留 KING Owner 300 級技能上限、三項凍結冷梅武功，以及 teacher.c 中已確認的 Original race ID rainnar 修正；
+保留 KING Owner 300 級技能上限、三項凍結冷梅武功、teacher.c 的 Original race ID rainnar 修正，以及梅影風 NPC 的入門門檻與種族相容邏輯；
 ES2M 原始版本仍完整保存在來源鏡像，保護檔案逐項記錄於同步報告。
 """
 from __future__ import annotations
@@ -21,8 +21,10 @@ PROTECTED_KING_PATHS = {
     "daemon/skill/hainmay_force.c",
     "daemon/skill/lunmay.c",
     "d/snow/npc/teacher.c",
+    "d/wutang/npc/may_yin_fong.c",
 }
 KING_RACE_COMPAT_PATHS = {"d/snow/npc/teacher.c"}
+KING_NPC_COMPAT_PATHS = {"d/wutang/npc/may_yin_fong.c"}
 FROZEN_KING_SKILLS = {
     "daemon/skill/advance_lunmay.c",
     "daemon/skill/hainmay_force.c",
@@ -37,7 +39,7 @@ def digest(path: Path) -> str:
     return h.hexdigest()
 
 def verify_king_owner_guards(overlay: Path, repo_root: Path) -> None:
-    """同步前後確認 KING Owner 與三項凍結冷梅武功仍完整。"""
+    """同步前後確認 KING Owner、凍結武功、種族相容及 NPC 技能門檻仍完整。"""
     checks = {
         "feature/char/skill.c": ("es2_king_skill_cap", 'query("id") == "king"'),
         "adm/daemons/kadmind.c": ('query("id") == "king"', "is_owner"),
@@ -71,6 +73,18 @@ def verify_king_owner_guards(overlay: Path, repo_root: Path) -> None:
         if '"avatar", "human", "rainnar", "malik"' not in raw or '"rainner"' in raw:
             raise SystemExit(f"FAIL: KING Original race ID correction missing: {rel}")
 
+    # 梅影風傳授：依技能真正入門等級補足門檻，並使用 Original race ID rainnar。
+    for rel in KING_NPC_COMPAT_PATHS:
+        target = overlay / rel
+        if not target.is_file():
+            raise SystemExit(f"FAIL: KING Cold Plum NPC compatibility file missing: {rel}")
+        raw = target.read_text(encoding="utf-8", errors="replace")
+        required = ('set_power("S");', '"custom_faction", FACTION',
+                    "skill_entry_level(skill)", "skill_threshold(skill, entry_level)",
+                    '"rainnar"')
+        if any(token not in raw for token in required) or '"rainner"' in raw:
+            raise SystemExit(f"FAIL: KING Cold Plum NPC progression/race guard missing: {rel}")
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--source", required=True, type=Path, help="latest ES2M mirror mudlib")
@@ -103,7 +117,7 @@ def main() -> int:
                 "original_sha256": digest(original),
             })
 
-        # 唯一 KING Owner 的 300 級技能上限位於此檔；先保留 KING 版本。
+        # KING Owner、凍結武學、種族代碼與 NPC 成長保護檔；先保留已驗證 KING 版本。
         # 最新 ES2M 原始檔仍完整保存於 es2m_source_mirror，供後續逐段合併。
         if rel_name in PROTECTED_KING_PATHS:
             if not dest.is_file():
@@ -123,6 +137,14 @@ def main() -> int:
                 if '"avatar", "human", "rainnar", "malik"' not in raw or '"rainner"' in raw:
                     raise SystemExit(f"FAIL: KING Original race ID correction missing: {rel_name}")
                 status = "preserved-KING-original-race-id-correction"
+            elif rel_name in KING_NPC_COMPAT_PATHS:
+                raw = dest.read_text(encoding="utf-8", errors="replace")
+                required = ('set_power("S");', '"custom_faction", FACTION',
+                            "skill_entry_level(skill)", "skill_threshold(skill, entry_level)",
+                            '"rainnar"')
+                if any(token not in raw for token in required) or '"rainner"' in raw:
+                    raise SystemExit(f"FAIL: KING Cold Plum NPC progression/race guard missing: {rel_name}")
+                status = "preserved-KING-cold-plum-NPC-progression-and-race"
             else:
                 raise SystemExit(f"FAIL: unclassified protected KING path: {rel_name}")
             preserved_king.append({
