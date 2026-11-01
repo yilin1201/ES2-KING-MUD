@@ -6,8 +6,8 @@
   "source_file_count": 1990,
   "copied_new_count": 2,
   "overwritten_existing_king_count": 0,
-  "already_matching_count": 1981,
-  "preserved_king_custom_count": 7,
+  "already_matching_count": 1976,
+  "preserved_king_custom_count": 12,
   "source_differs_from_pinned_original_count": 182,
   "copied_new": [
     {
@@ -4494,29 +4494,9 @@
       "sha256": "317192b992978243085b1e7adebe844fbf5871ab43846fad5925d2afaa42cf7a"
     },
     {
-      "path": "custom/zhenwu/npc/lu_xinien.c",
-      "status": "already-matches-ES2M",
-      "sha256": "d02aadb8bbd582cac53365b7b3f291e9bfddd77257444ac592e2da7f96df5b9a"
-    },
-    {
-      "path": "custom/zhenwu/npc/mee_pei.c",
-      "status": "already-matches-ES2M",
-      "sha256": "c929106e094985be0f636e4a039f75d4c2a6d7f25d114ad94038349946c8fa7a"
-    },
-    {
-      "path": "custom/zhenwu/npc/soldier.c",
-      "status": "already-matches-ES2M",
-      "sha256": "a1f7336f144202435daacbb1963e9e053003aefead050fb358f0554920c4341f"
-    },
-    {
       "path": "custom/zhenwu/npc/target_stake.c",
       "status": "already-matches-ES2M",
       "sha256": "344b3738c8b8cd36da753e6af6a2bfab0a20ca5c422ff6cf85b2e28208868b72"
-    },
-    {
-      "path": "custom/zhenwu/npc/zhenwu_soldier.c",
-      "status": "already-matches-ES2M",
-      "sha256": "3dcc5d3cef69d8a9c0f1945e154d49f26f287192b736631f356ce8924782c5c6"
     },
     {
       "path": "custom/zhenwu/obj/fire_gauntlets.c",
@@ -4527,11 +4507,6 @@
       "path": "custom/zhenwu/obj/great_axe_of_mighty.c",
       "status": "already-matches-ES2M",
       "sha256": "7d462a519883bacfb4edb2cf8a5e843b1529edeeeab34c64856c919b2341885f"
-    },
-    {
-      "path": "custom/zhenwu/obj/recruit_stone.c",
-      "status": "already-matches-ES2M",
-      "sha256": "fcc4ee993c9a3023fe8c4cf74ccaa009b61ccc7d0d15a252b2ac001c46adf777"
     },
     {
       "path": "custom/zhenwu/obj/short_pike.c",
@@ -9935,6 +9910,36 @@
       "status": "preserved-KING-ES2M-sneak-progression-adapter",
       "king_sha256": "25b6a8c37cb98e674afc9676256275a7fc04207c4fcc972d17c5ff9e8221b429",
       "es2m_sha256": "69e847b4b8d38eec5e1abdf30088047bc9c272c59fdb070841ceddf41e0f2b15"
+    },
+    {
+      "path": "custom/zhenwu/npc/lu_xinien.c",
+      "status": "preserved-KING-ES2M-Zhenwu-merged",
+      "king_sha256": "37ce1c839d8204695373e7a8724f9e0eb4fb37a5e6a587bf14a034129c0735fd",
+      "es2m_sha256": "d02aadb8bbd582cac53365b7b3f291e9bfddd77257444ac592e2da7f96df5b9a"
+    },
+    {
+      "path": "custom/zhenwu/npc/mee_pei.c",
+      "status": "preserved-KING-ES2M-Zhenwu-merged",
+      "king_sha256": "b618ff898186c62c124cf0c01b2dcb66ca330d2ed9cdaeb1ef72ccea19b6e302",
+      "es2m_sha256": "c929106e094985be0f636e4a039f75d4c2a6d7f25d114ad94038349946c8fa7a"
+    },
+    {
+      "path": "custom/zhenwu/npc/soldier.c",
+      "status": "preserved-KING-ES2M-Zhenwu-merged",
+      "king_sha256": "efa0f39f6097811a19ab679453cb0d7b51dd2c2fa7fb85b6a668d649700bd9f1",
+      "es2m_sha256": "a1f7336f144202435daacbb1963e9e053003aefead050fb358f0554920c4341f"
+    },
+    {
+      "path": "custom/zhenwu/npc/zhenwu_soldier.c",
+      "status": "preserved-KING-ES2M-Zhenwu-merged",
+      "king_sha256": "08aa953791f07c18f933684c6da69f7da8eab17e4135e9391add667531683edd",
+      "es2m_sha256": "3dcc5d3cef69d8a9c0f1945e154d49f26f287192b736631f356ce8924782c5c6"
+    },
+    {
+      "path": "custom/zhenwu/obj/recruit_stone.c",
+      "status": "preserved-KING-ES2M-Zhenwu-merged",
+      "king_sha256": "fcc4ee993c9a3023fe8c4cf74ccaa009b61ccc7d0d15a252b2ac001c46adf777",
+      "es2m_sha256": "fcc4ee993c9a3023fe8c4cf74ccaa009b61ccc7d0d15a252b2ac001c46adf777"
     },
     {
       "path": "d/snow/npc/teacher.c",
