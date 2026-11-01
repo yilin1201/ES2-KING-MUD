@@ -729,10 +729,8 @@ if modern_race_flow:
         "// ES2-KING PUBLIC CHARACTER TEXT INPUT／ES2M 已使用完整文字輸入與 race list callback。\n" + anchor, 1)
 else:
     import re
-    opts_start = text.find("mapping opts = ([", text.find('ob->set ("karma", 0);'))
-    if opts_start < 0:
-        opts_start = text.find("mapping opts = ([", text.find('ob->set("karma", 0);'))
-    race_start = text.find("private void get_race", opts_start)
+    race_start = text.find("private void get_race")
+    opts_start = text.rfind("mapping opts = ([", 0, race_start) if race_start >= 0 else -1
     switch_match = re.search(r'switch\s*\(\s*choice\s*\?\s*choice\s*:\s*race\s*\)\s*\{', text[race_start:]) if race_start >= 0 else None
     if opts_start < 0 or race_start < 0 or not switch_match:
         raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_email → get_race Race 區段。")
