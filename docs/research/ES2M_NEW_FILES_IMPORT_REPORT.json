@@ -6,8 +6,8 @@
   "source_file_count": 1990,
   "copied_new_count": 2,
   "overwritten_existing_king_count": 0,
-  "already_matching_count": 1984,
-  "preserved_king_custom_count": 4,
+  "already_matching_count": 1983,
+  "preserved_king_custom_count": 5,
   "source_differs_from_pinned_original_count": 182,
   "copied_new": [
     {
@@ -6159,11 +6159,6 @@
       "sha256": "b86f3e9d4eb6aeb1fa54bada5603dcfff8b92f0dedfd97546bf0f383118d830b"
     },
     {
-      "path": "d/snow/npc/teacher.c",
-      "status": "already-matches-ES2M",
-      "sha256": "73dfbdfaeaad62dd42171a5baa33b60eea766c39841a3865db4214bf663ce94a"
-    },
-    {
       "path": "d/snow/npc/waiter.c",
       "status": "already-matches-ES2M",
       "sha256": "97838e38de53ee3672a1b0b663075b1ffe9361e44af6e90827a6dd510378e9ef"
@@ -9945,6 +9940,12 @@
     }
   ],
   "preserved_king_custom": [
+    {
+      "path": "d/snow/npc/teacher.c",
+      "status": "preserved-KING-original-race-id-correction",
+      "king_sha256": "75bd6a7b626f2a248d327692d212ea755ca2eb3fb2c521a6ae96b9b49b0cc633",
+      "es2m_sha256": "73dfbdfaeaad62dd42171a5baa33b60eea766c39841a3865db4214bf663ce94a"
+    },
     {
       "path": "daemon/skill/advance_lunmay.c",
       "status": "preserved-KING-frozen-martial-baseline",
