@@ -716,9 +716,16 @@ private void get_race (string race, object ob) {
     else if (race == "11" || race == "夜叉") race = "yaksa";
     else if (race == "12" || race == "阿修羅") race = "ashura";
     switch (race) {'''
-if old not in text:
+import re
+opts_start = text.find("mapping opts = ([", text.find('ob->set ("karma", 0);'))
+if opts_start < 0:
+    opts_start = text.find("mapping opts = ([", text.find('ob->set("karma", 0);'))
+race_start = text.find("private void get_race", opts_start)
+switch_match = re.search(r'switch\s*\(\s*choice\s*\?\s*choice\s*:\s*race\s*\)\s*\{', text[race_start:]) if race_start >= 0 else None
+if opts_start < 0 or race_start < 0 or not switch_match:
     raise SystemExit("EXPANSION APPLY FAIL：找不到 Original get_email → get_race Race 區段。")
-text = text.replace(old, new, 1)
+switch_end = race_start + switch_match.end()
+text = text[:opts_start] + new + text[switch_end:]
 old_retry = '''        default:
             get_char ("get_race", 1, opts, ob);
             return;
