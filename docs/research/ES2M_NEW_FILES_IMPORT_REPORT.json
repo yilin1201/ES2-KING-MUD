@@ -6,8 +6,8 @@
   "source_file_count": 1990,
   "copied_new_count": 2,
   "overwritten_existing_king_count": 0,
-  "already_matching_count": 1970,
-  "preserved_king_custom_count": 18,
+  "already_matching_count": 1969,
+  "preserved_king_custom_count": 19,
   "source_differs_from_pinned_original_count": 182,
   "copied_new": [
     {
@@ -5344,11 +5344,6 @@
       "sha256": "d72660f9168ef99631dec4983a9fece27d9673f9c877951f5559bf163d7e7f44"
     },
     {
-      "path": "d/oldpine/npc/kao_shen.c",
-      "status": "already-matches-ES2M",
-      "sha256": "bf623731ff6881f0082abc680eaa8c3a13f1796b689564fde1ab5ffb22044113"
-    },
-    {
       "path": "d/oldpine/npc/lin_yuchan.c",
       "status": "already-matches-ES2M",
       "sha256": "46d2afadcd7a6bc496a03d53e02a7e56ac2466e3eb5b385b081bce1cfdf9c6c9"
@@ -9982,6 +9977,12 @@
       "status": "preserved-KING-Li-Village-confirmed-topology",
       "king_sha256": "753a7a2e2bc284e47d45046b8cdebb0d57f3152f",
       "es2m_sha256": "93ee986da871d52850d366242a062ffa69effd81"
+    },
+    {
+      "path": "d/oldpine/npc/kao_shen.c",
+      "status": "preserved-KING-user-confirmed-legacy-teacher-table",
+      "king_sha256": "a58f653f0c6fc6b4be6b401584acf3ff114666dd",
+      "es2m_sha256": "d2eb7d48021c904f79d824a6dd07a4d142e97541"
     }
   ],
   "source_differs_from_pinned_original": [
