@@ -22,7 +22,8 @@ LONG
         "/obj/food/mooncake" : 2
     ]));
     set("exits", ([
-        "east" : __DIR__"street1"
+        "east" : __DIR__"street1",
+        "north" : __DIR__"square_s"
     ]));
     setup();
     replace_program(HOCKSHOP);
