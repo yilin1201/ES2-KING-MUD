@@ -2,7 +2,7 @@
   "purpose": "ES2M 最新原始 Mudlib 唯讀鏡像；不得直接視為 Original ES2，也不直接取代 KING 專屬資料。",
   "source_repository": "wolfer168/es2-webmud",
   "source_branch": "main",
-  "source_commit": "18cee8bcaff35d45ff20c5dfab2287cbba31d65b",
+  "source_commit": "a60bd653e75000614b3857efa1dddcd736dc3324",
   "source_path": "source/upstream/mudlib/",
   "mirror_path": "es2m_source_mirror/mudlib/",
   "file_count": 1979,
@@ -9909,5 +9909,8 @@
     "鏡像只保留來源 Mudlib 當前存在的檔案。",
     "KING runtime overlay 依來源同路徑覆蓋；不刪除來源中不存在的 KING 專屬檔案。",
     "Pinned Original ES2 checkout 僅供比較，絕不修改。"
-  ]
+  ],
+  "sync_requested_from": "ES2M main",
+  "sync_requested_at": "2026-11-01",
+  "sync_note": "觸發既有 GitHub Actions：重新鏡像最新 ES2M Mudlib 並同步至 KING Runtime overlay；不得修改 Original ES2 基準。"
 }
