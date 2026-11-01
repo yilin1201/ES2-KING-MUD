@@ -377,10 +377,10 @@ needle = '''    if( member_array(msg[0..1], ({"想", "是", "好"})) != -1 ) {
 '''
 utf8_prefix = '    if( msg[0..strlen(word)-1] == word ) {'
 foreach_anchor = '    foreach(word in ({ "想", "是", "好" })) {'
-if foreach_anchor in text and utf8_prefix in text:
+if foreach_anchor in text and 'msg[0..strlen(word)-1] == word' in text:
     if SCHOLAR_UTF8_MARKER not in text:
         text = text.replace(foreach_anchor,
-            "    // ES2-KING ORIGINAL SCHOLAR UTF-8 COMPATIBILITY／ES2M 已採 UTF-8 完整字首比較。\\n" + foreach_anchor, 1)
+            "    // ES2-KING ORIGINAL SCHOLAR UTF-8 COMPATIBILITY／ES2M 已採 UTF-8 完整字首比較。\n" + foreach_anchor, 1)
 elif needle in text:
     replacement = '''    // ES2-KING ORIGINAL SCHOLAR UTF-8 COMPATIBILITY
     if( strsrch(msg, "想")==0 || strsrch(msg, "是")==0 || strsrch(msg, "好")==0 ) {'''
