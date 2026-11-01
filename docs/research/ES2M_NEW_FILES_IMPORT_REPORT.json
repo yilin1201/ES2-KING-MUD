@@ -6,8 +6,8 @@
   "source_file_count": 1990,
   "copied_new_count": 2,
   "overwritten_existing_king_count": 0,
-  "already_matching_count": 1976,
-  "preserved_king_custom_count": 12,
+  "already_matching_count": 1970,
+  "preserved_king_custom_count": 18,
   "source_differs_from_pinned_original_count": 182,
   "copied_new": [
     {
@@ -4794,11 +4794,6 @@
       "sha256": "400d2b38f4489efdc3804bb11aefdb9171a37de85a040ebe1f4957590bf750f9"
     },
     {
-      "path": "d/lee/creek.c",
-      "status": "already-matches-ES2M",
-      "sha256": "88b4216ced04ac87f9dba8c309b07d9b14023d354cd3705e4fc6beb899d74e36"
-    },
-    {
       "path": "d/lee/entrance_s.c",
       "status": "already-matches-ES2M",
       "sha256": "64b5a7958db65462911b44474b42f54ed6aaccf72ba54c52485d1eae9cfdb194"
@@ -5069,11 +5064,6 @@
       "sha256": "901a63c6514a5fb9255cecbdfdd996df2ab96d3032f0b25e3053625ba771568e"
     },
     {
-      "path": "d/lee/pawnshop.c",
-      "status": "already-matches-ES2M",
-      "sha256": "b577ced6a76c179d3ea5e8897f6f218bf9e869c7970128ce79cd3821b831261f"
-    },
-    {
       "path": "d/lee/riverside_n1.c",
       "status": "already-matches-ES2M",
       "sha256": "b7e232cfaa309ecf556863f4c9d402185a67621fd296f1e80cce35ccb836b0c4"
@@ -5099,19 +5089,9 @@
       "sha256": "0f818ad46b705ab1ff9fa7c3963426a7717f391f5d6e1cc6147bf0afa085f22e"
     },
     {
-      "path": "d/lee/square_c.c",
-      "status": "already-matches-ES2M",
-      "sha256": "53d29429e7b72bf9a2d3458665264f75446afab27771b90a751a7e5eba1a068b"
-    },
-    {
       "path": "d/lee/square_e.c",
       "status": "already-matches-ES2M",
       "sha256": "b50859de55547d2b7ab7fbc279fb327b2583e314327c13f5529dd7623f130737"
-    },
-    {
-      "path": "d/lee/square_s.c",
-      "status": "already-matches-ES2M",
-      "sha256": "b875a8ecdcb6fe0ea33f13dde9ada1311dc5f972c238707bbfbb40a10c3fb263"
     },
     {
       "path": "d/lee/square_w.c",
@@ -5127,11 +5107,6 @@
       "path": "d/lee/street2.c",
       "status": "already-matches-ES2M",
       "sha256": "50ea237a82351c80be38eeb97105208098bb39f2d1a993e015e4b47dea588db5"
-    },
-    {
-      "path": "d/lee/watermelon_n1.c",
-      "status": "already-matches-ES2M",
-      "sha256": "6b11b0c80efec14c09146125557bbf0c839bdb1d457b5e5cda02ea755e0b6e02"
     },
     {
       "path": "d/lee/watermelon_n2.c",
@@ -5152,11 +5127,6 @@
       "path": "d/lee/watermelon_s2.c",
       "status": "already-matches-ES2M",
       "sha256": "e6b6c44ba678bd3123454fdbba5cab8da9764878c72cd0ebddb833d3383ae9d8"
-    },
-    {
-      "path": "d/lee/watermelon_s3.c",
-      "status": "already-matches-ES2M",
-      "sha256": "95ac93a56cd092699e71592aa8a3022e13f1bac36ceca83460b7d3f810015102"
     },
     {
       "path": "d/lee/wroad1.c",
@@ -9976,6 +9946,42 @@
       "status": "preserved-KING-owner-customization-pending-ES2M-merge",
       "king_sha256": "913252ad2c4604d10b5e5a551af1c2149a290c423fc1986f684d248c1d6e1990",
       "es2m_sha256": "79b2cb42db3b092f5ba098a568aafd53ebb2e11087b6534e3565141c701499a5"
+    },
+    {
+      "path": "d/lee/creek.c",
+      "status": "preserved-KING-Li-Village-confirmed-topology",
+      "king_sha256": "11dd993edde676296de308f9492fa704fd826d68",
+      "es2m_sha256": "41bb2ae0cc1bfe022ae3638c089225dea75d38a9"
+    },
+    {
+      "path": "d/lee/pawnshop.c",
+      "status": "preserved-KING-Li-Village-confirmed-topology",
+      "king_sha256": "fb531ec27d45abbc622ff09f881bb54aa2403a7d",
+      "es2m_sha256": "2f464517038c758867fbd6c172bd174989638db6"
+    },
+    {
+      "path": "d/lee/square_c.c",
+      "status": "preserved-KING-Li-Village-confirmed-topology",
+      "king_sha256": "4455a5eac107064899a82efde947c34b4656e07f",
+      "es2m_sha256": "a51d93a784b2c5f64bad71f63fe8a67f8100c938"
+    },
+    {
+      "path": "d/lee/square_s.c",
+      "status": "preserved-KING-Li-Village-confirmed-topology",
+      "king_sha256": "48608edc16dcd1ce33263eb041c7e260e1ddf762",
+      "es2m_sha256": "1bff0c8606bd24e8e3e9646a4952a9ada031e3b9"
+    },
+    {
+      "path": "d/lee/watermelon_n1.c",
+      "status": "preserved-KING-Li-Village-confirmed-topology",
+      "king_sha256": "3ddd8e29ccc18b88a74f29c008cadf4bf4914ac8",
+      "es2m_sha256": "681227f6ee459a510e34b6eb78701d197306e5ce"
+    },
+    {
+      "path": "d/lee/watermelon_s3.c",
+      "status": "preserved-KING-Li-Village-confirmed-topology",
+      "king_sha256": "753a7a2e2bc284e47d45046b8cdebb0d57f3152f",
+      "es2m_sha256": "93ee986da871d52850d366242a062ffa69effd81"
     }
   ],
   "source_differs_from_pinned_original": [
