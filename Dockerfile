@@ -156,8 +156,10 @@ RUN cd scripts && python3 -m unittest -v test_es2m_world_coverage_unit
 
 # V13 ES2M 世界區域：Lee／Oldpine／Wutang 只補入 Runtime 缺檔，禁止覆蓋同名 Original。
 RUN cd scripts && python3 -m unittest -v test_import_es2m_world_zones_safe
+# World-zone import must use the current ES2M source mirror, not the archived recovery snapshot.
+# The archived snapshot differs in many reconstructed exits; it remains evidence-only.
 RUN python3 scripts/import_es2m_world_zones_safe.py \
-    --snapshot /build/repository/es2m_snapshot/mudlib \
+    --snapshot /build/repository/es2m_source_mirror/mudlib \
     --runtime /opt/es2-king/runtime/mudlib \
     --output /build/es2m-world-zones-stage.json
 # Lee／Oldpine／Wutang Runtime topology gates：SOURCE PASS 不等於 Runtime PASS。
