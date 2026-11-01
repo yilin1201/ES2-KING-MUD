@@ -92,7 +92,10 @@ string *dummy_hit_msg = ({
             raise SystemExit("ES2M TRAINING DUMMY FAIL：combatd 命中率 anchor 數量不符。")
         s = s.replace(old, new, 1)
 
-    if 'if( !action["must_hit"] && !dummy && !victim->is_busy()' not in s and "if( !dummy && !victim->is_busy()" not in s:
+    defense_start = s.find("/* 要求攻擊對象進行防禦。 */")
+    defense_end = s.find("/* 傳回非零值", defense_start)
+    defense_region = s[defense_start:defense_end] if defense_start >= 0 and defense_end > defense_start else ""
+    if "!dummy" not in defense_region:
         anchor = "    if( !victim->is_busy()"
         if s.count(anchor) != 1:
             raise SystemExit("ES2M TRAINING DUMMY FAIL：combatd 防禦 anchor 數量不符。")
