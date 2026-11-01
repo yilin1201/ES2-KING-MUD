@@ -123,7 +123,7 @@ string *dummy_hit_msg = ({
             raise SystemExit("ES2M TRAINING DUMMY FAIL：combatd 戰鬥敘述 anchor 數量不符。")
         s = s.replace(anchor, replacement, 1)
 
-    if "damage > 0 && !dummy" not in s:
+    if "damage > 0 && !dummy" not in s and 'damage > 0 && !action["brief"] && !dummy' not in s:
         anchor = "        if( damage > 0 ) report_status(victim);"
         if s.count(anchor) != 1:
             raise SystemExit("ES2M TRAINING DUMMY FAIL：combatd report_status anchor 數量不符。")
