@@ -61,3 +61,31 @@
 - 靜態核對結果：ES2M snapshot 保留上游更新；KING overlay 與凍結基準 SHA 完全一致；KING 專屬成長公式未被覆蓋。
 - GitHub Actions 觸發後仍是 failure，但相關 job 回傳 steps=[]，沒有執行測試步驟；分類為 INFRA FAIL，不可當作程式測試失敗或 PASS。尚未執行 Driver／遊戲實機驗證。
 - PR #13 維持 OPEN / NOT MERGED；本輪未部署、未建立雲端資源。
+
+
+## 2026-11-01 — ES2M 最新全量 Mudlib 同步（a60bd653）
+
+### 來源與目標基準
+
+- ES2M：`wolfer168/es2-webmud`，`main`，HEAD `a60bd653e75000614b3857efa1dddcd736dc3324`。
+- 本次前一個已同步來源：`18cee8bcaff35d45ff20c5dfab2287cbba31d65b`；上游差異為 28 commits ahead，Compare API 列出 14 個變更檔案（其中 11 個位於 `source/upstream/mudlib/`，另 3 個為上游文件、測試與 Web UI，不屬於 KING Runtime Mudlib 同步範圍）。
+- KING：`build/original-es2-races-phase2`；同步前 HEAD `8cf83c79725fb02f5003ab091387feffda28b7b5`。
+
+### 執行結果
+
+- GitHub Actions：`Sync ES2M Files Into KING Overlay`，Run ID `41300921266`，結論 **SUCCESS**。
+- 同步後 KING HEAD：`e19689359678e16b1b17a7ffb05c742b6dd4d793`。
+- 最新來源 Mudlib 檔案數：1,979。
+- 新增：2；覆蓋既有 KING Runtime 檔案：13；內容已相同：1,964。
+- 與 pinned Original ES2 不同的來源檔案：180（僅列入差異報告，不回寫 Original ES2）。
+- 新增檔案：`data/chinese.o`、`data/emoted.o`。
+- 覆蓋檔案：`cmds/std/sneak.c`、`cmds/usr/enable.c`、`cmds/usr/inventory.c`、`custom/legacy_npc/han_wen_suei.c`、`d/snow/npc/teacher.c`、`d/swaylan/lunmay/front_yard.c`、`d/swaylan/temple/gate.c`、`d/wutang/npc/may_yin_fong.c`、`daemon/skill/advance_lunmay.c`、`daemon/skill/hainmay_force.c`、`daemon/skill/lunmay.c`、`docs/help/fighter.lunmay.txt`、`feature/char/skill.c`。
+- 逐檔結果與 SHA-256：`docs/research/ES2M_NEW_FILES_IMPORT_REPORT.json`；最新來源 manifest：`es2m_source_mirror/MANIFEST.json`。
+
+### 保護與驗證界線
+
+- 同步只寫入 `es2m_source_mirror/` 與 `es2_king_expansion/runtime/mudlib/`；不修改 pinned Original ES2。
+- KING 沒有的路徑才新增；來源同路徑以 ES2M 覆蓋；來源沒有的 KING-only 檔案不刪除。
+- 本次 ES2M 自身 Mudlib 同步 Workflow 已成功完成，代表鏡像與 Overlay 匯入步驟成功，不等同 LPC 編譯、Docker、Oracle Runtime 或玩家 E2E PASS。
+- 同步後 GitHub PR workflows 因提交者為 `github-actions[bot]` 顯示 `action_required` 且沒有 jobs；該狀態不是測試 PASS，也不是程式 FAIL。此文件更新將由使用者提交身分觸發既有 ES2M 回歸工作流程，以取得實際測試結果。
+- PR #13 維持 OPEN / NOT MERGED；本次不部署。
