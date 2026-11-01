@@ -21,7 +21,11 @@ def digest(path: Path) -> str:
 
 
 def read(path: Path) -> str:
-    require(path.is_file(), "缺少檔案：" + str(path.relative_to(ROOT)))
+    try:
+        display = str(path.relative_to(ROOT))
+    except ValueError:
+        display = str(path)
+    require(path.is_file(), "缺少檔案：" + display)
     return path.read_text(encoding="utf-8")
 
 
