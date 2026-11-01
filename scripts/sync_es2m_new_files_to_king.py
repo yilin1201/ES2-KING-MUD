@@ -23,6 +23,37 @@ PROTECTED_KING_PATHS = {
     "d/snow/npc/teacher.c",
     "d/wutang/npc/may_yin_fong.c",
     "cmds/std/sneak.c",
+    "custom/zhenwu/npc/lu_xinien.c",
+    "custom/zhenwu/npc/mee_pei.c",
+    "custom/zhenwu/npc/soldier.c",
+    "custom/zhenwu/npc/zhenwu_soldier.c",
+    "custom/zhenwu/obj/recruit_stone.c",
+}
+KING_ZHENWU_GUARDS = {
+    "custom/zhenwu/npc/lu_xinien.c": (
+        'set("nickname","徵兵官")', 'set_level(25)', 'set_power("B")',
+        '/custom/weapon/blade/steelblade',
+    ),
+    "custom/zhenwu/npc/mee_pei.c": (
+        'set_attr("str", 40)', 'set_stat_maximum("gin", 600)',
+        'set_skill("berserk", 180)', 'set_skill("twohanded axe", 150)',
+        'set_power("A")', 'HEAVY_PARRY_MERIT 100000',
+        'improve_skill_exact("heavy_parry", 1)', '/obj/books/book_of_assault',
+    ),
+    "custom/zhenwu/npc/soldier.c": (
+        'set_level(5)', 'set_power("B")', 'set_stat_maximum("gin", 120)',
+        'set_stat_maximum("kee", 100)', 'set_stat_maximum("sen", 40)',
+    ),
+    "custom/zhenwu/npc/zhenwu_soldier.c": (
+        'set_level(15)', 'set_power("C")', 'set_attr("str", 25)',
+        'set_attr("cor", 22)', 'set_attr("con", 20)',
+        'set_skill("twohanded pike", 60)', 'set_skill("unarmed", 60)',
+    ),
+    "custom/zhenwu/obj/recruit_stone.c": (
+        'set("custom_faction", "soldier.ber")',
+        'set("soldier/from_fighter", 1)',
+        '強力格擋改由米沛傳授',
+    ),
 }
 KING_RACE_COMPAT_PATHS = {"d/snow/npc/teacher.c"}
 KING_NPC_COMPAT_PATHS = {"d/wutang/npc/may_yin_fong.c"}
@@ -100,6 +131,18 @@ def verify_king_owner_guards(overlay: Path, repo_root: Path) -> None:
         if any(token not in raw for token in required) or "COMBAT_D->int_formula_exp(me)" in raw:
             raise SystemExit(f"FAIL: KING sneak compatibility formula missing: {rel}")
 
+    # 振武軍營五個檔案已完成 ES2M／KING 逐檔合併，未來同步只保留此已驗證合併版本。
+    for rel, required in KING_ZHENWU_GUARDS.items():
+        target = overlay / rel
+        if not target.is_file():
+            raise SystemExit(f"FAIL: merged KING Zhenwu file missing: {rel}")
+        raw = target.read_text(encoding="utf-8", errors="replace")
+        if any(token not in raw for token in required):
+            raise SystemExit(f"FAIL: merged KING Zhenwu guard missing in {rel}")
+    stone = (overlay / "custom/zhenwu/obj/recruit_stone.c").read_text(encoding="utf-8", errors="replace")
+    if 'me->set_skill("heavy_parry", 1);' in stone or 'me->set_learn("heavy_parry", 1);' in stone:
+        raise SystemExit("FAIL: recruit stone must not bypass Mee Pei heavy_parry teaching")
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--source", required=True, type=Path, help="latest ES2M mirror mudlib")
@@ -169,6 +212,17 @@ def main() -> int:
                 if any(token not in raw for token in required) or "COMBAT_D->int_formula_exp(me)" in raw:
                     raise SystemExit(f"FAIL: KING sneak compatibility formula missing: {rel_name}")
                 status = "preserved-KING-ES2M-sneak-progression-adapter"
+            elif rel_name in KING_ZHENWU_GUARDS:
+                raw = dest.read_text(encoding="utf-8", errors="replace")
+                required = KING_ZHENWU_GUARDS[rel_name]
+                if any(token not in raw for token in required):
+                    raise SystemExit(f"FAIL: merged KING Zhenwu guard missing: {rel_name}")
+                if rel_name == "custom/zhenwu/obj/recruit_stone.c" and (
+                    'me->set_skill("heavy_parry", 1);' in raw
+                    or 'me->set_learn("heavy_parry", 1);' in raw
+                ):
+                    raise SystemExit("FAIL: recruit stone must not bypass Mee Pei heavy_parry teaching")
+                status = "preserved-KING-ES2M-Zhenwu-merged"
             else:
                 raise SystemExit(f"FAIL: unclassified protected KING path: {rel_name}")
             preserved_king.append({
