@@ -44,14 +44,14 @@ def literal_dependencies(path: Path, mudlib: Path) -> set[str]:
     return dependencies
 
 
-def validate_tree(mudlib: Path, require_runtime_link: bool, expected_room_count: int) -> None:
+def validate_tree(mudlib: Path, require_runtime_link: bool, expected_room_count: int, expected_npc_count: int) -> None:
     area = mudlib / "d/wutang"
     rooms = sorted(area.glob("*.c"))
     npcs = sorted((area / "npc").glob("*.c"))
     objects = sorted((area / "obj").glob("*.c"))
     assert len(rooms) == expected_room_count, f"ES2M_WUTANG_ROOM_COUNT: {len(rooms)} expected={expected_room_count}"
     # 2026-10-10 新增的 may_yin_fong.c 是已確認的 ES2M 來源 NPC，納入固定清冊。
-    assert len(npcs) == 32, f"ES2M_WUTANG_NPC_COUNT: {len(npcs)}"
+    assert len(npcs) == expected_npc_count, f"ES2M_WUTANG_NPC_COUNT: {len(npcs)} expected={expected_npc_count}"
     assert (area / "npc" / "may_yin_fong.c").is_file(), "ES2M_WUTANG_MAY_YIN_FONG_MISSING"
     assert len(objects) == 2, f"ES2M_WUTANG_OBJECT_COUNT: {len(objects)}"
 
@@ -88,19 +88,33 @@ def main() -> None:
     parser.add_argument("--runtime", type=Path)
     parser.add_argument("--current-source", type=Path, help="Latest ES2M source mirror for room inventory comparison")
     args = parser.parse_args()
-    validate_tree(args.source, False, 56)
+    validate_tree(args.source, False, 56, 32)
     runtime_room_count = 56
+    runtime_npc_count = 32
     if args.runtime:
         runtime_room_count = len(list((args.runtime / "d/wutang").glob("*.c")))
+        runtime_npc_count = len(list((args.runtime / "d/wutang/npc").glob("*.c")))
         if args.current_source:
             current_rooms = len(list((args.current_source / "d/wutang").glob("*.c")))
+            current_npcs = len(list((args.current_source / "d/wutang/npc").glob("*.c")))
             assert runtime_room_count == current_rooms, (
                 f"ES2M_WUTANG_RUNTIME_ROOM_COUNT: {runtime_room_count} expected_current_source={current_rooms}"
             )
+            assert runtime_npc_count == current_npcs, (
+                f"ES2M_WUTANG_RUNTIME_NPC_COUNT: {runtime_npc_count} expected_current_source={current_npcs}"
+            )
         else:
             assert runtime_room_count in (56, 58), f"ES2M_WUTANG_RUNTIME_ROOM_COUNT: {runtime_room_count}"
-        validate_tree(args.runtime, True, runtime_room_count)
-    print(f"ES2M WUTANG TOPOLOGY PASS／歷史快照 56 房間、Runtime {runtime_room_count} 房間、32 NPC（含 may_yin_fong）、2 物件及振武入口引用閉合。")
+            assert runtime_npc_count in (32, 33), f"ES2M_WUTANG_RUNTIME_NPC_COUNT: {runtime_npc_count}"
+        validate_tree(args.runtime, True, runtime_room_count, runtime_npc_count)
+        if args.current_source:
+            current_room_names = {p.name for p in (args.current_source / "d/wutang").glob("*.c")}
+            runtime_room_names = {p.name for p in (args.runtime / "d/wutang").glob("*.c")}
+            current_npc_names = {p.name for p in (args.current_source / "d/wutang/npc").glob("*.c")}
+            runtime_npc_names = {p.name for p in (args.runtime / "d/wutang/npc").glob("*.c")}
+            assert runtime_room_names == current_room_names, "ES2M_WUTANG_RUNTIME_ROOM_INVENTORY_MISMATCH"
+            assert runtime_npc_names == current_npc_names, "ES2M_WUTANG_RUNTIME_NPC_INVENTORY_MISMATCH"
+    print(f"ES2M WUTANG TOPOLOGY PASS／歷史快照 56 房間、32 NPC；Runtime {runtime_room_count} 房間、{runtime_npc_count} NPC、2 物件及振武入口引用閉合。")
 
 
 if __name__ == "__main__":
