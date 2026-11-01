@@ -23,13 +23,13 @@ def exits(room: Path) -> dict[str, str]:
     return dict(re.findall(r'"([a-z]+)"\s*:\s*(?:__DIR__)?"([^"]+)"', match.group(1)))
 
 
-def validate_tree(mudlib: Path, require_snow_link: bool) -> None:
+def validate_tree(mudlib: Path, require_snow_link: bool, expected_npc_count: int) -> None:
     area = mudlib / "d/oldpine"
     rooms = sorted(area.glob("*.c"))
     npcs = sorted((area / "npc").glob("*.c"))
     objects = sorted((area / "obj").glob("*.c"))
     assert len(rooms) == 50, f"ES2M_OLDPINE_ROOM_COUNT: {len(rooms)}"
-    assert len(npcs) == 17, f"ES2M_OLDPINE_NPC_COUNT: {len(npcs)}"
+    assert len(npcs) == expected_npc_count, f"ES2M_OLDPINE_NPC_COUNT: {len(npcs)} expected={expected_npc_count}"
     assert len(objects) == 5, f"ES2M_OLDPINE_OBJECT_COUNT: {len(objects)}"
 
     room_names = {p.stem for p in rooms}
@@ -65,10 +65,17 @@ def main() -> None:
     parser.add_argument("--source", required=True, type=Path)
     parser.add_argument("--runtime", type=Path)
     args = parser.parse_args()
-    validate_tree(args.source, False)
+    validate_tree(args.source, False, 17)
     if args.runtime:
-        validate_tree(args.runtime, True)
-    print("ES2M OLDPINE TOPOLOGY PASS／50 房間、17 NPC、5 物件、雙向入口及高慎虎刀門拜師主線引用閉合。")
+        validate_tree(args.runtime, True, 18)
+        source_npcs = {p.name for p in (args.source / "d/oldpine/npc").glob("*.c")}
+        runtime_npcs = {p.name for p in (args.runtime / "d/oldpine/npc").glob("*.c")}
+        extra_npcs = sorted(runtime_npcs - source_npcs)
+        missing_npcs = sorted(source_npcs - runtime_npcs)
+        assert not missing_npcs, f"ES2M_OLDPINE_RUNTIME_MISSING_NPC: {missing_npcs}"
+        assert len(extra_npcs) == 1, f"ES2M_OLDPINE_RUNTIME_EXTRA_NPCS: {extra_npcs}"
+        print("ES2M_OLDPINE_RUNTIME_EXTRA_NPC:", extra_npcs[0])
+    print("ES2M OLDPINE TOPOLOGY PASS／50 房間、歷史快照 17 NPC、最新 Runtime 18 NPC、5 物件、雙向入口及拜師主線引用閉合。")
 
 
 if __name__ == "__main__":
