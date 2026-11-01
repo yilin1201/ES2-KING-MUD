@@ -9,6 +9,42 @@ from pathlib import Path
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
+# 已人工逐檔合併的 KING／ES2M 振武軍營內容；只在全部必要標記吻合時視為相容。
+KING_ZHENWU_MERGED = {
+    "custom/zhenwu/npc/lu_xinien.c": (
+        'set("nickname","徵兵官")', 'set_level(25)', 'set_power("B")',
+        '/custom/weapon/blade/steelblade', 'CYN + "魯熙年花了',
+    ),
+    "custom/zhenwu/npc/mee_pei.c": (
+        'set_attr("str", 40)', 'set_stat_maximum("gin", 600)',
+        'set_skill("berserk", 180)', 'set_skill("twohanded axe", 150)',
+        'set_power("A")', 'HEAVY_PARRY_MERIT 100000',
+        'improve_skill_exact("heavy_parry", 1)', '/obj/books/book_of_assault',
+        'set("chat_msg_combat"',
+    ),
+    "custom/zhenwu/npc/soldier.c": (
+        'set_level(5)', 'set_power("B")', 'set_stat_maximum("gin", 120)',
+        'set_stat_maximum("kee", 100)', 'set_stat_maximum("sen", 40)',
+    ),
+    "custom/zhenwu/npc/zhenwu_soldier.c": (
+        'set_level(15)', 'set_power("C")', 'set_attr("str", 25)',
+        'set_attr("cor", 22)', 'set_attr("con", 20)',
+        'set_skill("twohanded pike", 60)', 'set_skill("unarmed", 60)',
+    ),
+    "custom/zhenwu/obj/recruit_stone.c": (
+        'set("custom_faction", "soldier.ber")',
+        'set("soldier/from_fighter", 1)',
+        '強力格擋改由米沛傳授',
+    ),
+}
+KING_ZHENWU_FORBIDDEN = {
+    # 強力格擋不可在徵兵時直接授予；必須由米沛依軍人身分、等級與戰功傳授。
+    "custom/zhenwu/obj/recruit_stone.c": (
+        'me->set_skill("heavy_parry", 1);',
+        'me->set_learn("heavy_parry", 1);',
+    ),
+}
+
 def stage(snapshot, runtime):
     source = snapshot / "custom/zhenwu"
     if not source.is_dir() or not runtime.is_dir():
@@ -21,6 +57,15 @@ def stage(snapshot, runtime):
         if target.exists():
             if sha(file) == sha(target):
                 report["identical"].append(str(rel))
+            elif str(rel) in KING_ZHENWU_MERGED:
+                # 已完成逐檔合併：確認 ES2M 新增基礎資料與 KING 專屬規則同時存在。
+                content = target.read_text(encoding="utf-8")
+                required = KING_ZHENWU_MERGED[str(rel)]
+                forbidden = KING_ZHENWU_FORBIDDEN.get(str(rel), ())
+                if all(token in content for token in required) and not any(token in content for token in forbidden):
+                    report["overlay_compatible"].append(str(rel))
+                else:
+                    report["conflicts_review"].append(str(rel))
             elif str(rel) == "custom/zhenwu/npc/target_stake.c":
                 # ES2-KING overlay 只新增 accept_kill()，讓假人不喊救命；
                 # 以精確文字比對確認此已知相容差異，不覆寫任一來源檔。

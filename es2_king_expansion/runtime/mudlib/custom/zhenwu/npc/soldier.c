@@ -5,6 +5,10 @@ void create()
     set_name("小兵", ({"soldier","小兵"}));
     set_race("human");
     set_class("soldier"); set_level(5);
+    // ES2M 最新新兵狀態上限。
+    set_stat_maximum("gin", 120);
+    set_stat_maximum("kee", 100);
+    set_stat_maximum("sen", 40);
     set_skill("twohanded pike", 20);
     set_skill("dodge", 10);
     set_skill("parry", 10);

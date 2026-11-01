@@ -11,6 +11,23 @@ void create()
     set("gender", "male");
     set("nickname", "振武軍提督");
 
+    // ES2M 最新 NPC 基礎屬性、狀態與戰鬥技能；保留 KING 軍功傳授劇情。
+    set_attr("str", 40);
+    set_attr("cor", 40);
+    set_attr("con", 40);
+    set_attr("cps", 35);
+    set_attr("dex", 40);
+
+    set_stat_maximum("gin", 600);
+    set_stat_maximum("kee", 800);
+    set_stat_maximum("sen", 200);
+
+    set_skill("berserk", 180);
+    set_skill("dodge", 120);
+    set_skill("parry", 120);
+    set_skill("unarmed", 150);
+    set_skill("twohanded axe", 150);
+
 
 
     set_skill("powerblow", 180);
@@ -18,6 +35,7 @@ void create()
 
     // 狂擊由系統依軍人身分自動加入戰鬥動作（docs/CUSTOM_NPC_SKILL.md），這裡只設施展機率。
     set("chat_chance_combat", 50);
+    set("chat_msg_combat", ({ (: command, "berserk" :) }));
 
     set("long", "米沛是振武軍最高指揮官，身披戰甲，神情沉穩威嚴。他在軍中多年，以實戰與軍功一步步升任主將，看來約五十多歲。軍中傳聞具備相當實力的軍人可向他申請更進一步的職務，但相關條件目前仍待可靠資料補齊。\n");
 
