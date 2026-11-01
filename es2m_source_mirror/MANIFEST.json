@@ -775,8 +775,8 @@
     },
     {
       "path": "cmds/usr/enable.c",
-      "size": 2169,
-      "sha256": "33acab76b66a464338dde4193779231e1c8d1a3ee85f7de92ce0e08a26cc0036"
+      "size": 2305,
+      "sha256": "94354da7d6a89d389741418fe35c3ea1f2755929c4aec4e491526848bcea9d54"
     },
     {
       "path": "cmds/usr/estimate.c",
@@ -810,8 +810,8 @@
     },
     {
       "path": "cmds/usr/inventory.c",
-      "size": 1505,
-      "sha256": "bc0ec98f5319b343bb3801caa50452353b0f4678d00cb4e8f44ab1202bbf2cd0"
+      "size": 1659,
+      "sha256": "be4e11468a8133b7709f353a35b1180ffc7f1cc654d02de092286edbfd3e8f67"
     },
     {
       "path": "cmds/usr/keep.c",
@@ -2755,8 +2755,8 @@
     },
     {
       "path": "custom/legacy_npc/han_wen_suei.c",
-      "size": 1471,
-      "sha256": "187ca4ec4e381ac78b306cf8bbe61c8a694f793a8e8d2fa817c59860aeaaf6d5"
+      "size": 2745,
+      "sha256": "66b0f1300374e1934a513e4145276b8c60edb1482e70bb526cc14ee33968a23b"
     },
     {
       "path": "custom/legacy_npc/han_xiao.c",
@@ -6595,8 +6595,8 @@
     },
     {
       "path": "d/swaylan/lunmay/front_yard.c",
-      "size": 3322,
-      "sha256": "a559d359142ce41bdebf731af97aee531dd3fa4f613f7787ec30fb71048c391a"
+      "size": 3685,
+      "sha256": "28c943845eaecb3ac8aff001b8ab4805b532cae2f4e8283d97b2e9888f3c371b"
     },
     {
       "path": "d/swaylan/lunmay/gate.c",
@@ -6815,8 +6815,8 @@
     },
     {
       "path": "d/swaylan/temple/gate.c",
-      "size": 784,
-      "sha256": "b18782ab2f93558f036d76e41ef85de24f1546f8cd7d660f979814e7725cb890"
+      "size": 921,
+      "sha256": "482afec539e75c3f8ea59a1ea0ac8517c6b6f5c1a7f2e19a43a2815d4370895f"
     },
     {
       "path": "d/swaylan/temple/main_hall.c",
@@ -7135,8 +7135,8 @@
     },
     {
       "path": "d/wutang/npc/may_yin_fong.c",
-      "size": 7010,
-      "sha256": "bcface353ca45554cdbac46800b17a4956f7d7d2c856575633f1b241d3332e2a"
+      "size": 7031,
+      "sha256": "5a0dd5530fbf9ff5545c2dcd9f41ef6ed7e7064e221855b52976c166bb38b398"
     },
     {
       "path": "d/wutang/npc/old_fire.c",
@@ -7835,8 +7835,8 @@
     },
     {
       "path": "daemon/skill/advance_lunmay.c",
-      "size": 6694,
-      "sha256": "7204056cfbacc45cd84dd0fc330b70af0c7833ec3eeefd5e7667f56b2f1f656f"
+      "size": 6776,
+      "sha256": "6e5fef9dfd705e49f49436e09e0d65960cb47d9466b3ab67e40339161a6e5bf2"
     },
     {
       "path": "daemon/skill/alchemy-medication.c",
@@ -7960,8 +7960,8 @@
     },
     {
       "path": "daemon/skill/lunmay.c",
-      "size": 5546,
-      "sha256": "a604fa2dd6210405e72d3e84ed4e75a44623d50f03e56609727d2db04a1fcfc4"
+      "size": 5604,
+      "sha256": "f40f0f070dbf956c0181770d0d4a0aed1894f5e8d2b9baca0b2be089ec95df1e"
     },
     {
       "path": "daemon/skill/magic_steps.c",
@@ -8366,7 +8366,7 @@
     {
       "path": "docs/help/fighter.lunmay.txt",
       "size": 2366,
-      "sha256": "1ef10a7fd55c1eb23f0cb991775fab94b65c5ec706fa02273606b92b87954edf"
+      "sha256": "b606f8f3408b8badaa3361aa5d880d35293ad3b4b04aab88d9b7a0685b8edca1"
     },
     {
       "path": "docs/help/fighter.tiger.txt",
@@ -9909,8 +9909,5 @@
     "鏡像只保留來源 Mudlib 當前存在的檔案。",
     "KING runtime overlay 依來源同路徑覆蓋；不刪除來源中不存在的 KING 專屬檔案。",
     "Pinned Original ES2 checkout 僅供比較，絕不修改。"
-  ],
-  "sync_requested_from": "ES2M main",
-  "sync_requested_at": "2026-11-01",
-  "sync_note": "觸發既有 GitHub Actions：重新鏡像最新 ES2M Mudlib 並同步至 KING Runtime overlay；不得修改 Original ES2 基準。"
+  ]
 }

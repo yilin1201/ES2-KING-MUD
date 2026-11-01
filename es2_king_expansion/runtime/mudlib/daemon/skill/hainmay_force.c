@@ -13,17 +13,27 @@ private void create()
     art_id    = "hainmay force";
     art_name  = "寒梅心法";
     art_usage = "force";
-    art_desc  = "冷梅莊的內功心法，可運氣回精、療傷，練到一百級能進入【 明 鏡 止 水 】之境。";
+    art_desc  = "冷梅莊的內功心法，可運氣回精、療傷，心法大成之後能進入【 明 鏡 止 水 】之境。";
 
     art_entry = 10;
 
     ma_coef  = 10;
     mm_start = 30;
-    mm_minus = 11;
+    mm_minus = 29;
     mm_coef  = 10;
 
     DAEMON_D->register_skill_daemon("hainmay force");
     setup();
+}
+
+/* 學習條件：等級 15、冷梅莊弟子。 */
+int valid_learn(object me)
+{
+    if( !is_faction(me, "fighter.lunmay") )
+        return notify_fail("你不是冷梅莊弟子﹐無法修練寒梅心法。\n");
+    if( me->query_level() < 15 )
+        return notify_fail("你的根基尚淺﹐還承受不住寒梅心法的清冷真氣。\n");
+    return 1;
 }
 
 /* 內功不會拿來出招。 */
@@ -35,7 +45,7 @@ void skill_completed(object me, string skill)
     tell_object(me, HIW "你練成寒梅心法第一重﹗\n" NOR);
 }
 
-/* 每級獎勵（引擎）；每 10 級練成一重（20 級第二重……100 級第十重）。
+/* 每級獎勵（引擎）；11 級起每級精 +2～3、氣 +2、神 +0～1；每 10 級練成一重（20 級第二重……100 級第十重）。
  * 100 級：修完十重基本心法，膂力 +1、膽識 +1、精上限 +100、氣上限 +100。 */
 void skill_advanced(object me, string skill)
 {
@@ -44,6 +54,12 @@ void skill_advanced(object me, string skill)
     ::skill_advanced(me, skill);
 
     lv = me->query_skill("hainmay force", 1);
+    // 練成（10 級）之後每升一級：精 +2～3、氣 +2、神 +0～1（使用者定案，2026-10-23）。
+    if( userp(me) && lv > 10 ) {
+        me->advance_stat("gin", 2 + random(2));
+        me->advance_stat("kee", 2);
+        me->advance_stat("sen", random(2));
+    }
     if( lv >= 20 && lv <= 100 && lv % 10 == 0 )
         tell_object(me, HIW "你練成了寒梅心法第" + chinese_number(lv / 10) + "重。\n" NOR);
 
@@ -66,8 +82,7 @@ int do_exercise(object me)
 {
     if( me->query_stat("kee") < 3 || me->query_stat("gin") < 4 ) {
         tell_object(me, "你覺得氣血浮動、精力難繼﹐已無法再運轉寒梅心法。\n");
-        me->interrupt_me(me, "exhausted");
-        return 1;
+        return 0;   // 傳回 0 結束打坐（系統沒有 interrupt_me，舊寫法會一直重複這句；2026-10-23）
     }
 
     me->consume_stat("kee", 2);
@@ -77,7 +92,7 @@ int do_exercise(object me)
 
     me->improve_restored_force_tick();
     me->improve_skill_exact("hainmay force",
-        (random(me->query_attr("int")) + 1) * (me->query_attr("int") / 7)
+        COMBAT_D->int_formula_exp(me)
         + random(me->query_attr("cps")));
     return 1;
 }

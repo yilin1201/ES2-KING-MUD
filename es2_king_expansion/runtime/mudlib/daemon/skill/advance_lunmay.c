@@ -42,7 +42,7 @@ private void create()
 
     ma_coef  = 10;
     mm_start = 30;
-    mm_minus = 11;
+    mm_minus = 29;
     mm_coef  = 10;
 
     DAEMON_D->register_skill_daemon("advance_lunmay");
@@ -52,6 +52,16 @@ private void create()
 int valid_enable(string usage)
 {
     return usage == "secondhand sword" || usage == "secondhand dagger";
+}
+
+/* 學習條件：等級 30、寒梅心法 100 級。 */
+int valid_learn(object me)
+{
+    if( me->query_level() < 30 )
+        return notify_fail("你的火候未到﹐還參不透傲梅暗劍訣的精要。\n");
+    if( me->query_skill("hainmay force", 1) < 100 )
+        return notify_fail("你的寒梅心法尚未大成﹐無法修練傲梅暗劍訣。\n");
+    return 1;
 }
 
 int in_mirror(object me)
@@ -86,7 +96,7 @@ private void freeze(object me, object victim, object weapon)
  * 防具照樣減傷；耗精 120%；累積 2 點。 */
 private void two_way(object me, object victim, object weapon)
 {
-    message_vision(HIW "$N施展傲梅暗劍訣中的殺招【梅二方劍】！\n" NOR
+    message_vision(HIW "$N施展傲梅暗劍訣中的殺招【梅二方劍】！" NOR "\n"
         "$N全力施展快劍﹐幻化出了二道劍氣將$n團團圍住！\n", me, victim);
     me->add_temp("advance_lunmay/points", 2);
     silent_hits(me, victim, weapon, 2, 115, 120, HIT_MUST);
@@ -98,7 +108,7 @@ private void four_way(object me, object victim, object weapon)
 {
     int i, result;
 
-    message_vision(HIW "$N施展傲梅暗劍訣中的殺招【梅四方劍】！\n" NOR
+    message_vision(HIW "$N施展傲梅暗劍訣中的殺招【梅四方劍】！" NOR "\n"
         "$N全力施展快劍﹐幻化出了四道劍氣將$n團團圍住！\n", me, victim);
     me->add_temp("advance_lunmay/points", 4);
     for( i = 0; i < 4; i++ ) {
@@ -115,8 +125,8 @@ private void love_frost(object me, object victim, object weapon)
     me->delete_temp("advance_lunmay/points");
     message_vision("$N意猶未盡﹐手上" + (objectp(weapon) ? weapon->name() : "劍")
         + "突然斜裡翻出劍尖急顫！\n"
-        HIW "$N施展傲梅暗劍訣中的殺招「愛霜恨雪」！一股無形的冷冽氣勁朝著$n直射而出！\n" NOR,
-        me, victim);
+        HIW "$N施展傲梅暗劍訣中的殺招「愛霜恨雪」！一股無形的冷冽氣勁朝著$n直射而出！" NOR "\n",
+        me, victim, 1);   // 整句一行、不自動斷行（使用者指示，2026-10-31）
     silent_hits(me, victim, weapon, 1, 300, 150, HIT_MUST | HIT_NO_ARMOR);
 }
 
