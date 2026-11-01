@@ -70,10 +70,9 @@ def main() -> None:
         require("ES2M TRAINING DUMMY COMBAT" in combat, "生成 Runtime combatd 未套用假人戰鬥規則。")
         require("if( !dummy ) ability -= random( victim->query_skill(skill) );" in combat,
                 "假人仍會以自身技能降低攻擊命中率。")
-        require(
-            "if( !dummy && !victim->is_busy()" in combat
-            or 'if( !action["must_hit"] && !dummy && !victim->is_busy()' in combat,
-            "假人仍可閃躲或格擋。")
+        defense = combat.split("/* 要求攻擊對象進行防禦。 */", 1)[1].split("/* 傳回非零值", 1)[0]
+        require("!dummy" in defense and "victim->is_busy()" in defense,
+                "假人仍可閃躲或格擋。")
         require(
             "if( damage > 0 && !dummy ) report_status(victim);" in combat
             or 'if( damage > 0 && !action["brief"] && !dummy ) report_status(victim);' in combat,
