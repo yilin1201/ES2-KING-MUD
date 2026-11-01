@@ -25,9 +25,18 @@ def patch_file(root: Path, relative: str, marker: str, transform) -> None:
 
 
 def patch_combatd(path: Path, source: str) -> str:
-    # 原始攻擊技巧、力道、閃躲與吸收邏輯保持不變，只在傷害換算前設定可選參數。
-    source = replace_once(path, source, "        string absorb_msg;\n",
-        "        string absorb_msg;\n        int damage_pct;\n", "combatd 傷害參數區域變數")
+    # ES2M 最新 combatd 已實作相同 damage_pct/no_armor 參數；只補驗收標記，不重複改寫。
+    if ('action["damage_pct"] > 0 ? action["damage_pct"] : 100' in source
+    and 'if( action["no_armor"] ) me->set_temp("martial_no_armor", 1);' in source
+    and 'me->delete_temp("martial_no_armor")' in source):
+        anchor = '        pct = action["damage_pct"] > 0 ? action["damage_pct"] : 100;'
+        return replace_once(path, source, anchor,
+            '// ES2-KING MARTIAL DAMAGE PARAMS／沿用 ES2M 已有的倍率與 no_armor 邏輯。\\n' + anchor,
+            "combatd ES2M existing damage parameter marker")
+
+    # 若來源尚未實作參數，才套用 Original combatd 的最小補丁。
+    source = replace_once(path, source, "        string absorb_msg;\\n",
+        "        string absorb_msg;\\n        int damage_pct;\\n", "combatd 傷害參數區域變數")
     old = """        /* 若力道未完全被吸收﹐則產生傷害。 */
         /* 產生傷害﹐則視攻擊方式給予少數精熟度 -Dragoon */
         if( strength > 0 ) {"""
@@ -54,6 +63,13 @@ def patch_combatd(path: Path, source: str) -> str:
 
 
 def patch_character_combat(path: Path, source: str) -> str:
+    # ES2M Runtime 已有等價的倍率與 no_armor 邏輯；補 marker 後保留原實作。
+    if ('query_temp("martial_damage_pct")' in source
+    and '!query_temp("martial_no_armor")' in source):
+        anchor = '    if( query_temp("martial_damage_pct") > 0 )'
+        return replace_once(path, source, anchor,
+            '// ES2-KING MARTIAL DAMAGE PCT／沿用 ES2M 已有的倍率與護甲處理。\\n' + anchor,
+            "character combat ES2M existing parameter marker")
     old = """    damage += query_temp("apply/damage");
 
     // Call victim to resist this.
@@ -71,6 +87,13 @@ def patch_character_combat(path: Path, source: str) -> str:
 
 
 def patch_equip(path: Path, source: str) -> str:
+    # ES2M Runtime 已有等價的武器倍率與 no_armor 邏輯；補 marker 後保留原實作。
+    if ('owner->query_temp("martial_damage_pct")' in source
+    and '!owner->query_temp("martial_no_armor")' in source):
+        anchor = '    if( owner->query_temp("martial_damage_pct") > 0 )'
+        return replace_once(path, source, anchor,
+            '// ES2-KING MARTIAL DAMAGE PCT／沿用 ES2M 已有的武器倍率與護甲處理。\\n' + anchor,
+            "equipment ES2M existing parameter marker")
     old = """    damage += environment()->query_temp("apply/damage");
 
     damage -= random(victim->resist_damage(damage, this_object()));"""
