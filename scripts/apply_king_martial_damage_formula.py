@@ -31,12 +31,12 @@ def patch_combatd(path: Path, source: str) -> str:
     and 'me->delete_temp("martial_no_armor")' in source):
         anchor = '        pct = action["damage_pct"] > 0 ? action["damage_pct"] : 100;'
         return replace_once(path, source, anchor,
-            '// ES2-KING MARTIAL DAMAGE PARAMS／沿用 ES2M 已有的倍率與 no_armor 邏輯。\\n' + anchor,
+            '// ES2-KING MARTIAL DAMAGE PARAMS／沿用 ES2M 已有的倍率與 no_armor 邏輯。\n' + anchor,
             "combatd ES2M existing damage parameter marker")
 
     # 若來源尚未實作參數，才套用 Original combatd 的最小補丁。
-    source = replace_once(path, source, "        string absorb_msg;\\n",
-        "        string absorb_msg;\\n        int damage_pct;\\n", "combatd 傷害參數區域變數")
+    source = replace_once(path, source, "        string absorb_msg;\n",
+        "        string absorb_msg;\n        int damage_pct;\n", "combatd 傷害參數區域變數")
     old = """        /* 若力道未完全被吸收﹐則產生傷害。 */
         /* 產生傷害﹐則視攻擊方式給予少數精熟度 -Dragoon */
         if( strength > 0 ) {"""
@@ -68,7 +68,7 @@ def patch_character_combat(path: Path, source: str) -> str:
     and '!query_temp("martial_no_armor")' in source):
         anchor = '    if( query_temp("martial_damage_pct") > 0 )'
         return replace_once(path, source, anchor,
-            '// ES2-KING MARTIAL DAMAGE PCT／沿用 ES2M 已有的倍率與護甲處理。\\n' + anchor,
+            '// ES2-KING MARTIAL DAMAGE PCT／沿用 ES2M 已有的倍率與護甲處理。\n' + anchor,
             "character combat ES2M existing parameter marker")
     old = """    damage += query_temp("apply/damage");
 
@@ -92,7 +92,7 @@ def patch_equip(path: Path, source: str) -> str:
     and '!owner->query_temp("martial_no_armor")' in source):
         anchor = '    if( owner->query_temp("martial_damage_pct") > 0 )'
         return replace_once(path, source, anchor,
-            '// ES2-KING MARTIAL DAMAGE PCT／沿用 ES2M 已有的武器倍率與護甲處理。\\n' + anchor,
+            '// ES2-KING MARTIAL DAMAGE PCT／沿用 ES2M 已有的武器倍率與護甲處理。\n' + anchor,
             "equipment ES2M existing parameter marker")
     old = """    damage += environment()->query_temp("apply/damage");
 
