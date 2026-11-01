@@ -15,7 +15,17 @@ import argparse, hashlib, json, shutil
 from pathlib import Path
 
 # KING 專屬核心檔：含唯一 admin KING 的 300 級上限，不能被 ES2M 原檔盲目取代。
-PROTECTED_KING_PATHS = {"feature/char/skill.c"}
+PROTECTED_KING_PATHS = {
+    "feature/char/skill.c",
+    "daemon/skill/advance_lunmay.c",
+    "daemon/skill/hainmay_force.c",
+    "daemon/skill/lunmay.c",
+}
+FROZEN_KING_SKILLS = {
+    "daemon/skill/advance_lunmay.c",
+    "daemon/skill/hainmay_force.c",
+    "daemon/skill/lunmay.c",
+}
 
 def digest(path: Path) -> str:
     h = hashlib.sha256()
@@ -24,8 +34,8 @@ def digest(path: Path) -> str:
             h.update(block)
     return h.hexdigest()
 
-def verify_king_owner_guards(overlay: Path) -> None:
-    """同步前先確認唯一 KING Owner 的管理權與技能上限保護仍存在。"""
+def verify_king_owner_guards(overlay: Path, repo_root: Path) -> None:
+    """同步前後確認 KING Owner 與三項凍結冷梅武功仍完整。"""
     checks = {
         "feature/char/skill.c": ("es2_king_skill_cap", 'query("id") == "king"'),
         "adm/daemons/kadmind.c": ('query("id") == "king"', "is_owner"),
@@ -41,6 +51,15 @@ def verify_king_owner_guards(overlay: Path) -> None:
             if marker not in raw:
                 raise SystemExit(f"FAIL: KING owner guard marker missing in {rel}: {marker}")
 
+    # 冷梅劍法、寒梅心法、傲梅暗劍訣：逐位元保留已確認 KING Frozen Baseline。
+    for rel in FROZEN_KING_SKILLS:
+        baseline = repo_root / "es2m_snapshot/king_frozen_baseline" / rel
+        target = overlay / rel
+        if not baseline.is_file() or not target.is_file():
+            raise SystemExit(f"FAIL: frozen KING martial baseline missing: {rel}")
+        if digest(baseline) != digest(target):
+            raise SystemExit(f"FAIL: frozen KING martial baseline mismatch: {rel}")
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--source", required=True, type=Path, help="latest ES2M mirror mudlib")
@@ -53,7 +72,7 @@ def main() -> int:
         if not p.is_dir():
             raise SystemExit(f"FAIL: required directory missing: {p}")
     a.overlay.mkdir(parents=True, exist_ok=True)
-    verify_king_owner_guards(a.overlay)
+    verify_king_owner_guards(a.overlay, Path(__file__).resolve().parents[1])
 
     source_files = sorted(p for p in a.source.rglob("*") if p.is_file())
     copied_new, overwritten, unchanged, original_conflicts, preserved_king = [], [], [], [], []
@@ -78,12 +97,21 @@ def main() -> int:
         if rel_name in PROTECTED_KING_PATHS:
             if not dest.is_file():
                 raise SystemExit(f"FAIL: protected KING file missing: {rel_name}")
-            king_text = dest.read_text(encoding="utf-8", errors="replace")
-            if "es2_king_skill_cap" not in king_text or 'query("id") == "king"' not in king_text:
-                raise SystemExit(f"FAIL: protected KING owner skill cap not verified: {rel_name}")
+            if rel_name == "feature/char/skill.c":
+                king_text = dest.read_text(encoding="utf-8", errors="replace")
+                if "es2_king_skill_cap" not in king_text or 'query("id") == "king"' not in king_text:
+                    raise SystemExit(f"FAIL: protected KING owner skill cap not verified: {rel_name}")
+                status = "preserved-KING-owner-customization-pending-ES2M-merge"
+            elif rel_name in FROZEN_KING_SKILLS:
+                baseline = Path(__file__).resolve().parents[1] / "es2m_snapshot/king_frozen_baseline" / rel
+                if not baseline.is_file() or digest(dest) != digest(baseline):
+                    raise SystemExit(f"FAIL: frozen KING martial baseline mismatch: {rel_name}")
+                status = "preserved-KING-frozen-martial-baseline"
+            else:
+                raise SystemExit(f"FAIL: unclassified protected KING path: {rel_name}")
             preserved_king.append({
                 "path": rel_name,
-                "status": "preserved-KING-owner-customization-pending-ES2M-merge",
+                "status": status,
                 "king_sha256": digest(dest),
                 "es2m_sha256": src_hash,
             })
@@ -116,7 +144,7 @@ def main() -> int:
             })
 
     # 寫入後再次驗證，確保 KING Owner 權限檔案仍存在。
-    verify_king_owner_guards(a.overlay)
+    verify_king_owner_guards(a.overlay, Path(__file__).resolve().parents[1])
 
     report = {
         "policy": "ES2M-source-authoritative-for-matching-paths; overwrite same-path overlay files except protected KING owner skill-cap file; never delete KING-only files; pinned Original ES2 is read-only",
