@@ -2,10 +2,10 @@
   "purpose": "ES2M 最新原始 Mudlib 唯讀鏡像；不得直接視為 Original ES2，也不直接取代 KING 專屬資料。",
   "source_repository": "wolfer168/es2-webmud",
   "source_branch": "main",
-  "source_commit": "a60bd653e75000614b3857efa1dddcd736dc3324",
+  "source_commit": "42c212eb386ed1d66f8fc7b619af4c0a4539259c",
   "source_path": "source/upstream/mudlib/",
   "mirror_path": "es2m_source_mirror/mudlib/",
-  "file_count": 1979,
+  "file_count": 1990,
   "hash_algorithm": "SHA-256",
   "files": [
     {
@@ -90,8 +90,8 @@
     },
     {
       "path": "adm/daemons/logind.c",
-      "size": 32760,
-      "sha256": "355852a98f0fa958f54bdefe0c04af548bf74917bf7ab2090b6217705f95fc71"
+      "size": 33579,
+      "sha256": "60786a09c1dbd1001b65e45cd6cbde1d6aee80ba40d4bb73f441ec277da3407f"
     },
     {
       "path": "adm/daemons/natured.c",
@@ -165,8 +165,8 @@
     },
     {
       "path": "adm/guild/portal.c",
-      "size": 693,
-      "sha256": "05930d8360b79883c325968e251f3ffbe473bebaa705e11d30797ced714145c6"
+      "size": 726,
+      "sha256": "350bcb8024e43773eb7e3d1b73de718cea996bc4a19c585ba8fb00aff2803d4f"
     },
     {
       "path": "adm/intermud/_gchannel.c",
@@ -850,8 +850,8 @@
     },
     {
       "path": "cmds/usr/praise.c",
-      "size": 2566,
-      "sha256": "d489ecc4317d7acf28532a1621ebaff62060c72c14c337df15627e597f038df6"
+      "size": 3021,
+      "sha256": "a288eadc15b522c2846863cfea3e3845c85471ef1c16c60a65d37449309f03ff"
     },
     {
       "path": "cmds/usr/quit.c",
@@ -890,8 +890,8 @@
     },
     {
       "path": "cmds/usr/tune.c",
-      "size": 1340,
-      "sha256": "c2281de6a52e93ac9f350a6b79c9a50d366dbda82998e0b7fee00d24e1470e18"
+      "size": 1999,
+      "sha256": "25bb98c0c2b28fe9feacf901f019768302b2fb163635db6f9bff788f1516a7a3"
     },
     {
       "path": "cmds/usr/undescribe.c",
@@ -3020,8 +3020,8 @@
     },
     {
       "path": "custom/legacy_npc/ro_yi.c",
-      "size": 1877,
-      "sha256": "a8ff48c6062cc465dcf706c993b3d03eb8dbd3cb754d7a79194af05e3a560b81"
+      "size": 5318,
+      "sha256": "01d74df5d36fa722517199580ae5f07806538a235489115ea19922b2b58cecdf"
     },
     {
       "path": "custom/legacy_npc/rong_shi_guo.c",
@@ -4360,8 +4360,8 @@
     },
     {
       "path": "custom/weapon/sword/sword_of_wind_spring.c",
-      "size": 1222,
-      "sha256": "a320f684d4eea455a3d53f7fb77297d6763c34c3fdaf5497daea99446e46e3da"
+      "size": 2358,
+      "sha256": "d108e6c38a6392778e2c23f17d731102f2d40a8b5950bccba65ed61ade40bfa5"
     },
     {
       "path": "custom/weapon/sword/white_dragon_fang.c",
@@ -4372,6 +4372,11 @@
       "path": "custom/weapon/sword/white_sword.c",
       "size": 718,
       "sha256": "6ee417420bf84d5be29e9d8473e9fcb895503394d298770f9dfa32a0980063b0"
+    },
+    {
+      "path": "custom/weapon/sword/windfury_sword.c",
+      "size": 1686,
+      "sha256": "d9c6d85a44f48d9a7fe851ce4124d393b8091b86f05db6a32023307fc2e4c156"
     },
     {
       "path": "custom/weapon/sword/yiluo_sword.c",
@@ -6335,8 +6340,8 @@
     },
     {
       "path": "d/swaylan/buxuan/npc/apprentice.c",
-      "size": 832,
-      "sha256": "c601960663afb9e5efbf4851bf187ed5831ac2a710c770ff31f7a1bb431eb261"
+      "size": 945,
+      "sha256": "dddfc20a621161867ab50f0734193b2336af3d18508a0863a5aeaa611d06453c"
     },
     {
       "path": "d/swaylan/buxuan/npc/farmer.c",
@@ -7705,8 +7710,8 @@
     },
     {
       "path": "daemon/misc/npc_skill.c",
-      "size": 13071,
-      "sha256": "84f9514c924251d164568c6b22b5e8f6d82c9443f2d8773a8399a404e96cefdf"
+      "size": 13593,
+      "sha256": "7af349d0616dfdddcc07981b402a178ec5d9f072eea176d503f5add08a7e034c"
     },
     {
       "path": "daemon/misc/traveler.c",
@@ -7899,6 +7904,11 @@
       "sha256": "51e4c51233585a0412093dc448aac4899dd2e33ea53a1a5e474e5947ac128fa2"
     },
     {
+      "path": "daemon/skill/close_myst-sword.c",
+      "size": 3877,
+      "sha256": "e8d42a1f4a8021f32f162e253f4dd011e523f59791f10a7bbc0ee36c8a9f35c8"
+    },
+    {
       "path": "daemon/skill/dagger.c",
       "size": 1875,
       "sha256": "83a57242a85e558e70a16ee1d1e65e5a4921d2da35b1e9b6ca8526030f8d8d6f"
@@ -7982,6 +7992,16 @@
       "path": "daemon/skill/mayin.c",
       "size": 2816,
       "sha256": "a2e3e0531eb2c76f8bdad743ab98ced5adf07c698129c5bf3ca5dabf924b5ee2"
+    },
+    {
+      "path": "daemon/skill/myst-force.c",
+      "size": 6597,
+      "sha256": "19d7c68065925d027bf0e0be1f6d320d1aae92f5041f2676887f2738f8e347b3"
+    },
+    {
+      "path": "daemon/skill/myst-steps.c",
+      "size": 4356,
+      "sha256": "0fc71f7f9c8c70385d5631dc92983538451b0885b620299625959b343aa969c6"
     },
     {
       "path": "daemon/skill/mysticism.c",
@@ -8294,6 +8314,11 @@
       "sha256": "d2cd54e0610d40831e2be98bb191af62fb75618766bb22a38e885d378c043252"
     },
     {
+      "path": "docs/help/berserk.txt",
+      "size": 883,
+      "sha256": "acfee598f7fc1e5222c3946eb6f4065ae556a3e00d98016e684f67030949b8f5"
+    },
+    {
       "path": "docs/help/blackteeth.txt",
       "size": 993,
       "sha256": "4834d507dd694155c4049df0421c1f1ce340f6022620f2b10197e6830e075359"
@@ -8317,6 +8342,11 @@
       "path": "docs/help/chivi_sutra.txt",
       "size": 1204,
       "sha256": "811ce4d865b3acbc14fbc828e4623dd4c6e88c547852d211a73d6783607b6131"
+    },
+    {
+      "path": "docs/help/close_myst-sword.txt",
+      "size": 457,
+      "sha256": "f114813f3f34791ae05fca0372afd083adde166613c5eb6a1fb0aed7579eda1b"
     },
     {
       "path": "docs/help/combat.txt",
@@ -8379,6 +8409,11 @@
       "sha256": "2a335d428e11d57af0cc0f03db6f5cd73742d190d0a92799f0f285bdee2530f6"
     },
     {
+      "path": "docs/help/heavy_parry.txt",
+      "size": 789,
+      "sha256": "72b040857c17034fc27020d418362e98e36a3e141f4791525af78e3a4b1b1065"
+    },
+    {
       "path": "docs/help/home_help.txt",
       "size": 282,
       "sha256": "1c92c742119f67349681918e4951ff18a471c87ae707b70085045b021c6d506f"
@@ -8434,6 +8469,16 @@
       "sha256": "b51df868672782d653b5d0658b68705f97d1e3b320062c62e072134c854043dc"
     },
     {
+      "path": "docs/help/myst-force.txt",
+      "size": 1012,
+      "sha256": "b9bfb3bc670b4530b0434a00bea5537f00f761006c0d0b9fede29b7cc505c06f"
+    },
+    {
+      "path": "docs/help/myst-steps.txt",
+      "size": 502,
+      "sha256": "61acd33d02d5cabd590c049e8ea328b0ef35715226551e7c591851380c114c19"
+    },
+    {
       "path": "docs/help/newbie.txt",
       "size": 578,
       "sha256": "c1fc8d06a900f374f77d11a732e24f8e614fece6f834d372d9a057c3c5b0a0d6"
@@ -8442,6 +8487,11 @@
       "path": "docs/help/potency-needle.txt",
       "size": 1042,
       "sha256": "2d3419f266313741659f35cbc92bba653bf48b33b251fedf69564dd08a76abe7"
+    },
+    {
+      "path": "docs/help/powerblow.txt",
+      "size": 594,
+      "sha256": "a9d4f813dfc5aa4f17067ff4f2011ad79063159aa20b5222969c9e5779d6775a"
     },
     {
       "path": "docs/help/rainner.txt",
@@ -8459,6 +8509,11 @@
       "sha256": "b7de1469c041fd16a2dcf321189160bc9499ebdb7ec46eb5bcda6ebb208bbcdc"
     },
     {
+      "path": "docs/help/scholar.myst.txt",
+      "size": 1233,
+      "sha256": "27977a096b347e74b585f74043f416b568a0e9582206bae59647326093ccf161"
+    },
+    {
       "path": "docs/help/skill_help.txt",
       "size": 403,
       "sha256": "b26ed123fb9f482b15634707c6a4f776432158d83015a00bff9826ba2121c010"
@@ -8470,8 +8525,8 @@
     },
     {
       "path": "docs/help/soldier.ber.txt",
-      "size": 1306,
-      "sha256": "12fb832bbef47e78bcce64ec9a721b98e2fb77f88c87ae2c34217a3d2768246f"
+      "size": 1952,
+      "sha256": "9720a9329160881f61026f8462389f33d4f3da59fb6d6d631918cefe1ce4aedf"
     },
     {
       "path": "docs/help/taoism_of_darkness.txt",
@@ -8670,8 +8725,8 @@
     },
     {
       "path": "feature/char/skill.c",
-      "size": 19024,
-      "sha256": "be9f8f95417a2029859b55be707174b45efebd41e0314789e6bf5abdec68ceff"
+      "size": 19414,
+      "sha256": "79b2cb42db3b092f5ba098a568aafd53ebb2e11087b6534e3565141c701499a5"
     },
     {
       "path": "feature/char/team.c",

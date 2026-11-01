@@ -39,7 +39,7 @@ private void create()
 
     ma_coef  = 10;
     mm_start = 30;
-    mm_minus = 11;
+    mm_minus = 29;
     mm_coef  = 10;
 
     DAEMON_D->register_skill_daemon("lunmay");
@@ -47,6 +47,14 @@ private void create()
 }
 
 int valid_enable(string usage) { return usage == "sword" || usage == "parry"; }
+
+/* 學習條件：冷梅莊弟子。 */
+int valid_learn(object me)
+{
+    if( !is_faction(me, "fighter.lunmay") )
+        return notify_fail("你不是冷梅莊弟子﹐無法修練冷梅劍法。\n");
+    return 1;
+}
 
 /* 明鏡止水狀態（寒梅心法 exert mirror，且內功 enable 寒梅心法）。 */
 int in_mirror(object me)
@@ -62,7 +70,7 @@ void attack_using(object me, object opponent, object weapon)
     &&  random(100) < scaled_chance(me, 30) ) {
         message_vision(HIW "\n$N催運寒梅心法使出【寒霜三千里】劍氣﹐"
             + (objectp(weapon) ? weapon->name() : "劍") + "劍刃嗤嗤做響﹐"
-            + "$n全身瞬間蒙上一層白霜！\n\n" NOR, me, opponent);
+            + "$n全身瞬間蒙上一層白霜！" NOR "\n\n", me, opponent, 1);   // 整句一行、不自動斷行（2026-10-31）
         opponent->start_busy(2);
     }
     ::attack_using(me, opponent, weapon);

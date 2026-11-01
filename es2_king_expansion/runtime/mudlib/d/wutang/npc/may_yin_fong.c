@@ -119,12 +119,11 @@ int accept_info(object ob, string type)
 
 int accept_apprentice(object me)
 {
-    // Original ES2 Race ID 為 rainnar；保留 ES2-KING 正式種族代碼。
     if( me->query_class() != "commoner" ) {
         command("say 閣下的志向相當明確，又何必來糾纏老朽呢？");
         return 0;
     }
-    if( member_array(me->query_race(), ({ "ashura", "malik", "rainnar" })) != -1 ) {
+    if( member_array(me->query_race(), ({ "ashura", "malik", "rainner" })) != -1 ) {
         command("say 閣下似乎不適合修習本門武功。");
         return 0;
     }
@@ -151,8 +150,6 @@ int init_apprentice(object me)
 
 int acquire_skill(object me, string skill)
 {
-    int entry_level;
-
     if( me->query("custom_faction") != FACTION ) return 0;
 
     switch( skill ) {
@@ -180,13 +177,10 @@ int acquire_skill(object me, string skill)
         return 0;
     }
 
-    /* 依技能真正的入門級別補足學成點數，避免一律以 1 級門檻計算。 */
-    entry_level = me->skill_entry_level(skill);
-    if( entry_level < 1 ) entry_level = 1;
-    if( me->query_learn(skill) >= me->skill_threshold(skill, entry_level) )
+    if( me->query_learn(skill) >= me->skill_threshold(skill, 1) )
         return notify_fail("梅影風淡淡說道：入門的要訣已經傳給你了，往後全看你自己。\n");
 
-    me->improve_skill_exact(skill, me->skill_threshold(skill, entry_level) - me->query_learn(skill));
+    me->improve_skill_exact(skill, me->skill_threshold(skill, 1) - me->query_learn(skill));
     tell_object(me, CYN + "梅影風將「" + to_chinese(skill) + "」的入門要訣傳授給你。\n" NOR);
     return 1;
 }

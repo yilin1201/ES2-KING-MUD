@@ -103,13 +103,12 @@ void teach_literate()
 	message_vision(CYN + "$N跟著念道﹕" + txt + "。\n" NOR, ob);
 
 	/* 挑選書生的條件 */
-	// Original ES2 Race ID 為 rainnar；ES2M 的 rainner 拼寫需在 KING 相容層校正。
 	// 加個random, 不然每講一句就問 -Dragoon
 	if( interactive(ob) && random(10) > 7 
 	&&  can_be_scholar(ob)
 	&&  !ob->query_temp("pending/picked_by_whaiz")
 	&&  member_array(ob->query_race(), ({
-		"avatar", "human", "rainnar", "malik", "woochan", "jiaojao", "yaksa"
+		"avatar", "human", "rainner", "malik", "woochan", "jiaojao", "yaksa"
 	    })) != -1
 	&&  ob->query_attr("int") > random(20) )
 	    do_chat( (: pick_student, ob :) );

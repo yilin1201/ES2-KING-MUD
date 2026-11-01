@@ -1,14 +1,35 @@
 {
-  "policy": "ES2M-source-authoritative-for-all-matching-paths-in-KING-runtime-overlay; overwrite same-path overlay files; pinned Original ES2 checkout is never modified",
+  "policy": "ES2M-source-authoritative-for-matching-paths; overwrite same-path overlay files except protected KING owner skill-cap file; never delete KING-only files; pinned Original ES2 is read-only",
   "source_root": "es2m_source_mirror/mudlib",
   "original_reference_root": "/tmp/original-es2/mudlib",
   "overlay_root": "es2_king_expansion/runtime/mudlib",
-  "source_file_count": 1979,
-  "copied_new_count": 2,
-  "overwritten_existing_king_count": 13,
-  "already_matching_count": 1964,
-  "source_differs_from_pinned_original_count": 180,
+  "source_file_count": 1990,
+  "copied_new_count": 13,
+  "overwritten_existing_king_count": 15,
+  "already_matching_count": 1961,
+  "preserved_king_custom_count": 1,
+  "source_differs_from_pinned_original_count": 182,
   "copied_new": [
+    {
+      "path": "custom/weapon/sword/windfury_sword.c",
+      "status": "copied-new-path",
+      "sha256": "d9c6d85a44f48d9a7fe851ce4124d393b8091b86f05db6a32023307fc2e4c156"
+    },
+    {
+      "path": "daemon/skill/close_myst-sword.c",
+      "status": "copied-new-path",
+      "sha256": "e8d42a1f4a8021f32f162e253f4dd011e523f59791f10a7bbc0ee36c8a9f35c8"
+    },
+    {
+      "path": "daemon/skill/myst-force.c",
+      "status": "copied-new-path",
+      "sha256": "19d7c68065925d027bf0e0be1f6d320d1aae92f5041f2676887f2738f8e347b3"
+    },
+    {
+      "path": "daemon/skill/myst-steps.c",
+      "status": "copied-new-path",
+      "sha256": "0fc71f7f9c8c70385d5631dc92983538451b0885b620299625959b343aa969c6"
+    },
     {
       "path": "data/chinese.o",
       "status": "copied-new-path",
@@ -18,9 +39,56 @@
       "path": "data/emoted.o",
       "status": "copied-new-path",
       "sha256": "2c384ba97da0f36083e64f756105ecc1cef39ecdbebcac2bb68a1f532b95a1f2"
+    },
+    {
+      "path": "docs/help/berserk.txt",
+      "status": "copied-new-path",
+      "sha256": "acfee598f7fc1e5222c3946eb6f4065ae556a3e00d98016e684f67030949b8f5"
+    },
+    {
+      "path": "docs/help/close_myst-sword.txt",
+      "status": "copied-new-path",
+      "sha256": "f114813f3f34791ae05fca0372afd083adde166613c5eb6a1fb0aed7579eda1b"
+    },
+    {
+      "path": "docs/help/heavy_parry.txt",
+      "status": "copied-new-path",
+      "sha256": "72b040857c17034fc27020d418362e98e36a3e141f4791525af78e3a4b1b1065"
+    },
+    {
+      "path": "docs/help/myst-force.txt",
+      "status": "copied-new-path",
+      "sha256": "b9bfb3bc670b4530b0434a00bea5537f00f761006c0d0b9fede29b7cc505c06f"
+    },
+    {
+      "path": "docs/help/myst-steps.txt",
+      "status": "copied-new-path",
+      "sha256": "61acd33d02d5cabd590c049e8ea328b0ef35715226551e7c591851380c114c19"
+    },
+    {
+      "path": "docs/help/powerblow.txt",
+      "status": "copied-new-path",
+      "sha256": "a9d4f813dfc5aa4f17067ff4f2011ad79063159aa20b5222969c9e5779d6775a"
+    },
+    {
+      "path": "docs/help/scholar.myst.txt",
+      "status": "copied-new-path",
+      "sha256": "27977a096b347e74b585f74043f416b568a0e9582206bae59647326093ccf161"
     }
   ],
   "overwritten_existing_king": [
+    {
+      "path": "adm/daemons/logind.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "355852a98f0fa958f54bdefe0c04af548bf74917bf7ab2090b6217705f95fc71",
+      "source_sha256": "60786a09c1dbd1001b65e45cd6cbde1d6aee80ba40d4bb73f441ec277da3407f"
+    },
+    {
+      "path": "adm/guild/portal.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "05930d8360b79883c325968e251f3ffbe473bebaa705e11d30797ced714145c6",
+      "source_sha256": "350bcb8024e43773eb7e3d1b73de718cea996bc4a19c585ba8fb00aff2803d4f"
+    },
     {
       "path": "cmds/std/sneak.c",
       "status": "overwritten-existing-KING-file",
@@ -28,46 +96,52 @@
       "source_sha256": "69e847b4b8d38eec5e1abdf30088047bc9c272c59fdb070841ceddf41e0f2b15"
     },
     {
-      "path": "cmds/usr/enable.c",
+      "path": "cmds/usr/praise.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "33acab76b66a464338dde4193779231e1c8d1a3ee85f7de92ce0e08a26cc0036",
-      "source_sha256": "94354da7d6a89d389741418fe35c3ea1f2755929c4aec4e491526848bcea9d54"
+      "previous_king_sha256": "d489ecc4317d7acf28532a1621ebaff62060c72c14c337df15627e597f038df6",
+      "source_sha256": "a288eadc15b522c2846863cfea3e3845c85471ef1c16c60a65d37449309f03ff"
     },
     {
-      "path": "cmds/usr/inventory.c",
+      "path": "cmds/usr/tune.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "bc0ec98f5319b343bb3801caa50452353b0f4678d00cb4e8f44ab1202bbf2cd0",
-      "source_sha256": "be4e11468a8133b7709f353a35b1180ffc7f1cc654d02de092286edbfd3e8f67"
+      "previous_king_sha256": "c2281de6a52e93ac9f350a6b79c9a50d366dbda82998e0b7fee00d24e1470e18",
+      "source_sha256": "25bb98c0c2b28fe9feacf901f019768302b2fb163635db6f9bff788f1516a7a3"
     },
     {
-      "path": "custom/legacy_npc/han_wen_suei.c",
+      "path": "custom/legacy_npc/ro_yi.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "187ca4ec4e381ac78b306cf8bbe61c8a694f793a8e8d2fa817c59860aeaaf6d5",
-      "source_sha256": "66b0f1300374e1934a513e4145276b8c60edb1482e70bb526cc14ee33968a23b"
+      "previous_king_sha256": "a8ff48c6062cc465dcf706c993b3d03eb8dbd3cb754d7a79194af05e3a560b81",
+      "source_sha256": "01d74df5d36fa722517199580ae5f07806538a235489115ea19922b2b58cecdf"
+    },
+    {
+      "path": "custom/weapon/sword/sword_of_wind_spring.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "a320f684d4eea455a3d53f7fb77297d6763c34c3fdaf5497daea99446e46e3da",
+      "source_sha256": "d108e6c38a6392778e2c23f17d731102f2d40a8b5950bccba65ed61ade40bfa5"
     },
     {
       "path": "d/snow/npc/teacher.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "c2609fcfc4635533b98f75fed875392afd367baa43cfba52f3c0986d28fc413a",
+      "previous_king_sha256": "129b04b74a98f1b22c7485207d079e33a71e61527cace4a6f20bf601d4ce3cc0",
       "source_sha256": "73dfbdfaeaad62dd42171a5baa33b60eea766c39841a3865db4214bf663ce94a"
     },
     {
-      "path": "d/swaylan/lunmay/front_yard.c",
+      "path": "d/swaylan/buxuan/npc/apprentice.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "a559d359142ce41bdebf731af97aee531dd3fa4f613f7787ec30fb71048c391a",
-      "source_sha256": "28c943845eaecb3ac8aff001b8ab4805b532cae2f4e8283d97b2e9888f3c371b"
-    },
-    {
-      "path": "d/swaylan/temple/gate.c",
-      "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "b18782ab2f93558f036d76e41ef85de24f1546f8cd7d660f979814e7725cb890",
-      "source_sha256": "482afec539e75c3f8ea59a1ea0ac8517c6b6f5c1a7f2e19a43a2815d4370895f"
+      "previous_king_sha256": "c601960663afb9e5efbf4851bf187ed5831ac2a710c770ff31f7a1bb431eb261",
+      "source_sha256": "dddfc20a621161867ab50f0734193b2336af3d18508a0863a5aeaa611d06453c"
     },
     {
       "path": "d/wutang/npc/may_yin_fong.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "8d855404add404f4da6d5fc3e794943f0e88d9006a66c8671e8f703602cdf7d0",
+      "previous_king_sha256": "fe28569a05eeb3d5e84804869be5dda61a306ef1703243e01b1b0187d51c29ca",
       "source_sha256": "5a0dd5530fbf9ff5545c2dcd9f41ef6ed7e7064e221855b52976c166bb38b398"
+    },
+    {
+      "path": "daemon/misc/npc_skill.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "84f9514c924251d164568c6b22b5e8f6d82c9443f2d8773a8399a404e96cefdf",
+      "source_sha256": "7af349d0616dfdddcc07981b402a178ec5d9f072eea176d503f5add08a7e034c"
     },
     {
       "path": "daemon/skill/advance_lunmay.c",
@@ -88,16 +162,10 @@
       "source_sha256": "f40f0f070dbf956c0181770d0d4a0aed1894f5e8d2b9baca0b2be089ec95df1e"
     },
     {
-      "path": "docs/help/fighter.lunmay.txt",
+      "path": "docs/help/soldier.ber.txt",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "1ef10a7fd55c1eb23f0cb991775fab94b65c5ec706fa02273606b92b87954edf",
-      "source_sha256": "b606f8f3408b8badaa3361aa5d880d35293ad3b4b04aab88d9b7a0685b8edca1"
-    },
-    {
-      "path": "feature/char/skill.c",
-      "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "913252ad2c4604d10b5e5a551af1c2149a290c423fc1986f684d248c1d6e1990",
-      "source_sha256": "be9f8f95417a2029859b55be707174b45efebd41e0314789e6bf5abdec68ceff"
+      "previous_king_sha256": "12fb832bbef47e78bcce64ec9a721b98e2fb77f88c87ae2c34217a3d2768246f",
+      "source_sha256": "9720a9329160881f61026f8462389f33d4f3da59fb6d6d631918cefe1ce4aedf"
     }
   ],
   "already_matching": [
@@ -182,11 +250,6 @@
       "sha256": "8966aaae2fcf7331a577ddcabfcf8fad55fcb99f865d9ca7e8a27b9dc21cf7b8"
     },
     {
-      "path": "adm/daemons/logind.c",
-      "status": "already-matches-ES2M",
-      "sha256": "355852a98f0fa958f54bdefe0c04af548bf74917bf7ab2090b6217705f95fc71"
-    },
-    {
       "path": "adm/daemons/natured.c",
       "status": "already-matches-ES2M",
       "sha256": "9efd97047cb3794099f8fedafa31e18d088052dc03a1ba9490c62cc450ffe01f"
@@ -255,11 +318,6 @@
       "path": "adm/guild/meetingroom.c",
       "status": "already-matches-ES2M",
       "sha256": "5881011550dec6efd74470bfbc43caebb6bf4d32ea3252ad0d69c5b91144b9b6"
-    },
-    {
-      "path": "adm/guild/portal.c",
-      "status": "already-matches-ES2M",
-      "sha256": "05930d8360b79883c325968e251f3ffbe473bebaa705e11d30797ced714145c6"
     },
     {
       "path": "adm/intermud/_gchannel.c",
@@ -862,6 +920,11 @@
       "sha256": "7af64641534808b9088ccd59de62d8e0a00d3bdcb496e152a10e4dfffc917978"
     },
     {
+      "path": "cmds/usr/enable.c",
+      "status": "already-matches-ES2M",
+      "sha256": "94354da7d6a89d389741418fe35c3ea1f2755929c4aec4e491526848bcea9d54"
+    },
+    {
       "path": "cmds/usr/estimate.c",
       "status": "already-matches-ES2M",
       "sha256": "eacbaf2a8c89dce929c5faf60fc525f9f81756fd362bbfd79c1ed2ff60abd35d"
@@ -890,6 +953,11 @@
       "path": "cmds/usr/id.c",
       "status": "already-matches-ES2M",
       "sha256": "79b7e81486e501187d8043646cd0c166d60c35fcc057e3351db0550b2b6ba06e"
+    },
+    {
+      "path": "cmds/usr/inventory.c",
+      "status": "already-matches-ES2M",
+      "sha256": "be4e11468a8133b7709f353a35b1180ffc7f1cc654d02de092286edbfd3e8f67"
     },
     {
       "path": "cmds/usr/keep.c",
@@ -927,11 +995,6 @@
       "sha256": "3e86d4bdb154abe55901918d40f69a7750fa9924092a88e458a5580eac8b1dc7"
     },
     {
-      "path": "cmds/usr/praise.c",
-      "status": "already-matches-ES2M",
-      "sha256": "d489ecc4317d7acf28532a1621ebaff62060c72c14c337df15627e597f038df6"
-    },
-    {
       "path": "cmds/usr/quit.c",
       "status": "already-matches-ES2M",
       "sha256": "4ae7260185a3d81aaee42dab87d36d7ba99cad8ea00ffd8cd3d4d7a21565cd78"
@@ -965,11 +1028,6 @@
       "path": "cmds/usr/to.c",
       "status": "already-matches-ES2M",
       "sha256": "0a01db7fedcb4a35a4f4e2497b0db6d41328101393d8154adce8cad3752454b2"
-    },
-    {
-      "path": "cmds/usr/tune.c",
-      "status": "already-matches-ES2M",
-      "sha256": "c2281de6a52e93ac9f350a6b79c9a50d366dbda82998e0b7fee00d24e1470e18"
     },
     {
       "path": "cmds/usr/undescribe.c",
@@ -2832,6 +2890,11 @@
       "sha256": "68f587ce1cf5b8131860fa33a5c845a9bf66f74ca834f885029c643b333c370c"
     },
     {
+      "path": "custom/legacy_npc/han_wen_suei.c",
+      "status": "already-matches-ES2M",
+      "sha256": "66b0f1300374e1934a513e4145276b8c60edb1482e70bb526cc14ee33968a23b"
+    },
+    {
       "path": "custom/legacy_npc/han_xiao.c",
       "status": "already-matches-ES2M",
       "sha256": "6cdc3751bc1513eb8df793725be3f60d62b182617622ad88c11cad0067fddde4"
@@ -3090,11 +3153,6 @@
       "path": "custom/legacy_npc/ren_xiao_xiao.c",
       "status": "already-matches-ES2M",
       "sha256": "9c88e8f037b18ac804f3db460c3d83c12f1ace50053c3978fe0364735795a6d0"
-    },
-    {
-      "path": "custom/legacy_npc/ro_yi.c",
-      "status": "already-matches-ES2M",
-      "sha256": "a8ff48c6062cc465dcf706c993b3d03eb8dbd3cb754d7a79194af05e3a560b81"
     },
     {
       "path": "custom/legacy_npc/rong_shi_guo.c",
@@ -4430,11 +4488,6 @@
       "path": "custom/weapon/sword/sword_of_redrune.c",
       "status": "already-matches-ES2M",
       "sha256": "cfc05e368c75307a24f1d28e2ffe2299a335d4d43f377d6de1cc1ad617289772"
-    },
-    {
-      "path": "custom/weapon/sword/sword_of_wind_spring.c",
-      "status": "already-matches-ES2M",
-      "sha256": "a320f684d4eea455a3d53f7fb77297d6763c34c3fdaf5497daea99446e46e3da"
     },
     {
       "path": "custom/weapon/sword/white_dragon_fang.c",
@@ -6402,11 +6455,6 @@
       "sha256": "d3a5c40eadf3ae538136dad22a6d90089e91b4e3f6a0e6fe2be1afb967d6d4de"
     },
     {
-      "path": "d/swaylan/buxuan/npc/apprentice.c",
-      "status": "already-matches-ES2M",
-      "sha256": "c601960663afb9e5efbf4851bf187ed5831ac2a710c770ff31f7a1bb431eb261"
-    },
-    {
       "path": "d/swaylan/buxuan/npc/farmer.c",
       "status": "already-matches-ES2M",
       "sha256": "0b9ad0e6b3652408460dbb541631665a8f7f5619cca788b30b01da1486751159"
@@ -6662,6 +6710,11 @@
       "sha256": "687fb02daa88f9191ebd5a62e0166ae19e870f54868618655b67aeb2ae479e73"
     },
     {
+      "path": "d/swaylan/lunmay/front_yard.c",
+      "status": "already-matches-ES2M",
+      "sha256": "28c943845eaecb3ac8aff001b8ab4805b532cae2f4e8283d97b2e9888f3c371b"
+    },
+    {
       "path": "d/swaylan/lunmay/gate.c",
       "status": "already-matches-ES2M",
       "sha256": "2535f22babfb387c32d9e4e96d4089642d4901e13d4a7f8ca1eafbdf316e60ca"
@@ -6875,6 +6928,11 @@
       "path": "d/swaylan/temple/dorm.c",
       "status": "already-matches-ES2M",
       "sha256": "d3ade0ae5a0c79f3f173be21b28cd24c2b9592907c60181bc91c69beb60f127d"
+    },
+    {
+      "path": "d/swaylan/temple/gate.c",
+      "status": "already-matches-ES2M",
+      "sha256": "482afec539e75c3f8ea59a1ea0ac8517c6b6f5c1a7f2e19a43a2815d4370895f"
     },
     {
       "path": "d/swaylan/temple/main_hall.c",
@@ -7757,11 +7815,6 @@
       "sha256": "fbc7deb612ca3dd3654989971d41c08667387ecbe951733c2fcd50328d6d60f4"
     },
     {
-      "path": "daemon/misc/npc_skill.c",
-      "status": "already-matches-ES2M",
-      "sha256": "84f9514c924251d164568c6b22b5e8f6d82c9443f2d8773a8399a404e96cefdf"
-    },
-    {
       "path": "daemon/misc/traveler.c",
       "status": "already-matches-ES2M",
       "sha256": "3c77c2d361c97f017d6e274178fef621e41396b593dd868a3c6894700b742ef5"
@@ -8392,6 +8445,11 @@
       "sha256": "bdce94f19ef571073b826235b56bd659a006ffe15132f78cd386be29fff34b2e"
     },
     {
+      "path": "docs/help/fighter.lunmay.txt",
+      "status": "already-matches-ES2M",
+      "sha256": "b606f8f3408b8badaa3361aa5d880d35293ad3b4b04aab88d9b7a0685b8edca1"
+    },
+    {
       "path": "docs/help/fighter.tiger.txt",
       "status": "already-matches-ES2M",
       "sha256": "19bc5e35aa35c888f6f2c5a159a348ff97ebc0b0e4cd1c1d7cbb58aabbbaea58"
@@ -8490,11 +8548,6 @@
       "path": "docs/help/snowkeep.txt",
       "status": "already-matches-ES2M",
       "sha256": "3e855e6b3aad829f75b920a8aea735d3458ac5e4e21e30c3cacc68c73df23122"
-    },
-    {
-      "path": "docs/help/soldier.ber.txt",
-      "status": "already-matches-ES2M",
-      "sha256": "12fb832bbef47e78bcce64ec9a721b98e2fb77f88c87ae2c34217a3d2768246f"
     },
     {
       "path": "docs/help/taoism_of_darkness.txt",
@@ -9922,6 +9975,14 @@
       "sha256": "a235a4df8811879acdf0ac069ef0ffa157c6cc47a908a11573ba752674a71fb5"
     }
   ],
+  "preserved_king_custom": [
+    {
+      "path": "feature/char/skill.c",
+      "status": "preserved-KING-owner-customization-pending-ES2M-merge",
+      "king_sha256": "913252ad2c4604d10b5e5a551af1c2149a290c423fc1986f684d248c1d6e1990",
+      "es2m_sha256": "79b2cb42db3b092f5ba098a568aafd53ebb2e11087b6534e3565141c701499a5"
+    }
+  ],
   "source_differs_from_pinned_original": [
     {
       "path": "adm/daemons/channeld.c",
@@ -9950,7 +10011,7 @@
     {
       "path": "adm/daemons/logind.c",
       "status": "ES2M-differs-from-pinned-original",
-      "source_sha256": "355852a98f0fa958f54bdefe0c04af548bf74917bf7ab2090b6217705f95fc71",
+      "source_sha256": "60786a09c1dbd1001b65e45cd6cbde1d6aee80ba40d4bb73f441ec277da3407f",
       "original_sha256": "daadba1224c7e052f3bdb52a6831c7697b9997043700f9210493474880bfb7dc"
     },
     {
@@ -9976,6 +10037,12 @@
       "status": "ES2M-differs-from-pinned-original",
       "source_sha256": "fb72afef43c87ca81921205bfb3ca23b58124a9109b39c07f1633c2e8ad803c1",
       "original_sha256": "2924f372c2c60117e612c0bad318a3941c09f4888b1f49e9e6280b9580581234"
+    },
+    {
+      "path": "adm/guild/portal.c",
+      "status": "ES2M-differs-from-pinned-original",
+      "source_sha256": "350bcb8024e43773eb7e3d1b73de718cea996bc4a19c585ba8fb00aff2803d4f",
+      "original_sha256": "05930d8360b79883c325968e251f3ffbe473bebaa705e11d30797ced714145c6"
     },
     {
       "path": "adm/obj/master.c",
@@ -10196,7 +10263,7 @@
     {
       "path": "cmds/usr/praise.c",
       "status": "ES2M-differs-from-pinned-original",
-      "source_sha256": "d489ecc4317d7acf28532a1621ebaff62060c72c14c337df15627e597f038df6",
+      "source_sha256": "a288eadc15b522c2846863cfea3e3845c85471ef1c16c60a65d37449309f03ff",
       "original_sha256": "506f70ce0cc1d35a9d9b5088f953369a2940c5034c7d1c868b6c709b68b9447e"
     },
     {
@@ -10210,6 +10277,12 @@
       "status": "ES2M-differs-from-pinned-original",
       "source_sha256": "c3c4284c54a0ecc4b5960f9a7ae6e85fbfd36056524e12d16d1a6c97a7fa5915",
       "original_sha256": "d7ff482638d7a29dc2ac2025b6ebab894812f17f9ca1589ccc8640c6f8a34399"
+    },
+    {
+      "path": "cmds/usr/tune.c",
+      "status": "ES2M-differs-from-pinned-original",
+      "source_sha256": "25bb98c0c2b28fe9feacf901f019768302b2fb163635db6f9bff788f1516a7a3",
+      "original_sha256": "c2281de6a52e93ac9f350a6b79c9a50d366dbda82998e0b7fee00d24e1470e18"
     },
     {
       "path": "cmds/usr/who.c",
@@ -10730,7 +10803,7 @@
     {
       "path": "feature/char/skill.c",
       "status": "ES2M-differs-from-pinned-original",
-      "source_sha256": "be9f8f95417a2029859b55be707174b45efebd41e0314789e6bf5abdec68ceff",
+      "source_sha256": "79b2cb42db3b092f5ba098a568aafd53ebb2e11087b6534e3565141c701499a5",
       "original_sha256": "0b9366f9ba05c0a242439605736ef4770dc2d1f17cd9ea03a1ad2d034abaf2f2"
     },
     {
