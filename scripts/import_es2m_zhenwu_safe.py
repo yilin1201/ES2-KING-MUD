@@ -50,6 +50,7 @@ def stage(snapshot, runtime):
     if not source.is_dir() or not runtime.is_dir():
         raise FileNotFoundError("ZHENWU_STAGE_ROOT_MISSING")
     report = {"staged": [], "identical": [], "overlay_compatible": [], "conflicts_review": [],
+              "conflict_details": [],
               "external_gate": "PENDING", "status": "FILE_STAGE_ONLY_NOT_GAMEPLAY_PASS"}
     for file in sorted(source.rglob("*.c")):
         rel = file.relative_to(snapshot)
@@ -81,8 +82,14 @@ def stage(snapshot, runtime):
                     report["overlay_compatible"].append(str(rel))
                 else:
                     report["conflicts_review"].append(str(rel))
+                    report["conflict_details"].append({
+                        "path": str(rel), "source_sha256": sha(file), "runtime_sha256": sha(target)
+                    })
             else:
                 report["conflicts_review"].append(str(rel))
+                report["conflict_details"].append({
+                    "path": str(rel), "source_sha256": sha(file), "runtime_sha256": sha(target)
+                })
         else:
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(file, target)
@@ -120,6 +127,8 @@ def main():
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(result, ensure_ascii=False, indent=2)+"\n")
     print("ES2M_ZHENWU_STAGE", json.dumps({k: len(v) if isinstance(v,list) else v for k,v in result.items()},ensure_ascii=False))
+    if result["conflicts_review"]:
+        print("ES2M_ZHENWU_CONFLICT_DETAILS", json.dumps(result["conflict_details"], ensure_ascii=False))
     if result["conflicts_review"] or result["external_gate"] != "LINK_PRESENT":
         raise SystemExit("ZHENWU_REVIEW_REQUIRED: source preserved; no gameplay claim")
 
