@@ -7,7 +7,7 @@ the newest ES2M progression implementation.
 
 本工具將最新 ES2M Mudlib 同步至 KING Runtime Overlay：
 同路徑覆蓋、缺少路徑新增、不刪除 KING-only 檔案。
-保留 KING Owner 300 級技能上限、三項凍結冷梅武功、teacher.c 的 Original race ID rainnar 修正，以及梅影風 NPC 的入門門檻與種族相容邏輯；
+保留 KING Owner 300 級技能上限、三項凍結冷梅武功、teacher.c 的 Original race ID rainnar 修正、梅影風 NPC 的入門門檻與種族相容邏輯，以及潛行的 Original API 相容公式；
 ES2M 原始版本仍完整保存在來源鏡像，保護檔案逐項記錄於同步報告。
 """
 from __future__ import annotations
@@ -22,9 +22,11 @@ PROTECTED_KING_PATHS = {
     "daemon/skill/lunmay.c",
     "d/snow/npc/teacher.c",
     "d/wutang/npc/may_yin_fong.c",
+    "cmds/std/sneak.c",
 }
 KING_RACE_COMPAT_PATHS = {"d/snow/npc/teacher.c"}
 KING_NPC_COMPAT_PATHS = {"d/wutang/npc/may_yin_fong.c"}
+KING_SNEAK_COMPAT_PATHS = {"cmds/std/sneak.c"}
 FROZEN_KING_SKILLS = {
     "daemon/skill/advance_lunmay.c",
     "daemon/skill/hainmay_force.c",
@@ -84,6 +86,19 @@ def verify_king_owner_guards(overlay: Path, repo_root: Path) -> None:
                     '"rainnar"')
         if any(token not in raw for token in required) or '"rainner"' in raw:
             raise SystemExit(f"FAIL: KING Cold Plum NPC progression/race guard missing: {rel}")
+
+    # ES2M 潛行保留原始悟性公式；KING Runtime 使用本地 helper，避免呼叫 Original 不存在的 COMBAT_D API。
+    for rel in KING_SNEAK_COMPAT_PATHS:
+        target = overlay / rel
+        if not target.is_file():
+            raise SystemExit(f"FAIL: KING sneak compatibility file missing: {rel}")
+        raw = target.read_text(encoding="utf-8", errors="replace")
+        required = ("private int es2_king_sneak_int_formula_exp(object me)",
+                    'me->improve_skill("sneak", me->query_attr("int"));',
+                    "return (random(i) + 1) * (random(i) + 1) + random(i);",
+                    "me->improve_skill(\"sneak\", es2_king_sneak_int_formula_exp(me));")
+        if any(token not in raw for token in required) or "COMBAT_D->int_formula_exp(me)" in raw:
+            raise SystemExit(f"FAIL: KING sneak compatibility formula missing: {rel}")
 
 def main() -> int:
     ap = argparse.ArgumentParser()
@@ -145,6 +160,15 @@ def main() -> int:
                 if any(token not in raw for token in required) or '"rainner"' in raw:
                     raise SystemExit(f"FAIL: KING Cold Plum NPC progression/race guard missing: {rel_name}")
                 status = "preserved-KING-cold-plum-NPC-progression-and-race"
+            elif rel_name in KING_SNEAK_COMPAT_PATHS:
+                raw = dest.read_text(encoding="utf-8", errors="replace")
+                required = ("private int es2_king_sneak_int_formula_exp(object me)",
+                            'me->improve_skill("sneak", me->query_attr("int"));',
+                            "return (random(i) + 1) * (random(i) + 1) + random(i);",
+                            "me->improve_skill(\"sneak\", es2_king_sneak_int_formula_exp(me));")
+                if any(token not in raw for token in required) or "COMBAT_D->int_formula_exp(me)" in raw:
+                    raise SystemExit(f"FAIL: KING sneak compatibility formula missing: {rel_name}")
+                status = "preserved-KING-ES2M-sneak-progression-adapter"
             else:
                 raise SystemExit(f"FAIL: unclassified protected KING path: {rel_name}")
             preserved_king.append({
