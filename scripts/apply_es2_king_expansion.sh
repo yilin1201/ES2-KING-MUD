@@ -278,19 +278,20 @@ import sys
 
 path = Path(sys.argv[1])
 text = path.read_text()
-# Pinned Original ES2 message.c 的三個確切輸出點；其他邏輯保持不變。
-replacements = {
-    'message("vision", cjk_wrap (str2, 70, -1), you); // second-person':
-    'message("vision", str2, you); // second-person — ES2-KING MESSAGE VISION NO HARD WRAP',
-    'message ("vision", cjk_wrap (str1, 70, -1), me); // first-person':
-    'message ("vision", str1, me); // first-person — ES2-KING MESSAGE VISION NO HARD WRAP',
-    'message ("vision", cjk_wrap (str3, 70, -1),  environment(me), ({ me, you }) ); // third-person':
-    'message ("vision", str3, environment(me), ({ me, you }) ); // third-person — ES2-KING MESSAGE VISION NO HARD WRAP',
-}
-for old, new in replacements.items():
-    if old not in text:
-        raise SystemExit("EXPANSION APPLY FAIL：找不到 Pinned Original message.c 的 message_vision() 輸出錨點。")
-    text = text.replace(old, new, 1)
+# Original ES2／Neolith 不同版本的換行寬度常數不同；以語意錨點匹配，不綁定 70 或 STD_WRAP_WIDTH。
+import re
+patterns = [
+    (r'message\s*\(\s*"vision"\s*,\s*cjk_wrap\s*\(\s*str2\s*,\s*[^,]+,\s*-1\s*\)\s*,\s*you\s*\)\s*;\s*//\s*second-person',
+     'message("vision", str2, you); // second-person — ES2-KING MESSAGE VISION NO HARD WRAP'),
+    (r'message\s*\(\s*"vision"\s*,\s*cjk_wrap\s*\(\s*str1\s*,\s*[^,]+,\s*-1\s*\)\s*,\s*me\s*\)\s*;\s*//\s*first-person',
+     'message("vision", str1, me); // first-person — ES2-KING MESSAGE VISION NO HARD WRAP'),
+    (r'message\s*\(\s*"vision"\s*,\s*cjk_wrap\s*\(\s*str3\s*,\s*[^,]+,\s*-1\s*\)\s*,\s*environment\(me\)\s*,\s*\(\{\s*me\s*,\s*you\s*\}\s*\)\s*\)\s*;\s*//\s*third-person',
+     'message("vision", str3, environment(me), ({ me, you }) ); // third-person — ES2-KING MESSAGE VISION NO HARD WRAP'),
+]
+for pattern, replacement in patterns:
+    text, count = re.subn(pattern, replacement, text, count=1)
+    if count != 1:
+        raise SystemExit("EXPANSION APPLY FAIL：找不到 Pinned Original message.c 的對應 message_vision() 輸出錨點：" + pattern)
 path.write_text(text)
 PY
 fi
