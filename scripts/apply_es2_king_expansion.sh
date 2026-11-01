@@ -664,7 +664,6 @@ insertion = anchor + """
 text = text.replace(anchor, insertion, 1)
 path.write_text(text)
 PY
-PY
 fi
 
 # 已生成過的舊 Runtime 可能沿用 mktemp 的 600；只補讀取權限，不授予任何 group／other 寫入權。
