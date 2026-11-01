@@ -85,7 +85,7 @@ class SafeWorldImportTest(unittest.TestCase):
             report = __import__("json").loads(output.read_text(encoding="utf-8"))
             self.assertEqual(report["preserved_existing"][0]["path"], str(rel))
             self.assertEqual(report["preserved_existing"][0]["status"],
-                             "PRESERVED_NOT_EQUIVALENT_NOT_GAMEPLAY_PASS")
+                             "PRESERVED_KING_OVERLAY_NOT_GAMEPLAY_PASS")
 
     def test_unknown_conflict_still_blocks(self):
         module = load_module()
