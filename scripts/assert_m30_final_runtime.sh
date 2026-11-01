@@ -15,11 +15,13 @@ test -f "$LOGIN_D" || {
   exit 1
 }
 
-# Original Internal Skill runtime／Original 內功執行環境：耗盡時必須接回實際存在的
-# action interrupt() API，否則 busy callback 會永久阻止 save／quit。
+# Dragon Force busy callback／龍圖心經打坐：精氣神不足時以 callback return 0 結束，
+# 不呼叫 pinned Original 不存在的 interrupt()／interrupt_me() API。
 test -f "$DRAGON_FORCE"
-grep -Fq 'me->interrupt(me, "exhausted")' "$DRAGON_FORCE"
-! grep -Fq 'me->interrupt_me(me, "exhausted")' "$DRAGON_FORCE"
+exhausted_block="$(sed -n '/int do_exercise(object me)/,/me->consume_stat("gin"/p' "$DRAGON_FORCE")"
+grep -Fq 'return 0;' <<<"$exhausted_block"
+! grep -Fq 'me->interrupt(' <<<"$exhausted_block"
+! grep -Fq 'me->interrupt_me(' <<<"$exhausted_block"
 
 # Final Runtime Assertion（最終執行環境斷言）：直接檢查 Neolith 即將載入的 logind，
 # 不以 Overlay 原始腳本存在作為替代證據。
