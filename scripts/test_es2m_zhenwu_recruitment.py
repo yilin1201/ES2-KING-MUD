@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""驗證振武軍營 ES2M 地圖拓樸與 KING 已定案的徵兵／強力格擋傳授規則；非 Gameplay PASS。"""
+"""驗證振武軍營 ES2M 原始階段與 KING Overlay 階段各自的徵兵規則；非 Gameplay PASS。"""
 from pathlib import Path
 import sys
 
@@ -18,6 +18,8 @@ for p in (gate, snow, yard, stone, lu, mee, soldier):
 if not errors:
     g, s, l = gate.read_text(), stone.read_text(), lu.read_text()
     n, y, m = snow.read_text(), yard.read_text(), mee.read_text()
+    king_overlay = 'me->set("custom_faction", "soldier.ber")' in s
+
     for label, content, needle in (
         ("gate", g, '"east" : "/d/snow/sgate"'),
         ("gate", g, '"west" : __DIR__"yard06"'),
@@ -26,26 +28,39 @@ if not errors:
         ("stone", s, 'origin_class != "commoner" && origin_class != "fighter"'),
         ("stone", s, 'me->query("gender") != "male"'),
         ("stone", s, 'me->set_class("soldier")'),
-        ("stone", s, 'me->set("custom_faction", "soldier.ber")'),
-        ("stone", s, 'me->set("soldier/from_fighter", 1)'),
         ("stone", s, 'origin_class == "commoner"'),
         ("stone", s, 'me->set_skill("berserk", 1)'),
         ("stone", s, 'me->set_skill("powerblow", 1)'),
-        ("stone", s, '強力格擋改由米沛傳授'),
         ("lu", l, 'void welcome_recruit(object who)'),
-        ("mee", m, '#define HEAVY_PARRY_MERIT 100000'),
-        ("mee", m, 'me->query_class() != "soldier"'),
-        ("mee", m, 'me->query_level() < 40'),
-        ("mee", m, 'me->query_learn("heavy_parry")'),
-        ("mee", m, 'me->query("soldier/from_fighter")'),
-        ("mee", m, 'me->query_score("military service") < HEAVY_PARRY_MERIT'),
-        ("mee", m, 'me->improve_skill_exact("heavy_parry", 1)'),
     ):
         if needle not in content:
-            errors.append(f"{label}: missing KING/ES2M rule {needle}")
-    # 強力格擋不可由徵兵石直接授予；保留米沛的等級、軍功與出身條件。
-    if 'me->set_skill("heavy_parry", 1);' in s or 'me->set_learn("heavy_parry", 1);' in s:
-        errors.append("stone: heavy_parry must remain gated by Mee Pei's military-merit teaching")
+            errors.append(f"{label}: missing base rule {needle}")
+
+    if king_overlay:
+        # KING Overlay：保留派系、武者轉任標記，強力格擋改由米沛按軍功條件傳授。
+        for label, content, needle in (
+            ("stone", s, 'me->set("custom_faction", "soldier.ber")'),
+            ("stone", s, 'me->set("soldier/from_fighter", 1)'),
+            ("stone", s, '強力格擋改由米沛傳授'),
+            ("mee", m, '#define HEAVY_PARRY_MERIT 100000'),
+            ("mee", m, 'me->query_class() != "soldier"'),
+            ("mee", m, 'me->query_level() < 40'),
+            ("mee", m, 'me->query_learn("heavy_parry")'),
+            ("mee", m, 'me->query("soldier/from_fighter")'),
+            ("mee", m, 'me->query_score("military service") < HEAVY_PARRY_MERIT'),
+            ("mee", m, 'me->improve_skill_exact("heavy_parry", 1)'),
+        ):
+            if needle not in content:
+                errors.append(f"{label}: missing KING rule {needle}")
+        if 'me->set_skill("heavy_parry", 1);' in s or 'me->set_learn("heavy_parry", 1);' in s:
+            errors.append("stone: heavy_parry must remain gated by Mee Pei's military-merit teaching")
+        print("ES2M_ZHENWU_RECRUIT_MODE: KING_OVERLAY")
+    else:
+        # ES2M 原始階段：驗證上游原始徵兵技能規則；KING 覆蓋尚未套用。
+        if 'set_skill("heavy_parry", 1)' not in s or 'set_learn("heavy_parry", 1)' not in s:
+            errors.append("stone: missing ES2M original heavy_parry enlist rule")
+        print("ES2M_ZHENWU_RECRUIT_MODE: ORIGINAL_ES2M")
+
 if errors:
     print("ES2M_ZHENWU_RECRUIT_FAIL\\n" + "\\n".join(errors))
     raise SystemExit(1)
