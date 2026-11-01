@@ -19,7 +19,10 @@ def test_delta_scope_is_restricted() -> None:
         if isinstance(node, ast.Assign):
             for target in node.targets:
                 if isinstance(target, ast.Name) and target.id in {"BOARD", "SQUARE", "LEE_INN"}:
-                    configured_paths[target.id] = ast.literal_eval(node.value)
+                    value = node.value
+                    assert isinstance(value, ast.Call) and isinstance(value.func, ast.Name) and value.func.id == "Path"
+                    assert len(value.args) == 1
+                    configured_paths[target.id] = ast.literal_eval(value.args[0])
     assert configured_paths == {
         "BOARD": "daemon/board/snow_board.c",
         "SQUARE": "d/snow/square_w.c",
