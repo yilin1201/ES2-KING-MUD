@@ -7,8 +7,8 @@ the newest ES2M progression implementation.
 
 本工具將最新 ES2M Mudlib 同步至 KING Runtime Overlay：
 同路徑覆蓋、缺少路徑新增、不刪除 KING-only 檔案。
-唯一保留的同路徑核心檔案 feature/char/skill.c 含 KING Owner 300 級
-專屬上限；先保留既有 KING 實作，待 ES2M 技能進度機制完成合併後再更新。
+保留 KING Owner 300 級技能上限、三項凍結冷梅武功，以及 teacher.c 中已確認的 Original race ID rainnar 修正；
+ES2M 原始版本仍完整保存在來源鏡像，保護檔案逐項記錄於同步報告。
 """
 from __future__ import annotations
 import argparse, hashlib, json, shutil
@@ -20,7 +20,9 @@ PROTECTED_KING_PATHS = {
     "daemon/skill/advance_lunmay.c",
     "daemon/skill/hainmay_force.c",
     "daemon/skill/lunmay.c",
+    "d/snow/npc/teacher.c",
 }
+KING_RACE_COMPAT_PATHS = {"d/snow/npc/teacher.c"}
 FROZEN_KING_SKILLS = {
     "daemon/skill/advance_lunmay.c",
     "daemon/skill/hainmay_force.c",
@@ -59,6 +61,15 @@ def verify_king_owner_guards(overlay: Path, repo_root: Path) -> None:
             raise SystemExit(f"FAIL: frozen KING martial baseline missing: {rel}")
         if digest(baseline) != digest(target):
             raise SystemExit(f"FAIL: frozen KING martial baseline mismatch: {rel}")
+
+    # Original ES2 種族代碼 rainnar：ES2M teacher.c 的 rainner 拼字不能覆蓋正式代碼。
+    for rel in KING_RACE_COMPAT_PATHS:
+        target = overlay / rel
+        if not target.is_file():
+            raise SystemExit(f"FAIL: KING race compatibility file missing: {rel}")
+        raw = target.read_text(encoding="utf-8", errors="replace")
+        if '"avatar", "human", "rainnar", "malik"' not in raw or '"rainner"' in raw:
+            raise SystemExit(f"FAIL: KING Original race ID correction missing: {rel}")
 
 def main() -> int:
     ap = argparse.ArgumentParser()
@@ -107,6 +118,11 @@ def main() -> int:
                 if not baseline.is_file() or digest(dest) != digest(baseline):
                     raise SystemExit(f"FAIL: frozen KING martial baseline mismatch: {rel_name}")
                 status = "preserved-KING-frozen-martial-baseline"
+            elif rel_name in KING_RACE_COMPAT_PATHS:
+                raw = dest.read_text(encoding="utf-8", errors="replace")
+                if '"avatar", "human", "rainnar", "malik"' not in raw or '"rainner"' in raw:
+                    raise SystemExit(f"FAIL: KING Original race ID correction missing: {rel_name}")
+                status = "preserved-KING-original-race-id-correction"
             else:
                 raise SystemExit(f"FAIL: unclassified protected KING path: {rel_name}")
             preserved_king.append({

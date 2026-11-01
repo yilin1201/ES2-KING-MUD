@@ -108,7 +108,7 @@ void teach_literate()
 	&&  can_be_scholar(ob)
 	&&  !ob->query_temp("pending/picked_by_whaiz")
 	&&  member_array(ob->query_race(), ({
-		"avatar", "human", "rainner", "malik", "woochan", "jiaojao", "yaksa"
+		"avatar", "human", "rainnar", "malik", "woochan", "jiaojao", "yaksa"
 	    })) != -1
 	&&  ob->query_attr("int") > random(20) )
 	    do_chat( (: pick_student, ob :) );
