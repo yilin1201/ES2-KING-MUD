@@ -38,7 +38,10 @@ def validate_tree(mudlib: Path, require_snow_link: bool, expected_npc_count: int
         assert 'set("map/area", ' in code, f"ES2M_OLDPINE_AREA_MISSING: {room.name}"
         for direction, target in exits(room).items():
             if target.startswith("/"):
-                assert target == "/d/snow/sgate", f"ES2M_OLDPINE_EXTERNAL_EXIT: {room.name}:{direction}:{target}"
+                external = mudlib / target.lstrip("/")
+                if not external.suffix:
+                    external = external.with_suffix(".c")
+                assert external.is_file(), f"ES2M_OLDPINE_EXTERNAL_EXIT_MISSING: {room.name}:{direction}:{target}"
                 continue
             assert target in room_names, f"ES2M_OLDPINE_BROKEN_EXIT: {room.name}:{direction}:{target}"
             if room.stem not in RECIPROCAL_SKIP and direction in OPPOSITE:
@@ -64,18 +67,31 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", required=True, type=Path)
     parser.add_argument("--runtime", type=Path)
+    parser.add_argument("--current-source", type=Path, help="Latest ES2M source mirror for inventory comparison")
     args = parser.parse_args()
     validate_tree(args.source, False, 17)
     runtime_npc_count = 17
     if args.runtime:
         runtime_npc_count = len(list((args.runtime / "d/oldpine/npc").glob("*.c")))
-        assert runtime_npc_count in (17, 18), f"ES2M_OLDPINE_RUNTIME_NPC_COUNT: {runtime_npc_count}"
+        if args.current_source:
+            current_npcs = {p.name for p in (args.current_source / "d/oldpine/npc").glob("*.c")}
+            assert runtime_npc_count == len(current_npcs), (
+                f"ES2M_OLDPINE_RUNTIME_NPC_COUNT: {runtime_npc_count} expected_current_source={len(current_npcs)}"
+            )
+        else:
+            assert runtime_npc_count in (17, 18), f"ES2M_OLDPINE_RUNTIME_NPC_COUNT: {runtime_npc_count}"
         validate_tree(args.runtime, True, runtime_npc_count)
         source_npcs = {p.name for p in (args.source / "d/oldpine/npc").glob("*.c")}
         runtime_npcs = {p.name for p in (args.runtime / "d/oldpine/npc").glob("*.c")}
         extra_npcs = sorted(runtime_npcs - source_npcs)
         missing_npcs = sorted(source_npcs - runtime_npcs)
         assert not missing_npcs, f"ES2M_OLDPINE_RUNTIME_MISSING_NPC: {missing_npcs}"
+        if args.current_source:
+            current_npcs = {p.name for p in (args.current_source / "d/oldpine/npc").glob("*.c")}
+            assert runtime_npcs == current_npcs, (
+                f"ES2M_OLDPINE_RUNTIME_SOURCE_MISMATCH: extra={sorted(runtime_npcs-current_npcs)} "
+                f"missing={sorted(current_npcs-runtime_npcs)}"
+            )
         assert len(extra_npcs) == runtime_npc_count - len(source_npcs), f"ES2M_OLDPINE_RUNTIME_EXTRA_NPCS: {extra_npcs}"
         if extra_npcs:
             print("ES2M_OLDPINE_RUNTIME_EXTRA_NPC:", ",".join(extra_npcs))
