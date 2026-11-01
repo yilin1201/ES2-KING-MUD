@@ -169,7 +169,8 @@ RUN python3 scripts/test_es2m_lee_topology.py \
         --runtime /opt/es2-king/runtime/mudlib
 RUN python3 scripts/test_es2m_oldpine_topology.py \
     --source /build/repository/es2m_snapshot/mudlib \
-    --runtime /opt/es2-king/runtime/mudlib
+    --runtime /opt/es2-king/runtime/mudlib \
+    --current-source /build/repository/es2m_source_mirror/mudlib
 RUN python3 scripts/test_es2m_wutang_topology.py \
     --source /build/repository/es2m_snapshot/mudlib \
     --runtime /opt/es2-king/runtime/mudlib
