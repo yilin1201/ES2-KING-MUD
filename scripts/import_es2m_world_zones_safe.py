@@ -27,6 +27,13 @@ ZONE_DIRS = (
 # 已知存在於 KING Runtime 的同名覆蓋：只保留現有版本並記錄雙方 SHA256。
 # 這不是內容相同或遊戲通過的宣告；其他未列出的衝突仍必須阻止建置。
 PRESERVE_EXISTING_CONFLICTS = {
+    # 已依 LEE_TOPOLOGY.json 校正的六條 KING Runtime 路線；保留拓樸修正，不回退到 ES2M 舊出口。
+    Path("d/lee/creek.c"),
+    Path("d/lee/pawnshop.c"),
+    Path("d/lee/square_c.c"),
+    Path("d/lee/square_s.c"),
+    Path("d/lee/watermelon_n1.c"),
+    Path("d/lee/watermelon_s3.c"),
     Path("d/lee/obj/brow_staff.c"),
     Path("d/lee/obj/flour.c"),
     Path("d/lee/obj/salt.c"),
