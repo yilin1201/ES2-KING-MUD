@@ -10,6 +10,9 @@ const exists=async p=>{try{await access(p,constants.F_OK);return true}catch{retu
 
 function session(){
   const socket=new WebSocket(url); let output="";
+  socket.on("open",()=>output+="\\n[WEBSOCKET OPEN]\\n");
+  socket.on("error",e=>output+="\\n[WEBSOCKET ERROR] "+e.message+"\\n");
+  socket.on("close",(code,reason)=>output+="\\n[WEBSOCKET CLOSE] "+code+" "+Buffer.from(reason||"").toString("utf8")+"\\n");
   socket.on("message",d=>output+=Buffer.from(d).toString("utf8"));
   return {socket, output:()=>output, send:s=>socket.send(s), close:()=>socket.close(),
     wait:(m,o=0,t=30000)=>new Promise((res,rej)=>{const st=Date.now(),iv=setInterval(()=>{const x=output.slice(o);if((typeof m==="string"?x.includes(m):m.test(x))){clearInterval(iv);res(x)}else if(Date.now()-st>t){clearInterval(iv);rej(new Error("PLAYER CREATE timeout: "+m+"\n"+x.slice(-1400)))}},25)})};
