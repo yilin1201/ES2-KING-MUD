@@ -222,22 +222,27 @@ echo 'ES2M ZHENWU CONNECTED: Snow sgate west <-> Zhenwu gate east; original enli
 # ES2M Wutang Town／五堂鎮（武當區域）完整導入：
 # Pinned Original 沒有 /d/wutang；若其他工作已建立同名區域，立即停止並保留既有版本。
 # 振武軍營大門的 south 出口直接沿用固定 ES2M 來源，不從 AI 推測世界連線。
-ES2M_WUTANG_DIR="$REPO_ROOT/es2m_snapshot/mudlib/d/wutang"
+ES2M_WUTANG_DIR="$REPO_ROOT/es2m_source_mirror/mudlib/d/wutang"
 if [[ -d "$ES2M_WUTANG_DIR" ]]; then
   python3 "$REPO_ROOT/scripts/test_es2m_wutang_topology.py" \
-    --source "$REPO_ROOT/es2m_snapshot/mudlib"
+    --source "$REPO_ROOT/es2m_snapshot/mudlib" \
+    --current-source "$REPO_ROOT/es2m_source_mirror/mudlib"
   if [[ -e "$ROOT/mudlib/d/wutang" ]]; then
-    diff -qr "$ES2M_WUTANG_DIR" "$ROOT/mudlib/d/wutang" || {
-      echo "ES2M WUTANG CONFLICT: existing runtime differs from source" >&2; exit 1;
-    }
-    echo "ES2M WUTANG IDEMPOTENT PASS"
+    # Runtime may contain the registered KING may_yin_fong overlay; validate current inventory/topology instead of byte-diffing against historical snapshot.
+    python3 "$REPO_ROOT/scripts/test_es2m_wutang_topology.py" \
+      --source "$REPO_ROOT/es2m_snapshot/mudlib" \
+      --runtime "$ROOT/mudlib" \
+      --current-source "$REPO_ROOT/es2m_source_mirror/mudlib"
+    echo "ES2M WUTANG CURRENT SOURCE INVENTORY PASS"
   else
     mkdir -p "$ROOT/mudlib/d/wutang"
     cp -a "$ES2M_WUTANG_DIR/." "$ROOT/mudlib/d/wutang/"
+    python3 "$REPO_ROOT/scripts/test_es2m_wutang_topology.py" \
+      --source "$REPO_ROOT/es2m_snapshot/mudlib" \
+      --runtime "$ROOT/mudlib" \
+      --current-source "$REPO_ROOT/es2m_source_mirror/mudlib"
   fi
-  python3 "$REPO_ROOT/scripts/test_es2m_wutang_topology.py" \
-    --source "$REPO_ROOT/es2m_snapshot/mudlib" --runtime "$ROOT/mudlib"
-  echo 'ES2M WUTANG CONNECTED: 56 rooms, 32 NPCs (including may_yin_fong) and 2 local objects; Zhenwu gate south <-> entrance north.'
+  echo 'ES2M WUTANG CONNECTED: latest source rooms, NPCs, ferries and objects; Zhenwu gate south <-> entrance north.'
 fi
 
 # Race Command Collision／種族指令同名衝突：Original EMOTED 也註冊 dance 表情。
