@@ -13,8 +13,10 @@ done
 
 grep -Fq '"human",' "$LOGIN" || { echo 'RACE_GATE_FAIL:login-human-entry' >&2; exit 1; }
 grep -Fq '"avatar",' "$LOGIN" || { echo 'RACE_GATE_FAIL:login-avatar-entry' >&2; exit 1; }
-grep -Fq 'case "human":' "$LOGIN" || { echo 'RACE_GATE_FAIL:login-human-case' >&2; exit 1; }
-grep -Fq 'case "avatar":' "$LOGIN" || { echo 'RACE_GATE_FAIL:login-avatar-case' >&2; exit 1; }
+# Latest ES2M uses an affordable-race list and string callback, not the legacy fixed switch menu.
+grep -Fq 'private void show_race_menu (object ob)' "$LOGIN" || { echo 'RACE_GATE_FAIL:dynamic-race-menu' >&2; exit 1; }
+grep -Fq 'private void get_race (string arg, object ob, string *list)' "$LOGIN" || { echo 'RACE_GATE_FAIL:dynamic-race-input' >&2; exit 1; }
+grep -Fq 'RACE_D(race)->query("karma")' "$LOGIN" || { echo 'RACE_GATE_FAIL:race-karma-lookup' >&2; exit 1; }
 # ES2M human/avatar daemon contract／最新 ES2M 使用無空格 LPC 呼叫格式，兩族 karma 均為 5。
 grep -Eq 'set[[:space:]]*\("karma",[[:space:]]*5\);' "$HUMAN" || { echo 'RACE_GATE_FAIL:human-karma' >&2; exit 1; }
 grep -Eq 'set[[:space:]]*\("karma",[[:space:]]*5\);' "$AVATAR" || { echo 'RACE_GATE_FAIL:avatar-karma' >&2; exit 1; }
