@@ -30,8 +30,8 @@ async function neolithReachable() {
         readFile(file, "utf8").catch(() => "")
       )
     );
-    return tables.some(table => table.split("\\n").slice(1).some(line => {
-      const fields = line.trim().split(/\\s+/);
+    return tables.some(table => table.split("\n").slice(1).some(line => {
+      const fields = line.trim().split(/\s+/);
       const local = fields[1] || "";
       const state = fields[3] || "";
       const colon = local.lastIndexOf(":");
