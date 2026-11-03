@@ -12,6 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "source/es2m_updates/20261005_5f042999/runtime_overlay/mudlib"
+LATEST = ROOT / "es2m_source_mirror/mudlib"
 
 
 @dataclass(frozen=True)
@@ -64,6 +65,10 @@ def validate(runtime_mudlib: Path) -> None:
         if not target.is_file():
             raise RuntimeError(f"Runtime 缺少交易相依檔：{item.path}")
         actual = digest(target)
+        latest_source = LATEST / item.path
+        # 最新 ES2M source mirror 已有相同交易功能時，保留新版，不回退至 2026-10-05 舊 overlay。
+        if latest_source.is_file() and actual == digest(latest_source):
+            continue
         accepted_source = digest(source)
         if actual not in (item.baseline_sha256, accepted_source):
             raise RuntimeError(f"Runtime 交易檔衝突，停止覆蓋：{item.path} {actual}")
@@ -77,6 +82,9 @@ def apply(runtime_mudlib: Path) -> int:
     for item in OVERLAYS:
         source = SOURCE / item.path
         target = runtime_mudlib / item.path
+        latest_source = LATEST / item.path
+        if latest_source.is_file() and digest(target) == digest(latest_source):
+            continue
         if digest(target) != item.source_sha256:
             shutil.copy2(source, target)
             changed += 1
