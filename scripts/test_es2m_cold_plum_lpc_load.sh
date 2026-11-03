@@ -41,7 +41,7 @@ done
 # Neolith.conf writes DebugLogFile under MudlibDir/LogDir; create it before startup.
 mkdir -p "$ROOT/mudlib/log"
 : > "$ROOT/mudlib/log/debug.log"
-DEBUG_LOG="$ROOT/mudlib/log/debug.log"
+DEBUG_LOG="$(realpath "$ROOT/mudlib/log/debug.log")"
 
 cd "$ROOT"
 "$DRIVER" -f neolith.conf >"$LOG" 2>&1 &
