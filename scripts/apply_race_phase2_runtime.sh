@@ -209,7 +209,7 @@ from pathlib import Path
 import sys
 p=Path(sys.argv[1]); s=p.read_text()
 old='//\t"west" : "/d/newcamp/gate",'
-new='\t"west" : "/custom/zhenwu/room/gate", // ES2M 振武軍營；只修改重建 Runtime。'
+new='\t"west" : "/custom/zhenwu/room/gate",'
 if new not in s:
     if old not in s:
         raise SystemExit("ES2M ZHENWU FAIL: original Snow south gate west marker changed")
