@@ -21,6 +21,13 @@ cleanup(){
         tail -n 100 "$TEMP_ROOT/$log" >&2
       fi
     done
+    echo "--- Runtime log files ---" >&2
+    find "$TEMP_ROOT/mudlib/log" "$TEMP_ROOT/mudlib/logs" "$TEMP_ROOT/log" -maxdepth 3 -type f -print 2>/dev/null | while IFS= read -r file; do
+      echo "--- $file (last 100 lines) ---" >&2
+      tail -n 100 "$file" >&2 2>/dev/null || true
+    done
+    echo "--- Runtime files (max depth 2) ---" >&2
+    find "$TEMP_ROOT" -maxdepth 2 -type f -printf '%p\\n' 2>/dev/null | head -n 100 >&2
   else
     rm -rf -- "$TEMP_ROOT"
   fi
