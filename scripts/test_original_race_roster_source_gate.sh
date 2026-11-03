@@ -18,8 +18,9 @@ grep -Fq 'case "avatar":' "$LOGIN"
 # ES2M human/avatar daemon contract／最新 ES2M 使用無空格 LPC 呼叫格式，兩族 karma 均為 5。
 grep -Eq 'set[[:space:]]*\("karma",[[:space:]]*5\);' "$HUMAN"
 grep -Eq 'set[[:space:]]*\("karma",[[:space:]]*5\);' "$AVATAR"
-grep -Fq 'random(10000) == 9999' "$HUMAN"
-grep -Eq 'ob->set_race[[:space:]]*\("avatar"\);' "$HUMAN"
+# Latest ES2M race daemons register their own race; do not require the superseded 1/10000 human-to-avatar branch.
+grep -Fq 'DAEMON_D->register_race_daemon("human");' "$HUMAN"
+grep -Fq 'DAEMON_D->register_race_daemon("avatar");' "$AVATAR"
 
 # Final Runtime 同時保留 pinned Original human/avatar 與已登錄的 ES2M supplemental races。
 # 此處只允許已完成 provenance 登錄的 10 個 ES2M daemon，禁止未審核 race 靜默進入部署映像。
