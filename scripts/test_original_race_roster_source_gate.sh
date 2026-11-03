@@ -36,5 +36,4 @@ test "${race_files[*]}" = "${expected[*]}" || {
 echo 'ORIGINAL_RACE_ROSTER_SOURCE_GATE_PASS'
 echo 'ORIGINAL_RACE_ROSTER_CONFIRMED:human,avatar'
 echo 'ES2M_RACE_ROSTER_SOURCE_GATE_PASS:blackteeth,yenhold,woochan,dingling,jiaojao,rainner,ashura,headless,yaksa,malik; beast=NPC_ONLY'
-echo 'ORIGINAL_AVATAR_DIRECT_CREATION_CONFIRMED:karma=100'
-echo 'ORIGINAL_HUMAN_AVATAR_RARE_PATH_CONFIRMED:1/10000'
+echo 'ES2M_HUMAN_AVATAR_DAEMON_REGISTRATION_CONFIRMED:karma=5; independent-race-daemons'
