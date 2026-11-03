@@ -86,7 +86,7 @@ else:
 PY
 
 # 即使 preload 編譯錯誤後 Neolith 仍繼續啟動，也要明確檢查啟動日誌。
-if grep -Eiq 'Error in loading object: /cmds/adm/admin|Error in loading object '/cmds/adm/admin'|/cmds/adm/admin(\.c)?.*(compile error|syntax error|failed to load)|admin\.c.*(compile error|syntax error)' "$LOG" "$DEBUG_LOG"; then
+if grep -Eiq "Error in loading object.*cmds/adm/admin|/cmds/adm/admin(\.c)?.*(compile error|syntax error|failed to load)|admin\.c.*(compile error|syntax error)" "$LOG" "$DEBUG_LOG"; then
   cat "$LOG"
   tail -n 200 "$DEBUG_LOG" 2>/dev/null || true
   echo "ADMIN GM LPC LOAD FAIL：admin.c 發生 LPC 編譯／載入錯誤。" >&2
