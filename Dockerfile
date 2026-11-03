@@ -7,7 +7,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        bison build-essential ca-certificates cmake git libboost-dev \
        libc-ares-dev libcurl4-openssl-dev libjsoncpp-dev libssl-dev \
-       ninja-build nodejs npm python3 \
+       iproute2 ninja-build nodejs npm python3 \
     && rm -rf /var/lib/apt/lists/*
 
 # Stable upstream build cache／先建置固定版本的 Original ES2 與 Neolith。
@@ -250,7 +250,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PORT=8080
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates libcurl4 libstdc++6 nodejs python3 python3-psycopg2 \
+    && apt-get install -y --no-install-recommends ca-certificates iproute2 libcurl4 libstdc++6 nodejs python3 python3-psycopg2 \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --create-home --uid 10001 es2king \
     && mkdir -p /var/lib/es2-king
