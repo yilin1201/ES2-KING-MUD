@@ -13,8 +13,8 @@ trap cleanup EXIT INT TERM
 test -x "$DRIVER_BIN"
 cp -a "$SOURCE_RUNTIME/mudlib" "$TEMP_ROOT/mudlib"
 cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
-"$REPO_ROOT/scripts/apply_race_phase2_runtime.sh" "$TEMP_ROOT"
-"$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
+bash "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh" "$TEMP_ROOT"
+bash "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
 # Test-only Host Throttle／測試專用主機限流處理：12 個種族皆由同一個 localhost 建立，
 # 會觸發 Original ES2 的每 IP 十帳號保護。只在 mktemp Runtime 套用既有 KING
 # bootstrap 政策，不修改來源保存區，也不把「同 IP 大量創角」宣稱為正式 Gameplay。
