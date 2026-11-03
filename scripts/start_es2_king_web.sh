@@ -72,22 +72,32 @@ trap graceful_shutdown INT TERM
 ) &
 driver_pid=$!
 
-# 等待真實 Telnet listener，不用固定 sleep 冒充啟動完成。
-node -e '
-  const net = require("net");
-  const host = process.env.ES2_HOST;
-  const port = Number(process.env.ES2_PORT);
-  const deadline = Date.now() + 60000;
-  function probe() {
-    const socket = net.createConnection({ host, port });
-    socket.setTimeout(1000);
-    socket.once("connect", () => { socket.destroy(); process.exit(0); });
-    const retry = () => { socket.destroy(); Date.now() < deadline ? setTimeout(probe, 250) : process.exit(1); };
-    socket.once("error", retry);
-    socket.once("timeout", retry);
-  }
-  probe();
-' || { echo "START FAIL：Neolith ${ES2_HOST}:${ES2_PORT} 未在 60 秒內啟動。" >&2; exit 1; }
+# Passive Listen Check／被動監聽檢查：不可主動連線後立即斷線，Neolith 可能因此收到 SIGPIPE。
+# 與 start_es2_king.sh 使用同一策略：確認核心程序存活且 TCP Port 持續 LISTEN。
+command -v ss >/dev/null 2>&1 || { echo "START FAIL：缺少被動 Port 檢查工具 ss。" >&2; exit 1; }
+stable_checks=0
+for _ in $(seq 1 600); do
+  if ! kill -0 "$driver_pid" 2>/dev/null; then
+    echo "START FAIL：Neolith process 已在 Port ${ES2_PORT} 就緒前退出。" >&2
+    tail -50 "$RUNTIME_DIR/mudlib/log/es2-king-driver.stdout" >&2 2>/dev/null || true
+    exit 1
+  fi
+  if ss -H -ltn "sport = :$ES2_PORT" 2>/dev/null | grep -q "LISTEN"; then
+    stable_checks=$((stable_checks + 1))
+  else
+    stable_checks=0
+  fi
+  if (( stable_checks >= 5 )); then
+    echo "NEOLITH LISTENER PASS：${ES2_HOST}:${ES2_PORT} 持續 LISTEN。"
+    break
+  fi
+  sleep 0.1
+done
+if (( stable_checks < 5 )); then
+  echo "START FAIL：Neolith ${ES2_HOST}:${ES2_PORT} 未在 60 秒內穩定 LISTEN。" >&2
+  tail -50 "$RUNTIME_DIR/mudlib/log/es2-king-driver.stdout" >&2 2>/dev/null || true
+  exit 1
+fi
 
 # Persistence Sync Loop／持久化同步迴圈：單次 Neon 網路錯誤不殺死同步程序，留下錯誤並持續重試。
 (
