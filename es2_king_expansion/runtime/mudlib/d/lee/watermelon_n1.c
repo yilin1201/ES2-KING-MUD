@@ -1,6 +1,7 @@
 // /d/lee/watermelon_n1.c
 // 李家村復原版。RECONSTRUCTED
 // Topology follows the user-provided Li Village map; generated prose is intentionally replaceable.
+// KING TOPOLOGY FIX (2026-11-03)：依 es2m_snapshot/d/lee/LEE_TOPOLOGY.json 對齊出口；不修改 ES2M source mirror。
 
 inherit ROOM;
 
@@ -19,6 +20,7 @@ LONG
         "/d/lee/npc/farmer" : 3
     ]));
     set("exits", ([
+        "west" : __DIR__"square_c",
         "east" : __DIR__"watermelon_n2",
         "south" : __DIR__"watermelon_s1"
     ]));
