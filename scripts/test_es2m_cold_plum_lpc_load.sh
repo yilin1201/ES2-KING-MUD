@@ -39,7 +39,7 @@ do
 done
 
 cd "$ROOT"
-"$DRIVER" -f neolith.conf -c >"$LOG" 2>&1 &
+"$DRIVER" -f neolith.conf >"$LOG" 2>&1 &
 PID=$!
 
 python3 - "$PID" "$LOG" <<'PY'

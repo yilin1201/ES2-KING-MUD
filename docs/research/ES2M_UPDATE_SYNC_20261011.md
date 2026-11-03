@@ -121,3 +121,4 @@
 - Original ES2 保存來源：未修改。
 - PR #13：維持 OPEN / NOT MERGED。
 - M30 Alpha／ES2M Regression 與 Render Docker 部署：待本次新版驗收工作流程及後續部署確認，不預先宣稱 PASS。
+- LPC Load Gate 原先使用 Neolith `-c`（Console Mode，主控台模式），但驗收程式同時等待 TCP 4000，兩者互相矛盾；已改為與正式 Runtime 相同的 `-f neolith.conf` 網路模式，避免 Driver 因 Console Mode 不監聽而被誤判啟動失敗。
