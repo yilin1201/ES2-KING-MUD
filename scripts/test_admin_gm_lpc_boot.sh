@@ -9,6 +9,15 @@ DRIVER=""
 PID=""
 
 cleanup() {
+  local status=$?
+  if [[ $status -ne 0 ]]; then
+    echo '---- ADMIN GM Neolith stdout/stderr ----' >&2
+    tail -n 120 "$LOG" 2>/dev/null || true
+    if [[ -n "${DEBUG_LOG:-}" && -f "$DEBUG_LOG" ]]; then
+      echo '---- ADMIN GM Neolith debug.log ----' >&2
+      tail -n 200 "$DEBUG_LOG" 2>/dev/null || true
+    fi
+  fi
   if [[ -n "$PID" ]] && kill -0 "$PID" 2>/dev/null; then
     kill "$PID" 2>/dev/null || true
     wait "$PID" 2>/dev/null || true
