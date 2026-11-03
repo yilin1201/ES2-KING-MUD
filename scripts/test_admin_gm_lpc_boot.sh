@@ -33,19 +33,26 @@ test -n "$DRIVER" || { echo "ADMIN GM LPC LOAD FAIL：找不到已建置的 Neol
 # 轉成絕對路徑，再切換到 Runtime 根目錄，避免相對路徑被重複拼接。
 DRIVER="$(realpath "$DRIVER")"
 
+# Neolith.conf writes DebugLogFile under MudlibDir/LogDir; prepare and capture it.
+mkdir -p "$ROOT/mudlib/log"
+: > "$ROOT/mudlib/log/debug.log"
+DEBUG_LOG="$(realpath "$ROOT/mudlib/log/debug.log")"
+
 cd "$ROOT"
-"$DRIVER" -f neolith.conf -c >"$LOG" 2>&1 &
+"$DRIVER" -f neolith.conf >"$LOG" 2>&1 &
 PID=$!
 
 # 等待實際 TCP 監聽；僅確認程序仍存在，不代表 Runtime 已完成啟動。
-python3 - "$PID" "$LOG" <<'PY'
+python3 - "$PID" "$LOG" "$DEBUG_LOG" <<'PY'
 import os, socket, sys, time
-pid, log = int(sys.argv[1]), sys.argv[2]
+pid, log, debug_log = int(sys.argv[1]), sys.argv[2], sys.argv[3]
 for _ in range(45):
     try:
         os.kill(pid, 0)
     except OSError:
-        print(open(log, errors="replace").read())
+        for path in (log, debug_log):
+            if os.path.exists(path):
+                print(open(path, errors="replace").read()[-20000:])
         raise SystemExit("ADMIN GM LPC LOAD FAIL：Neolith 在開啟服務前退出。")
     sock = socket.socket()
     sock.settimeout(0.5)
@@ -57,13 +64,16 @@ for _ in range(45):
         sock.close()
         time.sleep(1)
 else:
-    print(open(log, errors="replace").read())
+    for path in (log, debug_log):
+        if os.path.exists(path):
+            print(open(path, errors="replace").read()[-20000:])
     raise SystemExit("ADMIN GM LPC LOAD FAIL：45 秒內未監聽 TCP 4000。")
 PY
 
 # 即使 preload 編譯錯誤後 Neolith 仍繼續啟動，也要明確檢查啟動日誌。
-if grep -Eiq 'Error in loading object: /cmds/adm/admin|/cmds/adm/admin(\.c)?.*(compile error|syntax error|failed to load)|admin\.c.*(compile error|syntax error)' "$LOG"; then
+if grep -Eiq 'Error in loading object: /cmds/adm/admin|/cmds/adm/admin(\.c)?.*(compile error|syntax error|failed to load)|admin\.c.*(compile error|syntax error)' "$LOG" "$DEBUG_LOG"; then
   cat "$LOG"
+  tail -n 200 "$DEBUG_LOG" 2>/dev/null || true
   echo "ADMIN GM LPC LOAD FAIL：admin.c 發生 LPC 編譯／載入錯誤。" >&2
   exit 1
 fi

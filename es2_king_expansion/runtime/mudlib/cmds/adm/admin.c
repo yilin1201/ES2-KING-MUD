@@ -330,7 +330,7 @@ private int set_stat(object ob, string stat, int value)
 int main(object me, string arg)
 {
     string cmd, value_s, target_name, skill;
-    int value;
+    int value, level, i;
     object ob, gift, weapon;
     object *players;
 
