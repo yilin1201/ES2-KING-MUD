@@ -243,7 +243,7 @@ area = source_root / "d/wutang"
 copied = []
 for room in sorted(area.rglob("*.c")):
     code = room.read_text(encoding="utf-8")
-    for raw in re.findall(r'"(/(?:d|custom|obj)/[^"\\s]+)"', code):
+    for raw in re.findall(r'"(/(?:d|custom|obj)/[^"\s]+)"', code):
         rel = PurePosixPath(raw.lstrip("/"))
         if not rel.suffix:
             rel = rel.with_suffix(".c")
