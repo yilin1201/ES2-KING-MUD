@@ -82,7 +82,7 @@ for _ in $(seq 1 600); do
     tail -50 "$RUNTIME_DIR/mudlib/log/es2-king-driver.stdout" >&2 2>/dev/null || true
     exit 1
   fi
-  if ss -H -ltn "sport = :$ES2_PORT" 2>/dev/null | grep -q "LISTEN"; then
+  if ss -H -ltn 2>/dev/null | grep -Eq "LISTEN.*:$ES2_PORT[[:space:]]"; then
     stable_checks=$((stable_checks + 1))
   else
     stable_checks=0
