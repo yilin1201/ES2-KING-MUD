@@ -38,18 +38,25 @@ do
   grep -Fqx "$obj" "$PRELOAD" || printf '%s\n' "$obj" >> "$PRELOAD"
 done
 
+# Neolith.conf writes DebugLogFile under MudlibDir/LogDir; create it before startup.
+mkdir -p "$ROOT/mudlib/log"
+: > "$ROOT/mudlib/log/debug.log"
+DEBUG_LOG="$ROOT/mudlib/log/debug.log"
+
 cd "$ROOT"
 "$DRIVER" -f neolith.conf >"$LOG" 2>&1 &
 PID=$!
 
-python3 - "$PID" "$LOG" <<'PY'
+python3 - "$PID" "$LOG" "$DEBUG_LOG" <<'PY'
 import os, socket, sys, time
-pid, log = int(sys.argv[1]), sys.argv[2]
+pid, log, debug_log = int(sys.argv[1]), sys.argv[2], sys.argv[3]
 for _ in range(60):
     try:
         os.kill(pid, 0)
     except OSError:
-        print(open(log, errors="replace").read())
+        for path in (log, debug_log):
+            if os.path.exists(path):
+                print(open(path, errors="replace").read()[-20000:])
         raise SystemExit("ES2M COLD PLUM LOAD FAIL：Neolith 在監聽前退出。")
     sock = socket.socket()
     sock.settimeout(0.5)
@@ -67,6 +74,7 @@ PY
 
 if grep -Eiq 'Error in loading object: /(std/martial_art|daemon/skill/(lunmay|hainmay_force|advance_lunmay|mayin|seven)|daemon/misc/npc_power|std/char/npc|d/wutang/(crossroad|npc/may_yin_fong))|((compile|syntax) error).*(martial_art|lunmay|hainmay_force|advance_lunmay|mayin|seven|npc_power|may_yin_fong|crossroad)' "$LOG"; then
   cat "$LOG"
+  tail -n 200 "$DEBUG_LOG" 2>/dev/null || true
   echo "ES2M COLD PLUM LOAD FAIL：新增武學、NPC 強度或梅影風發生 LPC 載入錯誤。" >&2
   exit 1
 fi
