@@ -95,23 +95,7 @@ def main() -> None:
         if not (npc_dir / f"{name}.c").is_file()
     )
 
-    critical = {
-        "wroad3": {"east": "wroad4"},
-        "wroad4": {"west": "wroad3", "east": "square_w"},
-        "square_w": {"west": "wroad4"},
-        "shrine": {"in": "nie_backroom"},
-        "nie_backroom": {"out": "shrine"},
-    }
-    for room, links in critical.items():
-        path = runtime_area / f"{room}.c"
-        actual = exits(path) if path.is_file() else {}
-        for direction, target in links.items():
-            if actual.get(direction) != target:
-                broken.append(
-                    f"critical:{room}.{direction}->{actual.get(direction)} expected {target}"
-                )
-
-    # Source/runtime hash differences may be intentional KING merges (e.g. HOCKSHOP pawnshop);
+    # 最新 ES2M LEE_TOPOLOGY.json 已逐房間檢查所有出口；不再混用舊版 wroad4 固定路線。\n\n    # Source/runtime hash differences may be intentional KING merges (e.g. HOCKSHOP pawnshop);
     # runtime acceptance is based on latest ES2M topology exits, room/NPC presence, and critical links.
     if missing or broken or missing_npcs:
         print("ES2M_LEE_RUNTIME_FAIL")
@@ -123,7 +107,7 @@ def main() -> None:
             "pawnshop", "watermelon_s3", "creek",
         }
         for room_name in sorted(diagnostic_rooms):
-            source_path = snapshot_area / f"{room_name}.c"
+            source_path = source_area / f"{room_name}.c"
             runtime_path = runtime_area / f"{room_name}.c"
             if not runtime_path.is_file():
                 print(f"ROOM_DIAGNOSTIC: {room_name} runtime=MISSING path={runtime_path}")
@@ -136,7 +120,7 @@ def main() -> None:
                     "room": room_name,
                     "runtime_path": str(runtime_path),
                     "runtime_sha256": sha256(runtime_path),
-                    "snapshot_sha256": source_hash,
+                    "current_source_sha256": source_hash,
                     "same_bytes": source_hash == sha256(runtime_path),
                     "parsed_exits": exits(runtime_path),
                     "runtime_bytes": runtime_path.stat().st_size,
