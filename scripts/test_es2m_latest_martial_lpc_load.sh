@@ -45,32 +45,28 @@ cd "$ROOT"
 "$DRIVER" -f neolith.conf >"$LOG" 2>&1 &
 PID=$!
 
-python3 - "$PID" "$LOG" "$DEBUG_LOG" <<'PY'
-import os, socket, sys, time
-pid, log, debug_log = int(sys.argv[1]), sys.argv[2], sys.argv[3]
-for _ in range(60):
-    try:
-        os.kill(pid, 0)
-    except OSError:
-        for path in (log, debug_log):
-            if os.path.exists(path):
-                print(open(path, errors="replace").read()[-20000:])
-        raise SystemExit("ES2M MARTIAL LOAD FAIL：Neolith 在監聽前退出。")
-    sock = socket.socket()
-    sock.settimeout(0.5)
-    try:
-        sock.connect(("127.0.0.1", 4000))
-        sock.close()
-        break
-    except OSError:
-        sock.close()
-        time.sleep(1)
-else:
-    for path in (log, debug_log):
-        if os.path.exists(path):
-            print(open(path, errors="replace").read()[-20000:])
-    raise SystemExit("ES2M MARTIAL LOAD FAIL：60 秒內未監聽 TCP 4000。")
-PY
+# Passive Listen Check／被動監聽檢查：不可連線後立即斷線，Neolith 可能收到 SIGPIPE。
+command -v ss >/dev/null 2>&1 || { echo "ES2M MARTIAL LOAD BLOCKED：缺少 ss 被動監聽工具。" >&2; exit 1; }
+ready=0
+for _ in $(seq 1 600); do
+  if ! kill -0 "$PID" 2>/dev/null; then
+    cat "$LOG"
+    tail -n 200 "$DEBUG_LOG" 2>/dev/null || true
+    echo "ES2M MARTIAL LOAD FAIL：Neolith 在監聽前退出。" >&2
+    exit 1
+  fi
+  if ss -H -ltn 'sport = :4000' 2>/dev/null | grep -q 'LISTEN'; then
+    ready=1
+    break
+  fi
+  sleep 0.1
+done
+if (( ! ready )); then
+  cat "$LOG"
+  tail -n 200 "$DEBUG_LOG" 2>/dev/null || true
+  echo "ES2M MARTIAL LOAD FAIL：60 秒內未監聽 TCP 4000。" >&2
+  exit 1
+fi
 
 if grep -Eiq 'Error in loading object: /(daemon/skill/(tiger-steps|sanmeendo|tiger-force)|d/oldpine/npc/kao_shen)|((compile|syntax) error).*(tiger-steps|sanmeendo|tiger-force|kao_shen)' "$LOG" "$DEBUG_LOG"; then
   cat "$LOG"
