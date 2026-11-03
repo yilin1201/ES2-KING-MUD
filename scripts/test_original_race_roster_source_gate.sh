@@ -22,17 +22,19 @@ grep -Eq 'set[[:space:]]*\("karma",[[:space:]]*5\);' "$AVATAR"
 grep -Fq 'DAEMON_D->register_race_daemon("human");' "$HUMAN"
 grep -Fq 'DAEMON_D->register_race_daemon("avatar");' "$AVATAR"
 
-# Final Runtime 同時保留 pinned Original human/avatar 與已登錄的 ES2M supplemental races。
-# 此處只允許已完成 provenance 登錄的 10 個 ES2M daemon，禁止未審核 race 靜默進入部署映像。
+# Final Runtime 保留玩家可選 ES2M supplemental races，並保留 beast NPC-only daemon。
+# beast.c 明確標註不可由玩家建立角色選擇；不加入登入選單。
 mapfile -t race_files < <(find "$ROOT/mudlib/daemon/race" -maxdepth 1 -type f -name '*.c' -printf '%f\n' | sort)
-expected=("ashura.c" "avatar.c" "blackteeth.c" "dingling.c" "headless.c" "human.c" "jiaojao.c" "malik.c" "rainner.c" "woochan.c" "yaksa.c" "yenhold.c")
+expected=("ashura.c" "avatar.c" "beast.c" "blackteeth.c" "dingling.c" "headless.c" "human.c" "jiaojao.c" "malik.c" "rainner.c" "woochan.c" "yaksa.c" "yenhold.c")
 test "${race_files[*]}" = "${expected[*]}" || {
   printf 'ES2M_RACE_ROSTER_SOURCE_GATE_REAUDIT:%s\n' "${race_files[*]}" >&2
   exit 1
 }
+# beast is NPC-only and must not appear in the player-selectable login roster.
+! grep -Fq '"beast",' "$LOGIN"
 
 echo 'ORIGINAL_RACE_ROSTER_SOURCE_GATE_PASS'
 echo 'ORIGINAL_RACE_ROSTER_CONFIRMED:human,avatar'
-echo 'ES2M_RACE_ROSTER_SOURCE_GATE_PASS:blackteeth,yenhold,woochan,dingling,jiaojao,rainner,ashura,headless,yaksa,malik'
+echo 'ES2M_RACE_ROSTER_SOURCE_GATE_PASS:blackteeth,yenhold,woochan,dingling,jiaojao,rainner,ashura,headless,yaksa,malik; beast=NPC_ONLY'
 echo 'ORIGINAL_AVATAR_DIRECT_CREATION_CONFIRMED:karma=100'
 echo 'ORIGINAL_HUMAN_AVATAR_RARE_PATH_CONFIRMED:1/10000'
