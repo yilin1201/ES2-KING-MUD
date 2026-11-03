@@ -229,6 +229,32 @@ if [[ -d "$ES2M_WUTANG_DIR" ]]; then
     --current-source "$REPO_ROOT/es2m_source_mirror/mudlib"
   if [[ -e "$ROOT/mudlib/d/wutang" ]]; then
     # Runtime may contain the registered KING may_yin_fong overlay; validate current inventory/topology instead of byte-diffing against historical snapshot.
+
+  # 最新五堂鎮地圖的絕對出口依賴可能位於其他區域；補入來源存在而 Runtime 尚缺的檔案。
+  python3 - "$REPO_ROOT/es2m_source_mirror/mudlib" "$ROOT/mudlib" <<'PY'
+from pathlib import Path, PurePosixPath
+import re
+import shutil
+import sys
+
+source_root = Path(sys.argv[1])
+runtime_root = Path(sys.argv[2])
+area = source_root / "d/wutang"
+copied = []
+for room in sorted(area.rglob("*.c")):
+    code = room.read_text(encoding="utf-8")
+    for raw in re.findall(r'"(/(?:d|custom|obj)/[^"\\s]+)"', code):
+        rel = PurePosixPath(raw.lstrip("/"))
+        if not rel.suffix:
+            rel = rel.with_suffix(".c")
+        src = source_root / Path(str(rel))
+        dst = runtime_root / Path(str(rel))
+        if src.is_file() and not dst.is_file():
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dst)
+            copied.append(str(rel))
+print("ES2M_WUTANG_EXTERNAL_DEPENDENCIES_STAGED:" + ",".join(copied))
+PY
     python3 "$REPO_ROOT/scripts/test_es2m_wutang_topology.py" \
       --source "$REPO_ROOT/es2m_snapshot/mudlib" \
       --runtime "$ROOT/mudlib" \
