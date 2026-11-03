@@ -29,7 +29,7 @@ cleanup() {
     wait "$PID" 2>/dev/null || true
   fi
   if [[ -n "${MASTER_BACKUP:-}" && -f "$MASTER_BACKUP" ]]; then
-    cp "$MASTER_BACKUP" "$ROOT/mudlib/adm/obj/master.c"
+    cp "$MASTER_BACKUP" "$MASTER"
     rm -f "$MASTER_BACKUP"
   fi
   rm -f "$LOG"
@@ -57,7 +57,7 @@ mkdir -p "$ROOT/mudlib/log"
 : > "$ROOT/mudlib/log/debug.log"
 DEBUG_LOG="$(realpath "$ROOT/mudlib/log/debug.log")"
 
-MASTER="$ROOT/mudlib/adm/obj/master.c"
+MASTER="$(realpath "$ROOT/mudlib/adm/obj/master.c")"
 MASTER_BACKUP="$(mktemp)"
 cp "$MASTER" "$MASTER_BACKUP"
 python3 - "$MASTER" <<'PY'
