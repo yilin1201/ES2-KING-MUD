@@ -69,8 +69,9 @@ def main() -> None:
     parser.add_argument("--runtime", type=Path)
     parser.add_argument("--current-source", type=Path, help="Latest ES2M source mirror for inventory comparison")
     args = parser.parse_args()
-    validate_tree(args.source, False, 17)
-    runtime_npc_count = 17
+    source_npc_count = len(list((args.source / "d/oldpine/npc").glob("*.c")))
+    validate_tree(args.source, False, source_npc_count)
+    runtime_npc_count = source_npc_count
     if args.runtime:
         runtime_npc_count = len(list((args.runtime / "d/oldpine/npc").glob("*.c")))
         if args.current_source:
@@ -79,7 +80,7 @@ def main() -> None:
                 f"ES2M_OLDPINE_RUNTIME_NPC_COUNT: {runtime_npc_count} expected_current_source={len(current_npcs)}"
             )
         else:
-            assert runtime_npc_count in (17, 18), f"ES2M_OLDPINE_RUNTIME_NPC_COUNT: {runtime_npc_count}"
+            assert runtime_npc_count == source_npc_count, f"ES2M_OLDPINE_RUNTIME_NPC_COUNT: {runtime_npc_count} expected={source_npc_count}"
         validate_tree(args.runtime, True, runtime_npc_count)
         source_npcs = {p.name for p in (args.source / "d/oldpine/npc").glob("*.c")}
         runtime_npcs = {p.name for p in (args.runtime / "d/oldpine/npc").glob("*.c")}
@@ -95,7 +96,7 @@ def main() -> None:
         assert len(extra_npcs) == runtime_npc_count - len(source_npcs), f"ES2M_OLDPINE_RUNTIME_EXTRA_NPCS: {extra_npcs}"
         if extra_npcs:
             print("ES2M_OLDPINE_RUNTIME_EXTRA_NPC:", ",".join(extra_npcs))
-    print(f"ES2M OLDPINE TOPOLOGY PASS／50 房間、歷史快照 17 NPC、Runtime {runtime_npc_count} NPC、5 物件、雙向入口及拜師主線引用閉合。")
+    print(f"ES2M OLDPINE TOPOLOGY PASS／50 房間、最新來源 {source_npc_count} NPC、Runtime {runtime_npc_count} NPC、5 物件、雙向入口及拜師主線引用閉合。")
 
 
 if __name__ == "__main__":
