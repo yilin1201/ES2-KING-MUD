@@ -55,7 +55,7 @@ for _ in $(seq 1 600); do
     echo "ES2M MARTIAL LOAD FAIL：Neolith 在監聽前退出。" >&2
     exit 1
   fi
-  if ss -H -ltn 'sport = :4000' 2>/dev/null | grep -q 'LISTEN'; then
+  if ss -H -ltn 2>/dev/null | grep -Eq 'LISTEN.*:4000[[:space:]]'; then
     ready=1
     break
   fi
