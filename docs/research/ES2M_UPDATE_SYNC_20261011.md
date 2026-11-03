@@ -113,6 +113,7 @@
 - 舊版 `assert_m30_final_runtime.sh` 仍要求固定 12 項數字選單與舊 callback `get_race(string, object)`，與最新 ES2M API 不符，造成 2026-11-01 Render build 在最終 Runtime Assertion 停止。
 - 本次將驗收改為核對新版 callback、業力種族清單及 KING Public Character Text Input marker；不再要求過時的固定數字選單。
 - 此修改只更新驗收契約，不改寫 ES2M 原始種族選擇邏輯，也不變更 KING Owner Claim 程式。
+- M30 Alpha Runtime Gate 另同步修正龍圖心經檢查：新版 `do_exercise()` 以回傳 `0` 結束精力不足的打坐流程，不再呼叫不存在的 `interrupt()`／`interrupt_me()` API。
 
 ### 部署狀態
 

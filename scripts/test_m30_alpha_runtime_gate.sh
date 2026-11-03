@@ -12,7 +12,10 @@ grep -Fq 'return 200;' "$ROOT/feature/char/skill.c"
 grep -Fq 'if( val > cap ) val = cap;' "$ROOT/feature/char/skill.c"
 grep -Fq 'save_object (file)' "$ROOT/feature/save.c"
 grep -Fq 'restore_object (file, 1)' "$ROOT/feature/save.c"
-grep -Fq 'me->interrupt(me, "exhausted")' "$ROOT/d/snow/skill/dragon_force.c"
+# Dragon Force exercise contract／龍圖心經精力不足時以 do_exercise() 回傳 0 結束，不呼叫不存在的 interrupt API。
+grep -Fq 'int do_exercise(object me)' "$ROOT/d/snow/skill/dragon_force.c"
+grep -Fq 'return 0;   // 傳回 0 結束打坐' "$ROOT/d/snow/skill/dragon_force.c"
+! grep -Fq 'me->interrupt(me, "exhausted")' "$ROOT/d/snow/skill/dragon_force.c"
 ! grep -Fq 'me->interrupt_me(me, "exhausted")' "$ROOT/d/snow/skill/dragon_force.c"
 
 # Expansion core／Expansion 核心：M26-M29 全部同一 overlay／覆蓋層。
