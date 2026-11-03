@@ -293,8 +293,14 @@ s,n=re.subn(r'string \*user_race = \(\{.*?\}\);',block,s,count=1,flags=re.S)
 if n != 1:
     raise SystemExit('Could not replace user_race registry／無法更新登入種族清單')
 
-# Race acceptance／種族接受邏輯：目前保存的 Original logind.c 的 get_race() 只接受 human/avatar。
-# 重建 Runtime 必須同步讓歷史種族通過 switch，否則游標雖可選到種族，確認後仍會被退回選單。
+# Race acceptance／種族接受邏輯：最新 ES2M 使用 dynamic get_race callback，依 RACE_D(race)->query("karma") 驗證。
+# 若已是此新版 callback，更新 user_race 清單後即可接受全部種族，不再套用舊版固定 switch。
+if 'private void get_race (string arg, object ob, string *list)' in s and 'RACE_D(race)->query("karma")' in s:
+    p.write_text(s)
+    print("ES2M DYNAMIC RACE ACCEPTANCE PASS／最新 callback 已接受登入清單內所有種族。")
+    raise SystemExit(0)
+
+# Legacy Original compatibility／只有舊版固定 switch 才補入歷史種族 case。
 marker='''        case "avatar":\n            race = "avatar";\n            break;'''
 extra=''.join(f'''\n        case "{race}":\n            race = "{race}";\n            break;''' for race in races if race not in ('human','avatar'))
 if marker not in s:
