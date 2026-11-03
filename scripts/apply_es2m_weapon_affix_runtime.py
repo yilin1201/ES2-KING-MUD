@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PINNED = ROOT / "source/es2m_updates/20261004/mudlib"
 CURRENT = ROOT / "source/es2m_updates/20261004_087c1736/source/upstream/mudlib"
+LATEST = ROOT / "es2m_source_mirror/mudlib"
 
 
 @dataclass(frozen=True)
@@ -107,6 +108,11 @@ def validate(runtime_mudlib: Path, overlays: tuple[Overlay, ...] = OVERLAYS) -> 
         if not target.is_file():
             raise RuntimeError(f"Runtime 缺少相依檔：{item.path}")
         actual_target = digest(target)
+        latest_source = LATEST / item.path
+        # 最新 ES2M source mirror 若已與 Runtime 完全一致，代表新版已包含此功能；
+        # 不可再以 2026-10-04 舊詞綴快照覆蓋新版檔案。
+        if latest_source.is_file() and actual_target == digest(latest_source):
+            continue
         if actual_target not in item.allowed_target_sha256:
             raise RuntimeError(f"Runtime 衝突，停止覆蓋：{item.path} {actual_target}")
 
@@ -116,6 +122,9 @@ def apply(runtime_mudlib: Path, overlays: tuple[Overlay, ...] = OVERLAYS) -> int
     changed = 0
     for item in overlays:
         target = runtime_mudlib / item.path
+        latest_source = LATEST / item.path
+        if latest_source.is_file() and digest(target) == digest(latest_source):
+            continue
         if digest(target) != item.source_sha256:
             shutil.copy2(item.source, target)
             changed += 1
