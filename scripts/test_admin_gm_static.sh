@@ -69,7 +69,11 @@ grep -Fq '!weapon->wield()' "$COMMAND"
 grep -Fq 'private string resolve_skill_name(string name)' "$COMMAND"
 grep -Fq 'replace_string(name, " ", "_")' "$COMMAND"
 grep -Fq 'if (!(int)ob->query_learn(resolved)' "$COMMAND"
-grep -Fq 'if (value != level)' "$COMMAND"
+grep -Fq 'private int do_learn(object me, string value_s)' "$COMMAND"
+grep -Fq 'private int do_unlearn(object me, string value_s)' "$COMMAND"
+grep -Fq 'private int do_skill(object me, string value_s)' "$COMMAND"
+grep -Fq 'int i, level_index, skill_level, actual;' "$COMMAND"
+grep -Fq 'if (actual != skill_level)' "$COMMAND"
 
 # ES2-KDS soldier level-up fix／Expansion 必須保存軍人升級 daemon，原始來源不直接覆寫。
 SOLDIER="$ROOT/daemon/class/soldier.c"

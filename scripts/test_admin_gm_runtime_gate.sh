@@ -29,7 +29,11 @@ grep -Fqx '/cmds/adm/admin' "$PRELOAD"
 # ES2-KDS admin improvements／生成 Runtime 必須包含技能名稱解析與修改回讀驗證。
 grep -Fq 'private string resolve_skill_name(string name)' "$COMMAND"
 grep -Fq 'if (!(int)ob->query_learn(resolved)' "$COMMAND"
-grep -Fq 'if (value != level)' "$COMMAND"
+grep -Fq 'private int do_learn(object me, string value_s)' "$COMMAND"
+grep -Fq 'private int do_unlearn(object me, string value_s)' "$COMMAND"
+grep -Fq 'private int do_skill(object me, string value_s)' "$COMMAND"
+grep -Fq 'int i, level_index, skill_level, actual;' "$COMMAND"
+grep -Fq 'if (actual != skill_level)' "$COMMAND"
 
 # ES2-KDS soldier fix／確認軍人職業實際套用修正後的升級 daemon。
 grep -Fq 'static void create() { seteuid(getuid()); }' "$SOLDIER"
