@@ -129,10 +129,10 @@ fi
 # ES2M Old Pine Forest／老松林完整區域導入：
 # 僅在 Pinned Original 完全沒有 /d/oldpine 時建立新區域，避免覆蓋任何既有世界內容。
 # 來源房間、NPC、物件與三個 NPC 裝備相依檔均先由 topology gate（拓樸閘門）驗證。
-ES2M_OLDPINE_DIR="$REPO_ROOT/es2m_snapshot/mudlib/d/oldpine"
+ES2M_OLDPINE_DIR="$REPO_ROOT/es2m_source_mirror/mudlib/d/oldpine"
 if [[ -d "$ES2M_OLDPINE_DIR" ]]; then
   python3 "$REPO_ROOT/scripts/test_es2m_oldpine_topology.py" \
-    --source "$REPO_ROOT/es2m_snapshot/mudlib"
+    --source "$REPO_ROOT/es2m_source_mirror/mudlib"
 
   if [[ -e "$ROOT/mudlib/d/oldpine" ]]; then
     # E2E 再次套用時僅允許逐檔一致的已導入區域，不得覆蓋差異。
@@ -164,7 +164,7 @@ path.write_text(text)
 PY
 
   python3 "$REPO_ROOT/scripts/test_es2m_oldpine_topology.py" \
-    --source "$REPO_ROOT/es2m_snapshot/mudlib" --runtime "$ROOT/mudlib"
+    --source "$REPO_ROOT/es2m_source_mirror/mudlib" --runtime "$ROOT/mudlib"
   echo 'ES2M OLDPINE CONNECTED: 50 rooms, 17 NPCs and 5 local objects; Snow sgate southeast <-> entrance northwest.'
 fi
 
