@@ -163,6 +163,16 @@ if new not in text:
 path.write_text(text)
 PY
 
+  # 最新 Oldpine grass1 已連到康平村樹林口；先將其外部出口依賴一併寫入 Runtime。
+  KANGPING_EXIT="$REPO_ROOT/es2m_source_mirror/mudlib/d/kangping/forest_exit.c"
+  if [[ -f "$KANGPING_EXIT" ]]; then
+    mkdir -p "$ROOT/mudlib/d/kangping"
+    cp "$KANGPING_EXIT" "$ROOT/mudlib/d/kangping/forest_exit.c"
+  else
+    echo "ES2M OLDPINE FAIL：最新來源缺少 d/kangping/forest_exit.c。" >&2
+    exit 1
+  fi
+
   python3 "$REPO_ROOT/scripts/test_es2m_oldpine_topology.py" \
     --source "$REPO_ROOT/es2m_source_mirror/mudlib" --runtime "$ROOT/mudlib"
   echo 'ES2M OLDPINE CONNECTED: 50 rooms, 17 NPCs and 5 local objects; Snow sgate southeast <-> entrance northwest.'
