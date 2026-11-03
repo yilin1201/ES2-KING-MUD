@@ -48,3 +48,8 @@ grep -Fq 'input_to ("get_race", ob, list);' "$LOGIN_ASSERT"
 grep -Fq 'ORIGINAL_ES2_COMMIT="${ORIGINAL_ES2_COMMIT:-cc45c06af4852380e5148dad3c9d53ff06854f2c}"' scripts/bootstrap_original_es2.sh
 grep -Fq 'git -C "$WORKDIR" checkout "$ORIGINAL_ES2_COMMIT"' scripts/bootstrap_original_es2.sh
 grep -Fq 'git -C "$WORKDIR" submodule update --init --recursive' scripts/bootstrap_original_es2.sh
+
+# Driver build gate must match Dockerfile; the pinned Neolith submodule has no linux-gcc preset.
+grep -Fq 'cmake -S . -B out/build/linux -G Ninja -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release' .github/workflows/es2-king-m30-alpha.yml
+grep -Fq 'cmake --build out/build/linux --parallel' .github/workflows/es2-king-m30-alpha.yml
+! grep -Fq -- '--preset linux-gcc' .github/workflows/es2-king-m30-alpha.yml

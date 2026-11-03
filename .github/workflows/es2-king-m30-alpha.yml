@@ -41,7 +41,8 @@ jobs:
           python -m pip install --upgrade cmake
       - name: Driver Build／建置 Driver
         working-directory: .runtime/es2-king/neolith
-        run: cmake --preset linux-gcc -DBUILD_TESTING=OFF && cmake --build --preset dev-linux-gcc
+        run: cmake -S . -B out/build/linux -G Ninja -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
+          cmake --build out/build/linux --parallel
       # LPC Load Gate／以真實 Driver 載入新武學、NPC 強度及五堂鎮 NPC。
       - name: ES2M Cold Plum LPC Load／冷梅莊載入驗證
         run: bash scripts/test_es2m_cold_plum_lpc_load.sh .runtime/es2-king

@@ -130,3 +130,9 @@
 - The default branch contains legacy `.lpc` modules that reference `STD_WRAP_WIDTH`; the current ES2M source overlay replaces `globals.h` with a version that no longer defines that legacy constant.
 - Bootstrap now checks out the same pinned Original ES2 commit and updates submodules to the pinned tree before applying the ES2-KING overlay. This removes the test/deploy baseline mismatch rather than adding obsolete constants to ES2M.
 - A static gate now verifies the Bootstrap pin and submodule checkout.
+
+### Neolith Driver Build Gate alignment
+
+- M30 Alpha Workflow originally used `linux-gcc` / `dev-linux-gcc` CMake presets, but the Neolith submodule pinned by the production Original ES2 baseline does not expose those presets.
+- Dockerfile already builds the same pinned Driver using direct CMake configure/build commands; M30 Alpha now uses those exact commands and writes the binary under `neolith/out/build/linux` for LPC load tests.
+- Static Gate verifies the workflow does not regress to the unavailable preset.
