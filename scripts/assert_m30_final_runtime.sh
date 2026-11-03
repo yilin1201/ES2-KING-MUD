@@ -157,14 +157,16 @@ grep -Fq '待得金芒驟聚，「" HIY "不滅金身" HIW "」自然流轉，�
 grep -Fq 'return strength * query_immortal_absorb_percent() / 100;' "$BATIAN_SKILL"
 ! grep -Fq '暗金琉璃神華' "$BATIAN_SKILL"
 
-# Score Grid Bars／形體精氣神方格條只改顯示，保留 Original 三值 Statistic。
-grep -Fq 'ES2-KING SCORE GRID BARS' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
-grep -Fq 'score_grid_bar("HP", HIG' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
-grep -Fq 'score_grid_bar("GIN", HIR' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
-grep -Fq 'score_grid_bar("KEE", HIB' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
-grep -Fq 'score_grid_bar("SEN", HIY' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
-grep -Fq 'string bar = "ES2GRID:" + kind + ":";' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
-grep -Fq 'return bar + ":END";' "$RUNTIME_DIR/mudlib/cmds/usr/score.c"
-! grep -Fq 'score-block' "$RUNTIME_DIR/../webtelnet/public/index.html" 2>/dev/null || true
+# Frozen Score UI／Score UI 凍結：沿用目前 ES2M／Original score.c 的 tribar_graph 三值顯示，不額外重做介面。
+SCORE_UI="$RUNTIME_DIR/mudlib/cmds/usr/score.c"
+grep -Fq 'string tribar_graph (' "$SCORE_UI"
+grep -Fq 'tribar_graph (" ", BRED' "$SCORE_UI"
+grep -Fq 'tribar_graph ("■", YEL' "$SCORE_UI"
+grep -Fq 'tribar_graph ("■", RED' "$SCORE_UI"
+grep -Fq 'tribar_graph ("■", BLU' "$SCORE_UI"
+grep -Fq '精   %s' "$SCORE_UI"
+grep -Fq '氣   %s' "$SCORE_UI"
+grep -Fq '神   %s' "$SCORE_UI"
+grep -Fq 'write (line);' "$SCORE_UI"
 
 echo "FINAL RUNTIME OVERLAY ASSERTION PASS（最終執行環境覆蓋層斷言通過）：新版 KING 保留流程、Public Race Text 相容層與 Cold Plum Arena Static Gate 均已通過。"
