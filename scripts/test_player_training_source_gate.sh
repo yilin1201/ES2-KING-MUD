@@ -39,11 +39,11 @@ grep -Fq 'if( val > cap ) val = cap;' "$SKILL"
 grep -Fq 'if( skills[skill] > es2_king_skill_cap() )' "$SKILL"
 
 # Ordinary-player active progression／普通玩家主動成長：
-# Original sneak/steal command 是真正可由玩家操作觸發的 improve_skill call site。
-grep -Fq 'me->improve_skill("sneak", 1);' "$SNEAK"
-grep -Fq 'me->improve_skill("sneak", me->query_attr("int") );' "$SNEAK"
-grep -Fq 'me->improve_skill("stealing", me->query_attr("int"));' "$STEAL"
-grep -Fq 'me->improve_skill("stealing", random(me->query_attr("int")));' "$STEAL"
+# 目前 Runtime 採 KING/ES2M 已驗證的 sneak 智力公式與 steal_exp()，不再鎖定舊版 Original 呼叫參數。
+grep -Fq 'me->improve_skill("sneak", me->query_attr("int"));' "$SNEAK"
+grep -Fq 'me->improve_skill("sneak", es2_king_sneak_int_formula_exp(me));' "$SNEAK"
+grep -Fq 'me->improve_skill("stealing", steal_exp(me));' "$STEAL"
+grep -Fq 'me->improve_skill("stealing", steal_exp(me) / 4);' "$STEAL"
 
 # 重要 Evidence boundary：這個 pinned Target 沒有 usr learn/practice/exercise command。
 # 若日後出現，必須重新 audit，而不是默默把 family/historical 語法當 Original。
