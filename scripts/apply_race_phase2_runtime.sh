@@ -227,8 +227,10 @@ if [[ -d "$ES2M_WUTANG_DIR" ]]; then
   python3 "$REPO_ROOT/scripts/test_es2m_wutang_topology.py" \
     --source "$REPO_ROOT/es2m_snapshot/mudlib" \
     --current-source "$REPO_ROOT/es2m_source_mirror/mudlib"
-  if [[ -e "$ROOT/mudlib/d/wutang" ]]; then
-    # Runtime may contain the registered KING may_yin_fong overlay; validate current inventory/topology instead of byte-diffing against historical snapshot.
+  if [[ ! -e "$ROOT/mudlib/d/wutang" ]]; then
+    mkdir -p "$ROOT/mudlib/d/wutang"
+    cp -a "$ES2M_WUTANG_DIR/." "$ROOT/mudlib/d/wutang/"
+  fi
 
   # 最新五堂鎮地圖的絕對出口依賴可能位於其他區域；補入來源存在而 Runtime 尚缺的檔案。
   python3 - "$REPO_ROOT/es2m_source_mirror/mudlib" "$ROOT/mudlib" <<'PY'
@@ -243,7 +245,7 @@ area = source_root / "d/wutang"
 copied = []
 for room in sorted(area.rglob("*.c")):
     code = room.read_text(encoding="utf-8")
-    for raw in re.findall(r'"(/(?:d|custom|obj)/[^"\s]+)"', code):
+    for raw in re.findall(r'"(/(?:d|custom|obj)/[^"\\s]+)"', code):
         rel = PurePosixPath(raw.lstrip("/"))
         if not rel.suffix:
             rel = rel.with_suffix(".c")
@@ -255,19 +257,11 @@ for room in sorted(area.rglob("*.c")):
             copied.append(str(rel))
 print("ES2M_WUTANG_EXTERNAL_DEPENDENCIES_STAGED:" + ",".join(copied))
 PY
-    python3 "$REPO_ROOT/scripts/test_es2m_wutang_topology.py" \
-      --source "$REPO_ROOT/es2m_snapshot/mudlib" \
-      --runtime "$ROOT/mudlib" \
-      --current-source "$REPO_ROOT/es2m_source_mirror/mudlib"
-    echo "ES2M WUTANG CURRENT SOURCE INVENTORY PASS"
-  else
-    mkdir -p "$ROOT/mudlib/d/wutang"
-    cp -a "$ES2M_WUTANG_DIR/." "$ROOT/mudlib/d/wutang/"
-    python3 "$REPO_ROOT/scripts/test_es2m_wutang_topology.py" \
-      --source "$REPO_ROOT/es2m_snapshot/mudlib" \
-      --runtime "$ROOT/mudlib" \
-      --current-source "$REPO_ROOT/es2m_source_mirror/mudlib"
-  fi
+
+  python3 "$REPO_ROOT/scripts/test_es2m_wutang_topology.py" \
+    --source "$REPO_ROOT/es2m_snapshot/mudlib" \
+    --runtime "$ROOT/mudlib" \
+    --current-source "$REPO_ROOT/es2m_source_mirror/mudlib"
   echo 'ES2M WUTANG CONNECTED: latest source rooms, NPCs, ferries and objects; Zhenwu gate south <-> entrance north.'
 fi
 
