@@ -1,4 +1,5 @@
 import { createReadStream } from "node:fs";
+import { readFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { connect } from "node:net";
 import { randomBytes } from "node:crypto";
@@ -18,14 +19,27 @@ const buildVersion = process.env.ES2_BUILD_VERSION || "m30-public-runtime";
 const characterTransportVersion = "race-telnet-crlf-v9";
 
 // HTTP（網頁傳輸協定）只提供固定入口頁，避免把檔案系統暴露給瀏覽器。
-function neolithReachable() {
-  return new Promise(resolve => {
-    const socket = connect({ host: mudHost, port: mudPort });
-    socket.setTimeout(1000);
-    socket.once("connect", () => { socket.destroy(); resolve(true); });
-    socket.once("error", () => resolve(false));
-    socket.once("timeout", () => { socket.destroy(); resolve(false); });
-  });
+async function neolithReachable() {
+  // Passive Listener Check／被動監聽檢查：健康檢查不可建立 TCP 後立即斷線。
+  // Neolith 舊版 Driver 會把這種探測連線當成真正玩家連線，可能觸發 SIGPIPE／master ref-count fatal。
+  // 直接讀 Linux /proc/net/tcp，僅確認 LISTEN 狀態，不碰遊戲 socket。
+  const expectedPort = mudPort.toString(16).toUpperCase().padStart(4, "0");
+  try {
+    const tables = await Promise.all(
+      ["/proc/net/tcp", "/proc/net/tcp6"].map(file =>
+        readFile(file, "utf8").catch(() => "")
+      )
+    );
+    return tables.some(table => table.split("\\n").slice(1).some(line => {
+      const fields = line.trim().split(/\\s+/);
+      const local = fields[1] || "";
+      const state = fields[3] || "";
+      const colon = local.lastIndexOf(":");
+      return colon >= 0 && local.slice(colon + 1).toUpperCase() === expectedPort && state === "0A";
+    }));
+  } catch {
+    return false;
+  }
 }
 
 const http = createServer(async (request, response) => {
@@ -206,10 +220,6 @@ function createMudSession(browser, firstMessage = null) {
   mud.once("connect", () => {
     mud.setTimeout(0);
     console.log(`[public-session ${sessionId}] mud-connected host=${mudHost} port=${mudPort}`);
-    // Initial Telnet Negotiation／新工作階段先送出標準 Telnet 選項協商，確保 Neolith 啟動 Login prompt。
-    // IAC WILL ECHO、IAC WILL SGA、IAC DO TTYPE、IAC DO NAWS；不包含玩家帳密或遊戲命令。
-    mud.write(Buffer.from([255, 251, 1, 255, 251, 3, 255, 253, 24, 255, 253, 31]));
-    console.log(`[public-session ${sessionId}] telnet-negotiation-sent bytes=12`);
     if (firstMessage) forwardBrowserMessage(firstMessage);
   });
   mud.on("data", data => {
