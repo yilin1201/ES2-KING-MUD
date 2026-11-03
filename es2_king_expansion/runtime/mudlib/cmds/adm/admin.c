@@ -97,6 +97,7 @@ private string resolve_skill_name(string name)
 private void show_help()
 {
     write(@HELP
+
 ============================================================
 ES2-KING ADMIN GM 使用教學（King 管理角色）
 ============================================================
@@ -109,11 +110,12 @@ ES2-KING ADMIN GM 使用教學（King 管理角色）
   admin inspect                 查看自己的角色資料
   admin inspect <玩家>          查看在線玩家資料
   admin list                    列出在線玩家
+HELP);
+write(@HELP
   admin goto <玩家>             傳送到玩家所在房間
   admin save                    保存自己的角色資料
   admin save <玩家>             保存指定在線玩家資料
-HELP
-    );
+HELP);
 
     write(@HELP
 
@@ -128,6 +130,8 @@ HELP
   admin cor <數值> [玩家]       膽識（原版範圍 1～50）
   admin int <數值> [玩家]       悟性（原版範圍 1～50）
   admin spi <數值> [玩家]       靈性（原版範圍 1～50）
+HELP);
+write(@HELP
   admin cps <數值> [玩家]       定力（原版範圍 1～50）
   admin dex <數值> [玩家]       機敏（原版範圍 1～50）
   admin con <數值> [玩家]       根骨（原版範圍 1～50）
@@ -137,6 +141,8 @@ HELP
   【King 管理角色操作範例】
   admin attrs 50                將八大屬性全部設定為 50
   admin str 50                  單獨設定自己的膂力為 50
+HELP);
+write(@HELP
   admin cor 50                  單獨設定自己的膽識為 50
   admin int 50                  單獨設定自己的悟性為 50
   admin spi 50                  單獨設定自己的靈性為 50
@@ -144,10 +150,11 @@ HELP
   admin dex 50                  單獨設定自己的機敏為 50
   admin con 50                  單獨設定自己的根骨為 50
   admin wis 50                  單獨設定自己的慧根為 50
+HELP);
+write(@HELP
   admin inspect                 核對八大屬性是否已更新
   admin save                    保存 King 角色資料
-HELP
-    );
+HELP);
 
     write(@HELP
 
@@ -169,11 +176,12 @@ HELP
 
 【五、HP 與恢復】
   admin hp <數值> [玩家]        設定目前 HP
+HELP);
+write(@HELP
   admin maxhp <數值> [玩家]     設定最大 HP，並補滿 HP
   admin heal                    恢復自己的 HP／精／氣／神
   admin heal <玩家>             恢復指定在線玩家
-HELP
-    );
+HELP);
 
     write(@HELP
 
@@ -190,8 +198,7 @@ HELP
 
   裝備虎紋刀：
   admin wield tiger blade
-HELP
-    );
+HELP);
 
     write(@HELP
 
@@ -209,6 +216,8 @@ HELP
   admin inspect
   admin stats 999
   admin attrs 50
+HELP);
+write(@HELP
   admin skill blade 200
   admin learn tiger-blade
   admin skill tiger-blade 200
@@ -217,8 +226,7 @@ HELP
   admin heal
   admin save
   admin inspect
-HELP
-    );
+HELP);
 
     write(@HELP
 
@@ -231,8 +239,7 @@ HELP
   6. 此教學只列出目前 admin 指令的使用方式；實際效果仍須在遊戲內驗證。
 
 ============================================================
-HELP
-    );
+HELP);
 }
 
 private void show_status(object ob)
