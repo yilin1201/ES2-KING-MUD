@@ -206,6 +206,10 @@ function createMudSession(browser, firstMessage = null) {
   mud.once("connect", () => {
     mud.setTimeout(0);
     console.log(`[public-session ${sessionId}] mud-connected host=${mudHost} port=${mudPort}`);
+    // Initial Telnet Negotiation／新工作階段先送出標準 Telnet 選項協商，確保 Neolith 啟動 Login prompt。
+    // IAC WILL ECHO、IAC WILL SGA、IAC DO TTYPE、IAC DO NAWS；不包含玩家帳密或遊戲命令。
+    mud.write(Buffer.from([255, 251, 1, 255, 251, 3, 255, 253, 24, 255, 253, 31]));
+    console.log(`[public-session ${sessionId}] telnet-negotiation-sent bytes=12`);
     if (firstMessage) forwardBrowserMessage(firstMessage);
   });
   mud.on("data", data => {
