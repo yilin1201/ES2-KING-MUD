@@ -1,4 +1,5 @@
 name: Sync ES2M Files Into KING Overlay
+# 2026-11-03：依使用者授權重新執行最新 ES2M 全量同步；同路徑覆蓋、新檔新增，保留 KING 專屬保護項目。
 
 on:
   push:
