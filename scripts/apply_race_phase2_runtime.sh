@@ -155,7 +155,7 @@ import sys
 path = Path(sys.argv[1])
 text = path.read_text()
 old = '//\t"southeast" : "/d/oldpine/road1",'
-new = '\t"southeast" : "/d/oldpine/entrance", // ES2M 老松林；只修改重建 Runtime。'
+new = '\t"southeast" : "/d/oldpine/entrance",'
 if new not in text:
     if old not in text:
         raise SystemExit("ES2M OLDPINE FAIL: Snow sgate oldpine marker changed")
