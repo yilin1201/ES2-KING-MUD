@@ -38,3 +38,9 @@ else
   exit "$scan_status"
 fi
 echo 'M30 ALPHA STATIC PASS／M1-M30 矩陣、完成證據與邊界完整。'
+
+# Latest ES2M Login API／最新來源登入介面：確保 Final Runtime Gate 不再要求舊版固定數字種族選單。
+LOGIN_ASSERT="scripts/assert_m30_final_runtime.sh"
+grep -Fq 'private void get_race (string arg, object ob, string *list)' "$LOGIN_ASSERT"
+grep -Fq 'input_to ("get_race", ob, list);' "$LOGIN_ASSERT"
+! grep -Fq 'private void get_race (string race, object ob)' "$LOGIN_ASSERT"
