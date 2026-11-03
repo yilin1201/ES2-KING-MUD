@@ -160,7 +160,7 @@ grep -Fq 'return strength * query_immortal_absorb_percent() / 100;' "$BATIAN_SKI
 # Frozen Score UI／Score UI 凍結：沿用目前 ES2M／Original score.c 的 tribar_graph 三值顯示，不額外重做介面。
 SCORE_UI="$RUNTIME_DIR/mudlib/cmds/usr/score.c"
 grep -Fq 'string tribar_graph (' "$SCORE_UI"
-grep -Fq 'tribar_graph (" ", BRED' "$SCORE_UI"
+grep -Fq 'tribar_graph(" ", BRED' "$SCORE_UI"
 grep -Fq 'tribar_graph ("■", YEL' "$SCORE_UI"
 grep -Fq 'tribar_graph ("■", RED' "$SCORE_UI"
 grep -Fq 'tribar_graph ("■", BLU' "$SCORE_UI"
