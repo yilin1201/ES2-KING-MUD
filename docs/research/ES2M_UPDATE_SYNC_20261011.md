@@ -89,3 +89,34 @@
 - 本次 ES2M 自身 Mudlib 同步 Workflow 已成功完成，代表鏡像與 Overlay 匯入步驟成功，不等同 LPC 編譯、Docker、Oracle Runtime 或玩家 E2E PASS。
 - 同步後 GitHub PR workflows 因提交者為 `github-actions[bot]` 顯示 `action_required` 且沒有 jobs；該狀態不是測試 PASS，也不是程式 FAIL。此文件更新將由使用者提交身分觸發既有 ES2M 回歸工作流程，以取得實際測試結果。
 - PR #13 維持 OPEN / NOT MERGED；本次不部署。
+
+
+## 2026-11-03 — ES2M 最新來源全量鏡像與 KING Overlay 同步
+
+### 來源與執行結果
+
+- ES2M Repository：`wolfer168/es2-webmud`，branch `main`。
+- 最新來源 HEAD：`69d222ecd3b2138a80b87f1dadce9103df278bb3`。
+- 前次來源同步基準：`a60bd653e75000614b3857efa1dddcd736dc3324`；本輪差異為 41 commits、47 個變更檔案（含 Mudlib、文件、測試與 Web UI）。
+- KING Repository：`yilin1201/ES2-KING-MUD`，branch `build/original-es2-races-phase2`。
+- 執行 Workflow：`Sync ES2M Files Into KING Overlay`，Run ID `41564713563`，結論 **SUCCESS**。
+- 最新來源 Mudlib：1,991 檔案。
+- KING Overlay 同步結果：新增 3、覆蓋 17、內容相同 1,959、保留 KING 專屬保護檔 12。
+- 與 pinned Original ES2 不同的來源檔案：184；僅列入差異報告，不回寫 Original ES2。
+- 完整逐檔 SHA-256 與結果：`docs/research/ES2M_NEW_FILES_IMPORT_REPORT.json`。
+- 最新來源 manifest：`es2m_source_mirror/MANIFEST.json`。
+
+### 登入核心相容性與驗收修正
+
+- 最新 ES2M `adm/daemons/logind.c` 採用業力可選種族清單、`show_race_menu()`、`affordable_races()` 與 `input_to("get_race", ob, list)` callback。
+- `scripts/apply_es2_king_expansion.sh` 已具有新版 callback 分支：保留 ES2M 種族選擇流程，並在生成 Runtime 加入 KING Owner Claim 與 Public Character Text Input 相容層。
+- 舊版 `assert_m30_final_runtime.sh` 仍要求固定 12 項數字選單與舊 callback `get_race(string, object)`，與最新 ES2M API 不符，造成 2026-11-01 Render build 在最終 Runtime Assertion 停止。
+- 本次將驗收改為核對新版 callback、業力種族清單及 KING Public Character Text Input marker；不再要求過時的固定數字選單。
+- 此修改只更新驗收契約，不改寫 ES2M 原始種族選擇邏輯，也不變更 KING Owner Claim 程式。
+
+### 部署狀態
+
+- ES2M Source Mirror 與 KING Overlay 同步：**PASS**。
+- Original ES2 保存來源：未修改。
+- PR #13：維持 OPEN / NOT MERGED。
+- M30 Alpha／ES2M Regression 與 Render Docker 部署：待本次新版驗收工作流程及後續部署確認，不預先宣稱 PASS。
