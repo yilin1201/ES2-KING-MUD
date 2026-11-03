@@ -63,7 +63,26 @@ for id in humanprobe avatarprobe blackprobe yenprobe wooprobe dingprobe jiaoprob
 done
 
 (cd "$TEMP_ROOT"; exec "$DRIVER_BIN" -f neolith.conf) >"$TEMP_ROOT/driver.stdout" 2>&1 & driver_pid=$!
-ES2_TEST_PORT=4000 node -e 'const n=require("net"),d=Date.now()+30000;(function p(){const s=n.createConnection({host:"127.0.0.1",port:+process.env.ES2_TEST_PORT});s.once("connect",()=>{s.destroy();process.exit(0)});s.once("error",()=>{s.destroy();Date.now()<d?setTimeout(p,100):process.exit(1)})})()'
+# Passive Listen Check／被動監聽檢查：不可主動連線後立即斷線，Neolith 可能因此收到 SIGPIPE。
+command -v ss >/dev/null 2>&1 || { echo 'ORIGINAL PLAYER CREATION E2E BLOCKED：缺少 ss 被動監聽檢查工具。' >&2; exit 1; }
+driver_ready=0
+for _ in $(seq 1 300); do
+  if ! kill -0 "$driver_pid" 2>/dev/null; then
+    echo 'ORIGINAL PLAYER CREATION E2E FAIL：Neolith 在 Port 4000 穩定前已退出。' >&2
+    tail -n 100 "$TEMP_ROOT/driver.stdout" >&2 2>/dev/null || true
+    exit 1
+  fi
+  if ss -H -ltn 'sport = :4000' 2>/dev/null | grep -q 'LISTEN'; then
+    driver_ready=1
+    break
+  fi
+  sleep 0.1
+done
+if (( ! driver_ready )); then
+  echo 'ORIGINAL PLAYER CREATION E2E FAIL：Port 4000 未進入 LISTENING。' >&2
+  tail -n 100 "$TEMP_ROOT/driver.stdout" >&2 2>/dev/null || true
+  exit 1
+fi
 (cd "$REPO_ROOT/webtelnet"; ES2_HOST=127.0.0.1 ES2_PORT=4000 PORT="$WEB_PORT" exec node server.mjs) >"$TEMP_ROOT/bridge.stdout" 2>&1 & bridge_pid=$!
 ES2_TEST_PORT="$WEB_PORT" node -e 'const h=require("http"),d=Date.now()+10000;(function p(){h.get({host:"127.0.0.1",port:+process.env.ES2_TEST_PORT,path:"/health"},r=>{r.resume();r.statusCode===200?process.exit(0):Date.now()<d?setTimeout(p,100):process.exit(1)}).on("error",()=>Date.now()<d?setTimeout(p,100):process.exit(1))})()'
 
