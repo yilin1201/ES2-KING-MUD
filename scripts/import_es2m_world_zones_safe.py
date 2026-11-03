@@ -34,6 +34,9 @@ PRESERVE_EXISTING_CONFLICTS = {
     Path("d/lee/square_s.c"),
     Path("d/lee/watermelon_n1.c"),
     Path("d/lee/watermelon_s3.c"),
+    # 依最新 ES2M LEE_TOPOLOGY.json 修正 wroad3/square_w 的連接，保留已對齊版本。
+    Path("d/lee/wroad3.c"),
+    Path("d/lee/square_w.c"),
     # 高慎的拜師／授技門檻採用使用者提供的歷史教師表，不能回退到 ES2M 上游不同技能代碼。
     Path("d/oldpine/npc/kao_shen.c"),
     Path("d/lee/obj/brow_staff.c"),
