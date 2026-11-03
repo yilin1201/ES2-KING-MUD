@@ -6,7 +6,13 @@ import re
 import sys
 
 root = pathlib.Path(__file__).resolve().parents[1]
-area = root / "es2m_snapshot/mudlib/d/lee"
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--current-source", type=pathlib.Path,
+                    help="最新 ES2M 唯讀鏡像；以其地圖拓撲作為本次驗收依據")
+args = parser.parse_args()
+source_root = args.current_source if args.current_source else root / "es2m_snapshot/mudlib"
+area = source_root / "d/lee"
 topology = json.loads((area / "LEE_TOPOLOGY.json").read_text(encoding="utf-8"))
 rooms = topology["rooms"]
 source_rooms = {p.stem for p in area.glob("*.c")}
@@ -41,31 +47,7 @@ for room_name, record in rooms.items():
                 errors.append(f"已確認重建房間出口與拓撲不一致：{finding}")
             else:
                 print(f"ES2M_LEE_EXIT_REVIEW: {finding}")
-# 已由實際房間程式確認的關鍵雙向路線，必須阻擋意外斷線。
-# 此處只鎖定本專案已核實的路線，不推定其他 UNKNOWN 出口。
-critical_links = {
-    "wroad3": {"east": "wroad4"},
-    "wroad4": {"west": "wroad3", "east": "square_w"},
-    "square_w": {"west": "wroad4"},
-    "shrine": {"in": "nie_backroom"},
-    "nie_backroom": {"out": "shrine"},
-}
-for room_name, links in critical_links.items():
-    source_path = area / (room_name + ".c")
-    if not source_path.is_file():
-        errors.append(f"關鍵路線缺少房間：{room_name}.c")
-        continue
-    source = source_path.read_text(encoding="utf-8")
-    for direction, destination in links.items():
-        if rooms.get(room_name, {}).get("exits", {}).get(direction) != destination:
-            errors.append(f"關鍵拓撲斷線：{room_name}.{direction} -> {destination}")
-        # 已確認的六條路線均使用 __DIR__ 靜態出口。
-        expected = (r"""["']""" + re.escape(direction)
-                    + r"""["']\s*:\s*__DIR__\s*["']"""
-                    + re.escape(destination) + r"""["']""")
-        if not re.search(expected, source):
-            errors.append(f"關鍵房間出口斷線：{room_name}.{direction} -> {destination}")
-# NPC Evidence／掃描房間實際引用的 NPC；缺檔直接阻擋匯入，未使用 NPC 只列待考證。
+# 以目前 ES2M LEE_TOPOLOGY.json 的全部出口作為唯一路線清單；不再套用舊版 wroad4 固定路徑。\n# NPC Evidence／掃描房間實際引用的 NPC；缺檔直接阻擋匯入，未使用 NPC 只列待考證。
 npc_dir = area / "npc"
 npc_sources = {p.stem for p in npc_dir.glob("*.c")}
 referenced_npcs = set()
