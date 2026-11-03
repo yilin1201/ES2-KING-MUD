@@ -6,6 +6,7 @@ set -euo pipefail
 # upstream checkout of Annihilator's ES2 Mudlib + Neolith driver for testing.
 
 UPSTREAM_REPO="https://github.com/taedlar/es2_mudlib.git"
+ORIGINAL_ES2_COMMIT="${ORIGINAL_ES2_COMMIT:-cc45c06af4852380e5148dad3c9d53ff06854f2c}"
 WORKDIR="${1:-.runtime/original-es2}"
 
 if [[ -e "$WORKDIR" ]]; then
@@ -15,6 +16,14 @@ fi
 
 mkdir -p "$(dirname "$WORKDIR")"
 git clone --recurse-submodules "$UPSTREAM_REPO" "$WORKDIR"
+
+# Always test against the same pinned Original ES2 baseline as Dockerfile.
+# The default branch may contain newer .lpc files that are not part of the approved baseline.
+git -C "$WORKDIR" checkout "$ORIGINAL_ES2_COMMIT"
+git -C "$WORKDIR" submodule update --init --recursive
+ACTUAL_ORIGINAL_COMMIT="$(git -C "$WORKDIR" rev-parse HEAD)"
+[[ "$ACTUAL_ORIGINAL_COMMIT" == "$ORIGINAL_ES2_COMMIT" ]] || { echo "ERROR: Original ES2 commit mismatch: $ACTUAL_ORIGINAL_COMMIT" >&2; exit 1; }
+echo "Original ES2 pinned commit verified: $ACTUAL_ORIGINAL_COMMIT"
 
 # Original ES2 keeps account/login data and character/body data separately.
 # Prepare both persistent directory trees so a newly created account can be

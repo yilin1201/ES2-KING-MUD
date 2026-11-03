@@ -43,3 +43,8 @@ echo 'M30 ALPHA STATIC PASS／M1-M30 矩陣、完成證據與邊界完整。'
 LOGIN_ASSERT="scripts/assert_m30_final_runtime.sh"
 grep -Fq 'private void get_race (string arg, object ob, string *list)' "$LOGIN_ASSERT"
 grep -Fq 'input_to ("get_race", ob, list);' "$LOGIN_ASSERT"
+
+# Bootstrap must use the same pinned Original ES2 commit as the production Docker build.
+grep -Fq 'ORIGINAL_ES2_COMMIT="${ORIGINAL_ES2_COMMIT:-cc45c06af4852380e5148dad3c9d53ff06854f2c}"' scripts/bootstrap_original_es2.sh
+grep -Fq 'git -C "$WORKDIR" checkout "$ORIGINAL_ES2_COMMIT"' scripts/bootstrap_original_es2.sh
+grep -Fq 'git -C "$WORKDIR" submodule update --init --recursive' scripts/bootstrap_original_es2.sh

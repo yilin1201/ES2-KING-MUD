@@ -122,3 +122,11 @@
 - PR #13：維持 OPEN / NOT MERGED。
 - M30 Alpha／ES2M Regression 與 Render Docker 部署：待本次新版驗收工作流程及後續部署確認，不預先宣稱 PASS。
 - LPC Load Gate 原先使用 Neolith `-c`（Console Mode，主控台模式），但驗收程式同時等待 TCP 4000，兩者互相矛盾；已改為與正式 Runtime 相同的 `-f neolith.conf` 網路模式，避免 Driver 因 Console Mode 不監聽而被誤判啟動失敗。
+
+
+### Original ES2 baseline alignment
+
+- M30 Bootstrap previously cloned the Original ES2 default branch without checking out the pinned baseline, while Dockerfile used `cc45c06af4852380e5148dad3c9d53ff06854f2c`.
+- The default branch contains legacy `.lpc` modules that reference `STD_WRAP_WIDTH`; the current ES2M source overlay replaces `globals.h` with a version that no longer defines that legacy constant.
+- Bootstrap now checks out the same pinned Original ES2 commit and updates submodules to the pinned tree before applying the ES2-KING overlay. This removes the test/deploy baseline mismatch rather than adding obsolete constants to ES2M.
+- A static gate now verifies the Bootstrap pin and submodule checkout.
