@@ -47,13 +47,18 @@ def exits(path: Path) -> dict[str, str]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--snapshot", type=Path, default=Path("es2m_snapshot/mudlib"))
+    parser.add_argument("--current-source", type=Path,
+                        help="最新 ES2M 唯讀鏡像；提供時以其 LEE_TOPOLOGY.json 作為出口依據")
     parser.add_argument("--runtime", type=Path, required=True)
     args = parser.parse_args()
 
+    # 最新 ES2M source mirror 是本次同步的權威來源；歷史 snapshot 僅供未提供鏡像時回退。
+    source_root = args.current_source if args.current_source else args.snapshot
+    source_area = source_root / "d/lee"
     snapshot_area = args.snapshot / "d/lee"
     runtime_area = args.runtime / "d/lee"
     topology = json.loads(
-        (snapshot_area / "LEE_TOPOLOGY.json").read_text(encoding="utf-8")
+        (source_area / "LEE_TOPOLOGY.json").read_text(encoding="utf-8")
     )
     rooms = topology["rooms"]
 
@@ -61,7 +66,7 @@ def main() -> None:
     broken = []
     source_runtime_mismatch = []
     for name, record in rooms.items():
-        source_path = snapshot_area / f"{name}.c"
+        source_path = source_area / f"{name}.c"
         path = runtime_area / f"{name}.c"
         if not path.is_file():
             missing.append(name)
@@ -106,8 +111,8 @@ def main() -> None:
                     f"critical:{room}.{direction}->{actual.get(direction)} expected {target}"
                 )
 
-    # Snapshot hash differences may be intentional KING merges (e.g. HOCKSHOP pawnshop);
-    # runtime acceptance is based on actual exits, room/NPC presence, and critical links.
+    # Source/runtime hash differences may be intentional KING merges (e.g. HOCKSHOP pawnshop);
+    # runtime acceptance is based on latest ES2M topology exits, room/NPC presence, and critical links.
     if missing or broken or missing_npcs:
         print("ES2M_LEE_RUNTIME_FAIL")
         # Forensic diagnostics／根因診斷：失敗時列出六個已確認出口房間的實際路徑、
