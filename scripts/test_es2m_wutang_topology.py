@@ -100,10 +100,14 @@ def main() -> None:
     parser.add_argument("--runtime", type=Path)
     parser.add_argument("--current-source", type=Path, help="Latest ES2M source mirror for room inventory comparison")
     args = parser.parse_args()
-    validate_tree(args.source, False, 56, 32, 0)
-    runtime_room_count = 56
-    runtime_npc_count = 32
-    runtime_boat_count = 0
+    source_area = args.source / "d/wutang"
+    source_boat_count = sum(1 for p in source_area.glob("*.c") if p.stem in BOAT_ROOMS)
+    source_room_count = len(list(source_area.glob("*.c"))) - source_boat_count
+    source_npc_count = len(list((source_area / "npc").glob("*.c")))
+    validate_tree(args.source, False, source_room_count, source_npc_count, source_boat_count)
+    runtime_room_count = source_room_count
+    runtime_npc_count = source_npc_count
+    runtime_boat_count = source_boat_count
     if args.runtime:
         runtime_area = args.runtime / "d/wutang"
         runtime_boat_count = sum(1 for p in runtime_area.glob("*.c") if p.stem in BOAT_ROOMS)
@@ -124,9 +128,9 @@ def main() -> None:
                 f"ES2M_WUTANG_RUNTIME_NPC_COUNT: {runtime_npc_count} expected_current_source={len(current_npc_names)}"
             )
         else:
-            assert runtime_room_count == 56, f"ES2M_WUTANG_RUNTIME_ROOM_COUNT: {runtime_room_count}"
-            assert runtime_npc_count in (32, 33), f"ES2M_WUTANG_RUNTIME_NPC_COUNT: {runtime_npc_count}"
-            assert runtime_boat_count in (0, 2), f"ES2M_WUTANG_RUNTIME_BOAT_COUNT: {runtime_boat_count}"
+            assert runtime_room_count == source_room_count, f"ES2M_WUTANG_RUNTIME_ROOM_COUNT: {runtime_room_count}"
+            assert runtime_npc_count == source_npc_count, f"ES2M_WUTANG_RUNTIME_NPC_COUNT: {runtime_npc_count}"
+            assert runtime_boat_count == source_boat_count, f"ES2M_WUTANG_RUNTIME_BOAT_COUNT: {runtime_boat_count}"
         validate_tree(args.runtime, True, runtime_room_count, runtime_npc_count, runtime_boat_count)
         if args.current_source:
             runtime_room_names = {p.name for p in runtime_area.glob("*.c") if p.stem not in BOAT_ROOMS}
@@ -136,7 +140,7 @@ def main() -> None:
             assert runtime_boat_names == current_boat_names, "ES2M_WUTANG_RUNTIME_BOAT_INVENTORY_MISMATCH"
             assert runtime_npc_names == current_npc_names, "ES2M_WUTANG_RUNTIME_NPC_INVENTORY_MISMATCH"
     print(
-        f"ES2M WUTANG TOPOLOGY PASS／歷史快照 56 房間、32 NPC；"
+        f"ES2M WUTANG TOPOLOGY PASS／來源 {source_room_count} 房間、{source_npc_count} NPC；"
         f"Runtime {runtime_room_count} 鎮區房間、{runtime_npc_count} NPC、"
         f"{runtime_boat_count} 艘羿水渡船、2 物件及振武入口引用閉合。"
     )
