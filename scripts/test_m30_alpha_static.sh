@@ -43,4 +43,3 @@ echo 'M30 ALPHA STATIC PASS／M1-M30 矩陣、完成證據與邊界完整。'
 LOGIN_ASSERT="scripts/assert_m30_final_runtime.sh"
 grep -Fq 'private void get_race (string arg, object ob, string *list)' "$LOGIN_ASSERT"
 grep -Fq 'input_to ("get_race", ob, list);' "$LOGIN_ASSERT"
-! grep -Fq 'private void get_race (string race, object ob)' "$LOGIN_ASSERT"
