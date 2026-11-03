@@ -53,3 +53,8 @@ grep -Fq 'git -C "$WORKDIR" submodule update --init --recursive' scripts/bootstr
 grep -Fq 'cmake -S . -B out/build/linux -G Ninja -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release' .github/workflows/es2-king-m30-alpha.yml
 grep -Fq 'cmake --build out/build/linux --parallel' .github/workflows/es2-king-m30-alpha.yml
 ! grep -Fq -- '--preset linux-gcc' .github/workflows/es2-king-m30-alpha.yml
+
+# ADMIN GM E2E must use the latest ES2M text race selection contract, not legacy numeric race input.
+grep -Fq "line(tn, buf, 'human', 0.6)" scripts/test_admin_gm_lpc_boot.sh
+grep -Fq "line(tn, buf, 'male', 0.6)" scripts/test_admin_gm_lpc_boot.sh
+! grep -Fq "line(tn, buf, '1', 0.6)" scripts/test_admin_gm_lpc_boot.sh
