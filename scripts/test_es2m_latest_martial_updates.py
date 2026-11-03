@@ -112,7 +112,16 @@ def main() -> None:
             expected = SNAPSHOT / rel
             actual = runtime / rel
             require(actual.is_file(), "生成 Runtime 缺少 " + rel)
-            require(digest(expected) == digest(actual), "生成 Runtime 與已核對快照不一致：" + rel)
+            if rel == "d/oldpine/npc/kao_shen.c":
+                # 高慎是 KING 專案後續補入的研究 NPC，保留拜師／授技與技能門檻整合版；
+                # 不得以較舊的 ES2M evidence snapshot 覆蓋 KING overlay。
+                king_expected = OVERLAY / rel
+                require(king_expected.is_file(), "KING 高慎整合版缺少：" + rel)
+                require(digest(king_expected) == digest(actual),
+                        "生成 Runtime 與 KING 高慎整合版不一致：" + rel)
+            else:
+                require(digest(expected) == digest(actual),
+                        "生成 Runtime 與已核對快照不一致：" + rel)
 
         runtime_teacher = read(runtime / "d/snow/npc/teacher.c")
         require("ES2-KING ORIGINAL SCHOLAR UTF-8 COMPATIBILITY" in runtime_teacher,
