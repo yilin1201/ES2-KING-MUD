@@ -31,6 +31,7 @@ trap cleanup EXIT
 
 mkdir -p "$ROOT/mudlib/log"
 : > "$DEBUG_LOG"
+: > "$COMPILE_LOG"
 DRIVER="$(find "$ROOT/neolith/out" -type f -name neolith -perm -111 | head -n 1)"
 [[ -n "$DRIVER" && -x "$DRIVER" ]] || { echo 'ADMIN GM LPC LOAD FAIL：找不到 Neolith Driver。' >&2; exit 1; }
 
