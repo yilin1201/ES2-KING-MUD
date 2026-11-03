@@ -12,8 +12,10 @@ grep -Fq 'STATIC SOURCE ANALYSIS REQUIRED' "$ROOT/cmds/std/kact.c"
 for f in kadmin khome kcreate kcanon kmartial; do grep -Fq 'int help(object me)' "$ROOT/cmds/adm/$f.c"; done
 for f in kroom kexit kgoto kmap kact kwhere knpc kitem kobj ktrace kbroken kmiss; do grep -Fq 'int help(object me)' "$ROOT/cmds/std/$f.c"; done
 for label in 'VISIBLE / RAW EXIT' 'MISSING' 'BROKEN' 'STATIC SOURCE ANALYSIS REQUIRED'; do grep -Fq "$label" "$ROOT/cmds/std/kexit.c"; done
-# Original k=kill 由 aliasd 保持；Expansion 不得修改或覆蓋 Original alias daemon。
-test ! -e "$ROOT/adm/daemons/aliasd.c"
+# ES2M 全量鏡像會在 overlay 保存 aliasd.c；必須與唯讀來源鏡像逐位元相同，且保留 Original k=kill。
+test -f "$ROOT/adm/daemons/aliasd.c"
+cmp -s "$ROOT/adm/daemons/aliasd.c" "es2m_source_mirror/mudlib/adm/daemons/aliasd.c"
+grep -Eq '"k":[[:space:]]*"kill"' "$ROOT/adm/daemons/aliasd.c"
 
 for f in klocate kmoney ksave kset kskill; do
   test ! -e "$ROOT/cmds/adm/$f.c"
