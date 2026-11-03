@@ -37,8 +37,6 @@ else
   echo "M30 STATIC FAIL／待辦掃描工具錯誤，exit=$scan_status" >&2
   exit "$scan_status"
 fi
-echo 'M30 ALPHA STATIC PASS／M1-M30 矩陣、完成證據與邊界完整。'
-
 # Latest ES2M Login API／最新來源登入介面：確保 Final Runtime Gate 不再要求舊版固定數字種族選單。
 LOGIN_ASSERT="scripts/assert_m30_final_runtime.sh"
 grep -Fq 'private void get_race (string arg, object ob, string *list)' "$LOGIN_ASSERT"
@@ -54,7 +52,9 @@ grep -Fq 'cmake -S . -B out/build/linux -G Ninja -DBUILD_TESTING=OFF -DCMAKE_BUI
 grep -Fq 'cmake --build out/build/linux --parallel' .github/workflows/es2-king-m30-alpha.yml
 ! grep -Fq -- '--preset linux-gcc' .github/workflows/es2-king-m30-alpha.yml
 
-# ADMIN GM E2E must use the latest ES2M text race selection contract, not legacy numeric race input.
-grep -Fq "line(tn, buf, 'human', 0.6)" scripts/test_admin_gm_lpc_boot.sh
-grep -Fq "line(tn, buf, 'male', 0.6)" scripts/test_admin_gm_lpc_boot.sh
-! grep -Fq "line(tn, buf, '1', 0.6)" scripts/test_admin_gm_lpc_boot.sh
+# ADMIN GM LPC Load Gate／只驗證管理員指令可被 Neolith 編譯並 preload；不以繞過 RealIPD 的直連 Telnet 假冒正式 E2E。
+grep -Fq "preloaded cmds/adm/admin" scripts/test_admin_gm_lpc_boot.sh
+! grep -Fq 'telnetlib' scripts/test_admin_gm_lpc_boot.sh
+! grep -Fq 'python3 -' scripts/test_admin_gm_lpc_boot.sh
+
+echo 'M30 ALPHA STATIC PASS／M1-M30 矩陣、完成證據與邊界完整。'
