@@ -163,15 +163,31 @@ if new not in text:
 path.write_text(text)
 PY
 
-  # 最新 Oldpine grass1 已連到康平村樹林口；先將其外部出口依賴一併寫入 Runtime。
-  KANGPING_EXIT="$REPO_ROOT/es2m_source_mirror/mudlib/d/kangping/forest_exit.c"
-  if [[ -f "$KANGPING_EXIT" ]]; then
-    mkdir -p "$ROOT/mudlib/d/kangping"
-    cp "$KANGPING_EXIT" "$ROOT/mudlib/d/kangping/forest_exit.c"
-  else
-    echo "ES2M OLDPINE FAIL：最新來源缺少 d/kangping/forest_exit.c。" >&2
-    exit 1
-  fi
+  # 最新 ES2M Oldpine 連到康平村、百花村等外部地圖；先補入來源已提供但 Original Runtime 尚未有的依賴。
+  python3 - "$REPO_ROOT/es2m_source_mirror/mudlib" "$ROOT/mudlib" <<'PY'
+from pathlib import Path, PurePosixPath
+import re
+import shutil
+import sys
+
+source_root = Path(sys.argv[1])
+runtime_root = Path(sys.argv[2])
+oldpine = source_root / "d/oldpine"
+copied = []
+for room in sorted(oldpine.rglob("*.c")):
+    code = room.read_text(encoding="utf-8")
+    for raw in re.findall(r'"(/(?:d|custom|obj)/[^"\\s]+)"', code):
+        rel = PurePosixPath(raw.lstrip("/"))
+        if not rel.suffix:
+            rel = rel.with_suffix(".c")
+        src = source_root / Path(str(rel))
+        dst = runtime_root / Path(str(rel))
+        if src.is_file() and not dst.is_file():
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dst)
+            copied.append(str(rel))
+print("ES2M_OLDPINE_EXTERNAL_DEPENDENCIES_STAGED:" + ",".join(copied))
+PY
 
   python3 "$REPO_ROOT/scripts/test_es2m_oldpine_topology.py" \
     --source "$REPO_ROOT/es2m_source_mirror/mudlib" --runtime "$ROOT/mudlib"
