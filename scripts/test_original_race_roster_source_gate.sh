@@ -11,16 +11,16 @@ for file in "$LOGIN" "$HUMAN" "$AVATAR"; do
   test -f "$file" || { echo "ORIGINAL_RACE_ROSTER_SOURCE_GATE_FAIL:missing:$file" >&2; exit 1; }
 done
 
-grep -Fq '"human",' "$LOGIN"
-grep -Fq '"avatar",' "$LOGIN"
-grep -Fq 'case "human":' "$LOGIN"
-grep -Fq 'case "avatar":' "$LOGIN"
+grep -Fq '"human",' "$LOGIN" || { echo 'RACE_GATE_FAIL:login-human-entry' >&2; exit 1; }
+grep -Fq '"avatar",' "$LOGIN" || { echo 'RACE_GATE_FAIL:login-avatar-entry' >&2; exit 1; }
+grep -Fq 'case "human":' "$LOGIN" || { echo 'RACE_GATE_FAIL:login-human-case' >&2; exit 1; }
+grep -Fq 'case "avatar":' "$LOGIN" || { echo 'RACE_GATE_FAIL:login-avatar-case' >&2; exit 1; }
 # ES2M human/avatar daemon contract／最新 ES2M 使用無空格 LPC 呼叫格式，兩族 karma 均為 5。
-grep -Eq 'set[[:space:]]*\("karma",[[:space:]]*5\);' "$HUMAN"
-grep -Eq 'set[[:space:]]*\("karma",[[:space:]]*5\);' "$AVATAR"
+grep -Eq 'set[[:space:]]*\("karma",[[:space:]]*5\);' "$HUMAN" || { echo 'RACE_GATE_FAIL:human-karma' >&2; exit 1; }
+grep -Eq 'set[[:space:]]*\("karma",[[:space:]]*5\);' "$AVATAR" || { echo 'RACE_GATE_FAIL:avatar-karma' >&2; exit 1; }
 # Latest ES2M race daemons register their own race; do not require the superseded 1/10000 human-to-avatar branch.
-grep -Fq 'DAEMON_D->register_race_daemon("human");' "$HUMAN"
-grep -Fq 'DAEMON_D->register_race_daemon("avatar");' "$AVATAR"
+grep -Fq 'DAEMON_D->register_race_daemon("human");' "$HUMAN" || { echo 'RACE_GATE_FAIL:human-daemon-registration' >&2; exit 1; }
+grep -Fq 'DAEMON_D->register_race_daemon("avatar");' "$AVATAR" || { echo 'RACE_GATE_FAIL:avatar-daemon-registration' >&2; exit 1; }
 
 # Final Runtime 保留玩家可選 ES2M supplemental races，並保留 beast NPC-only daemon。
 # beast.c 明確標註不可由玩家建立角色選擇；不加入登入選單。
@@ -31,7 +31,7 @@ test "${race_files[*]}" = "${expected[*]}" || {
   exit 1
 }
 # beast is NPC-only and must not appear in the player-selectable login roster.
-! grep -Fq '"beast",' "$LOGIN"
+! grep -Fq '"beast",' "$LOGIN" || { echo 'RACE_GATE_FAIL:beast-must-not-be-player-selectable' >&2; exit 1; }
 
 echo 'ORIGINAL_RACE_ROSTER_SOURCE_GATE_PASS'
 echo 'ORIGINAL_RACE_ROSTER_CONFIRMED:human,avatar'
