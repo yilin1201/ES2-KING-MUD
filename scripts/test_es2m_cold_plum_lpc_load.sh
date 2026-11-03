@@ -68,11 +68,13 @@ for _ in range(60):
         sock.close()
         time.sleep(1)
 else:
-    print(open(log, errors="replace").read())
+    for path in (log, debug_log):
+        if os.path.exists(path):
+            print(open(path, errors="replace").read()[-20000:])
     raise SystemExit("ES2M COLD PLUM LOAD FAIL：60 秒內未監聽 TCP 4000。")
 PY
 
-if grep -Eiq 'Error in loading object: /(std/martial_art|daemon/skill/(lunmay|hainmay_force|advance_lunmay|mayin|seven)|daemon/misc/npc_power|std/char/npc|d/wutang/(crossroad|npc/may_yin_fong))|((compile|syntax) error).*(martial_art|lunmay|hainmay_force|advance_lunmay|mayin|seven|npc_power|may_yin_fong|crossroad)' "$LOG"; then
+if grep -Eiq 'Error in loading object: /(std/martial_art|daemon/skill/(lunmay|hainmay_force|advance_lunmay|mayin|seven)|daemon/misc/npc_power|std/char/npc|d/wutang/(crossroad|npc/may_yin_fong))|((compile|syntax) error).*(martial_art|lunmay|hainmay_force|advance_lunmay|mayin|seven|npc_power|may_yin_fong|crossroad)' "$LOG" "$DEBUG_LOG"; then
   cat "$LOG"
   tail -n 200 "$DEBUG_LOG" 2>/dev/null || true
   echo "ES2M COLD PLUM LOAD FAIL：新增武學、NPC 強度或梅影風發生 LPC 載入錯誤。" >&2

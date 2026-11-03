@@ -66,11 +66,13 @@ for _ in range(60):
         sock.close()
         time.sleep(1)
 else:
-    print(open(log, errors="replace").read())
+    for path in (log, debug_log):
+        if os.path.exists(path):
+            print(open(path, errors="replace").read()[-20000:])
     raise SystemExit("ES2M MARTIAL LOAD FAIL：60 秒內未監聽 TCP 4000。")
 PY
 
-if grep -Eiq 'Error in loading object: /(daemon/skill/(tiger-steps|sanmeendo|tiger-force)|d/oldpine/npc/kao_shen)|((compile|syntax) error).*(tiger-steps|sanmeendo|tiger-force|kao_shen)' "$LOG"; then
+if grep -Eiq 'Error in loading object: /(daemon/skill/(tiger-steps|sanmeendo|tiger-force)|d/oldpine/npc/kao_shen)|((compile|syntax) error).*(tiger-steps|sanmeendo|tiger-force|kao_shen)' "$LOG" "$DEBUG_LOG"; then
   cat "$LOG"
   tail -n 200 "$DEBUG_LOG" 2>/dev/null || true
   echo "ES2M MARTIAL LOAD FAIL：最新虎刀門技能或高慎發生 LPC 載入錯誤。" >&2
