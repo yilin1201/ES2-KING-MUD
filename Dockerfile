@@ -166,6 +166,7 @@ RUN python3 scripts/import_es2m_world_zones_safe.py \
 RUN python3 scripts/test_es2m_lee_topology.py \
     && python3 scripts/test_es2m_lee_runtime.py \
         --snapshot /build/repository/es2m_snapshot/mudlib \
+        --current-source /build/repository/es2m_source_mirror/mudlib \
         --runtime /opt/es2-king/runtime/mudlib
 RUN python3 scripts/test_es2m_oldpine_topology.py \
     --source /build/repository/es2m_snapshot/mudlib \
