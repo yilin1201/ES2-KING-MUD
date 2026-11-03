@@ -37,17 +37,17 @@ jobs:
           LPC
       - name: Configure Neolith
         working-directory: .runtime/original-es2/neolith
-        run: cmake --preset linux-gcc -DBUILD_TESTING=OFF
+        run: cmake -S . -B out/build/linux -G Ninja -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
       - name: Build Neolith
         working-directory: .runtime/original-es2/neolith
-        run: cmake --build --preset dev-linux-gcc
+        run: cmake --build out/build/linux --parallel
       - name: Locate driver executable
         run: |
           DRIVER="$(find .runtime/original-es2/neolith/out -type f -name neolith -perm -111 | head -n 1)"; test -n "$DRIVER"; echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"
       - name: Boot Original ES2 Mudlib
         shell: bash
         run: |
-          set -euo pipefail; cd .runtime/original-es2; DRIVER_ABS="$(realpath "$GITHUB_WORKSPACE/$DRIVER")"; "$DRIVER_ABS" -f neolith.conf -c > "$RUNNER_TEMP/es2-boot.log" 2>&1 & PID=$!; echo "ES2_PID=$PID" >> "$GITHUB_ENV"
+          set -euo pipefail; cd .runtime/original-es2; DRIVER_ABS="$(realpath "$GITHUB_WORKSPACE/$DRIVER")"; "$DRIVER_ABS" -f neolith.conf > "$RUNNER_TEMP/es2-boot.log" 2>&1 & PID=$!; echo "ES2_PID=$PID" >> "$GITHUB_ENV"
           for i in $(seq 1 30); do kill -0 "$PID" 2>/dev/null || break; if nc -z 127.0.0.1 4000; then exit 0; fi; sleep 1; done; cat "$RUNNER_TEMP/es2-boot.log"; exit 1
       - name: M2 regression and M3 persistence/relogin verification
         shell: bash

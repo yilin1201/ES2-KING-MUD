@@ -136,3 +136,10 @@
 - M30 Alpha Workflow originally used `linux-gcc` / `dev-linux-gcc` CMake presets, but the Neolith submodule pinned by the production Original ES2 baseline does not expose those presets.
 - Dockerfile already builds the same pinned Driver using direct CMake configure/build commands; M30 Alpha now uses those exact commands and writes the binary under `neolith/out/build/linux` for LPC load tests.
 - Static Gate verifies the workflow does not regress to the unavailable preset.
+
+### Original ES2 legacy command-file naming
+
+- Pinned Original ES2 `cc45c06` stores `cmds/std/drop.c` and `cmds/std/give.c`; the M24 runtime gate incorrectly required `.lpc` filenames from a newer default-branch variant.
+- Updated the M24 gate to check the actual pinned `.c` files and their `no_drop` protection logic; no Original source files were modified.
+- Original ES2 Driver Build now uses the same direct CMake commands as Dockerfile and launches without `-c`, because the workflow verifies TCP port 4000.
+- M25 workflow path filters now include the M21-M24 regression scripts and pinned bootstrap dependency that it actually executes.

@@ -2,7 +2,7 @@ name: Original ES2 M25 Release Candidate
 on:
   push:
     branches: [build/original-es2-races-phase2]
-    paths: ['original_es2/research/m25_*', 'original_es2/runtime/m25_*', 'scripts/test_m25_*', '.github/workflows/original-es2-m25-release-candidate.yml']
+    paths: ['original_es2/research/m25_*', 'original_es2/runtime/m25_*', 'scripts/test_m25_*', 'scripts/test_m21_*', 'scripts/test_m22_*', 'scripts/test_m23_*', 'scripts/test_m24_*', 'scripts/bootstrap_original_es2.sh', '.github/workflows/original-es2-m25-release-candidate.yml']
   pull_request:
     paths: ['original_es2/research/m25_*', 'original_es2/runtime/m25_*', 'scripts/test_m25_*', '.github/workflows/original-es2-m25-release-candidate.yml']
   workflow_dispatch:
