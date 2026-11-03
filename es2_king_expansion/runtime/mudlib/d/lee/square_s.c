@@ -1,7 +1,6 @@
 // /d/lee/square_s.c
 // 李家村復原版。GENERATED
 // Topology follows the user-provided Li Village map; generated prose is intentionally replaceable.
-// KING TOPOLOGY FIX (2026-11-03)：依 es2m_snapshot/d/lee/LEE_TOPOLOGY.json 對齊出口；不修改 ES2M source mirror。
 
 inherit ROOM;
 
@@ -14,8 +13,7 @@ LONG
     );
     set("exits", ([
         "north" : __DIR__"square_w",
-        "east" : __DIR__"square_c",
-        "south" : __DIR__"pawnshop"
+        "east" : __DIR__"square_c"
     ]));
     setup();
     replace_program(ROOM);

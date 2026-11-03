@@ -4,17 +4,12 @@
   "original_reference_root": "/tmp/original-es2/mudlib",
   "overlay_root": "es2_king_expansion/runtime/mudlib",
   "source_file_count": 1991,
-  "copied_new_count": 3,
-  "overwritten_existing_king_count": 17,
-  "already_matching_count": 1959,
+  "copied_new_count": 2,
+  "overwritten_existing_king_count": 9,
+  "already_matching_count": 1968,
   "preserved_king_custom_count": 12,
   "source_differs_from_pinned_original_count": 184,
   "copied_new": [
-    {
-      "path": "daemon/misc/web_board.c",
-      "status": "copied-new-path",
-      "sha256": "73889108697206ed81a79b23c444a42d66a3782fafa23f6d4785d470927fd978"
-    },
     {
       "path": "data/chinese.o",
       "status": "copied-new-path",
@@ -28,57 +23,39 @@
   ],
   "overwritten_existing_king": [
     {
-      "path": "adm/daemons/logind.c",
-      "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "60786a09c1dbd1001b65e45cd6cbde1d6aee80ba40d4bb73f441ec277da3407f",
-      "source_sha256": "be65d5925f1354496c356905dda0ea6d35098ec5d165b62001c0af9a3f46979f"
-    },
-    {
-      "path": "cmds/usr/webhud.c",
-      "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "4035758ac04699d188c60ae1480b19881b49731187e38810be2a89dbf98f672d",
-      "source_sha256": "5f8f9b0f66f7e8cdbbeecbd7f5e27c4d683130eaead2f041a932cb4d643523a2"
-    },
-    {
-      "path": "custom/armor/armor/black_harness.c",
-      "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "7f5c8b1d89bbe23ed3a1ce14a622baf138464e7fec9614e889373b6dc35277b4",
-      "source_sha256": "ccadf6eb76e1081fa505c353ecfd2a37b52015b65ac354288bde005f3ba755be"
-    },
-    {
       "path": "d/lee/creek.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "eb980ebc3f5038496579dac891fece9c29b7f994538dcede0c69bd3082342ecb",
+      "previous_king_sha256": "567c937eb89eb50673a9ae295f963066da31b7ac1bb001e42d469f3a231ff4f3",
       "source_sha256": "88b4216ced04ac87f9dba8c309b07d9b14023d354cd3705e4fc6beb899d74e36"
     },
     {
       "path": "d/lee/pawnshop.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "c3bc1fcc302b1e6b1f801ce6b515097b2d1a572e6855c43a02b982321bded938",
+      "previous_king_sha256": "753e06fea3b0b68a00cd5bccc456d93e66843291a7abae5cc536e31a4b914d43",
       "source_sha256": "b577ced6a76c179d3ea5e8897f6f218bf9e869c7970128ce79cd3821b831261f"
     },
     {
       "path": "d/lee/square_c.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "d6732ef2a25463edb4753e9c7f2ccd48d1713f809f4232752684af99c5a0a52d",
+      "previous_king_sha256": "23c4b37658ac9f8415699a1b9fa4ec4128c6f5d1d5ad12e94c934a014ddf49e2",
       "source_sha256": "53d29429e7b72bf9a2d3458665264f75446afab27771b90a751a7e5eba1a068b"
     },
     {
       "path": "d/lee/square_s.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "9c8e6ff8bffb5678debe74b7298dec28ea87ea5068a5a42041545ab22320aa9c",
+      "previous_king_sha256": "5dee072ea80d4158cde1ad66314616a99c662d7d837731131fd4e04ae10bb904",
       "source_sha256": "b875a8ecdcb6fe0ea33f13dde9ada1311dc5f972c238707bbfbb40a10c3fb263"
     },
     {
       "path": "d/lee/watermelon_n1.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "34ebb8923935c7a328bd478d3c4eacd942ac8b506ea2f5128c8f8057910142aa",
+      "previous_king_sha256": "6dbc0f57544d4ef635b32f3e55a301d7c412788e3beb35ded03985570a37425a",
       "source_sha256": "6b11b0c80efec14c09146125557bbf0c839bdb1d457b5e5cda02ea755e0b6e02"
     },
     {
       "path": "d/lee/watermelon_s3.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "6ad6fea64e217f91cc225c40af9f3078eb6744a7ec03a5fa9484dd70b7d14473",
+      "previous_king_sha256": "c697cd1d1e5cf72494254214d351e1d38c3ad3e5602cf4764755ef6d067572e7",
       "source_sha256": "95ac93a56cd092699e71592aa8a3022e13f1bac36ceca83460b7d3f810015102"
     },
     {
@@ -88,46 +65,16 @@
       "source_sha256": "bf623731ff6881f0082abc680eaa8c3a13f1796b689564fde1ab5ffb22044113"
     },
     {
-      "path": "daemon/board/bug_board.c",
+      "path": "daemon/class/taoist.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "c5e3b6a57901b426bec16eae811e09b811d59d575da49055468944168940068d",
-      "source_sha256": "c1b425bd241ecfa16f29bab31f72b7c863cb52646592045c4ae2c1b593c1da2a"
+      "previous_king_sha256": "a80a6af91664eff60afb73ea9fcb6beb27effaa6884a880539af3784e51f0ae5",
+      "source_sha256": "4f4abe192b3070f4302dcf42de26d1fd23ed9d6d15acc6228192f328b3d31b82"
     },
     {
-      "path": "daemon/skill/berserk.c",
+      "path": "include/class_level.h",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "3882ca3b504768a796eab52d9cdd43aef9dcaa4253c570761862cfbb695d9a0d",
-      "source_sha256": "f73305a66de6da74776fb74d04cc57de6242b656dd450b2b7ca4104267b7b3ae"
-    },
-    {
-      "path": "docs/help/berserk.txt",
-      "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "acfee598f7fc1e5222c3946eb6f4065ae556a3e00d98016e684f67030949b8f5",
-      "source_sha256": "33439c70862f9ac0bc0cb7b10f829965ec4b498fdd51b08da92bcbab634582e1"
-    },
-    {
-      "path": "docs/help/soldier.ber.txt",
-      "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "9720a9329160881f61026f8462389f33d4f3da59fb6d6d631918cefe1ce4aedf",
-      "source_sha256": "bed99b3c0eac13f4e20d026f996915429cf379018155429b6e498bbdd3ff4678"
-    },
-    {
-      "path": "feature/user/more.c",
-      "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "96ee850a728170847a362281fd420338d55fac33eed3f91a2c3b6b2754db7df1",
-      "source_sha256": "9ba452b3946f0527a602f781f6cb368ede9f41683c33eb11d4fdb88b200efbd8"
-    },
-    {
-      "path": "obj/npc/demogorgon.c",
-      "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "a19faff62ec50c04f3a2160dacb01e7a38df28d65a46a748673b663eacad0808",
-      "source_sha256": "2e3d3b009f9f8fbad9e4032ac6b9b9dcb6008ad3c45868fdc640e2b878f0fd9f"
-    },
-    {
-      "path": "obj/user.c",
-      "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "d4913bf82b0770d2f99bd50c67d84f90ce15c1ed83a3791f8868493dc557187f",
-      "source_sha256": "218f261111639c94e7ba1b6ce81c939bab17e23ffe72e470f324c8cd28ee6688"
+      "previous_king_sha256": "cc33f76cd56afae16f5d3e82903996587c579c8bb4f5696b297c10ffb40c872d",
+      "source_sha256": "a2e4dbb7787fe576a9e92fd39feb841b003575cbe86a1831ccfe5abad024f43a"
     }
   ],
   "already_matching": [
@@ -210,6 +157,11 @@
       "path": "adm/daemons/httpd.c",
       "status": "already-matches-ES2M",
       "sha256": "8966aaae2fcf7331a577ddcabfcf8fad55fcb99f865d9ca7e8a27b9dc21cf7b8"
+    },
+    {
+      "path": "adm/daemons/logind.c",
+      "status": "already-matches-ES2M",
+      "sha256": "be65d5925f1354496c356905dda0ea6d35098ec5d165b62001c0af9a3f46979f"
     },
     {
       "path": "adm/daemons/natured.c",
@@ -1027,6 +979,11 @@
       "sha256": "da42230617fc75d11ed2b9d8e23bfa23f8fb46b434d074e5d9ada5e199091b6c"
     },
     {
+      "path": "cmds/usr/webhud.c",
+      "status": "already-matches-ES2M",
+      "sha256": "5f8f9b0f66f7e8cdbbeecbd7f5e27c4d683130eaead2f041a932cb4d643523a2"
+    },
+    {
       "path": "cmds/usr/who.c",
       "status": "already-matches-ES2M",
       "sha256": "8b02c722c17e4eceeb3107eeddb41bab246c03bcc4e58dc9c7f93d2184d0bca1"
@@ -1220,6 +1177,11 @@
       "path": "custom/armor/armor/bear_armor.c",
       "status": "already-matches-ES2M",
       "sha256": "450cecd3c54f28c8a8efa65bb734f810e941651295292e079cb7d55be60756a1"
+    },
+    {
+      "path": "custom/armor/armor/black_harness.c",
+      "status": "already-matches-ES2M",
+      "sha256": "ccadf6eb76e1081fa505c353ecfd2a37b52015b65ac354288bde005f3ba755be"
     },
     {
       "path": "custom/armor/armor/brimstony_armor.c",
@@ -7547,6 +7509,11 @@
       "sha256": "29efe4f663f2a045a6519ce5809448f596426b20d7945d8e135facd004aaae7b"
     },
     {
+      "path": "daemon/board/bug_board.c",
+      "status": "already-matches-ES2M",
+      "sha256": "c1b425bd241ecfa16f29bab31f72b7c863cb52646592045c4ae2c1b593c1da2a"
+    },
+    {
       "path": "daemon/board/celestial_board.c",
       "status": "already-matches-ES2M",
       "sha256": "87bfdf7fe0952e7a8c52c1ba605cb470be94574aa6073c1198d3b7fcbe28cc0d"
@@ -7585,11 +7552,6 @@
       "path": "daemon/class/soldier.c",
       "status": "already-matches-ES2M",
       "sha256": "84078ba4380b9caf9064e20f4fb2cbcc5b946f4a040bfe14235958a57b1f36d8"
-    },
-    {
-      "path": "daemon/class/taoist.c",
-      "status": "already-matches-ES2M",
-      "sha256": "a80a6af91664eff60afb73ea9fcb6beb27effaa6884a880539af3784e51f0ae5"
     },
     {
       "path": "daemon/class/thief.c",
@@ -7747,6 +7709,11 @@
       "sha256": "3c77c2d361c97f017d6e274178fef621e41396b593dd868a3c6894700b742ef5"
     },
     {
+      "path": "daemon/misc/web_board.c",
+      "status": "already-matches-ES2M",
+      "sha256": "73889108697206ed81a79b23c444a42d66a3782fafa23f6d4785d470927fd978"
+    },
+    {
       "path": "daemon/race/ashura.c",
       "status": "already-matches-ES2M",
       "sha256": "9006bf5e7b840f6d5ed1f95823ff87ee6ce2734fc3758b99fd6fc4bc63a40b38"
@@ -7895,6 +7862,11 @@
       "path": "daemon/skill/beast.c",
       "status": "already-matches-ES2M",
       "sha256": "75cb3d31ddee60c0cad79df09e0ff2bf835b87b72d386e444e6cf1b41e82befa"
+    },
+    {
+      "path": "daemon/skill/berserk.c",
+      "status": "already-matches-ES2M",
+      "sha256": "f73305a66de6da74776fb74d04cc57de6242b656dd450b2b7ca4104267b7b3ae"
     },
     {
       "path": "daemon/skill/blade.c",
@@ -8312,6 +8284,11 @@
       "sha256": "d2cd54e0610d40831e2be98bb191af62fb75618766bb22a38e885d378c043252"
     },
     {
+      "path": "docs/help/berserk.txt",
+      "status": "already-matches-ES2M",
+      "sha256": "33439c70862f9ac0bc0cb7b10f829965ec4b498fdd51b08da92bcbab634582e1"
+    },
+    {
       "path": "docs/help/blackteeth.txt",
       "status": "already-matches-ES2M",
       "sha256": "4834d507dd694155c4049df0421c1f1ce340f6022620f2b10197e6830e075359"
@@ -8515,6 +8492,11 @@
       "path": "docs/help/snowkeep.txt",
       "status": "already-matches-ES2M",
       "sha256": "3e855e6b3aad829f75b920a8aea735d3458ac5e4e21e30c3cacc68c73df23122"
+    },
+    {
+      "path": "docs/help/soldier.ber.txt",
+      "status": "already-matches-ES2M",
+      "sha256": "bed99b3c0eac13f4e20d026f996915429cf379018155429b6e498bbdd3ff4678"
     },
     {
       "path": "docs/help/taoism_of_darkness.txt",
@@ -8837,6 +8819,11 @@
       "sha256": "82b60ebc8fa7a0bac3704d17c38a88013d1c139ca0b655e062d8fb89379f7659"
     },
     {
+      "path": "feature/user/more.c",
+      "status": "already-matches-ES2M",
+      "sha256": "9ba452b3946f0527a602f781f6cb368ede9f41683c33eb11d4fdb88b200efbd8"
+    },
+    {
       "path": "feature/weapon/axe.c",
       "status": "already-matches-ES2M",
       "sha256": "ff2dccf07ee2f38d4e3fd3b1eeca89797e5646a2a66d8493de30b94cef180e5d"
@@ -8910,11 +8897,6 @@
       "path": "include/char.h",
       "status": "already-matches-ES2M",
       "sha256": "8c27d84d95dcaafc8a93058c7f825131f744758030bc0e33cb065dc5819f0220"
-    },
-    {
-      "path": "include/class_level.h",
-      "status": "already-matches-ES2M",
-      "sha256": "cc33f76cd56afae16f5d3e82903996587c579c8bb4f5696b297c10ffb40c872d"
     },
     {
       "path": "include/combat.h",
@@ -9742,6 +9724,11 @@
       "sha256": "a031352a2e82c47de77f83b8e547eb849478177101923fe96317ec0b61f2a723"
     },
     {
+      "path": "obj/npc/demogorgon.c",
+      "status": "already-matches-ES2M",
+      "sha256": "2e3d3b009f9f8fbad9e4032ac6b9b9dcb6008ad3c45868fdc640e2b878f0fd9f"
+    },
+    {
       "path": "obj/npc/garrison.c",
       "status": "already-matches-ES2M",
       "sha256": "a5da930e497cfa4fc9df5b9af0bc7d72c6091a5b3ca52a7da455c20b07b7c1a5"
@@ -9785,6 +9772,11 @@
       "path": "obj/spirit.c",
       "status": "already-matches-ES2M",
       "sha256": "5df84ecde0440a6a8061f659db190c77ba1643a838fe69597ee6168eca184742"
+    },
+    {
+      "path": "obj/user.c",
+      "status": "already-matches-ES2M",
+      "sha256": "218f261111639c94e7ba1b6ce81c939bab17e23ffe72e470f324c8cd28ee6688"
     },
     {
       "path": "obj/void.c",

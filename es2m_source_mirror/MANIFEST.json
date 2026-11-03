@@ -2,7 +2,7 @@
   "purpose": "ES2M 最新原始 Mudlib 唯讀鏡像；不得直接視為 Original ES2，也不直接取代 KING 專屬資料。",
   "source_repository": "wolfer168/es2-webmud",
   "source_branch": "main",
-  "source_commit": "69d222ecd3b2138a80b87f1dadce9103df278bb3",
+  "source_commit": "0bd203f7166d0bb83e9b75a526e333f379205182",
   "source_path": "source/upstream/mudlib/",
   "mirror_path": "es2m_source_mirror/mudlib/",
   "file_count": 1991,
@@ -7560,8 +7560,8 @@
     },
     {
       "path": "daemon/class/taoist.c",
-      "size": 1926,
-      "sha256": "a80a6af91664eff60afb73ea9fcb6beb27effaa6884a880539af3784e51f0ae5"
+      "size": 1917,
+      "sha256": "4f4abe192b3070f4302dcf42de26d1fd23ed9d6d15acc6228192f328b3d31b82"
     },
     {
       "path": "daemon/class/thief.c",
@@ -8940,8 +8940,8 @@
     },
     {
       "path": "include/class_level.h",
-      "size": 1566,
-      "sha256": "cc33f76cd56afae16f5d3e82903996587c579c8bb4f5696b297c10ffb40c872d"
+      "size": 1612,
+      "sha256": "a2e4dbb7787fe576a9e92fd39feb841b003575cbe86a1831ccfe5abad024f43a"
     },
     {
       "path": "include/combat.h",

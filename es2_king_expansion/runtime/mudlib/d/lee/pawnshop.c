@@ -1,7 +1,6 @@
 // /d/lee/pawnshop.c
 // 李家村復原版。CONFIRMED_MIXED
 // Topology follows the user-provided Li Village map; generated prose is intentionally replaceable.
-// KING TOPOLOGY FIX (2026-11-03)：依 es2m_snapshot/d/lee/LEE_TOPOLOGY.json 對齊出口；不修改 ES2M source mirror。
 // MODIFIED：改用原始 ES2 的 HOCKSHOP 房間類型（/std/room/hockshop.c，作者 Annihilator），
 // 取代先前另外寫的簡化版收購機制；典當/贖回/賣斷/收購轉售規則沿用原始程式，未自行更動。
 
@@ -23,7 +22,6 @@ LONG
         "/obj/food/mooncake" : 2
     ]));
     set("exits", ([
-        "north" : __DIR__"square_s",
         "east" : __DIR__"street1"
     ]));
     setup();
