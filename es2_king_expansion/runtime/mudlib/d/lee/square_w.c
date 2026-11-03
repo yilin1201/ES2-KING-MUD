@@ -13,7 +13,7 @@ LONG
     );
     set("exits", ([
         "north" : __DIR__"nroad3",
-        "west" : __DIR__"wroad4",
+        "west" : __DIR__"wroad3",
         "east" : __DIR__"square_e",
         "south" : __DIR__"square_s"
     ]));
