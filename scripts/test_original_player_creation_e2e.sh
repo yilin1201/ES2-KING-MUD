@@ -72,7 +72,7 @@ for _ in $(seq 1 300); do
     tail -n 100 "$TEMP_ROOT/driver.stdout" >&2 2>/dev/null || true
     exit 1
   fi
-  if ss -H -ltn 'sport = :4000' 2>/dev/null | grep -q 'LISTEN'; then
+  if ss -H -ltn 2>/dev/null | grep -Eq 'LISTEN.*:4000[[:space:]]'; then
     driver_ready=1
     break
   fi
