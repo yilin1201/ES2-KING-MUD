@@ -163,7 +163,7 @@ RUN python3 scripts/import_es2m_world_zones_safe.py \
     --runtime /opt/es2-king/runtime/mudlib \
     --output /build/es2m-world-zones-stage.json
 # Lee／Oldpine／Wutang Runtime topology gates：SOURCE PASS 不等於 Runtime PASS。
-RUN python3 scripts/test_es2m_lee_topology.py \
+RUN python3 scripts/test_es2m_lee_topology.py --current-source /build/repository/es2m_source_mirror/mudlib \
     && python3 scripts/test_es2m_lee_runtime.py \
         --snapshot /build/repository/es2m_snapshot/mudlib \
         --current-source /build/repository/es2m_source_mirror/mudlib \
