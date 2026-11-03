@@ -7,7 +7,25 @@ TEMP_ROOT="$(mktemp -d)"
 WEB_PORT="$((49000 + $$ % 700))"
 TEST_PASSWORD="$(openssl rand -hex 16)"
 driver_pid=""; bridge_pid=""
-cleanup(){ status=$?; [[ -z "$bridge_pid" ]] || kill "$bridge_pid" 2>/dev/null || true; [[ -z "$driver_pid" ]] || kill "$driver_pid" 2>/dev/null || true; wait "$bridge_pid" 2>/dev/null || true; wait "$driver_pid" 2>/dev/null || true; if ((status)); then echo "ORIGINAL PLAYER CREATION E2E FAIL：暫存 Runtime 保留於 $TEMP_ROOT" >&2; else rm -rf -- "$TEMP_ROOT"; fi; return "$status"; }
+cleanup(){
+  status=$?
+  [[ -z "$bridge_pid" ]] || kill "$bridge_pid" 2>/dev/null || true
+  [[ -z "$driver_pid" ]] || kill "$driver_pid" 2>/dev/null || true
+  wait "$bridge_pid" 2>/dev/null || true
+  wait "$driver_pid" 2>/dev/null || true
+  if ((status)); then
+    echo "ORIGINAL PLAYER CREATION E2E FAIL：暫存 Runtime 保留於 $TEMP_ROOT" >&2
+    for log in driver.stdout bridge.stdout; do
+      if [[ -s "$TEMP_ROOT/$log" ]]; then
+        echo "--- $log (last 100 lines) ---" >&2
+        tail -n 100 "$TEMP_ROOT/$log" >&2
+      fi
+    done
+  else
+    rm -rf -- "$TEMP_ROOT"
+  fi
+  return "$status"
+}
 trap cleanup EXIT INT TERM
 
 test -x "$DRIVER_BIN"
