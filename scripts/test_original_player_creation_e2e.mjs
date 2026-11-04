@@ -84,7 +84,7 @@ const races = [
   ["headprobe","headless","刑天 (Headless)","刑天測試","headless"],
   ["yaksaprobe","yaksa","夜叉 (Yaksa)","夜叉測試","yaksa"],
   ["malikprobe","malik","巫首 (Malik)","巫首測試","malik"],
-  ["7probe","human","Human（人類）","數字帳號測試","human"]
+  ["7probe","human","人類 (human)","數字帳號測試","human"]
 ];
 for (const [id,raceChoice,raceLabel,name,raceId] of races)
   await runPlayer({id,raceChoice,raceLabel,name,raceId});
