@@ -31,7 +31,8 @@ COPY . .
 RUN bash scripts/test_admin_gm_static.sh
 
 # WebTelnet Browser Static Gate：Render 建置前先解析瀏覽器 module，避免 HTML 可開啟但 JavaScript 未執行而永久停在「連線中」。
-RUN node scripts/test_m30_webtelnet_display.mjs \
+RUN node --check webtelnet/server.mjs \
+    && node scripts/test_m30_webtelnet_display.mjs \
     && bash scripts/test_webtelnet_mobile_nowrap.sh webtelnet/public/index.html
 
 # Original ES2／Neolith 已在 COPY . . 前完成固定版本建置；此處開始套用專案 overlay。
