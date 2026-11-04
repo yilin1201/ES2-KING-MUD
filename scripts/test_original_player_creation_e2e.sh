@@ -40,6 +40,20 @@ cp -a "$SOURCE_RUNTIME/mudlib" "$TEMP_ROOT/mudlib"
 cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
 bash "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh" "$TEMP_ROOT"
 bash "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
+
+# 確認 E2E 臨時 Runtime 確實使用 KING gender prompt adapter，且 input_prompt 模組存在。
+python3 - "$TEMP_ROOT/mudlib" <<'PY'
+from pathlib import Path
+import sys
+root = Path(sys.argv[1])
+logind = (root / "adm/daemons/logind.c").read_text(encoding="utf-8", errors="replace")
+input_feature = (root / "feature/user/input.c").read_text(encoding="utf-8", errors="replace")
+if 'write ("\\n您要扮演的哪種性別的角色? (Male / Female) ");' not in logind:
+    raise SystemExit("KING_GENDER_PROMPT_RUNTIME_FAIL: explicit gender prompt missing")
+if "void input_prompt" not in input_feature:
+    raise SystemExit("KING_GENDER_PROMPT_RUNTIME_FAIL: input_prompt feature missing")
+print("KING_GENDER_PROMPT_RUNTIME_PASS")
+PY
 # Test-only Host Throttle／測試專用主機限流處理：12 個種族皆由同一個 localhost 建立，
 # 會觸發 Original ES2 的每 IP 十帳號保護。只在 mktemp Runtime 套用既有 KING
 # bootstrap 政策，不修改來源保存區，也不把「同 IP 大量創角」宣稱為正式 Gameplay。
