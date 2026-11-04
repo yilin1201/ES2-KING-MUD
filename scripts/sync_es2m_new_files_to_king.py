@@ -78,9 +78,10 @@ KING_GENDER_PROMPT_UPSTREAM = """mapping gender_opts = ([
 KING_GENDER_PROMPT_KING = """mapping gender_opts = ([
         "prompt": "您要扮演的哪種性別的角色? ",
         "options": ({ "M) 男性", "F) 女性" }),
-        // KING WebTelnet 相容：啟用 Neolith input_prompt 顯示性別選單。
-        "cursor": 1
-    ]);"""
+        "cursor": 0
+    ]);
+    // KING WebTelnet 相容：原始 get_gender 使用四參數 input_to，手動輸出性別提示。
+    write ("\\n您要扮演的哪種性別的角色? (Male / Female) ");"""
 KING_LEE_TOPOLOGY_GUARDS = {
     "d/lee/square_s.c": '"south" : __DIR__"pawnshop"',
     "d/lee/square_c.c": '"east" : __DIR__"watermelon_n1"',
@@ -350,7 +351,7 @@ def main() -> int:
         "overwritten_existing_king_count": len(overwritten),
         "already_matching_count": len(unchanged),
         "preserved_king_custom_count": len(preserved_king),
-        "runtime_compatibility_patches": [f"{KING_GENDER_PROMPT_PATH}: gender_opts cursor 1 for WebTelnet input_prompt"],
+        "runtime_compatibility_patches": [f"{KING_GENDER_PROMPT_PATH}: explicit get_gender prompt output for WebTelnet four-argument input_to"],
         "source_differs_from_pinned_original_count": len(original_conflicts),
         "copied_new": copied_new,
         "overwritten_existing_king": overwritten,
