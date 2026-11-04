@@ -15,10 +15,10 @@ cleanup(){
   wait "$driver_pid" 2>/dev/null || true
   if ((status)); then
     echo "ORIGINAL PLAYER CREATION E2E FAIL：暫存 Runtime 保留於 $TEMP_ROOT" >&2
-    for log in driver.stdout bridge.stdout; do
+    for log in driver.stdout bridge.stdout player-creation.log; do
       if [[ -s "$TEMP_ROOT/$log" ]]; then
-        echo "--- $log (last 100 lines) ---" >&2
-        tail -n 100 "$TEMP_ROOT/$log" >&2
+        echo "--- $log (last 200 lines) ---" >&2
+        tail -n 200 "$TEMP_ROOT/$log" >&2
       fi
     done
     echo "--- Runtime log files ---" >&2
