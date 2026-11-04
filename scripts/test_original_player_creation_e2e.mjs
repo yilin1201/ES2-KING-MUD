@@ -72,18 +72,18 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   if (/^\d/.test(id)) console.log("ORIGINAL_PLAYER_CREATION_NUMERIC_ID_E2E_PASS");
 }
 const races = [
-  ["humanprobe","human","Human（人類）","人類測試","human"],
-  ["avatarprobe","人類族","Avatar（人類族）","人類族測試","avatar"],
-  ["blackprobe","blackteeth","黑齒","黑齒測試","blackteeth"],
-  ["yenprobe","yenhold","厭火","厭火測試","yenhold"],
-  ["wooprobe","woochan","無腸","無腸測試","woochan"],
-  ["dingprobe","dingling","釘靈","釘靈測試","dingling"],
-  ["jiaoprobe","jiaojao","焦僥","焦僥測試","jiaojao"],
-  ["rainprobe","rainner","雨師妾","雨師妾測試","rainner"],
-  ["ashprobe","ashura","阿修羅","阿修羅測試","ashura"],
-  ["headprobe","headless","刑天","刑天測試","headless"],
-  ["yaksaprobe","yaksa","夜叉","夜叉測試","yaksa"],
-  ["malikprobe","malik","巫首","巫首測試","malik"],
+  ["humanprobe","human","人類 (human)","人類測試","human"],
+  ["avatarprobe","人類族","人類族 (avatar)","人類族測試","avatar"],
+  ["blackprobe","blackteeth","黑齒 (Blackteeth)","黑齒測試","blackteeth"],
+  ["yenprobe","yenhold","厭火 (Yenhold)","厭火測試","yenhold"],
+  ["wooprobe","woochan","無腸 (Woochan)","無腸測試","woochan"],
+  ["dingprobe","dingling","釘靈 (Dingling)","釘靈測試","dingling"],
+  ["jiaoprobe","jiaojao","焦僥 (Jiaojao)","焦僥測試","jiaojao"],
+  ["rainprobe","rainner","雨師妾 (Rainner)","雨師妾測試","rainner"],
+  ["ashprobe","ashura","阿修羅 (Ashura)","阿修羅測試","ashura"],
+  ["headprobe","headless","刑天 (Headless)","刑天測試","headless"],
+  ["yaksaprobe","yaksa","夜叉 (Yaksa)","夜叉測試","yaksa"],
+  ["malikprobe","malik","巫首 (Malik)","巫首測試","malik"],
   ["7probe","human","Human（人類）","數字帳號測試","human"]
 ];
 for (const [id,raceChoice,raceLabel,name,raceId] of races)
