@@ -179,7 +179,7 @@ function createMudSession(browser, firstMessage = null) {
         || /您的選擇.*可查閱說明/.test(runtimeTail)
         || /選擇你的角色所屬的種族\s*\(human\/avatar\)/.test(runtimeTail)
         || /請輸入 human 或 avatar/.test(runtimeTail);
-      console.log(\`[public-session \${sessionId}] race-choice mode=\${lineRace ? "line" : "cursor"} race=\${race}\`);
+      console.log(`[public-session ${sessionId}] race-choice mode=${lineRace ? "line" : "cursor"} race=${race}`);
       if (lineRace) {
         mud.write(Buffer.from((/^\d+$/.test(choice) ? choice : race) + "\r\n", "utf8"));
       } else if (race === "human") {
