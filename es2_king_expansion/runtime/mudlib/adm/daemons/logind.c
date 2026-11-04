@@ -667,7 +667,8 @@ private void get_race (string arg, object ob, string *list) {
     mapping gender_opts = ([
         "prompt": "您要扮演的哪種性別的角色? ",
         "options": ({ "M) 男性", "F) 女性" }),
-        "cursor": 0
+        // KING WebTelnet 相容：啟用 Neolith input_prompt 顯示性別選單。
+        "cursor": 1
     ]);
     input_to ("get_gender", gender_opts, ob, race);
 }
