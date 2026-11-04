@@ -57,10 +57,10 @@ assert.doesNotMatch(html, /terminal\.textContent \+= cleanText/);
 // Character Prompt Ordering／新提示必須優先於同一輸出緩衝區內的舊提示。
 const raceThenGender = "您的選擇(用 '? <種族名>' 可查閱說明)﹕\\n您要扮演的哪種性別的角色? (Male / Female) ";
 assert.equal(characterMenuFor(raceThenGender)?.type, "gender");
-assert.deepEqual(prepareCharacterChoice(raceThenGender, "male"), { bytes: "M\\r\\n", followup: null });
+assert.deepEqual(prepareCharacterChoice(raceThenGender, "male"), { bytes: "M\r\n", followup: null });
 const raceThenGenderThenConfirm = raceThenGender + "\\n您確定要創造這個角色嗎? (Yes / No)";
 assert.equal(characterMenuFor(raceThenGenderThenConfirm)?.type, "confirm");
-assert.deepEqual(prepareCharacterChoice(raceThenGenderThenConfirm, "yes"), { bytes: "Y\\r\\n", followup: null });
+assert.deepEqual(prepareCharacterChoice(raceThenGenderThenConfirm, "yes"), { bytes: "Y\r\n", followup: null });
 const genderThenRace = raceThenGender + "\\n您的選擇(用 '? <種族名>' 可查閱說明)﹕";
 assert.equal(characterMenuFor(genderThenRace)?.type, "race");
 
