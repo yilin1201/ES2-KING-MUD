@@ -37,11 +37,11 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   assert.equal(await exists(login),false); assert.equal(await exists(user),false);
   let s=session();
   console.log("E2E_PLAYER_START",id,raceId);
-  await s.wait("您的使用者代號"); s.send(id+"\r\n"); await s.wait("您確定嗎"); await choice(s,"yes");
+  await s.wait("您的使用者代號"); s.send(id+"\r\n"); const co=s.output().length; await s.wait("您確定嗎",co); await s.wait("> ",co); await choice(s,"yes");
   await s.wait("請設定您的密碼"); s.send(password+"\r\n"); await s.wait("請再輸入一次您的密碼"); s.send(password+"\r\n");
   await s.wait("您的電子郵件地址"); s.send("none\r\n"); await s.wait(raceLabel);
-  const ro=s.output().length; await choice(s,raceChoice); await s.wait("您要扮演的哪種性別",ro); await choice(s,"male");
-  await s.wait("您的顯示名稱"); s.send(name+"\r\n"); await s.wait("您確定要創造這個角色嗎"); await choice(s,"yes");
+  const ro=s.output().length; await s.wait("請輸入編號 1-12 或種族 ID",ro); await s.wait("> ",ro); await choice(s,raceChoice); const go=s.output().length; await s.wait("您要扮演的哪種性別",go); await s.wait("> ",go); await choice(s,"male");
+  await s.wait("您的顯示名稱"); s.send(name+"\r\n"); const fo=s.output().length; await s.wait("您確定要創造這個角色嗎",fo); await s.wait("> ",fo); await choice(s,"yes");
   await s.wait("目前權限: (player)"); await s.wait("客棧大堂"); await s.wait("> ");
   await new Promise(r=>setTimeout(r,1200));
   for(const cmd of ["look","score","skills","inventory"]){const o=s.output().length;s.send(cmd+"\r\n");await s.wait("> ",o)}
