@@ -31,7 +31,7 @@ function session(){
 }
 async function choice(s,value){const p=prepareCharacterChoice(s.output().slice(-1400),value);assert.ok(p);s.send(p.bytes)}
 
-// Original get_char 的確認與性別使用單鍵 Y/M；只有種族選擇使用 WebTelnet ES2RACE 控制訊息。
+// Original input_to 的確認與性別使用 Y/M + CRLF；只有種族選擇使用 WebTelnet ES2RACE 控制訊息。
 async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   const shard=id[0], login=`${saveDir}/login/${shard}/${id}.o`, user=`${saveDir}/user/${shard}/${id}.o`;
   assert.equal(await exists(login),false); assert.equal(await exists(user),false);
