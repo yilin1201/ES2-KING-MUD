@@ -5,10 +5,12 @@ import re
 from pathlib import Path
 
 OPPOSITE = {
-    "north": "south", "south": "north", "east": "west", "west": "east",
-    "northeast": "southwest", "southwest": "northeast",
-    "northwest": "southeast", "southeast": "northwest", "up": "down", "down": "up",
-    "in": "out", "out": "in", "northdown": "southup", "southup": "northdown",
+    "north": ("south",), "south": ("north",), "east": ("west",), "west": ("east",),
+    "northeast": ("southwest",), "southwest": ("northeast",),
+    "northwest": ("southeast",), "southeast": ("northwest",), "up": ("down",), "down": ("up",),
+    # 一般室內出口維持 in/out；ES2M 五堂鎮涼亭另以 enter/out 成對連接。
+    "in": ("out",), "out": ("in", "enter"), "enter": ("out",),
+    "northdown": ("southup",), "southup": ("northdown",),
 }
 ONE_WAY = {("temple_road_s", "dark_alley_e"), ("yan_gate", "temple_road_n"), ("temple_yard", "temple")}
 BOAT_ROOMS = {"ferry_boat_huang", "ferry_boat_ro"}
@@ -79,9 +81,17 @@ def validate_tree(mudlib: Path, require_runtime_link: bool, expected_room_count:
                 assert external.is_file(), f"ES2M_WUTANG_EXTERNAL_EXIT_MISSING: {room.name}:{target}"
                 continue
             assert target in room_names, f"ES2M_WUTANG_BROKEN_EXIT: {room.name}:{direction}:{target}"
-            back = exits(area / f"{target}.c").get(OPPOSITE[direction])
-            assert back == room.stem or (room.stem, target) in ONE_WAY or (target, room.stem) in ONE_WAY, \
-                f"ES2M_WUTANG_ONE_WAY: {room.stem}:{direction}:{target}:{back}"
+            target_exits = exits(area / f"{target}.c")
+            reverse_matches = [
+                reverse for reverse in OPPOSITE[direction]
+                if target_exits.get(reverse) == room.stem
+            ]
+            back = reverse_matches[0] if reverse_matches else None
+            assert (
+                reverse_matches
+                or (room.stem, target) in ONE_WAY
+                or (target, room.stem) in ONE_WAY
+            ), f"ES2M_WUTANG_ONE_WAY: {room.stem}:{direction}:{target}:{back}"
         for npc in re.findall(r'__DIR__"npc/([a-z_]+)"', code):
             assert (area / "npc" / f"{npc}.c").is_file(), f"ES2M_WUTANG_MISSING_NPC: {room.name}:{npc}"
 
