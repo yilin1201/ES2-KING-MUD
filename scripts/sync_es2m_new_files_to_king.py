@@ -28,6 +28,15 @@ PROTECTED_KING_PATHS = {
     "custom/zhenwu/npc/soldier.c",
     "custom/zhenwu/npc/zhenwu_soldier.c",
     "custom/zhenwu/obj/recruit_stone.c",
+    # 李家村路網：保留 KING 已確認的拓樸修正，避免上游房間程式缺少 LEE_TOPOLOGY 已登錄出口。
+    "d/lee/square_s.c",
+    "d/lee/square_c.c",
+    "d/lee/watermelon_n1.c",
+    "d/lee/pawnshop.c",
+    "d/lee/watermelon_s3.c",
+    "d/lee/creek.c",
+    "d/lee/wroad3.c",
+    "d/lee/square_w.c",
 }
 KING_ZHENWU_GUARDS = {
     "custom/zhenwu/npc/lu_xinien.c": (
@@ -54,6 +63,16 @@ KING_ZHENWU_GUARDS = {
         'set("soldier/from_fighter", 1)',
         '強力格擋改由米沛傳授',
     ),
+}
+KING_LEE_TOPOLOGY_GUARDS = {
+    "d/lee/square_s.c": '"south" : __DIR__"pawnshop"',
+    "d/lee/square_c.c": '"east" : __DIR__"watermelon_n1"',
+    "d/lee/watermelon_n1.c": '"west" : __DIR__"square_c"',
+    "d/lee/pawnshop.c": '"north" : __DIR__"square_s"',
+    "d/lee/watermelon_s3.c": '"east" : __DIR__"creek"',
+    "d/lee/creek.c": '"west" : __DIR__"watermelon_s3"',
+    "d/lee/wroad3.c": '"east" : __DIR__"square_w"',
+    "d/lee/square_w.c": '"west" : __DIR__"wroad3"',
 }
 KING_RACE_COMPAT_PATHS = {"d/snow/npc/teacher.c"}
 KING_NPC_COMPAT_PATHS = {"d/wutang/npc/may_yin_fong.c"}
@@ -143,6 +162,15 @@ def verify_king_owner_guards(overlay: Path, repo_root: Path) -> None:
     if 'me->set_skill("heavy_parry", 1);' in stone or 'me->set_learn("heavy_parry", 1);' in stone:
         raise SystemExit("FAIL: recruit stone must not bypass Mee Pei heavy_parry teaching")
 
+    # 李家村出口相容：依最新 ES2M LEE_TOPOLOGY.json 保留已修正的雙向路線。
+    for rel, marker in KING_LEE_TOPOLOGY_GUARDS.items():
+        path = overlay / rel
+        if not path.is_file():
+            raise SystemExit(f"FAIL: KING Lee topology compatibility file missing: {rel}")
+        raw = path.read_text(encoding="utf-8", errors="replace")
+        if marker not in raw:
+            raise SystemExit(f"FAIL: KING Lee topology route missing in {rel}: {marker}")
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--source", required=True, type=Path, help="latest ES2M mirror mudlib")
@@ -223,6 +251,8 @@ def main() -> int:
                 ):
                     raise SystemExit("FAIL: recruit stone must not bypass Mee Pei heavy_parry teaching")
                 status = "preserved-KING-ES2M-Zhenwu-merged"
+            elif rel_name in KING_LEE_TOPOLOGY_GUARDS:
+                status = "preserved-KING-LEE-topology-compatibility"
             else:
                 raise SystemExit(f"FAIL: unclassified protected KING path: {rel_name}")
             preserved_king.append({
