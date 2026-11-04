@@ -11,7 +11,7 @@ const exists=async p=>{try{await access(p,constants.F_OK);return true}catch{retu
 
 // ANSI Normalization／測試輸出比對前移除 Telnet 終端控制序列；不改變實際送往 Driver 的輸入位元組。
 function cleanOutput(value) {
-  return value.replace(/\\x1b\\[[0-?]*[ -/]*[@-~]/g, "").replace(/\\x1b\\][^\\x07]*(?:\\x07|\\x1b\\\\)/g, "");
+  return value.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "").replace(/\x1b\][^\x07]*(?:\x07|\x1b\\)/g, "");
 }
 
 function session(){
