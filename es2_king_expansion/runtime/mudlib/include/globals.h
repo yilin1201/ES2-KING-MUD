@@ -6,7 +6,7 @@ author: Annihilator <taedlar@gmail.com>
 #define MUD_NAME_INTERMUD "Celestial Empire"
 #define MUD_NAME_ABBR "es2"
 #define MUD_HOSTNAME "es2.muds.net"
-#define MUD_PORT 4001
+#define MUD_PORT 4000 // KING WebTelnet 內部連線埠，與 neolith.conf Port 4000 保持一致。
 #define HTTP_PORT 4015
 
 // Directories
