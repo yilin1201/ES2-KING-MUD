@@ -170,9 +170,9 @@ function createMudSession(browser, firstMessage = null) {
       inventoryProbePending = {kind: inventoryProbe === "look king" ? "look-self" : inventoryProbe, started: Date.now()};
       console.log(`[public-session ${sessionId}] inventory-probe=${inventoryProbe === "look king" ? "look-self" : inventoryProbe} bridge-forwarded=true`);
     }
-    if (/^ES2RACE:(?:[1-9]|1[0-2]|human|avatar|blackteeth|yenhold|jiaojao|woochan|dingling|headless|rainner|malik|yaksa|ashura)$/.test(incoming)) {
+    if (/^ES2RACE:(?:[1-9]|1[01]|human|blackteeth|yenhold|jiaojao|woochan|dingling|headless|rainner|malik|yaksa|ashura)$/.test(incoming)) {
       const choice = incoming.slice("ES2RACE:".length);
-      const raceIds = ["", "human", "avatar", "blackteeth", "yenhold", "jiaojao", "woochan", "dingling", "headless", "rainner", "malik", "yaksa", "ashura"];
+      const raceIds = ["", "human", "blackteeth", "yenhold", "jiaojao", "woochan", "dingling", "headless", "rainner", "malik", "yaksa", "ashura"];
       const race = /^\d+$/.test(choice) ? raceIds[Number(choice)] : choice;
       const lineRace = numericRaceActive
         || /請輸入編號 1-12 或種族 ID|請輸入編號 1 或 2/.test(runtimeTail)
