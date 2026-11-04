@@ -55,6 +55,10 @@ assert.match(html, /appendAnsiText\(decoded\)/);
 assert.doesNotMatch(html, /terminal\.textContent \+= cleanText/);
 
 // Character Prompt Ordering／新提示必須優先於同一輸出緩衝區內的舊提示。
+const racePrompt = "您的選擇(用 '? <種族名>' 可查閱說明)﹕";
+assert.equal(characterMenuFor(racePrompt)?.options.length, 11);
+assert.equal(characterMenuFor(racePrompt)?.options.some(option => option.label.includes("avatar")), false);
+assert.deepEqual(prepareCharacterChoice(racePrompt, "blackteeth"), { bytes: "ES2RACE:2", followup: null });
 const raceThenGender = "您的選擇(用 '? <種族名>' 可查閱說明)﹕\\n您要扮演的哪種性別的角色? (Male / Female) ";
 assert.equal(characterMenuFor(raceThenGender)?.type, "gender");
 assert.deepEqual(prepareCharacterChoice(raceThenGender, "male"), { bytes: "M\r\n", followup: null });
