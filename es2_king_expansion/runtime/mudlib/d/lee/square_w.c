@@ -11,9 +11,10 @@ void create()
 這片空地是村民日常往來與歇腳的地方，地面被踩得十分結實。北面連著私塾附近的道路，南面還有另一片廣場。空地一角擺著幾張長凳，木質已經有些發黑，看得出是村里人常年歇腳留下的痕跡。
 LONG
     );
+    // 依最新 ES2M LEE_TOPOLOGY.json 補齊李家村道路連接。
     set("exits", ([
         "north" : __DIR__"nroad3",
-        "west" : __DIR__"wroad4",
+        "west" : __DIR__"wroad3",
         "east" : __DIR__"square_e",
         "south" : __DIR__"square_s"
     ]));
