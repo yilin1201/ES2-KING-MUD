@@ -5,17 +5,29 @@ import { constants } from "node:fs";
 import { prepareCharacterChoice } from "../webtelnet/public/character-input.mjs";
 
 const url=process.env.ES2_E2E_WS_URL, saveDir=process.env.ES2_E2E_SAVE_DIR, password=process.env.ES2_E2E_PASSWORD;
+console.log("ORIGINAL_PLAYER_CREATION_E2E_START", Boolean(url), Boolean(saveDir), Boolean(password));
 assert.ok(url && saveDir && password);
 const exists=async p=>{try{await access(p,constants.F_OK);return true}catch{return false}};
 
 function session(){
   const socket=new WebSocket(url); let output="";
-  socket.on("open",()=>output+="\\n[WEBSOCKET OPEN]\\n");
-  socket.on("error",e=>output+="\\n[WEBSOCKET ERROR] "+e.message+"\\n");
-  socket.on("close",(code,reason)=>output+="\\n[WEBSOCKET CLOSE] "+code+" "+Buffer.from(reason||"").toString("utf8")+"\\n");
-  socket.on("message",d=>output+=Buffer.from(d).toString("utf8"));
+  socket.on("open",()=>{console.log("E2E_WS_OPEN");output+="\\n[WEBSOCKET OPEN]\\n"});
+  socket.on("error",e=>{console.error("E2E_WS_ERROR",e.message);output+="\\n[WEBSOCKET ERROR] "+e.message+"\\n"});
+  socket.on("close",(code,reason)=>{console.log("E2E_WS_CLOSE",code);output+="\\n[WEBSOCKET CLOSE] "+code+" "+Buffer.from(reason||"").toString("utf8")+"\\n"});
+  socket.on("message",d=>{console.log("E2E_WS_MESSAGE_BYTES",d.length);output+=Buffer.from(d).toString("utf8")});
   return {socket, output:()=>output, send:s=>socket.send(s), close:()=>socket.close(),
-    wait:(m,o=0,t=30000)=>new Promise((res,rej)=>{const st=Date.now(),iv=setInterval(()=>{const x=output.slice(o);if((typeof m==="string"?x.includes(m):m.test(x))){clearInterval(iv);res(x)}else if(Date.now()-st>t){clearInterval(iv);rej(new Error("PLAYER CREATE timeout: "+m+"\n"+x.slice(-1400)))}},25)})};
+    wait:(m,o=0,t=30000)=>new Promise((res,rej)=>{
+      console.log("E2E_WAIT_START",String(m));
+      const st=Date.now(),iv=setInterval(()=>{
+        const x=output.slice(o);
+        if((typeof m==="string"?x.includes(m):m.test(x))){
+          clearInterval(iv);console.log("E2E_WAIT_MATCH",String(m));res(x);
+        } else if(Date.now()-st>t){
+          clearInterval(iv);console.error("E2E_WAIT_TIMEOUT",String(m),x.slice(-1400));
+          rej(new Error("PLAYER CREATE timeout: "+m+"\\n"+x.slice(-1400)));
+        }
+      },25)
+    })};
 }
 async function choice(s,value){const p=prepareCharacterChoice(s.output().slice(-512),value);assert.ok(p);s.send(p.bytes)}
 
@@ -23,6 +35,7 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
   const shard=id[0], login=`${saveDir}/login/${shard}/${id}.o`, user=`${saveDir}/user/${shard}/${id}.o`;
   assert.equal(await exists(login),false); assert.equal(await exists(user),false);
   let s=session();
+  console.log("E2E_PLAYER_START",id,raceId);
   await s.wait("您的使用者代號"); s.send(id+"\r\n"); await s.wait("您確定嗎"); await choice(s,"yes");
   await s.wait("請設定您的密碼"); s.send(password+"\r\n"); await s.wait("請再輸入一次您的密碼"); s.send(password+"\r\n");
   await s.wait("您的電子郵件地址"); s.send("none\r\n"); await s.wait(raceLabel);
