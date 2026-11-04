@@ -38,8 +38,8 @@ from pathlib import Path
 import sys
 path = Path(sys.argv[1])
 text = path.read_text(encoding="utf-8")
-needle = 'if (race == "human" && random(100) < 1)\\n        race = "avatar";'
-replacement = 'if (race == "human" && (ob->query("id") == "avataropen" || random(100) < 1))\\n        race = "avatar";'
+needle = 'if (race == "human" && random(100) < 1)\n        race = "avatar";'
+replacement = 'if (race == "human" && (ob->query("id") == "avataropen" || random(100) < 1))\n        race = "avatar";'
 if needle not in text:
     raise SystemExit("PLAYER_AVATAR_FIXTURE_FAIL: Original avatar transformation insertion point missing")
 path.write_text(text.replace(needle, replacement, 1), encoding="utf-8")
