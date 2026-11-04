@@ -1,8 +1,8 @@
 // Character Creation Compatibility／角色建立相容：Race 由 Bridge 轉整行；Gender／Confirm 使用 input_to，需 CRLF 結束。
 // 不變更 Original 種族資料與後續創角邏輯；只避開 Public iPhone 對 Race 單鍵輸入的不穩定。
 export const RACE_PROMPT = /(?:選擇你的角色所屬的種族[\s\S]*請輸入編號 1-12 或種族 ID|請輸入編號 1-12 或種族 ID)[：:]?\s*(?:>\s*)*$/;
-export const GENDER_PROMPT = /您要扮演的哪種性別\(外觀\)的角色[?？]?\s*$/;
-export const CONFIRM_PROMPT = /(?:使用 .+ 這個代號將會創造一個新的人物﹐您確定嗎|您確定要創造這個角色嗎|您要重新創造這個角色嗎|您要將另一個連線中的相同人物趕出去﹐取而代之嗎)[?？]?\s*$/;
+export const GENDER_PROMPT = /您要扮演的哪種性別\(外觀\)的角色[?？]?\s*(?:>\s*)*$/;
+export const CONFIRM_PROMPT = /(?:使用 .+ 這個代號將會創造一個新的人物﹐您確定嗎|您確定要創造這個角色嗎|您要重新創造這個角色嗎|您要將另一個連線中的相同人物趕出去﹐取而代之嗎)[?？]?\s*(?:>\s*)*$/;
 
 const menus = {
   race: [
@@ -50,13 +50,13 @@ export function prepareCharacterChoice(outputTail, rawValue) {
     if (extra[value]) return { bytes: `ES2RACE:${extra[value]}`, followup: null };
   }
   if (menu.type === "gender") {
-    if (["female", "f", "女性", "女"].includes(value)) return { bytes: "F\\r\\n", followup: null };
-    if (["male", "m", "男性", "男"].includes(value)) return { bytes: "M\\r\\n", followup: null };
-    if (["unknown", "n", "無法判斷", "未知"].includes(value)) return { bytes: "N\\r\\n", followup: null };
+    if (["female", "f", "女性", "女"].includes(value)) return { bytes: "F\r\n", followup: null };
+    if (["male", "m", "男性", "男"].includes(value)) return { bytes: "M\r\n", followup: null };
+    if (["unknown", "n", "無法判斷", "未知"].includes(value)) return { bytes: "N\r\n", followup: null };
   }
   if (menu.type === "confirm") {
-    if (["yes", "y", "是"].includes(value)) return { bytes: "Y\\r\\n", followup: null };
-    if (["no", "n", "否"].includes(value)) return { bytes: "N\\r\\n", followup: null };
+    if (["yes", "y", "是"].includes(value)) return { bytes: "Y\r\n", followup: null };
+    if (["no", "n", "否"].includes(value)) return { bytes: "N\r\n", followup: null };
   }
   return null;
 }
