@@ -5,9 +5,12 @@
   "overlay_root": "es2_king_expansion/runtime/mudlib",
   "source_file_count": 1991,
   "copied_new_count": 2,
-  "overwritten_existing_king_count": 0,
-  "already_matching_count": 1968,
+  "overwritten_existing_king_count": 1,
+  "already_matching_count": 1967,
   "preserved_king_custom_count": 21,
+  "runtime_compatibility_patches": [
+    "adm/daemons/logind.c: gender_opts cursor 1 for WebTelnet input_prompt"
+  ],
   "source_differs_from_pinned_original_count": 186,
   "copied_new": [
     {
@@ -21,7 +24,14 @@
       "sha256": "2c384ba97da0f36083e64f756105ecc1cef39ecdbebcac2bb68a1f532b95a1f2"
     }
   ],
-  "overwritten_existing_king": [],
+  "overwritten_existing_king": [
+    {
+      "path": "adm/daemons/logind.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "37930fa03927403df90afa502fa6afee8336c3a38f903b6684bef229f73182c7",
+      "source_sha256": "f2c5cbe53aeb87d77dc4568396738c391ce7293a5c4c3e9b98726a697a7b43e4"
+    }
+  ],
   "already_matching": [
     {
       "path": "AGENTS.md",
@@ -102,11 +112,6 @@
       "path": "adm/daemons/httpd.c",
       "status": "already-matches-ES2M",
       "sha256": "8966aaae2fcf7331a577ddcabfcf8fad55fcb99f865d9ca7e8a27b9dc21cf7b8"
-    },
-    {
-      "path": "adm/daemons/logind.c",
-      "status": "already-matches-ES2M",
-      "sha256": "f2c5cbe53aeb87d77dc4568396738c391ce7293a5c4c3e9b98726a697a7b43e4"
     },
     {
       "path": "adm/daemons/natured.c",
