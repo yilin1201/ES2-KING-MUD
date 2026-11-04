@@ -40,6 +40,19 @@ cp -a "$SOURCE_RUNTIME/mudlib" "$TEMP_ROOT/mudlib"
 cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
 bash "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh" "$TEMP_ROOT"
 bash "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
+# Test-only Karma Fixture／僅在 mktemp Runtime 提高新帳號可選種族業力，完整測試 Original 可選種族；不寫入正式 KING。
+python3 - "$TEMP_ROOT/mudlib/adm/daemons/logind.c" <<'PY'
+from pathlib import Path
+import sys
+path = Path(sys.argv[1])
+text = path.read_text(encoding="utf-8")
+needle = 'private void show_race_menu (object ob) {\\n    string *list = affordable_races(ob), line;'
+replacement = 'private void show_race_menu (object ob) {\\n    string *list, line;\\n    // E2E-only fixture: allow every Original player-selectable race in this isolated runtime.\\n    ob->set("karma", 1000);\\n    list = affordable_races(ob);'
+if needle not in text:
+    raise SystemExit("PLAYER_CREATE_E2E_KARMA_FIXTURE_FAIL: show_race_menu insertion point missing")
+path.write_text(text.replace(needle, replacement, 1), encoding="utf-8")
+print("PLAYER_CREATE_E2E_KARMA_FIXTURE_READY")
+PY
 # 確認 E2E 臨時 Runtime 確實使用 KING gender prompt adapter，且 input_prompt 模組存在。
 python3 - "$TEMP_ROOT/mudlib" <<'PY'
 from pathlib import Path
@@ -77,7 +90,7 @@ if grep -R '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' \
   exit 1
 fi
 mkdir -p "$TEMP_ROOT/mudlib/data/login"/{a..z} "$TEMP_ROOT/mudlib/data/login"/{0..9} "$TEMP_ROOT/mudlib/data/user"/{a..z} "$TEMP_ROOT/mudlib/data/user"/{0..9} "$TEMP_ROOT/mudlib/log"
-for id in humanprobe avatarprobe blackprobe yenprobe wooprobe dingprobe jiaoprobe rainprobe ashprobe headprobe yaksaprobe malikprobe 7probe; do
+for id in humanprobe blackprobe yenprobe wooprobe dingprobe jiaoprobe rainprobe ashprobe headprobe yaksaprobe malikprobe 7probe; do
   initial="${id:0:1}"
   rm -f "$TEMP_ROOT/mudlib/data/login/$initial/$id.o" "$TEMP_ROOT/mudlib/data/user/$initial/$id.o"
 done
