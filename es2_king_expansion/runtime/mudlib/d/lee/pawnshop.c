@@ -21,8 +21,10 @@ LONG
         "/d/lee/npc/lee_xiao_tian" : 1,
         "/obj/food/mooncake" : 2
     ]));
+    // 依最新 ES2M LEE_TOPOLOGY.json 補齊李家村道路連接。
     set("exits", ([
-        "east" : __DIR__"street1"
+        "east" : __DIR__"street1",
+        "north" : __DIR__"square_s"
     ]));
     setup();
     replace_program(HOCKSHOP);
