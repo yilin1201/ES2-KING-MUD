@@ -82,7 +82,7 @@ async function createCharacter({ id, raceChoice, raceLabel, genderChoice, name }
   await connect(p);
   await waitForAfter(p, 0, "您的使用者代號");
   await sendLine(p, id, /使用 .* 這個代號將會創造一個新的人物/);
-  await sendChoice(p, "Y", "請設定您的密碼");
+  await sendLine(p, "Y", "請設定您的密碼");
   await sendLine(p, password, "請再輸入一次您的密碼");
   await sendLine(p, password, "您的電子郵件地址");
   const raceMenu = await sendLine(p, "none", "可查閱說明");
@@ -90,9 +90,9 @@ async function createCharacter({ id, raceChoice, raceLabel, genderChoice, name }
   assert.match(raceMenu, /blackteeth/);
   assert.doesNotMatch(raceMenu, /avatar/);
   await sendChoice(p, `ES2RACE:${raceChoice}`, "您要扮演的哪種性別");
-  await sendChoice(p, genderChoice, "您的顯示名稱");
+  await sendLine(p, genderChoice, "您的顯示名稱");
   await sendLine(p, name, "您確定要創造這個角色嗎");
-  const entered = await sendChoice(p, "Y", /目前權限: \(player\)/, 45000);
+  const entered = await sendLine(p, "Y", /目前權限: \(player\)/, 45000);
   assert.match(entered, /目前權限: \(player\)/);
   await waitForAfter(p, 0, /客棧大堂/);
   await waitForAfter(p, 0, "> ");
