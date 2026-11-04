@@ -9,7 +9,7 @@
   "already_matching_count": 1967,
   "preserved_king_custom_count": 21,
   "runtime_compatibility_patches": [
-    "adm/daemons/logind.c: gender_opts cursor 1 for WebTelnet input_prompt"
+    "adm/daemons/logind.c: explicit get_gender prompt output for WebTelnet four-argument input_to"
   ],
   "source_differs_from_pinned_original_count": 186,
   "copied_new": [
@@ -28,7 +28,7 @@
     {
       "path": "adm/daemons/logind.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "37930fa03927403df90afa502fa6afee8336c3a38f903b6684bef229f73182c7",
+      "previous_king_sha256": "64a553461314488d305829ade02a581ac55925c25f6b9805cadbe716dc131e0d",
       "source_sha256": "f2c5cbe53aeb87d77dc4568396738c391ce7293a5c4c3e9b98726a697a7b43e4"
     }
   ],
