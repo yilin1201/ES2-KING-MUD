@@ -13,9 +13,10 @@ void create()
 村西的石子路在這裡較寬，北側靠近醫館，南側仍是農家。向東再走便能抵達村中廣場。路面因為往來就診的村民較多，被踩得格外平整，偶爾能聞到醫館飄來的淡淡藥香，混著農家的泥土氣息。
 LONG
     );
+    // 依最新 ES2M LEE_TOPOLOGY.json 補齊李家村道路連接。
     set("exits", ([
         "west" : __DIR__"wroad2",
-        "east" : __DIR__"wroad4",
+        "east" : __DIR__"square_w",
         "north" : __DIR__"shrine",
         "south" : __DIR__"farm_w2"
     ]));
