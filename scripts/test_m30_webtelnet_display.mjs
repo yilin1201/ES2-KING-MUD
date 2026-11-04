@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { TelnetTextFilter } from "../webtelnet/telnet.mjs";
+import { characterMenuFor, prepareCharacterChoice } from "../webtelnet/public/character-input.mjs";
 
 const filter = new TelnetTextFilter();
 const decoder = new TextDecoder("utf-8");
@@ -52,6 +53,16 @@ assert.match(html, /function appendAnsiText\(raw\)/);
 assert.match(html, /ansi-93/);
 assert.match(html, /appendAnsiText\(decoded\)/);
 assert.doesNotMatch(html, /terminal\.textContent \+= cleanText/);
+
+// Character Prompt Ordering／新提示必須優先於同一輸出緩衝區內的舊提示。
+const raceThenGender = "您的選擇(用 '? <種族名>' 可查閱說明)﹕\\n您要扮演的哪種性別的角色? (Male / Female) ";
+assert.equal(characterMenuFor(raceThenGender)?.type, "gender");
+assert.deepEqual(prepareCharacterChoice(raceThenGender, "male"), { bytes: "M\\r\\n", followup: null });
+const raceThenGenderThenConfirm = raceThenGender + "\\n您確定要創造這個角色嗎? (Yes / No)";
+assert.equal(characterMenuFor(raceThenGenderThenConfirm)?.type, "confirm");
+assert.deepEqual(prepareCharacterChoice(raceThenGenderThenConfirm, "yes"), { bytes: "Y\\r\\n", followup: null });
+const genderThenRace = raceThenGender + "\\n您的選擇(用 '? <種族名>' 可查閱說明)﹕";
+assert.equal(characterMenuFor(genderThenRace)?.type, "race");
 
 // Public Login（公開登入）必須在瀏覽器本身遮蔽密碼，且不得儲存或記錄輸入內容。
 assert.match(html, /const passwordPrompt = \/\(/);
