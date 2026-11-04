@@ -9969,5 +9969,10 @@
     "鏡像只保留來源 Mudlib 當前存在的檔案。",
     "KING runtime overlay 依來源同路徑覆蓋；不刪除來源中不存在的 KING 專屬檔案。",
     "Pinned Original ES2 checkout 僅供比較，絕不修改。"
-  ]
+  ],
+  "refresh_request": {
+    "requested_at": "2026-11-04",
+    "requested_action": "Re-run full ES2M sync to verify KING gender prompt adapter is reapplied after source overwrite; retain port 4000 and existing KING guards.",
+    "expected_upstream_head": "1f86bcaa52b5425624a16da5fb7ed9892e16c899"
+  }
 }
