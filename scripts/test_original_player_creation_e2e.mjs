@@ -28,7 +28,6 @@ function session(){
         if((typeof m==="string"?x.includes(m):m.test(x))){
           clearInterval(iv);console.log("E2E_WAIT_MATCH",String(m));res(x);
         } else if(Date.now()-st>t){
-          clearInterval(iv);console.error("E2E_WAIT_TIMEOUT",String(m),x.slice(-1400)); console.error("E2E_WAIT_TIMEOUT_JSON",JSON.stringify(x.slice(-1400)));
           rej(new Error("PLAYER CREATE timeout: "+m+"\\n"+x.slice(-1400)));
         }
       },25)
