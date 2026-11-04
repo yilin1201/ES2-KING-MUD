@@ -18,9 +18,11 @@ LONG
     set("objects", ([
         "/d/lee/npc/farmer" : 3
     ]));
+    // 依最新 ES2M LEE_TOPOLOGY.json 補齊李家村道路連接。
     set("exits", ([
         "east" : __DIR__"watermelon_n2",
-        "south" : __DIR__"watermelon_s1"
+        "south" : __DIR__"watermelon_s1",
+        "west" : __DIR__"square_c"
     ]));
     set("detail/西瓜", "圓滾滾的大西瓜，或許可以趁農夫不注意的時候摘（pick）幾個？");
     set("detail/watermelon", "圓滾滾的大西瓜，或許可以趁農夫不注意的時候摘（pick）幾個？");
