@@ -37,6 +37,8 @@ PROTECTED_KING_PATHS = {
     "d/lee/creek.c",
     "d/lee/wroad3.c",
     "d/lee/square_w.c",
+    # KING WebTelnet 內部 MUD listener 使用 4000；上游 globals.h 的 4001 不可直接覆蓋 Runtime。
+    "include/globals.h",
 }
 KING_ZHENWU_GUARDS = {
     "custom/zhenwu/npc/lu_xinien.c": (
@@ -63,6 +65,9 @@ KING_ZHENWU_GUARDS = {
         'set("soldier/from_fighter", 1)',
         '強力格擋改由米沛傳授',
     ),
+}
+KING_RUNTIME_PORT_GUARDS = {
+    "include/globals.h": "#define MUD_PORT 4000",
 }
 KING_LEE_TOPOLOGY_GUARDS = {
     "d/lee/square_s.c": '"south" : __DIR__"pawnshop"',
@@ -162,6 +167,15 @@ def verify_king_owner_guards(overlay: Path, repo_root: Path) -> None:
     if 'me->set_skill("heavy_parry", 1);' in stone or 'me->set_learn("heavy_parry", 1);' in stone:
         raise SystemExit("FAIL: recruit stone must not bypass Mee Pei heavy_parry teaching")
 
+    # KING WebTelnet listener／上游 MUD_PORT 4001 與 KING neolith.conf Port 4000 不一致，Runtime 必須固定 4000。
+    for rel, marker in KING_RUNTIME_PORT_GUARDS.items():
+        path = overlay / rel
+        if not path.is_file():
+            raise SystemExit(f"FAIL: KING Runtime port header missing: {rel}")
+        raw = path.read_text(encoding="utf-8", errors="replace")
+        if marker not in raw:
+            raise SystemExit(f"FAIL: KING Runtime port contract missing in {rel}: {marker}")
+
     # 李家村出口相容：依最新 ES2M LEE_TOPOLOGY.json 保留已修正的雙向路線。
     for rel, marker in KING_LEE_TOPOLOGY_GUARDS.items():
         path = overlay / rel
@@ -251,6 +265,8 @@ def main() -> int:
                 ):
                     raise SystemExit("FAIL: recruit stone must not bypass Mee Pei heavy_parry teaching")
                 status = "preserved-KING-ES2M-Zhenwu-merged"
+            elif rel_name in KING_RUNTIME_PORT_GUARDS:
+                status = "preserved-KING-WebTelnet-port-compatibility"
             elif rel_name in KING_LEE_TOPOLOGY_GUARDS:
                 status = "preserved-KING-LEE-topology-compatibility"
             else:
