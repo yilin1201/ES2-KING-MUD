@@ -5,9 +5,9 @@
   "overlay_root": "es2_king_expansion/runtime/mudlib",
   "source_file_count": 1991,
   "copied_new_count": 2,
-  "overwritten_existing_king_count": 1,
+  "overwritten_existing_king_count": 0,
   "already_matching_count": 1968,
-  "preserved_king_custom_count": 20,
+  "preserved_king_custom_count": 21,
   "source_differs_from_pinned_original_count": 186,
   "copied_new": [
     {
@@ -21,14 +21,7 @@
       "sha256": "2c384ba97da0f36083e64f756105ecc1cef39ecdbebcac2bb68a1f532b95a1f2"
     }
   ],
-  "overwritten_existing_king": [
-    {
-      "path": "include/globals.h",
-      "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "d9fc89db92d8e406bb3c186888feceeb6a748671c78026cb0020576ae611b3c2",
-      "source_sha256": "34687512dfde867f5f20f4985274ef0edfd07ac900123e490fefaac086fd04cd"
-    }
-  ],
+  "overwritten_existing_king": [],
   "already_matching": [
     {
       "path": "AGENTS.md",
@@ -9991,6 +9984,12 @@
       "status": "preserved-KING-owner-customization-pending-ES2M-merge",
       "king_sha256": "913252ad2c4604d10b5e5a551af1c2149a290c423fc1986f684d248c1d6e1990",
       "es2m_sha256": "79b2cb42db3b092f5ba098a568aafd53ebb2e11087b6534e3565141c701499a5"
+    },
+    {
+      "path": "include/globals.h",
+      "status": "preserved-KING-WebTelnet-port-compatibility",
+      "king_sha256": "cccedb4005e2cc5c0319b6a811570d9b8846f22adf167aa95b717e12b85ecd2a",
+      "es2m_sha256": "34687512dfde867f5f20f4985274ef0edfd07ac900123e490fefaac086fd04cd"
     }
   ],
   "source_differs_from_pinned_original": [
