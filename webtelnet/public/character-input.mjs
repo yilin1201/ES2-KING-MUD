@@ -31,9 +31,17 @@ const menus = {
 };
 
 export function characterMenuFor(outputTail) {
-  if (RACE_PROMPT.test(outputTail)) return { type: "race", options: menus.race };
-  if (GENDER_PROMPT.test(outputTail)) return { type: "gender", options: menus.gender };
-  if (CONFIRM_PROMPT.test(outputTail)) return { type: "confirm", options: menus.confirm };
+  // 依輸出中最後出現的提示判斷目前選單，避免舊種族提示蓋過新性別／確認提示。
+  const lastIndex = markers => Math.max(-1, ...markers.map(marker => outputTail.lastIndexOf(marker)));
+  const latest = [
+    { type: "race", index: lastIndex(["您的選擇(用", "請輸入選項數字", "請輸入編號 1-12 或種族 ID", "請輸入編號 1 或 2"]) },
+    { type: "gender", index: outputTail.lastIndexOf("您要扮演的哪種性別") },
+    { type: "confirm", index: lastIndex(["使用 ", "您確定要創造這個角色嗎", "您要重新創造這個角色嗎", "您要將另一個連線中的相同人物趕出去﹐取而代之嗎"]) }
+  ].sort((a, b) => b.index - a.index)[0];
+  if (!latest || latest.index < 0) return null;
+  if (latest.type === "race" && RACE_PROMPT.test(outputTail)) return { type: "race", options: menus.race };
+  if (latest.type === "gender" && GENDER_PROMPT.test(outputTail)) return { type: "gender", options: menus.gender };
+  if (latest.type === "confirm" && CONFIRM_PROMPT.test(outputTail)) return { type: "confirm", options: menus.confirm };
   return null;
 }
 
