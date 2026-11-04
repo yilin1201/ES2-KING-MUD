@@ -2,7 +2,7 @@
   "purpose": "ES2M 最新原始 Mudlib 唯讀鏡像；不得直接視為 Original ES2，也不直接取代 KING 專屬資料。",
   "source_repository": "wolfer168/es2-webmud",
   "source_branch": "main",
-  "source_commit": "0bd203f7166d0bb83e9b75a526e333f379205182",
+  "source_commit": "1f86bcaa52b5425624a16da5fb7ed9892e16c899",
   "source_path": "source/upstream/mudlib/",
   "mirror_path": "es2m_source_mirror/mudlib/",
   "file_count": 1991,
@@ -40,8 +40,8 @@
     },
     {
       "path": "adm/daemons/chard.c",
-      "size": 14099,
-      "sha256": "550ef621397576584adbbb2cedd2e144ac3398dbfd8f92ea9acd45ebb17702dc"
+      "size": 14052,
+      "sha256": "c7e126e047df9ca175f5e4fafb8e91e3353900f0fa7da3d49badc27a9799e8e1"
     },
     {
       "path": "adm/daemons/chinesed.c",
@@ -80,8 +80,8 @@
     },
     {
       "path": "adm/daemons/fingerd.c",
-      "size": 4206,
-      "sha256": "a0eccabf72288e3ae6bb71387e14a0649e26964fae6d74f2ed372d0b9e4fdf4a"
+      "size": 5692,
+      "sha256": "852ae51c6ea9f6ffa437114d2283406ee99b1594f7aea58cb1228420e2a7be2e"
     },
     {
       "path": "adm/daemons/httpd.c",
@@ -90,8 +90,8 @@
     },
     {
       "path": "adm/daemons/logind.c",
-      "size": 33998,
-      "sha256": "be65d5925f1354496c356905dda0ea6d35098ec5d165b62001c0af9a3f46979f"
+      "size": 34949,
+      "sha256": "f2c5cbe53aeb87d77dc4568396738c391ce7293a5c4c3e9b98726a697a7b43e4"
     },
     {
       "path": "adm/daemons/natured.c",
@@ -920,8 +920,8 @@
     },
     {
       "path": "cmds/usr/who.c",
-      "size": 11832,
-      "sha256": "8b02c722c17e4eceeb3107eeddb41bab246c03bcc4e58dc9c7f93d2184d0bca1"
+      "size": 12346,
+      "sha256": "0b1e845143b49ef435b87e4e1182f0d753f5173e6248b777372cf9c93acfbead"
     },
     {
       "path": "cmds/usr/wimpy.c",
@@ -1000,8 +1000,8 @@
     },
     {
       "path": "cmds/wiz/invis.c",
-      "size": 656,
-      "sha256": "8367068fc16f88aafdeef0f81d39ee014396609f0dff1ff155c6dd3f52d5752d"
+      "size": 887,
+      "sha256": "6f210933a54002de2721198d3436514ac94eebd77c715dca728480a50b82eb95"
     },
     {
       "path": "cmds/wiz/link.c",
@@ -7030,8 +7030,8 @@
     },
     {
       "path": "d/wutang/gravel_road_n.c",
-      "size": 1365,
-      "sha256": "980b225c7a7717b72f19ec0a2ef9526c201a2105b6486accc0c75016101f99a0"
+      "size": 1262,
+      "sha256": "17a3c4b0e3f461f338d23edd329fbdb3733f80ebfd55f0ffa58e686b98c864bf"
     },
     {
       "path": "d/wutang/gravel_road_s.c",
@@ -7255,8 +7255,8 @@
     },
     {
       "path": "d/wutang/pavilion.c",
-      "size": 601,
-      "sha256": "1337e24ceb7d62f10930f60d2e252c46c97f37bef31a157a55753fe1100dc7cc"
+      "size": 807,
+      "sha256": "96149f5bede38a09f69f1a4894bcd5bb041444a7e63ff20406530a5da23ccabc"
     },
     {
       "path": "d/wutang/pawnshop.c",
@@ -7820,8 +7820,8 @@
     },
     {
       "path": "daemon/race/yaksa/devour.c",
-      "size": 6651,
-      "sha256": "68019438805aa9c6abc1c8062ec1fed5465d5cee1862e8edfbb81da518e9aac1"
+      "size": 6529,
+      "sha256": "53c2b2b9b75cc34c340724682f07ccf1a6336e70ec5774d533306669d1aa842c"
     },
     {
       "path": "daemon/race/yaksa.c",
@@ -7945,8 +7945,8 @@
     },
     {
       "path": "daemon/skill/hainmay_force.c",
-      "size": 7049,
-      "sha256": "7d8846ae077df33a1a44d312225dadaa6336eeb082260915c1bc3dfd83a330b8"
+      "size": 7232,
+      "sha256": "aee498e12a214e7aff2366f6b1c604828681fce06006c7f5f6031dade9c71f3a"
     },
     {
       "path": "daemon/skill/heavy_parry.c",
@@ -8610,8 +8610,8 @@
     },
     {
       "path": "docs/help/yaksa.txt",
-      "size": 633,
-      "sha256": "0278d4f8e79fd92be1079e59e8e5d8abc9ca28c91e4a3bcd540efd0bebfd8fa6"
+      "size": 621,
+      "sha256": "2734ab4dce817b3dbf947bf6bdf565bdd20dc47d8e882c5d0c0fb5664fede3c9"
     },
     {
       "path": "docs/help/yenhold.txt",
@@ -9969,10 +9969,5 @@
     "鏡像只保留來源 Mudlib 當前存在的檔案。",
     "KING runtime overlay 依來源同路徑覆蓋；不刪除來源中不存在的 KING 專屬檔案。",
     "Pinned Original ES2 checkout 僅供比較，絕不修改。"
-  ],
-  "refresh_request": {
-    "requested_at": "2026-11-04",
-    "requested_action": "Refresh latest ES2M main and synchronize all source files into KING runtime overlay; same-path overwrite and new-path copy, preserve guarded KING-only files.",
-    "expected_upstream_head": "1f86bcaa52b5425624a16da5fb7ed9892e16c899"
-  }
+  ]
 }

@@ -22,7 +22,6 @@ LONG
         "/obj/food/mooncake" : 2
     ]));
     set("exits", ([
-        "north" : __DIR__"square_s",
         "east" : __DIR__"street1"
     ]));
     setup();

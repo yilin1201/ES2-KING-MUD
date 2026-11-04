@@ -19,7 +19,6 @@ LONG
         "/d/lee/npc/farmer" : 3
     ]));
     set("exits", ([
-        "west" : __DIR__"square_c",
         "east" : __DIR__"watermelon_n2",
         "south" : __DIR__"watermelon_s1"
     ]));

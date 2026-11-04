@@ -5,10 +5,10 @@
   "overlay_root": "es2_king_expansion/runtime/mudlib",
   "source_file_count": 1991,
   "copied_new_count": 2,
-  "overwritten_existing_king_count": 9,
-  "already_matching_count": 1968,
+  "overwritten_existing_king_count": 17,
+  "already_matching_count": 1960,
   "preserved_king_custom_count": 12,
-  "source_differs_from_pinned_original_count": 184,
+  "source_differs_from_pinned_original_count": 186,
   "copied_new": [
     {
       "path": "data/chinese.o",
@@ -23,58 +23,106 @@
   ],
   "overwritten_existing_king": [
     {
+      "path": "adm/daemons/chard.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "550ef621397576584adbbb2cedd2e144ac3398dbfd8f92ea9acd45ebb17702dc",
+      "source_sha256": "c7e126e047df9ca175f5e4fafb8e91e3353900f0fa7da3d49badc27a9799e8e1"
+    },
+    {
+      "path": "adm/daemons/fingerd.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "a0eccabf72288e3ae6bb71387e14a0649e26964fae6d74f2ed372d0b9e4fdf4a",
+      "source_sha256": "852ae51c6ea9f6ffa437114d2283406ee99b1594f7aea58cb1228420e2a7be2e"
+    },
+    {
+      "path": "adm/daemons/logind.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "be65d5925f1354496c356905dda0ea6d35098ec5d165b62001c0af9a3f46979f",
+      "source_sha256": "f2c5cbe53aeb87d77dc4568396738c391ce7293a5c4c3e9b98726a697a7b43e4"
+    },
+    {
+      "path": "cmds/usr/who.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "8b02c722c17e4eceeb3107eeddb41bab246c03bcc4e58dc9c7f93d2184d0bca1",
+      "source_sha256": "0b1e845143b49ef435b87e4e1182f0d753f5173e6248b777372cf9c93acfbead"
+    },
+    {
+      "path": "cmds/wiz/invis.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "8367068fc16f88aafdeef0f81d39ee014396609f0dff1ff155c6dd3f52d5752d",
+      "source_sha256": "6f210933a54002de2721198d3436514ac94eebd77c715dca728480a50b82eb95"
+    },
+    {
       "path": "d/lee/creek.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "567c937eb89eb50673a9ae295f963066da31b7ac1bb001e42d469f3a231ff4f3",
+      "previous_king_sha256": "eb980ebc3f5038496579dac891fece9c29b7f994538dcede0c69bd3082342ecb",
       "source_sha256": "88b4216ced04ac87f9dba8c309b07d9b14023d354cd3705e4fc6beb899d74e36"
     },
     {
       "path": "d/lee/pawnshop.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "753e06fea3b0b68a00cd5bccc456d93e66843291a7abae5cc536e31a4b914d43",
+      "previous_king_sha256": "3830c423d0f357ca7d67ac32d970ba822fafec81a34d2af475447f3e6643393a",
       "source_sha256": "b577ced6a76c179d3ea5e8897f6f218bf9e869c7970128ce79cd3821b831261f"
     },
     {
       "path": "d/lee/square_c.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "23c4b37658ac9f8415699a1b9fa4ec4128c6f5d1d5ad12e94c934a014ddf49e2",
+      "previous_king_sha256": "d6732ef2a25463edb4753e9c7f2ccd48d1713f809f4232752684af99c5a0a52d",
       "source_sha256": "53d29429e7b72bf9a2d3458665264f75446afab27771b90a751a7e5eba1a068b"
     },
     {
       "path": "d/lee/square_s.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "5dee072ea80d4158cde1ad66314616a99c662d7d837731131fd4e04ae10bb904",
+      "previous_king_sha256": "9c8e6ff8bffb5678debe74b7298dec28ea87ea5068a5a42041545ab22320aa9c",
       "source_sha256": "b875a8ecdcb6fe0ea33f13dde9ada1311dc5f972c238707bbfbb40a10c3fb263"
+    },
+    {
+      "path": "d/lee/square_w.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "73cdb65730ff10aadde5a6145327568827b5dcee37e2585e329b0d8a0cef9062",
+      "source_sha256": "c6fe27504a97ffdc7315f0ab33570b2a337d979673dee5118e11c9c3de637c85"
     },
     {
       "path": "d/lee/watermelon_n1.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "6dbc0f57544d4ef635b32f3e55a301d7c412788e3beb35ded03985570a37425a",
+      "previous_king_sha256": "9b6d6e91c602fe8b74d8c97205f1c9e5e33995b0110585281bac37a65513b0ac",
       "source_sha256": "6b11b0c80efec14c09146125557bbf0c839bdb1d457b5e5cda02ea755e0b6e02"
     },
     {
       "path": "d/lee/watermelon_s3.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "c697cd1d1e5cf72494254214d351e1d38c3ad3e5602cf4764755ef6d067572e7",
+      "previous_king_sha256": "6ad6fea64e217f91cc225c40af9f3078eb6744a7ec03a5fa9484dd70b7d14473",
       "source_sha256": "95ac93a56cd092699e71592aa8a3022e13f1bac36ceca83460b7d3f810015102"
     },
     {
-      "path": "d/oldpine/npc/kao_shen.c",
+      "path": "d/lee/wroad3.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "1e1990cbfc7bc6359cd6b2450aeabdcd43257d8f343a7c4d2cbc89cd2c41f5c8",
-      "source_sha256": "bf623731ff6881f0082abc680eaa8c3a13f1796b689564fde1ab5ffb22044113"
+      "previous_king_sha256": "2a7557ea23149fdc75f4924dc1ebb2c2c0b3cabd08b68253e3e35c590943d2df",
+      "source_sha256": "7094f5ccaa1ff2fe2165fc9cb575b4513575173ca4a58c06647c61b48c9d54a7"
     },
     {
-      "path": "daemon/class/taoist.c",
+      "path": "d/wutang/gravel_road_n.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "a80a6af91664eff60afb73ea9fcb6beb27effaa6884a880539af3784e51f0ae5",
-      "source_sha256": "4f4abe192b3070f4302dcf42de26d1fd23ed9d6d15acc6228192f328b3d31b82"
+      "previous_king_sha256": "980b225c7a7717b72f19ec0a2ef9526c201a2105b6486accc0c75016101f99a0",
+      "source_sha256": "17a3c4b0e3f461f338d23edd329fbdb3733f80ebfd55f0ffa58e686b98c864bf"
     },
     {
-      "path": "include/class_level.h",
+      "path": "d/wutang/pavilion.c",
       "status": "overwritten-existing-KING-file",
-      "previous_king_sha256": "cc33f76cd56afae16f5d3e82903996587c579c8bb4f5696b297c10ffb40c872d",
-      "source_sha256": "a2e4dbb7787fe576a9e92fd39feb841b003575cbe86a1831ccfe5abad024f43a"
+      "previous_king_sha256": "1337e24ceb7d62f10930f60d2e252c46c97f37bef31a157a55753fe1100dc7cc",
+      "source_sha256": "96149f5bede38a09f69f1a4894bcd5bb041444a7e63ff20406530a5da23ccabc"
+    },
+    {
+      "path": "daemon/race/yaksa/devour.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "68019438805aa9c6abc1c8062ec1fed5465d5cee1862e8edfbb81da518e9aac1",
+      "source_sha256": "53c2b2b9b75cc34c340724682f07ccf1a6336e70ec5774d533306669d1aa842c"
+    },
+    {
+      "path": "docs/help/yaksa.txt",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "0278d4f8e79fd92be1079e59e8e5d8abc9ca28c91e4a3bcd540efd0bebfd8fa6",
+      "source_sha256": "2734ab4dce817b3dbf947bf6bdf565bdd20dc47d8e882c5d0c0fb5664fede3c9"
     }
   ],
   "already_matching": [
@@ -107,11 +155,6 @@
       "path": "adm/daemons/channeld.c",
       "status": "already-matches-ES2M",
       "sha256": "523c6a3f7e0fa33e44e80abda3280e3aecf98e2c36caf36cc7470f4e0cd8f9ae"
-    },
-    {
-      "path": "adm/daemons/chard.c",
-      "status": "already-matches-ES2M",
-      "sha256": "550ef621397576584adbbb2cedd2e144ac3398dbfd8f92ea9acd45ebb17702dc"
     },
     {
       "path": "adm/daemons/chinesed.c",
@@ -149,19 +192,9 @@
       "sha256": "9cb5a15ec8f39357305567d0bb9c9891a3a37031a09a8f305c4976d72257e9f7"
     },
     {
-      "path": "adm/daemons/fingerd.c",
-      "status": "already-matches-ES2M",
-      "sha256": "a0eccabf72288e3ae6bb71387e14a0649e26964fae6d74f2ed372d0b9e4fdf4a"
-    },
-    {
       "path": "adm/daemons/httpd.c",
       "status": "already-matches-ES2M",
       "sha256": "8966aaae2fcf7331a577ddcabfcf8fad55fcb99f865d9ca7e8a27b9dc21cf7b8"
-    },
-    {
-      "path": "adm/daemons/logind.c",
-      "status": "already-matches-ES2M",
-      "sha256": "be65d5925f1354496c356905dda0ea6d35098ec5d165b62001c0af9a3f46979f"
     },
     {
       "path": "adm/daemons/natured.c",
@@ -984,11 +1017,6 @@
       "sha256": "5f8f9b0f66f7e8cdbbeecbd7f5e27c4d683130eaead2f041a932cb4d643523a2"
     },
     {
-      "path": "cmds/usr/who.c",
-      "status": "already-matches-ES2M",
-      "sha256": "8b02c722c17e4eceeb3107eeddb41bab246c03bcc4e58dc9c7f93d2184d0bca1"
-    },
-    {
       "path": "cmds/usr/wimpy.c",
       "status": "already-matches-ES2M",
       "sha256": "5d8521c4cee4adb531302d56b36c5d72786ecdfff8e6d58d17db0cbfdf4ada76"
@@ -1062,11 +1090,6 @@
       "path": "cmds/wiz/info.c",
       "status": "already-matches-ES2M",
       "sha256": "e2913def62874c89ad0beb859404198728cfe99737c83a8271b54aa7c9f5e622"
-    },
-    {
-      "path": "cmds/wiz/invis.c",
-      "status": "already-matches-ES2M",
-      "sha256": "8367068fc16f88aafdeef0f81d39ee014396609f0dff1ff155c6dd3f52d5752d"
     },
     {
       "path": "cmds/wiz/link.c",
@@ -5149,11 +5172,6 @@
       "sha256": "b50859de55547d2b7ab7fbc279fb327b2583e314327c13f5529dd7623f130737"
     },
     {
-      "path": "d/lee/square_w.c",
-      "status": "already-matches-ES2M",
-      "sha256": "c6fe27504a97ffdc7315f0ab33570b2a337d979673dee5118e11c9c3de637c85"
-    },
-    {
       "path": "d/lee/street1.c",
       "status": "already-matches-ES2M",
       "sha256": "763c987b1d0b1c0e6ce89fd7ec847d496dc00482c5be56a070faeaba7c9f21d8"
@@ -5192,11 +5210,6 @@
       "path": "d/lee/wroad2.c",
       "status": "already-matches-ES2M",
       "sha256": "8f9c17ce167b98a64fe839ff17f8a5c15f0ec6e0cef0c53fa74761a013e4ae54"
-    },
-    {
-      "path": "d/lee/wroad3.c",
-      "status": "already-matches-ES2M",
-      "sha256": "7094f5ccaa1ff2fe2165fc9cb575b4513575173ca4a58c06647c61b48c9d54a7"
     },
     {
       "path": "d/lee/wroad4.c",
@@ -5397,6 +5410,11 @@
       "path": "d/oldpine/npc/injured_traveller.c",
       "status": "already-matches-ES2M",
       "sha256": "d72660f9168ef99631dec4983a9fece27d9673f9c877951f5559bf163d7e7f44"
+    },
+    {
+      "path": "d/oldpine/npc/kao_shen.c",
+      "status": "already-matches-ES2M",
+      "sha256": "bf623731ff6881f0082abc680eaa8c3a13f1796b689564fde1ab5ffb22044113"
     },
     {
       "path": "d/oldpine/npc/lin_yuchan.c",
@@ -7029,11 +7047,6 @@
       "sha256": "4e87f82922b86893673cba60b663a1398cdcf3f710243e8bca103c67cfec4c4b"
     },
     {
-      "path": "d/wutang/gravel_road_n.c",
-      "status": "already-matches-ES2M",
-      "sha256": "980b225c7a7717b72f19ec0a2ef9526c201a2105b6486accc0c75016101f99a0"
-    },
-    {
       "path": "d/wutang/gravel_road_s.c",
       "status": "already-matches-ES2M",
       "sha256": "aceab3f17306bbf5d52f720548ca2c5b169afdc3b48b42b264f71c82f1fde55a"
@@ -7247,11 +7260,6 @@
       "path": "d/wutang/path_e.c",
       "status": "already-matches-ES2M",
       "sha256": "150f33353f4d5f7b67262fbd722f8924c9ce38e3fa373d39473657d82d9d2c19"
-    },
-    {
-      "path": "d/wutang/pavilion.c",
-      "status": "already-matches-ES2M",
-      "sha256": "1337e24ceb7d62f10930f60d2e252c46c97f37bef31a157a55753fe1100dc7cc"
     },
     {
       "path": "d/wutang/pawnshop.c",
@@ -7554,6 +7562,11 @@
       "sha256": "84078ba4380b9caf9064e20f4fb2cbcc5b946f4a040bfe14235958a57b1f36d8"
     },
     {
+      "path": "daemon/class/taoist.c",
+      "status": "already-matches-ES2M",
+      "sha256": "4f4abe192b3070f4302dcf42de26d1fd23ed9d6d15acc6228192f328b3d31b82"
+    },
+    {
       "path": "daemon/class/thief.c",
       "status": "already-matches-ES2M",
       "sha256": "a45f9cff3467d38ce32339ff51d39e3559294ff2a63c2f9ef817c5680b27e1ec"
@@ -7807,11 +7820,6 @@
       "path": "daemon/race/woochan.c",
       "status": "already-matches-ES2M",
       "sha256": "05ae62870b47ed8e27d4b20e3b66c1d97b4622efa6ef9d206ba17df3598e30d3"
-    },
-    {
-      "path": "daemon/race/yaksa/devour.c",
-      "status": "already-matches-ES2M",
-      "sha256": "68019438805aa9c6abc1c8062ec1fed5465d5cee1862e8edfbb81da518e9aac1"
     },
     {
       "path": "daemon/race/yaksa.c",
@@ -8574,11 +8582,6 @@
       "sha256": "438f19157a84cb76e98b9ce7fd9da7b7eb741387facec5aa5e4fa15c4092b009"
     },
     {
-      "path": "docs/help/yaksa.txt",
-      "status": "already-matches-ES2M",
-      "sha256": "0278d4f8e79fd92be1079e59e8e5d8abc9ca28c91e4a3bcd540efd0bebfd8fa6"
-    },
-    {
       "path": "docs/help/yenhold.txt",
       "status": "already-matches-ES2M",
       "sha256": "36210ef321105d9559a3390199b0500d5b7b1e70abd469280be5896c085f49d2"
@@ -8897,6 +8900,11 @@
       "path": "include/char.h",
       "status": "already-matches-ES2M",
       "sha256": "8c27d84d95dcaafc8a93058c7f825131f744758030bc0e33cb065dc5819f0220"
+    },
+    {
+      "path": "include/class_level.h",
+      "status": "already-matches-ES2M",
+      "sha256": "a2e4dbb7787fe576a9e92fd39feb841b003575cbe86a1831ccfe5abad024f43a"
     },
     {
       "path": "include/combat.h",
@@ -9978,7 +9986,7 @@
       "path": "daemon/skill/hainmay_force.c",
       "status": "preserved-KING-frozen-martial-baseline",
       "king_sha256": "09ef02e9516a47c02fa2cd02193cb5c5fb12f17f5f7b30b0e43488d52610b4bf",
-      "es2m_sha256": "7d8846ae077df33a1a44d312225dadaa6336eeb082260915c1bc3dfd83a330b8"
+      "es2m_sha256": "aee498e12a214e7aff2366f6b1c604828681fce06006c7f5f6031dade9c71f3a"
     },
     {
       "path": "daemon/skill/lunmay.c",
@@ -10003,7 +10011,7 @@
     {
       "path": "adm/daemons/chard.c",
       "status": "ES2M-differs-from-pinned-original",
-      "source_sha256": "550ef621397576584adbbb2cedd2e144ac3398dbfd8f92ea9acd45ebb17702dc",
+      "source_sha256": "c7e126e047df9ca175f5e4fafb8e91e3353900f0fa7da3d49badc27a9799e8e1",
       "original_sha256": "c583ed940d0c59e01af2e1b5c6eaddcfa1a222e3a14ef41cda45d6f9c178750d"
     },
     {
@@ -10019,9 +10027,15 @@
       "original_sha256": "d9a3326aec4a6cbcad28e822929b8623807eb78520278b8a261d40c2a6622db5"
     },
     {
+      "path": "adm/daemons/fingerd.c",
+      "status": "ES2M-differs-from-pinned-original",
+      "source_sha256": "852ae51c6ea9f6ffa437114d2283406ee99b1594f7aea58cb1228420e2a7be2e",
+      "original_sha256": "a0eccabf72288e3ae6bb71387e14a0649e26964fae6d74f2ed372d0b9e4fdf4a"
+    },
+    {
       "path": "adm/daemons/logind.c",
       "status": "ES2M-differs-from-pinned-original",
-      "source_sha256": "be65d5925f1354496c356905dda0ea6d35098ec5d165b62001c0af9a3f46979f",
+      "source_sha256": "f2c5cbe53aeb87d77dc4568396738c391ce7293a5c4c3e9b98726a697a7b43e4",
       "original_sha256": "daadba1224c7e052f3bdb52a6831c7697b9997043700f9210493474880bfb7dc"
     },
     {
@@ -10297,8 +10311,14 @@
     {
       "path": "cmds/usr/who.c",
       "status": "ES2M-differs-from-pinned-original",
-      "source_sha256": "8b02c722c17e4eceeb3107eeddb41bab246c03bcc4e58dc9c7f93d2184d0bca1",
+      "source_sha256": "0b1e845143b49ef435b87e4e1182f0d753f5173e6248b777372cf9c93acfbead",
       "original_sha256": "c1fa6d628b6a9c968b17b104ff7a18b57d367715f3e42b8e0d9639a6bcdfc014"
+    },
+    {
+      "path": "cmds/wiz/invis.c",
+      "status": "ES2M-differs-from-pinned-original",
+      "source_sha256": "6f210933a54002de2721198d3436514ac94eebd77c715dca728480a50b82eb95",
+      "original_sha256": "8367068fc16f88aafdeef0f81d39ee014396609f0dff1ff155c6dd3f52d5752d"
     },
     {
       "path": "cmds/wiz/mudlist.c",
