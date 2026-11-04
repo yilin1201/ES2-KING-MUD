@@ -40,20 +40,6 @@ cp -a "$SOURCE_RUNTIME/mudlib" "$TEMP_ROOT/mudlib"
 cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
 bash "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh" "$TEMP_ROOT"
 bash "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
-# Test-only Race Input Diagnostic／僅在 mktemp Runtime 記錄 get_race 收到的原始輸入，不寫入正式 Runtime。
-python3 - "$TEMP_ROOT/mudlib/adm/daemons/logind.c" <<'PY'
-from pathlib import Path
-import sys
-path = Path(sys.argv[1])
-text = path.read_text(encoding="utf-8")
-needle = 'private void get_race (string arg, object ob, string *list) {\n    string race;'
-replacement = needle + '\n    log_file("PLAYER_CREATE_E2E", sprintf("get_race arg=%O length=%d list=%O\\n", arg, strlen(arg), list));'
-if needle not in text:
-    raise SystemExit("PLAYER_CREATE_E2E_DIAGNOSTIC_FAIL: get_race insertion point missing")
-path.write_text(text.replace(needle, replacement, 1), encoding="utf-8")
-print("PLAYER_CREATE_E2E_DIAGNOSTIC_READY")
-PY
-
 # 確認 E2E 臨時 Runtime 確實使用 KING gender prompt adapter，且 input_prompt 模組存在。
 python3 - "$TEMP_ROOT/mudlib" <<'PY'
 from pathlib import Path
