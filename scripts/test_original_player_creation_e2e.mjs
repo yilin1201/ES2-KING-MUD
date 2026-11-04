@@ -76,7 +76,6 @@ async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
 }
 const races = [
   ["humanprobe","human","人類 (human)","人類測試","human"],
-  ["avatarprobe","人類族","人類族 (avatar)","人類族測試","avatar"],
   ["blackprobe","blackteeth","黑齒 (Blackteeth)","黑齒測試","blackteeth"],
   ["yenprobe","yenhold","厭火 (Yenhold)","厭火測試","yenhold"],
   ["wooprobe","woochan","無腸 (Woochan)","無腸測試","woochan"],
@@ -91,5 +90,5 @@ const races = [
 ];
 for (const [id,raceChoice,raceLabel,name,raceId] of races)
   await runPlayer({id,raceChoice,raceLabel,name,raceId});
-console.log("ES2M_RACE_ABILITY_COMMANDS_E2E_PASS");
-console.log("ES2M_PLAYER_CREATION_12_RACES_E2E_PASS");
+console.log("ES2M_SELECTABLE_RACE_ABILITY_COMMANDS_E2E_PASS");
+console.log("ES2M_PLAYER_CREATION_11_SELECTABLE_RACES_E2E_PASS");
