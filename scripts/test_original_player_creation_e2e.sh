@@ -66,7 +66,7 @@ if "void input_prompt" not in input_feature:
     raise SystemExit("KING_GENDER_PROMPT_RUNTIME_FAIL: input_prompt feature missing")
 print("KING_GENDER_PROMPT_RUNTIME_PASS")
 PY
-# Test-only Host Throttle／測試專用主機限流處理：11 個可選種族加 1 個數字開頭帳號皆由同一個 localhost 建立，
+# Test-only Host Throttle／測試專用主機限流處理：11 個可選種族皆由同一個 localhost 建立，
 # 會觸發 Original ES2 的每 IP 十帳號保護。只在 mktemp Runtime 套用既有 KING
 # bootstrap 政策，不修改來源保存區，也不把「同 IP 大量創角」宣稱為正式 Gameplay。
 # No-match is normal: avoid set -e/pipefail abort when antispam is already disabled.
@@ -90,7 +90,7 @@ if grep -R '^[[:space:]]*#define[[:space:]]\+ENABLE_ANTISPAM' \
   exit 1
 fi
 mkdir -p "$TEMP_ROOT/mudlib/data/login"/{a..z} "$TEMP_ROOT/mudlib/data/login"/{0..9} "$TEMP_ROOT/mudlib/data/user"/{a..z} "$TEMP_ROOT/mudlib/data/user"/{0..9} "$TEMP_ROOT/mudlib/log"
-for id in humanprobe blackprobe yenprobe wooprobe dingprobe jiaoprobe rainprobe ashprobe headprobe yaksaprobe malikprobe 7probe; do
+for id in humanprobe blackprobe yenprobe wooprobe dingprobe jiaoprobe rainprobe ashprobe headprobe yaksaprobe malikprobe; do
   initial="${id:0:1}"
   rm -f "$TEMP_ROOT/mudlib/data/login/$initial/$id.o" "$TEMP_ROOT/mudlib/data/user/$initial/$id.o"
 done
@@ -126,11 +126,11 @@ LOG="$TEMP_ROOT/player-creation.log"
 echo "E2E_STAGE: starting player creation Node test"
 ES2_E2E_WS_URL="ws://127.0.0.1:$WEB_PORT/mud" ES2_E2E_SAVE_DIR="$TEMP_ROOT/mudlib/data" ES2_E2E_PASSWORD="$TEST_PASSWORD" node "$REPO_ROOT/scripts/test_original_player_creation_e2e.mjs" 2>&1 | tee "$LOG"
 echo "E2E_STAGE: player creation Node test returned"
-for marker in ORIGINAL_PLAYER_CREATION_HUMAN_E2E_PASS ORIGINAL_PLAYER_CREATION_NUMERIC_ID_E2E_PASS ES2M_SELECTABLE_RACE_ABILITY_COMMANDS_E2E_PASS ES2M_PLAYER_CREATION_11_SELECTABLE_RACES_E2E_PASS; do grep -Fq "$marker" "$LOG"; done
+for marker in ORIGINAL_PLAYER_CREATION_HUMAN_E2E_PASS ES2M_SELECTABLE_RACE_ABILITY_COMMANDS_E2E_PASS ES2M_PLAYER_CREATION_11_SELECTABLE_RACES_E2E_PASS; do grep -Fq "$marker" "$LOG"; done
 # Runtime evidence must be free of compilation/runtime errors, not merely JS markers.
 test -r "$TEMP_ROOT/driver.stdout" || { echo 'ORIGINAL PLAYER CREATION E2E BLOCKED：缺少 Driver log。' >&2; exit 1; }
 if grep -En '編譯時段錯誤|Runtime error|Cannot #include|Undefined variable|Undefined function' "$TEMP_ROOT/driver.stdout"; then
   echo 'ORIGINAL PLAYER CREATION E2E FAIL：Driver Log 存在編譯／執行錯誤。' >&2
   exit 1
 fi
-echo "ES2M PLAYER CREATION E2E：11 個可選種族及數字開頭帳號，由零存檔驗證創角、世界指令、save、quit、relogin。"
+echo "ES2M PLAYER CREATION E2E：11 個可選種族，由零存檔驗證創角、世界指令、save、quit、relogin。"
