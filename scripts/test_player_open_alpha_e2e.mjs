@@ -81,7 +81,7 @@ async function createCharacter({ id, raceChoice, raceLabel, genderChoice, name }
   const p = peer(id);
   await connect(p);
   await waitForAfter(p, 0, "您的使用者代號");
-  await sendLine(p, id, /使用 .* 這個代號將會創造一個新的人物/);
+  await sendLine(p, id, "您確定嗎");
   await sendLine(p, "Y", "請設定您的密碼");
   await sendLine(p, password, "請再輸入一次您的密碼");
   await sendLine(p, password, "您的電子郵件地址");
