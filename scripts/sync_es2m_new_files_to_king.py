@@ -80,7 +80,7 @@ KING_GENDER_PROMPT_KING = """mapping gender_opts = ([
         "options": ({ "M) 男性", "F) 女性" }),
         // KING WebTelnet 相容：啟用 Neolith input_prompt 顯示性別選單。
         "cursor": 1
-    ]);"
+    ]);"""
 KING_LEE_TOPOLOGY_GUARDS = {
     "d/lee/square_s.c": '"south" : __DIR__"pawnshop"',
     "d/lee/square_c.c": '"east" : __DIR__"watermelon_n1"',
