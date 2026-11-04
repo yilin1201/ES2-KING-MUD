@@ -50,6 +50,11 @@ needle = 'private void show_race_menu (object ob) {\n    string *list = affordab
 replacement = 'private void show_race_menu (object ob) {\n    string *list, line;\n    // E2E-only fixture: allow every Original player-selectable race in this isolated runtime.\n    ob->set("karma", 1000);\n    list = affordable_races(ob);'
 if needle not in text:
     raise SystemExit("PLAYER_CREATE_E2E_KARMA_FIXTURE_FAIL: show_race_menu insertion point missing")
+avatar_needle = 'if (race == "human" && random(100) < 1)\\n        race = "avatar";'
+avatar_replacement = 'if (race == "human" && random(100) < 0)\\n        race = "avatar";'
+if avatar_needle not in text:
+    raise SystemExit("PLAYER_CREATE_E2E_AVATAR_GUARD_FAIL: random avatar branch missing")
+text = text.replace(avatar_needle, avatar_replacement, 1)
 path.write_text(text.replace(needle, replacement, 1), encoding="utf-8")
 print("PLAYER_CREATE_E2E_KARMA_FIXTURE_READY")
 PY
