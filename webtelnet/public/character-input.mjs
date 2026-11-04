@@ -52,7 +52,6 @@ export function prepareCharacterChoice(outputTail, rawValue) {
   if (menu.type === "race") {
     // Race Line Input／種族整行輸入：Public iPhone 不再依賴 get_char 的 CR 或方向鍵。
     if (["1", "human", "人類"].includes(value)) return { bytes: "ES2RACE:1", followup: null };
-    if (["2", "avatar", "人類族"].includes(value)) return { bytes: "ES2RACE:2", followup: null };
     const extra = { "2":"2", "blackteeth":"2", "黑齒":"2", "3":"3", "yenhold":"3", "厭火":"3", "4":"4", "jiaojao":"4", "焦僥":"4", "5":"5", "woochan":"5", "無腸":"5", "6":"6", "dingling":"6", "釘靈":"6", "7":"7", "headless":"7", "刑天":"7", "8":"8", "rainner":"8", "雨師妾":"8", "9":"9", "malik":"9", "巫首":"9", "10":"10", "yaksa":"10", "夜叉":"10", "11":"11", "ashura":"11", "阿修羅":"11" };
     if (extra[value]) return { bytes: `ES2RACE:${extra[value]}`, followup: null };
   }
