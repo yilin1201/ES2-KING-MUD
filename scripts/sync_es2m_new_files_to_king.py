@@ -69,6 +69,18 @@ KING_ZHENWU_GUARDS = {
 KING_RUNTIME_PORT_GUARDS = {
     "include/globals.h": "#define MUD_PORT 4000",
 }
+KING_GENDER_PROMPT_PATH = "adm/daemons/logind.c"
+KING_GENDER_PROMPT_UPSTREAM = """mapping gender_opts = ([
+        "prompt": "您要扮演的哪種性別的角色? ",
+        "options": ({ "M) 男性", "F) 女性" }),
+        "cursor": 0
+    ]);"""
+KING_GENDER_PROMPT_KING = """mapping gender_opts = ([
+        "prompt": "您要扮演的哪種性別的角色? ",
+        "options": ({ "M) 男性", "F) 女性" }),
+        // KING WebTelnet 相容：啟用 Neolith input_prompt 顯示性別選單。
+        "cursor": 1
+    ]);"
 KING_LEE_TOPOLOGY_GUARDS = {
     "d/lee/square_s.c": '"south" : __DIR__"pawnshop"',
     "d/lee/square_c.c": '"east" : __DIR__"watermelon_n1"',
@@ -95,6 +107,18 @@ def digest(path: Path) -> str:
             h.update(block)
     return h.hexdigest()
 
+def apply_king_gender_prompt_compatibility(overlay: Path) -> None:
+    """只在 KING Runtime 將 ES2M gender_opts cursor 0 調整為可顯示選單的 cursor 1。"""
+    path = overlay / KING_GENDER_PROMPT_PATH
+    if not path.is_file():
+        raise SystemExit(f"FAIL: KING gender prompt runtime file missing: {KING_GENDER_PROMPT_PATH}")
+    raw = path.read_text(encoding="utf-8", errors="replace")
+    if KING_GENDER_PROMPT_UPSTREAM in raw:
+        raw = raw.replace(KING_GENDER_PROMPT_UPSTREAM, KING_GENDER_PROMPT_KING, 1)
+        path.write_text(raw, encoding="utf-8")
+    elif KING_GENDER_PROMPT_KING not in raw:
+        raise SystemExit("FAIL: ES2M gender_opts structure changed; review KING WebTelnet compatibility patch")
+
 def verify_king_owner_guards(overlay: Path, repo_root: Path) -> None:
     """同步前後確認 KING Owner、凍結武功、種族相容及 NPC 技能門檻仍完整。"""
     checks = {
@@ -111,6 +135,11 @@ def verify_king_owner_guards(overlay: Path, repo_root: Path) -> None:
         for marker in markers:
             if marker not in raw:
                 raise SystemExit(f"FAIL: KING owner guard marker missing in {rel}: {marker}")
+
+    # KING WebTelnet：確認 gender_opts cursor 1，確保 Neolith 顯示 Male/Female 輸入提示。
+    gender_path = overlay / KING_GENDER_PROMPT_PATH
+    if not gender_path.is_file() or KING_GENDER_PROMPT_KING not in gender_path.read_text(encoding="utf-8", errors="replace"):
+        raise SystemExit("FAIL: KING WebTelnet gender prompt compatibility patch missing")
 
     # 冷梅劍法、寒梅心法、傲梅暗劍訣：逐位元保留已確認 KING Frozen Baseline。
     for rel in FROZEN_KING_SKILLS:
@@ -197,6 +226,7 @@ def main() -> int:
         if not p.is_dir():
             raise SystemExit(f"FAIL: required directory missing: {p}")
     a.overlay.mkdir(parents=True, exist_ok=True)
+    apply_king_gender_prompt_compatibility(a.overlay)
     verify_king_owner_guards(a.overlay, Path(__file__).resolve().parents[1])
 
     source_files = sorted(p for p in a.source.rglob("*") if p.is_file())
@@ -305,6 +335,8 @@ def main() -> int:
                 "sha256": src_hash,
             })
 
+    # 同路徑同步後重新套用 KING Runtime 性別提示相容修正，再做完整保護驗證。
+    apply_king_gender_prompt_compatibility(a.overlay)
     # 寫入後再次驗證，確保 KING Owner 權限檔案仍存在。
     verify_king_owner_guards(a.overlay, Path(__file__).resolve().parents[1])
 
@@ -318,6 +350,7 @@ def main() -> int:
         "overwritten_existing_king_count": len(overwritten),
         "already_matching_count": len(unchanged),
         "preserved_king_custom_count": len(preserved_king),
+        "runtime_compatibility_patches": [f"{KING_GENDER_PROMPT_PATH}: gender_opts cursor 1 for WebTelnet input_prompt"],
         "source_differs_from_pinned_original_count": len(original_conflicts),
         "copied_new": copied_new,
         "overwritten_existing_king": overwritten,
