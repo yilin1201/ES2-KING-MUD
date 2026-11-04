@@ -32,6 +32,19 @@ cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
 bash "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh" "$TEMP_ROOT"
 bash "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
 bash "$REPO_ROOT/scripts/apply_combat_balance_instrumentation.sh" "$TEMP_ROOT"
+# Avatar Test Fixture／只在隔離 Runtime 對 avataropen 帳號強制觸發 Original 的 human 1% avatar 轉化分支。
+python3 - "$TEMP_ROOT/mudlib/adm/daemons/logind.c" <<'PY'
+from pathlib import Path
+import sys
+path = Path(sys.argv[1])
+text = path.read_text(encoding="utf-8")
+needle = 'if (race == "human" && random(100) < 1)\\n        race = "avatar";'
+replacement = 'if (race == "human" && (ob->query("id") == "avataropen" || random(100) < 1))\\n        race = "avatar";'
+if needle not in text:
+    raise SystemExit("PLAYER_AVATAR_FIXTURE_FAIL: Original avatar transformation insertion point missing")
+path.write_text(text.replace(needle, replacement, 1), encoding="utf-8")
+print("PLAYER_AVATAR_FIXTURE_READY")
+PY
 
 # Fresh Data／全新資料：此 E2E 不複製任何 login/user fixture。
 rm -rf -- "$TEMP_ROOT/mudlib/data"
@@ -123,5 +136,5 @@ if grep -En '編譯時段錯誤|Runtime error|Cannot #include|Undefined variable
   exit 1
 fi
 
-echo 'PLAYER_OPEN_ALPHA_LOCAL_RUNTIME_PASS：12 Race 創角另有獨立 Gate；本 Gate 驗證全新 Human／Avatar、普通玩家世界／NPC／物品／裝備／戰鬥、Alchemist、save／quit／relogin。'
+echo 'PLAYER_OPEN_ALPHA_LOCAL_RUNTIME_PASS：11 個可選種族及 Original 1% Avatar 轉化另有獨立 Gate；本 Gate 驗證全新 Human／Avatar、普通玩家世界／NPC／物品／裝備／戰鬥、Alchemist、save／quit／relogin。'
 
