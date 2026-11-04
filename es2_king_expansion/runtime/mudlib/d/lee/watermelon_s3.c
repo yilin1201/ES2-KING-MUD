@@ -11,9 +11,11 @@ void create()
 李家村東南側的瓜田延伸到溪邊附近，水氣讓此處土壤較為鬆軟。沿田埂可回到西面的其他瓜田。田邊立著一座簡陋的稻草人，衣衫破舊，隨風輕輕晃動，多少能唬住幾隻膽小的鳥雀。
 LONG
     );
+    // 依最新 ES2M LEE_TOPOLOGY.json 補齊李家村道路連接。
     set("exits", ([
         "west" : __DIR__"watermelon_s2",
-        "north" : __DIR__"watermelon_n3"
+        "north" : __DIR__"watermelon_n3",
+        "east" : __DIR__"creek"
     ]));
     setup();
     replace_program(ROOM);
