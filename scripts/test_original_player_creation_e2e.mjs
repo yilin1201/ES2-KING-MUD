@@ -9,6 +9,11 @@ console.log("ORIGINAL_PLAYER_CREATION_E2E_START", Boolean(url), Boolean(saveDir)
 assert.ok(url && saveDir && password);
 const exists=async p=>{try{await access(p,constants.F_OK);return true}catch{return false}};
 
+// ANSI Normalization／測試輸出比對前移除 Telnet 終端控制序列；不改變實際送往 Driver 的輸入位元組。
+function cleanOutput(value) {
+  return value.replace(/\\x1b\\[[0-?]*[ -/]*[@-~]/g, "").replace(/\\x1b\\][^\\x07]*(?:\\x07|\\x1b\\\\)/g, "");
+}
+
 function session(){
   const socket=new WebSocket(url); let output="";
   socket.on("open",()=>{console.log("E2E_WS_OPEN");output+="\\n[WEBSOCKET OPEN]\\n"});
@@ -19,7 +24,7 @@ function session(){
     wait:(m,o=0,t=30000)=>new Promise((res,rej)=>{
       console.log("E2E_WAIT_START",String(m));
       const st=Date.now(),iv=setInterval(()=>{
-        const x=output.slice(o);
+        const x=cleanOutput(output.slice(o));
         if((typeof m==="string"?x.includes(m):m.test(x))){
           clearInterval(iv);console.log("E2E_WAIT_MATCH",String(m));res(x);
         } else if(Date.now()-st>t){
@@ -29,7 +34,7 @@ function session(){
       },25)
     })};
 }
-async function choice(s,value){const p=prepareCharacterChoice(s.output().slice(-1400),value);assert.ok(p);s.send(p.bytes)}
+async function choice(s,value){const p=prepareCharacterChoice(cleanOutput(s.output().slice(-1400)),value);assert.ok(p);s.send(p.bytes)}
 
 // Original input_to 的確認與性別使用 Y/M + CRLF；只有種族選擇使用 WebTelnet ES2RACE 控制訊息。
 async function runPlayer({id,raceChoice,raceLabel,name,raceId}){
