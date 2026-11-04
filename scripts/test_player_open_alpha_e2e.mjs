@@ -85,12 +85,10 @@ async function createCharacter({ id, raceChoice, raceLabel, genderChoice, name }
   await sendChoice(p, "Y", "請設定您的密碼");
   await sendLine(p, password, "請再輸入一次您的密碼");
   await sendLine(p, password, "您的電子郵件地址");
-  const raceMenu = await sendLine(p, "none", "請輸入編號 1-12 或種族 ID");
-  assert.match(raceMenu, /1\. Human（人類）/);
-  assert.match(raceMenu, /2\. Avatar（人類族）/);
-  assert.match(raceMenu, /3\. 黑齒/);
-  assert.match(raceMenu, /8\. 刑天/);
-  assert.match(raceMenu, /12\. 阿修羅/);
+  const raceMenu = await sendLine(p, "none", "可查閱說明");
+  assert.match(raceMenu, /human/);
+  assert.match(raceMenu, /blackteeth/);
+  assert.doesNotMatch(raceMenu, /avatar/);
   await sendChoice(p, `ES2RACE:${raceChoice}`, "您要扮演的哪種性別");
   await sendChoice(p, genderChoice, "您的顯示名稱");
   await sendLine(p, name, "您確定要創造這個角色嗎");
@@ -528,7 +526,7 @@ console.log("ORIGINAL_PLAYER_CREATION_HUMAN_E2E_PASS");
 human.socket.close();
 
 // Avatar／人類族：同樣從不存在的帳號走完整 Original 創角，不複製 save fixture。
-const avatar = await createCharacter({ id: avatarId, raceChoice: "2", raceLabel: "avatar", genderChoice: "F", name: "人類族測試員" });
+const avatar = await createCharacter({ id: avatarId, raceChoice: "1", raceLabel: "avatar", genderChoice: "F", name: "人類族測試員" });
 // Avatar Basic World Journey／人類族不能只停在創角畫面：必須以普通玩家身份真正進入世界、移動、看 NPC、操作背包。
 await enterInnAsPlayer(avatar);
 assert.match(await command(avatar, "inventory"), /你身上|攜帶|沒有|物品|Inventory/i);
