@@ -46,8 +46,8 @@ from pathlib import Path
 import sys
 path = Path(sys.argv[1])
 text = path.read_text(encoding="utf-8")
-needle = 'private void show_race_menu (object ob) {\\n    string *list = affordable_races(ob), line;'
-replacement = 'private void show_race_menu (object ob) {\\n    string *list, line;\\n    // E2E-only fixture: allow every Original player-selectable race in this isolated runtime.\\n    ob->set("karma", 1000);\\n    list = affordable_races(ob);'
+needle = 'private void show_race_menu (object ob) {\n    string *list = affordable_races(ob), line;'
+replacement = 'private void show_race_menu (object ob) {\n    string *list, line;\n    // E2E-only fixture: allow every Original player-selectable race in this isolated runtime.\n    ob->set("karma", 1000);\n    list = affordable_races(ob);'
 if needle not in text:
     raise SystemExit("PLAYER_CREATE_E2E_KARMA_FIXTURE_FAIL: show_race_menu insertion point missing")
 path.write_text(text.replace(needle, replacement, 1), encoding="utf-8")
