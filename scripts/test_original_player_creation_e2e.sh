@@ -46,8 +46,8 @@ from pathlib import Path
 import sys
 path = Path(sys.argv[1])
 text = path.read_text(encoding="utf-8")
-needle = 'private void get_race (string arg, object ob, string *list) {\\n    string race;'
-replacement = needle + '\\n    log_file("PLAYER_CREATE_E2E", sprintf("get_race arg=%O length=%d list=%O\\\\n", arg, strlen(arg), list));'
+needle = 'private void get_race (string arg, object ob, string *list) {\n    string race;'
+replacement = needle + '\n    log_file("PLAYER_CREATE_E2E", sprintf("get_race arg=%O length=%d list=%O\\n", arg, strlen(arg), list));'
 if needle not in text:
     raise SystemExit("PLAYER_CREATE_E2E_DIAGNOSTIC_FAIL: get_race insertion point missing")
 path.write_text(text.replace(needle, replacement, 1), encoding="utf-8")
