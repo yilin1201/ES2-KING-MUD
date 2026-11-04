@@ -181,7 +181,7 @@ function createMudSession(browser, firstMessage = null) {
         || /請輸入 human 或 avatar/.test(runtimeTail);
       console.log(`[public-session ${sessionId}] race-choice mode=${lineRace ? "line" : "cursor"} race=${race}`);
       if (lineRace) {
-        mud.write(Buffer.from((/^\d+$/.test(choice) ? choice : race) + "\r\n", "utf8"));
+        mud.write(Buffer.from(race + "\r\n", "utf8"));
       } else if (race === "human") {
         mud.write(Buffer.from("\r", "utf8"));
       } else {
