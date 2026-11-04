@@ -91,11 +91,15 @@ if (( ! driver_ready )); then
   exit 1
 fi
 (cd "$REPO_ROOT/webtelnet"; ES2_HOST=127.0.0.1 ES2_PORT=4000 PORT="$WEB_PORT" exec node server.mjs) >"$TEMP_ROOT/bridge.stdout" 2>&1 & bridge_pid=$!
+echo "E2E_STAGE: waiting for WebTelnet bridge health on port $WEB_PORT"
 ES2_TEST_PORT="$WEB_PORT" node -e 'const h=require("http"),d=Date.now()+10000;(function p(){h.get({host:"127.0.0.1",port:+process.env.ES2_TEST_PORT,path:"/health"},r=>{r.resume();r.statusCode===200?process.exit(0):Date.now()<d?setTimeout(p,100):process.exit(1)}).on("error",()=>Date.now()<d?setTimeout(p,100):process.exit(1))})()'
+echo "E2E_STAGE: WebTelnet bridge health passed"
 
 LOG="$TEMP_ROOT/player-creation.log"
 # 將 Node 測試標準錯誤一併寫入 player-creation.log，避免 E2E 例外被 cleanup 遺漏。
+echo "E2E_STAGE: starting player creation Node test"
 ES2_E2E_WS_URL="ws://127.0.0.1:$WEB_PORT/mud" ES2_E2E_SAVE_DIR="$TEMP_ROOT/mudlib/data" ES2_E2E_PASSWORD="$TEST_PASSWORD" node "$REPO_ROOT/scripts/test_original_player_creation_e2e.mjs" 2>&1 | tee "$LOG"
+echo "E2E_STAGE: player creation Node test returned"
 for marker in ORIGINAL_PLAYER_CREATION_HUMAN_E2E_PASS ORIGINAL_PLAYER_CREATION_AVATAR_E2E_PASS ORIGINAL_PLAYER_CREATION_NUMERIC_ID_E2E_PASS ES2M_PLAYER_CREATION_12_RACES_E2E_PASS; do grep -Fq "$marker" "$LOG"; done
 # Runtime evidence must be free of compilation/runtime errors, not merely JS markers.
 test -r "$TEMP_ROOT/driver.stdout" || { echo 'ORIGINAL PLAYER CREATION E2E BLOCKED：缺少 Driver log。' >&2; exit 1; }
