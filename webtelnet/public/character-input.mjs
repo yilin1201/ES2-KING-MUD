@@ -7,17 +7,16 @@ export const CONFIRM_PROMPT = /(?:使用 .+ 這個代號將會創造一個新的
 const menus = {
   race: [
     { value: "1", label: "1. Human（人類）" },
-    { value: "2", label: "2. Avatar（人類族）" },
-    { value: "3", label: "3. 黑齒" },
-    { value: "4", label: "4. 厭火" },
-    { value: "5", label: "5. 焦僥" },
-    { value: "6", label: "6. 無腸" },
-    { value: "7", label: "7. 釘靈" },
-    { value: "8", label: "8. 刑天" },
-    { value: "9", label: "9. 雨師妾" },
-    { value: "10", label: "10. 巫首" },
-    { value: "11", label: "11. 夜叉" },
-    { value: "12", label: "12. 阿修羅" }
+    { value: "2", label: "2. 黑齒" },
+    { value: "3", label: "3. 厭火" },
+    { value: "4", label: "4. 焦僥" },
+    { value: "5", label: "5. 無腸" },
+    { value: "6", label: "6. 釘靈" },
+    { value: "7", label: "7. 刑天" },
+    { value: "8", label: "8. 雨師妾" },
+    { value: "9", label: "9. 巫首" },
+    { value: "10", label: "10. 夜叉" },
+    { value: "11", label: "11. 阿修羅" }
   ],
   gender: [
     { value: "female", label: "女性" },
@@ -54,7 +53,7 @@ export function prepareCharacterChoice(outputTail, rawValue) {
     // Race Line Input／種族整行輸入：Public iPhone 不再依賴 get_char 的 CR 或方向鍵。
     if (["1", "human", "人類"].includes(value)) return { bytes: "ES2RACE:1", followup: null };
     if (["2", "avatar", "人類族"].includes(value)) return { bytes: "ES2RACE:2", followup: null };
-    const extra = { "3":"3", "blackteeth":"3", "黑齒":"3", "4":"4", "yenhold":"4", "厭火":"4", "5":"5", "jiaojao":"5", "焦僥":"5", "6":"6", "woochan":"6", "無腸":"6", "7":"7", "dingling":"7", "釘靈":"7", "8":"8", "headless":"8", "刑天":"8", "9":"9", "rainner":"9", "雨師妾":"9", "10":"10", "malik":"10", "巫首":"10", "11":"11", "yaksa":"11", "夜叉":"11", "12":"12", "ashura":"12", "阿修羅":"12" };
+    const extra = { "2":"2", "blackteeth":"2", "黑齒":"2", "3":"3", "yenhold":"3", "厭火":"3", "4":"4", "jiaojao":"4", "焦僥":"4", "5":"5", "woochan":"5", "無腸":"5", "6":"6", "dingling":"6", "釘靈":"6", "7":"7", "headless":"7", "刑天":"7", "8":"8", "rainner":"8", "雨師妾":"8", "9":"9", "malik":"9", "巫首":"9", "10":"10", "yaksa":"10", "夜叉":"10", "11":"11", "ashura":"11", "阿修羅":"11" };
     if (extra[value]) return { bytes: `ES2RACE:${extra[value]}`, followup: null };
   }
   if (menu.type === "gender") {
