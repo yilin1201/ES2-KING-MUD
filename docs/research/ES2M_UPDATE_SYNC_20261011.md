@@ -143,3 +143,44 @@
 - Updated the M24 gate to check the actual pinned `.c` files and their `no_drop` protection logic; no Original source files were modified.
 - Original ES2 Driver Build now uses the same direct CMake commands as Dockerfile and launches without `-c`, because the workflow verifies TCP port 4000.
 - M25 workflow path filters now include the M21-M24 regression scripts and pinned bootstrap dependency that it actually executes.
+
+## 2026-11-05 — ES2M 最新 0d6f1cf9 全量覆蓋同步 KING
+
+### 來源差異
+
+- ES2M Repository：`wolfer168/es2-webmud`，branch `main`。
+- 前次 KING 鏡像來源：`1f86bcaa52b5425624a16da5fb7ed9892e16c899`。
+- 本次最新 ES2M HEAD：`0d6f1cf9e6494c97a62cb0663352f587504688e4`。
+- Git Compare：39 commits ahead、共 56 個變更路徑，其中 39 個位於 `source/upstream/mudlib/`。
+- 新增內容包含亂葬崗區域、NPC／物件、風嘯拳法、瑯夷派內功、龍葉相關技能及 yaksa 吞噬技能更新。
+
+### 全量同步執行結果
+
+- KING Repository：`yilin1201/ES2-KING-MUD`。
+- Branch：`build/original-es2-races-phase2`。
+- Workflow：`Sync ES2M Files Into KING Overlay`，Run ID `42042406489`，結論 **SUCCESS**。
+- 同步後 KING HEAD：`b2fa2f32a08283af6ead49be78cbbf1cff365c1e`。
+- 最新 ES2M Mudlib：2,017 個檔案。
+- 新增至 KING Overlay：28 個。
+- 覆蓋既有 KING Overlay：13 個。
+- 內容已相同：1,955 個。
+- 保留 KING 專屬保護檔：21 個。
+- ES2M 與 pinned Original ES2 不同的來源檔案：186 個；只在 KING Runtime Overlay／來源鏡像範圍管理，不回寫 pinned Original ES2。
+- 逐檔狀態與 SHA-256：`docs/research/ES2M_NEW_FILES_IMPORT_REPORT.json`。
+- 最新來源版本與檔案清單：`es2m_source_mirror/MANIFEST.json`。
+
+### 保護範圍
+
+- 保留 KING Owner 技能上限與權限核心：`feature/char/skill.c`、KADM Owner 授權程式。
+- 保留冷梅劍法、寒梅心法、傲梅暗劍訣三項凍結武學。
+- 保留振武軍營已驗證的 KING／ES2M 合併檔案。
+- 保留李家村已驗證拓樸、Original race ID `rainnar)、梅影風傳授門檻、潛行相容層及 WebTelnet 4000 Port。
+- 來源 Mudlib 中不存在的 KING-only 檔案不刪除；本次只對 ES2M 來源存在的 2,017 個路徑逐檔新增／覆蓋／保留。
+- Pinned Original ES2 基準未修改。
+
+### 後續驗收與部署界線
+
+- 全量來源抓取、鏡像更新、Overlay 同路徑覆蓋與報告產生：**PASS**。
+- 後續 ES2M Regression、Original ES2 Driver、M30 Alpha 與 Render Docker Build 需以本次同步後的最新 KING HEAD 重新驗收；不得以同步 Workflow PASS 代替 Runtime PASS。
+- PR #13 維持 OPEN / NOT MERGED。
+- Render 仍採現有 Docker Web Service 手動部署模式；部署前須完成本次新 HEAD 的建置驗收，並確認 `king` Owner 帳號資料保存／重建路徑。
