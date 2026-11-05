@@ -54,6 +54,12 @@ def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def digest_text(content: str) -> str:
+    """計算記憶體中文字串 SHA-256，用來辨識受控 patch 的冪等結果。"""
+
+    return hashlib.sha256(content.encode("utf-8")).hexdigest()
+
+
 def validate(runtime_mudlib: Path) -> None:
     """寫入前一次檢查全部檔案，防止只套用半筆交易功能。"""
 
@@ -76,21 +82,28 @@ def validate(runtime_mudlib: Path) -> None:
         if not target.is_file():
             raise RuntimeError(f"Runtime 缺少交易相依檔：{item.path}")
         actual = digest(target)
-        expansion_source = ROOT / "es2_king_expansion" / "runtime" / "mudlib" / item.path
-        if item.path == "cmds/std/buy.c" and expansion_source.is_file() and actual == digest(expansion_source):
-            current_text = target.read_text(encoding="utf-8")
-            if BUY_QUANTITY_UNGUARDED not in current_text and BUY_QUANTITY_GUARDED not in current_text:
-                raise RuntimeError("KING Expansion buy.c 數量解析區塊與已知契約不同，停止自動修改")
-            continue
-
         latest_source = LATEST / item.path
-        # 最新 ES2M 檔案若與 Runtime 相同，保留所有上游內容。
-        # buy.c 只允許針對已知數量解析區塊加上 KING Guard，不可整檔回退。
+        if item.path == "cmds/std/buy.c":
+            expansion_source = ROOT / "es2_king_expansion" / "runtime" / "mudlib" / item.path
+            recognized = False
+            for base_source in (latest_source, expansion_source):
+                if not base_source.is_file():
+                    continue
+                base_text = base_source.read_text(encoding="utf-8")
+                if BUY_QUANTITY_UNGUARDED in base_text:
+                    guarded_text = base_text.replace(BUY_QUANTITY_UNGUARDED, BUY_QUANTITY_GUARDED, 1)
+                elif BUY_QUANTITY_GUARDED in base_text:
+                    guarded_text = base_text
+                else:
+                    continue
+                if actual in (digest(base_source), digest_text(guarded_text)):
+                    recognized = True
+                    break
+            if recognized:
+                continue
+
+        # 其他交易檔若已是最新 ES2M 內容，保留上游版本。
         if latest_source.is_file() and actual == digest(latest_source):
-            if item.path == "cmds/std/buy.c":
-                current_text = target.read_text(encoding="utf-8")
-                if BUY_QUANTITY_UNGUARDED not in current_text and BUY_QUANTITY_GUARDED not in current_text:
-                    raise RuntimeError("最新 ES2M buy.c 數量解析區塊與已知契約不同，停止自動修改")
             continue
         accepted_source = digest(source)
         if actual not in (item.baseline_sha256, accepted_source):
@@ -105,34 +118,35 @@ def apply(runtime_mudlib: Path) -> int:
     for item in OVERLAYS:
         source = SOURCE / item.path
         target = runtime_mudlib / item.path
-        expansion_source = ROOT / "es2_king_expansion" / "runtime" / "mudlib" / item.path
-        if item.path == "cmds/std/buy.c" and expansion_source.is_file() and digest(target) == digest(expansion_source):
-            current_text = target.read_text(encoding="utf-8")
-            if BUY_QUANTITY_GUARDED not in current_text:
-                if BUY_QUANTITY_UNGUARDED not in current_text:
-                    raise RuntimeError("KING Expansion buy.c 數量解析區塊與已知契約不同，停止自動修改")
-                target.write_text(
-                    current_text.replace(BUY_QUANTITY_UNGUARDED, BUY_QUANTITY_GUARDED, 1),
-                    encoding="utf-8",
-                )
-                changed += 1
-            (runtime_mudlib / "bin" / Path(item.path).with_suffix(".b")).unlink(missing_ok=True)
-            continue
-
         latest_source = LATEST / item.path
-        if latest_source.is_file() and digest(target) == digest(latest_source):
-            if item.path == "cmds/std/buy.c":
-                current_text = target.read_text(encoding="utf-8")
-                if BUY_QUANTITY_GUARDED not in current_text:
-                    if BUY_QUANTITY_UNGUARDED not in current_text:
-                        raise RuntimeError("最新 ES2M buy.c 數量解析區塊與已知契約不同，停止自動修改")
-                    target.write_text(
-                        current_text.replace(BUY_QUANTITY_UNGUARDED, BUY_QUANTITY_GUARDED, 1),
-                        encoding="utf-8",
-                    )
-                    changed += 1
-                # Targeted source patch must also invalidate Neolith's compiled LPC cache.
+        if item.path == "cmds/std/buy.c":
+            expansion_source = ROOT / "es2_king_expansion" / "runtime" / "mudlib" / item.path
+            patched = False
+            for base_source in (latest_source, expansion_source):
+                if not base_source.is_file():
+                    continue
+                base_text = base_source.read_text(encoding="utf-8")
+                if BUY_QUANTITY_UNGUARDED in base_text:
+                    guarded_text = base_text.replace(BUY_QUANTITY_UNGUARDED, BUY_QUANTITY_GUARDED, 1)
+                elif BUY_QUANTITY_GUARDED in base_text:
+                    guarded_text = base_text
+                else:
+                    continue
+                if digest(target) == digest(base_source):
+                    if guarded_text != base_text:
+                        target.write_text(guarded_text, encoding="utf-8")
+                        changed += 1
+                    patched = True
+                    break
+                if digest(target) == digest_text(guarded_text):
+                    patched = True
+                    break
+            if patched:
+                # Invalidate compiled LPC cache whether this run patched or recognized an existing patched output.
                 (runtime_mudlib / "bin" / Path(item.path).with_suffix(".b")).unlink(missing_ok=True)
+                continue
+
+        if latest_source.is_file() and digest(target) == digest(latest_source):
             continue
         if digest(target) != item.source_sha256:
             shutil.copy2(source, target)
