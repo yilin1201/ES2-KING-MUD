@@ -9969,5 +9969,7 @@
     "鏡像只保留來源 Mudlib 當前存在的檔案。",
     "KING runtime overlay 依來源同路徑覆蓋；不刪除來源中不存在的 KING 專屬檔案。",
     "Pinned Original ES2 checkout 僅供比較，絕不修改。"
-  ]
+  ],
+  "sync_requested_source_commit": "0d6f1cf9e6494c97a62cb0663352f587504688e4",
+  "sync_requested_at": "2026-11-05T14:07:00Z"
 }
