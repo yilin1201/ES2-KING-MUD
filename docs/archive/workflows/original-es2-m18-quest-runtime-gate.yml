@@ -1,0 +1,27 @@
+name: Original ES2 M18 Quest Runtime Gate
+
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths:
+      - 'original_es2/research/m18_quest_runtime_plan.md'
+      - 'original_es2/research/m18_quest_evidence_registry.md'
+      - 'scripts/test_m18_quest_runtime_gate.sh'
+      - 'scripts/bootstrap_original_es2.sh'
+      - '.github/workflows/original-es2-m18-quest-runtime-gate.yml'
+  workflow_dispatch:
+
+jobs:
+  m18-quest-runtime-gate:
+    name: M18 任務系統實機證據閘門
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout（取得程式）：將目前分支內容放入測試主機。
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v5
+      # Bootstrap（建立乾淨上游執行樹）：取得 Original ES2 程式。
+      - name: Bootstrap Original ES2／建立乾淨上游執行樹
+        run: bash scripts/bootstrap_original_es2.sh
+      # Runtime Gate（實機證據閘門）：盤點任務、進度與獎勵候選程式。
+      - name: Runtime evidence gate／執行任務系統實機證據閘門
+        run: bash scripts/test_m18_quest_runtime_gate.sh .runtime/original-es2

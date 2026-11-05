@@ -1,0 +1,110 @@
+name: ES2M Update Snapshot Gate
+
+on:
+  push:
+    branches:
+      - build/original-es2-races-phase2
+    paths:
+      - '.github/workflows/es2m-update-snapshot.yml'
+      - 'es2m_snapshot/mudlib/adm/daemons/combatd.c'
+      - 'es2m_snapshot/mudlib/cmds/std/buy.c'
+      - 'es2m_snapshot/mudlib/cmds/std/sneak.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/sneak.c'
+      - 'scripts/test_es2m_sneak_adapter.py'
+      - 'es2m_snapshot/mudlib/feature/npc/vendor.c'
+      - 'es2m_snapshot/mudlib/d/snow/npc/waiter.c'
+      - 'scripts/test_es2m_update_snapshot.py'
+      - 'scripts/test_es2m_fighter_level_contract.py'
+      - 'original_es2/research/es2m_update_20261010.md'
+      - 'es2m_snapshot/mudlib/std/martial_art.c'
+      - 'es2m_snapshot/mudlib/std/martial_art.h'
+      - 'es2m_snapshot/mudlib/daemon/skill/**'
+      - 'es2m_snapshot/mudlib/daemon/misc/npc_power.c'
+      - 'es2m_snapshot/mudlib/std/char/npc.c'
+      - 'es2m_snapshot/mudlib/include/daemon.h'
+      - 'es2m_snapshot/mudlib/d/wutang/**'
+      - 'es2_king_expansion/runtime/mudlib/std/martial_art.c'
+      - 'es2_king_expansion/runtime/mudlib/std/martial_art.h'
+      - 'es2_king_expansion/runtime/mudlib/daemon/skill/**'
+      - 'es2_king_expansion/runtime/mudlib/daemon/misc/npc_power.c'
+      - 'es2_king_expansion/runtime/mudlib/std/char/npc.c'
+      - 'es2_king_expansion/runtime/mudlib/include/daemon.h'
+      - 'es2_king_expansion/runtime/mudlib/feature/char/skill.c'
+      - 'es2_king_expansion/runtime/mudlib/d/wutang/**'
+      - 'scripts/test_es2m_skill_import.py'
+      - 'scripts/test_es2m_cold_plum_overlay.py'
+      - 'scripts/test_es2m_latest_martial_updates.py'
+      - 'scripts/test_es2m_skill_commands.py'
+      - 'es2m_snapshot/mudlib/cmds/usr/**'
+      - 'es2_king_expansion/runtime/mudlib/cmds/usr/**'
+  pull_request:
+    paths:
+      - '.github/workflows/es2m-update-snapshot.yml'
+      - 'es2m_snapshot/mudlib/adm/daemons/combatd.c'
+      - 'es2m_snapshot/mudlib/cmds/std/buy.c'
+      - 'es2m_snapshot/mudlib/cmds/std/sneak.c'
+      - 'es2_king_expansion/runtime/mudlib/cmds/std/sneak.c'
+      - 'scripts/test_es2m_sneak_adapter.py'
+      - 'es2m_snapshot/mudlib/feature/npc/vendor.c'
+      - 'es2m_snapshot/mudlib/d/snow/npc/waiter.c'
+      - 'scripts/test_es2m_update_snapshot.py'
+      - 'scripts/test_es2m_fighter_level_contract.py'
+      - 'original_es2/research/es2m_update_20261010.md'
+      - 'es2m_snapshot/mudlib/std/martial_art.c'
+      - 'es2m_snapshot/mudlib/std/martial_art.h'
+      - 'es2m_snapshot/mudlib/daemon/skill/**'
+      - 'es2m_snapshot/mudlib/daemon/misc/npc_power.c'
+      - 'es2m_snapshot/mudlib/std/char/npc.c'
+      - 'es2m_snapshot/mudlib/include/daemon.h'
+      - 'es2m_snapshot/mudlib/d/wutang/**'
+      - 'es2_king_expansion/runtime/mudlib/std/martial_art.c'
+      - 'es2_king_expansion/runtime/mudlib/std/martial_art.h'
+      - 'es2_king_expansion/runtime/mudlib/daemon/skill/**'
+      - 'es2_king_expansion/runtime/mudlib/daemon/misc/npc_power.c'
+      - 'es2_king_expansion/runtime/mudlib/std/char/npc.c'
+      - 'es2_king_expansion/runtime/mudlib/include/daemon.h'
+      - 'es2_king_expansion/runtime/mudlib/feature/char/skill.c'
+      - 'es2_king_expansion/runtime/mudlib/d/wutang/**'
+      - 'scripts/test_es2m_skill_import.py'
+      - 'scripts/test_es2m_cold_plum_overlay.py'
+      - 'scripts/test_es2m_latest_martial_updates.py'
+      - 'scripts/test_es2m_skill_commands.py'
+      - 'es2m_snapshot/mudlib/cmds/usr/**'
+      - 'es2_king_expansion/runtime/mudlib/cmds/usr/**'
+
+permissions:
+  contents: read
+
+jobs:
+  es2m-source-contract:
+    name: ES2M 來源快照與規則契約
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout／取得程式：使用目前分支的 ES2M 保存快照。
+      - name: Checkout ES2-KING
+        uses: actions/checkout@v4
+      # Syntax Gate／語法檢查：先確保 Python 測試檔可解析。
+      - name: Python syntax gate／Python 語法檢查
+        run: python3 -m py_compile scripts/test_es2m_update_snapshot.py scripts/test_es2m_fighter_level_contract.py scripts/test_es2m_skill_import.py scripts/test_es2m_cold_plum_overlay.py scripts/test_es2m_skill_commands.py scripts/test_es2m_sneak_adapter.py
+      # Snapshot Gate／來源快照：驗證批量購買、庫存、交貨與戰鬥成長證據。
+      - name: ES2M update snapshot／ES2M 更新來源檢查
+        run: python3 scripts/test_es2m_update_snapshot.py
+      # Progression Gate／成長契約：只驗證來源函式規則，不冒充遊戲內實戰 PASS。
+      - name: Fighter progression contract／戰鬥成長來源契約
+        run: python3 scripts/test_es2m_fighter_level_contract.py
+      # Cold Plum Static Gate／冷梅莊來源與 Expansion 閘門；不代表 LPC 實機通過。
+      - name: Cold Plum overlay／冷梅莊靜態完整性
+        run: python3 scripts/test_es2m_cold_plum_overlay.py
+      # Skill Snapshot Gate／技能快照清單與來源檔案完整性。
+      - name: Skill inventory／技能來源快照
+        run: python3 scripts/test_es2m_skill_import.py
+      # Skill Commands Gate／技能狀態指令來源與 Expansion 檢查。
+      - name: Skill commands／停用與學習狀態指令
+        run: python3 scripts/test_es2m_skill_commands.py
+      # Latest ES2M Gate／驗證上游封存與 KING 自訂武功各自完整，避免互相覆蓋。
+      - name: Latest ES2M martial update contract／最新武學同步契約
+        run: python3 scripts/test_es2m_latest_martial_updates.py
+
+      # Sneak Adapter Gate／使用 Python 標準 unittest 驗證潛行相容層，不需額外安裝 pytest，也不冒充 LPC 實機通過。
+      - name: ES2M sneak adapter／潛行相容層檢查
+        run: python3 scripts/test_es2m_sneak_adapter.py

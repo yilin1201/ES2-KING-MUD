@@ -1,0 +1,84 @@
+// ES2-KING Expansion：冷梅劍法 Combat daemon。
+// 冷梅劍法五式名稱來自既有 gameplay evidence；傲梅暗劍訣為 ES2-KING Expansion 正式進階殺招。
+// KING V0 自訂係數：attack +10～20、force +10～20、defense 0～20；非 Original 原始係數。
+// 明鏡止水啟動後，五式與進階殺招依序輪轉，避免把未知權重偽造成機率設定。
+
+#include <ansi.h>
+inherit SKILL;
+
+mapping *mirror_actions = ({
+    // 戰鬥文字色彩依使用者提供的 Original gameplay 截圖 Evidence 重建：
+    // 一般敘述白色；冷梅招式【】外框紅色、框內名稱白色；二／四／八道劍氣數量黃色；
+    // 愛霜恨雪使用青色「愛霜恨雪」；寒霜三千里使用全白【 寒霜三千里 】。只重建演出，不新增未知倍率或機率。
+    ([ "name":"梅二方劍",
+       "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIR "【" HIW "梅二方劍" HIR "】" HIW "」！\n"
+                HIW "$N全力施展快劍，幻化出了" HIY "二道" HIW "劍氣將$n團團圍住！" NOR,
+       "attack":12, "force":12, "defense":5, "damage_type":"刺傷" ]),
+    ([ "name":"梅四方劍",
+       "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIR "【" HIW "梅四方劍" HIR "】" HIW "」！\n"
+                HIW "$N全力施展快劍，幻化出了" HIY "四道" HIW "劍氣將$n團團圍住！" NOR,
+       "attack":14, "force":14, "defense":8, "damage_type":"刺傷" ]),
+    ([ "name":"梅八方劍",
+       "action":HIW "$N施展傲梅暗劍訣中的殺招「" HIR "【" HIW "梅八方劍" HIR "】" HIW "」！\n"
+                HIW "$N全力施展快劍，幻化出了" HIY "八道" HIW "劍氣將$n團團圍住！" NOR,
+       "attack":16, "force":16, "defense":10, "damage_type":"刺傷" ]),
+    ([ "name":"愛霜恨雪",
+       "action":HIW "$N施展傲梅暗劍訣中的殺招" HIC "「愛霜恨雪」" HIW "！\n"
+                "一股無形的冷冽氣勁朝著$n直射而出！" NOR,
+       "attack":18, "force":18, "defense":12, "damage_type":"割傷" ]),
+    ([ "name":"寒霜三千里",
+       "action":HIW "$N催運寒梅心法使出【 寒霜三千里 】劍氣，寒霜劍劍刃嗡嗡做響，$n全身瞬間蒙上一層白霜！" NOR,
+       "attack":20, "force":20, "defense":15, "damage_type":"割傷" ]),
+    ([ "name":"傲梅暗劍訣・傲雪藏鋒・逆折寒梅",
+       "action":HIW
+       "【明劍欺敵，暗劍藏殺；傲雪藏鋒・逆折寒梅。】\n"
+       "$N右手$w漫天一振，以冷梅劍法陽面起勢；「梅二方劍」連環激盪，"
+       "「梅四方劍」旋即封鎖四野，再接「寒霜三千里」掀起浩瀚雪幕，"
+       "劍勢如千軍萬馬呼嘯而過，封住$n的視線、身位與氣機，逼得$n全力招架。\n"
+       "就在$n招架用老、五感盡被暴雪遮蔽的一剎，$N右手明劍仍在風雪中牽制，"
+       "左袖之下的傲梅暗劍卻已藏盡殺機——不帶風聲、不見反光，無聲無息自袖底鑽出。\n"
+       HIR "——【傲梅暗劍訣・傲雪藏鋒・逆折寒梅】！\n" HIW
+       "那道暗鋒如雪夜折梅般輕巧寫意，忽自明劍劍勢相逆之處折出；"
+       "明劍在前欺敵，暗劍在後藏殺，真正的鋒芒直到最後一瞬才向咽喉、心口、氣海三處要害尋隙而入，直取$n的$l！" NOR,
+       // 雙手聯動與三處要害為招式敘事設定；實際命中部位仍交由 Original Combat 的 $l 決定。
+       // 除 KING V0 自訂 attack/force/defense 外，未知 Original 穿透、Busy、寒毒與消耗數值仍不補造。
+       "attack":20, "force":20, "defense":20, "damage_type":"刺傷" ]),
+});
+
+mapping basic_action = ([
+    "name":"冷梅劍法",
+    "action":CYN "$N手中$w輕顫，循冷梅劍理刺向$n的$l" NOR,
+    "attack":10, "force":10, "defense":0, "damage_type":"刺傷"
+]);
+
+private void create()
+{
+    seteuid(getuid());
+    DAEMON_D->register_skill_daemon("lunmay");
+    setup();
+}
+
+int valid_enable(string usage) { return usage == "sword"; }
+
+void attack_using(object me, object opponent, object weapon)
+{
+    mapping action;
+    int index;
+
+    if (!opponent) return;
+    // KING 防禦開場由實際攻擊入口觸發，避免依賴 parry daemon 是否收到 attack hook。
+    if (me->skill_mapped("parry") == "batian lianti jue")
+        call_other("/d/arena/skill/batian_lianti_jue", "show_immortal_intro", me);
+
+    if (me->query_temp("cold_plum/mirror_state")) {
+        index = me->query_temp("cold_plum/mirror_index");
+        if (index < 0 || index >= sizeof(mirror_actions)) index = 0;
+        action = mirror_actions[index];
+        me->set_temp("cold_plum/mirror_index", (index + 1) % sizeof(mirror_actions));
+        me->set_temp("cold_plum/last_form", action["name"]);
+    } else {
+        action = basic_action;
+    }
+
+    COMBAT_D->fight(me, opponent, "sword", action, weapon);
+}

@@ -1,0 +1,29 @@
+name: Original ES2 M16 NPC Item Runtime Gate
+
+on:
+  push:
+    branches:
+      - build/original-es2-races-phase2
+    paths:
+      - 'original_es2/research/m16_npc_item_runtime_plan.md'
+      - 'scripts/test_m16_npc_item_runtime_gate.sh'
+      - 'scripts/bootstrap_original_es2.sh'
+      - '.github/workflows/original-es2-m16-npc-item-runtime-gate.yml'
+  workflow_dispatch:
+
+jobs:
+  m16-npc-item-runtime-gate:
+    name: M16 NPC／裝備／物品實機證據閘門
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout（取得程式）：把目前 ES2-KING 分支內容放進測試主機。
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v5
+
+      # Bootstrap（建立乾淨上游執行樹）：沿用專案既有流程取得 Original ES2 runtime。
+      - name: Bootstrap Original ES2／建立乾淨上游執行樹
+        run: bash scripts/bootstrap_original_es2.sh
+
+      # Runtime Gate（實機證據閘門）：只讀上游，不把擴充設定反寫成 Original。
+      - name: Runtime evidence gate／執行 NPC 裝備物品實機證據閘門
+        run: bash scripts/test_m16_npc_item_runtime_gate.sh .runtime/original-es2

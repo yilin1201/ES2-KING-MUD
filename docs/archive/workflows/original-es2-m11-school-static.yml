@@ -1,0 +1,25 @@
+name: Original ES2 M11 Class School Static
+
+# GitHub Actions／GitHub 自動化測試：鎖定七職業與門派證據，避免 M14/M15 重建時名稱漂移。
+on:
+  workflow_dispatch:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths:
+      - 'original_es2/research/original_class_school_evidence.md'
+      - 'scripts/test_class_school_m11_static.sh'
+      - '.github/workflows/original-es2-m11-school-static.yml'
+  pull_request:
+    paths:
+      - 'original_es2/research/original_class_school_evidence.md'
+      - 'scripts/test_class_school_m11_static.sh'
+      - '.github/workflows/original-es2-m11-school-static.yml'
+
+jobs:
+  verify-class-school-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取出目前分支程式
+        uses: actions/checkout@v4
+      - name: Verify class and school evidence／驗證職業與門派證據
+        run: bash scripts/test_class_school_m11_static.sh

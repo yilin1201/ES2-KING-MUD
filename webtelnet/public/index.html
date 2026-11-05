@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>ES2-KING WebTelnet</title>
+  <style>
+    :root { --terminal-font: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Noto Sans Mono CJK TC", "PingFang TC", "Microsoft JhengHei", monospace; }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: #080b10; color: #e8edf2; font: 16px/1.45 var(--terminal-font); }
+    main { width: 100%; max-width: 960px; margin: auto; padding: 1rem max(1rem, env(safe-area-inset-right)) 1rem max(1rem, env(safe-area-inset-left)); }
+    #terminal-shell { width: 100%; max-width: 100%; }
+    #terminal {
+      min-height: 72vh;
+      margin: 0;
+      white-space: pre;
+      overflow-x: auto;
+      overflow-y: visible;
+      overflow-wrap: normal;
+      word-break: normal;
+      font: 15px/1.35 var(--terminal-font);
+      letter-spacing: 0;
+      tab-size: 8;
+      -webkit-overflow-scrolling: touch;
+    }
+    /* ANSI Terminal Palette：保留 Original ES2 / Expansion 實際送出的終端色彩。 */
+
+    .score-grid { display:inline-flex; gap:3px; vertical-align:middle; margin-left:2px; }
+    .score-cell { display:inline-block; width:13px; height:16px; flex:0 0 13px; }
+    .score-hp .score-cell { background:#4ade80; } .score-gin .score-cell { background:#ff5a5f; }
+    .score-kee .score-cell { background:#60a5fa; } .score-sen .score-cell { background:#fde047; }
+    .score-cell.effective { opacity:.55; } .score-cell.maximum { background:transparent; box-sizing:border-box; border:1px solid #6b7280; opacity:.65; }
+    .ansi-30 { color: #111827; } .ansi-31 { color: #dc2626; } .ansi-32 { color: #16a34a; }
+    .ansi-33 { color: #ca8a04; } .ansi-34 { color: #2563eb; } .ansi-35 { color: #c026d3; }
+    .ansi-36 { color: #0891b2; } .ansi-37 { color: #e5e7eb; }
+    .ansi-90 { color: #6b7280; } .ansi-91 { color: #ff5a5f; } .ansi-92 { color: #4ade80; }
+    .ansi-93 { color: #fde047; } .ansi-94 { color: #60a5fa; } .ansi-95 { color: #e879f9; }
+    .ansi-96 { color: #67e8f9; } .ansi-97 { color: #ffffff; }
+    form { display: flex; gap: .5rem; position: sticky; bottom: 0; background: #080b10; padding: .75rem 0 max(.75rem, env(safe-area-inset-bottom)); }
+    input { min-width: 0; flex: 1; padding: .7rem; font-size: 16px; background: #151b24; color: white; border: 1px solid #52606d; }
+    button { padding: .7rem 1rem; font-size: 16px; }
+    /* Character Choice／角色選項：以足夠大的按鈕送出 Original get_char 單鍵，不改動原始創角邏輯。 */
+    #character-choices:not([hidden]) { display: flex; flex-wrap: wrap; gap: .5rem; padding: .5rem 0; }
+    #character-choices button { min-height: 44px; }
+    @media (min-width: 601px) {
+      /* Desktop 以實際字型的 80 個字元寬度建立畫布；置中容器，不改動終端文字對齊。 */
+      #terminal-shell { width: 80ch; margin-inline: auto; font-family: var(--terminal-font); font-size: 15px; }
+    }
+    @media (max-width: 600px) {
+      main { padding-top: .5rem; padding-left: max(.5rem, env(safe-area-inset-left)); padding-right: max(.5rem, env(safe-area-inset-right)); }
+      /* 只縮放終端輸出；輸入框與按鈕維持 16px，避免 Safari 自動放大與觸控區過小。 */
+      #terminal { min-height: 70vh; font-size: var(--mobile-terminal-font-size, 14px); }
+    }
+  </style>
+</head>
+<body><main>
+  <section id="terminal-shell" aria-label="ES2-KING 80欄終端">
+    <div id="status">連線中……</div>
+    <pre id="terminal" aria-live="polite"></pre>
+    <div id="character-choices" hidden aria-label="角色建立單鍵選單"></div>
+    <form><input id="command" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="遊戲指令"><button>送出</button></form>
+  </section>
+</main>
+<script type="module">
+  import { MINIMUM_OWNER_CLAIM_BYTES, prepareOwnerClaim } from "/claim-input.mjs";
+  import { characterMenuFor, prepareCharacterChoice } from "/character-input.mjs";
+
+  const status = document.querySelector("#status");
+  const terminal = document.querySelector("#terminal");
+  const command = document.querySelector("#command");
+  const characterChoices = document.querySelector("#character-choices");
+  const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+  // Resume Token／續接權杖：只保存 Bridge 登入成功後核發的隨機權杖，不保存帳號或密碼。
+  // Token 透過 WSS 第一個控制訊息傳送，不放進 URL、Cookie 或一般終端輸出。
+  const resumeStorageKey = "es2-king-web-resume-v1";
+  const resumeControlPrefix = "\x1eES2RESUME:";
+  const resumeTokenPattern = /^[A-Za-z0-9_-]{43}$/;
+  let resumeToken = localStorage.getItem(resumeStorageKey);
+  if (!resumeTokenPattern.test(resumeToken || "")) {
+    localStorage.removeItem(resumeStorageKey);
+    resumeToken = null;
+  }
+  const mobileLayout = matchMedia("(max-width: 600px)");
+  const terminalColumns = 80;
+  const mobileNoWrapMinFontPx = 8; // 完整原文＋不斷行優先；低於此值改用水平捲動，避免不可讀。
+  let socket;
+  let reconnectTimer = null;
+  let retryDelay = 1000;
+  let outputTail = "";
+  let pendingCharacterFollowup = null;
+  let pendingCharacterFollowupTimer = null;
+  let claimPastePending = false;
+  let claimCompositionActive = false;
+
+  // Password Prompt（密碼輸入提示）只控制瀏覽器欄位是否遮蔽；密碼仍由 Original ES2 驗證與雜湊。
+  // 此層不保存、不記錄也不解析密碼，避免 KING 秘密進入 Web、Bridge 或基礎設施設定。
+  const passwordPrompt = /(請輸入密碼|請先輸入您原來的密碼|請輸入新密碼|請再輸入一次新密碼|請設定您的密碼|請再輸入一次您的密碼|KING Owner 一次性初始化權杖)[：:﹕]?\s*$/;
+  const newPasswordPrompt = /(請輸入新密碼|請再輸入一次新密碼|請設定您的密碼|請再輸入一次您的密碼)[：:﹕]?\s*$/;
+  const ownerClaimPrompt = /KING Owner 一次性初始化權杖[：:﹕]?\s*$/;
+
+  function sendCharacterChoice(value) {
+    const prepared = prepareCharacterChoice(outputTail, value);
+    if (!prepared || socket.readyState !== WebSocket.OPEN) return false;
+    pendingCharacterFollowup = prepared.followup;
+    socket.send(prepared.bytes);
+    // iPhone/Public Neolith：get_char 的方向鍵重畫可能只含 ANSI 游標控制，WebTelnet 會先剝除 ANSI，
+    // 因此不能只等「可辨識的新 prompt」才送確認鍵。Race follow-up 加短延遲保底，避免 avatar 卡住；human 無 follow-up。
+    if (pendingCharacterFollowup) {
+      clearTimeout(pendingCharacterFollowupTimer);
+      pendingCharacterFollowupTimer = setTimeout(() => {
+        if (!pendingCharacterFollowup || socket.readyState !== WebSocket.OPEN) return;
+        const followup = pendingCharacterFollowup;
+        pendingCharacterFollowup = null;
+        socket.send(followup);
+      }, 120);
+    }
+    command.value = "";
+    return true;
+  }
+
+  function renderCharacterChoices() {
+    const menu = characterMenuFor(outputTail);
+    characterChoices.replaceChildren();
+    characterChoices.hidden = !menu;
+    if (!menu) return;
+    for (const option of menu.options) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = option.label;
+      button.addEventListener("click", () => sendCharacterChoice(option.value));
+      characterChoices.append(button);
+    }
+  }
+
+  function protectSecretEntry() {
+    const secret = passwordPrompt.test(outputTail);
+    const ownerClaim = ownerClaimPrompt.test(outputTail);
+    command.type = secret ? "password" : "text";
+    command.autocomplete = ownerClaim
+      ? "off"
+      : secret
+        ? (newPasswordPrompt.test(outputTail) ? "new-password" : "current-password")
+      : "off";
+    command.inputMode = ownerClaim ? "text" : "";
+    command.setAttribute("aria-label", secret ? "密碼（輸入內容不顯示）" : "遊戲指令");
+    const menu = characterMenuFor(outputTail);
+    command.placeholder = !secret && menu?.type === "race" ? "輸入 1 或 2，或點選上方按鈕" : "";
+    renderCharacterChoices();
+  }
+
+  // Mobile No-Wrap Priority／手機首要原則：完整原文、不斷行。
+  // 不再固定只按 80 欄縮放；以目前畫面最長「實際單行」與 Original 80 欄基準取較大者，
+  // 動態縮放終端輸出，使人物出招敘述盡量整行可見。若所需字級低於可讀下限，保留原文並水平捲動，絕不斷行／刪字。
+  function fitMobileTerminal() {
+    terminal.style.removeProperty("--mobile-terminal-font-size");
+    if (!mobileLayout.matches) return;
+
+    const plain = terminal.innerText || "";
+    const longestLineColumns = plain.split(/\r?\n/).reduce((max, line) => Math.max(max, Array.from(line).length), 0);
+    const targetColumns = Math.max(terminalColumns, longestLineColumns);
+
+    const probe = document.createElement("span");
+    probe.textContent = "0".repeat(targetColumns);
+    probe.setAttribute("aria-hidden", "true");
+    Object.assign(probe.style, {
+      position: "absolute",
+      visibility: "hidden",
+      whiteSpace: "pre",
+      fontFamily: getComputedStyle(terminal).fontFamily,
+      fontSize: "100px",
+      fontWeight: "normal",
+      letterSpacing: "0"
+    });
+    document.body.append(probe);
+    const measuredWidth = probe.getBoundingClientRect().width;
+    probe.remove();
+
+    if (measuredWidth > 0 && terminal.clientWidth > 0) {
+      const rawSize = Math.floor((100 * terminal.clientWidth / measuredWidth) * 1000) / 1000;
+      const fittedSize = Math.max(mobileNoWrapMinFontPx, rawSize);
+      terminal.style.setProperty("--mobile-terminal-font-size", `${fittedSize}px`);
+    }
+  }
+
+  const scheduleMobileFit = () => requestAnimationFrame(fitMobileTerminal);
+  window.addEventListener("resize", scheduleMobileFit, { passive: true });
+  mobileLayout.addEventListener("change", scheduleMobileFit);
+  if (document.fonts) document.fonts.ready.then(scheduleMobileFit);
+  scheduleMobileFit();
+
+  // Claim Input Observability／認領輸入可觀測性：只顯示 UTF-8 位元組長度，不顯示內容或指紋。
+  function updateOwnerClaimLength() {
+    if (!ownerClaimPrompt.test(outputTail)) return;
+    const prepared = prepareOwnerClaim(command.value);
+    status.textContent = `KING Claim 輸入長度：${prepared.byteLength} bytes`;
+  }
+
+  // iPhone Safari 貼上完成後才讀取 DOM value；避免 paste default action 尚未落入欄位便判斷長度。
+  command.addEventListener("paste", () => {
+    claimPastePending = true;
+    requestAnimationFrame(() => {
+      claimPastePending = false;
+      updateOwnerClaimLength();
+    });
+  });
+  command.addEventListener("input", updateOwnerClaimLength);
+  command.addEventListener("compositionstart", () => { claimCompositionActive = true; });
+  command.addEventListener("compositionend", () => {
+    claimCompositionActive = false;
+    updateOwnerClaimLength();
+  });
+
+  // TextDecoder（文字解碼器）以串流 UTF-8 解碼，保留跨 WebSocket 資料塊的中文字元。
+  const decoder = new TextDecoder("utf-8");
+  // ANSI Renderer：把 Original ES2 的 SGR 前景色安全轉成 DOM span。
+  // 只使用 textContent 建立文字節點，不把 MUD 輸出當 HTML，避免終端文字注入網頁。
+  let ansiForeground = null;
+  let ansiBright = false;
+  let ansiCarry = "";
+  function appendAnsiText(raw) {
+    raw = ansiCarry + raw;
+    ansiCarry = "";
+    const incomplete = raw.match(/\x1b\[[0-9;]*$/);
+    if (incomplete) {
+      ansiCarry = incomplete[0];
+      raw = raw.slice(0, -ansiCarry.length);
+    }
+    const re = /\x1b\[([0-9;]*)m/g;
+    let last = 0;
+    const emit = text => {
+      if (!text) return;
+      const node = document.createElement("span");
+      let code = ansiForeground;
+      if (ansiBright && code >= 30 && code <= 37) code += 60;
+      if (code !== null) node.className = "ansi-" + code;
+      const gridRe = /ES2GRID:(HP|GIN|KEE|SEN):([FEM]{28}):END/g;
+      let pos = 0;
+      for (let gm; (gm = gridRe.exec(text)); ) {
+        if (gm.index > pos) {
+          const plain = node.cloneNode(false);
+          plain.textContent = text.slice(pos, gm.index);
+          terminal.append(plain);
+        }
+        const grid = document.createElement("span");
+        grid.className = "score-grid score-" + gm[1].toLowerCase();
+        for (const state of gm[2]) {
+          const cell = document.createElement("span");
+          cell.className = "score-cell " + (state === "F" ? "filled" : state === "E" ? "effective" : "maximum");
+          grid.append(cell);
+        }
+        terminal.append(grid);
+        pos = gridRe.lastIndex;
+      }
+      if (pos < text.length) {
+        const plain = node.cloneNode(false);
+        plain.textContent = text.slice(pos);
+        terminal.append(plain);
+      }
+    };
+    for (let match; (match = re.exec(raw)); ) {
+      emit(raw.slice(last, match.index));
+      const codes = (match[1] || "0").split(";").map(Number);
+      for (const code of codes) {
+        if (code === 0) { ansiForeground = null; ansiBright = false; }
+        else if (code === 1) ansiBright = true;
+        else if (code === 22) ansiBright = false;
+        else if ((code >= 30 && code <= 37) || (code >= 90 && code <= 97)) ansiForeground = code;
+        else if (code === 39) ansiForeground = null;
+      }
+      last = re.lastIndex;
+    }
+    emit(raw.slice(last));
+  }
+  const append = data => {
+    const decoded = decoder.decode(data, { stream: true });
+    // Prompt 辨識仍使用純文字；畫面則保留 SGR 色彩。
+    const cleanText = decoded.replace(/\x1b\[[0-9;?]*[ -/]*[@-~]/g, "");
+    appendAnsiText(decoded);
+    // 僅保留輸出末端以辨識可能跨 WebSocket 分段的提示文字；絕不把玩家輸入加入此緩衝。
+    outputTail = (outputTail + cleanText).slice(-256);
+    protectSecretEntry();
+    scheduleMobileFit();
+    // Original cursor 選單收到方向鍵後會重新繪製；等新提示抵達再送單一空白確認鍵。
+    if (pendingCharacterFollowup && characterMenuFor(outputTail)) {
+      const followup = pendingCharacterFollowup;
+      pendingCharacterFollowup = null;
+      clearTimeout(pendingCharacterFollowupTimer);
+      socket.send(followup);
+    }
+    window.scrollTo(0, document.body.scrollHeight);
+  };
+  function handleSocketMessage(data) {
+    if (typeof data === "string" && data.startsWith(resumeControlPrefix)) {
+      try {
+        const message = JSON.parse(data.slice(resumeControlPrefix.length));
+        if (message.type === "resume-token" && resumeTokenPattern.test(message.token || "")) {
+          resumeToken = message.token;
+          localStorage.setItem(resumeStorageKey, resumeToken);
+        } else if (message.type === "resume-ok") {
+          status.textContent = "連線已恢復";
+          command.focus();
+        } else if (message.type === "resume-failed") {
+          resumeToken = null;
+          localStorage.removeItem(resumeStorageKey);
+          status.textContent = "續接已失效，已返回正常登入";
+        }
+      } catch {
+        // 無效 Bridge 控制訊息不得顯示、不得轉成遊戲命令，也不得改動現有 Session。
+      }
+      return;
+    }
+    append(typeof data === "string" ? new TextEncoder().encode(data) : data);
+  }
+
+  function scheduleReconnect() {
+    if (reconnectTimer !== null) return;
+    reconnectTimer = setTimeout(() => {
+      reconnectTimer = null;
+      connect();
+    }, retryDelay);
+    retryDelay = Math.min(retryDelay * 2, 10000);
+  }
+
+  function connect() {
+    if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) return;
+    if (reconnectTimer !== null) {
+      clearTimeout(reconnectTimer);
+      reconnectTimer = null;
+    }
+    status.textContent = "連線中……";
+    const nextSocket = new WebSocket(`${protocol}//${location.host}/mud`);
+    socket = nextSocket;
+    nextSocket.binaryType = "arraybuffer";
+    nextSocket.onopen = () => {
+      if (socket !== nextSocket) return;
+      retryDelay = 1000;
+      // 第一個 WSS frame 僅交給 Bridge；沒有有效 Token 時建立正常 Original Login。
+      nextSocket.send(resumeControlPrefix + JSON.stringify({type: "resume", token: resumeToken || ""}));
+      status.textContent = resumeToken ? "正在恢復連線……" : "已連線 ES2-KING";
+      if (!resumeToken) command.focus();
+    };
+    nextSocket.onmessage = event => {
+      if (socket === nextSocket) handleSocketMessage(event.data);
+    };
+    nextSocket.onclose = event => {
+      if (socket !== nextSocket) return;
+      socket = null;
+      status.textContent = `連線中斷 (${event.code})，將自動重連`;
+      scheduleReconnect();
+    };
+    nextSocket.onerror = () => {
+      if (socket === nextSocket) status.textContent = "WebSocket 橋接連線失敗";
+    };
+  }
+  connect();
+  // iOS Safari 回到前景才檢查連線；hidden／pagehide／blur 不主動 close 或 logout。
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState !== "visible") return;
+    if (!socket || socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) {
+      retryDelay = 1000;
+      connect();
+    }
+  });
+  window.addEventListener("pageshow", () => {
+    if (!socket || socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) connect();
+  });
+  const commandForm = document.querySelector("form");
+  commandForm.addEventListener("submit", event => {
+    event.preventDefault();
+    // Mobile Paste Barrier／手機貼上屏障：等待 Safari 完成 paste／composition 後再送出。
+    if (ownerClaimPrompt.test(outputTail) && (claimPastePending || claimCompositionActive)) {
+      requestAnimationFrame(() => commandForm.requestSubmit(event.submitter));
+      return;
+    }
+    if (socket.readyState === WebSocket.OPEN) {
+      const choice = command.value.trim().toLowerCase();
+      if (choice === "quit") {
+        // Explicit Logout／明確登出：瀏覽器與 Bridge 都立即丟棄 Resume Token。
+        resumeToken = null;
+        localStorage.removeItem(resumeStorageKey);
+      }
+      // Race Line Input／種族整行輸入：Runtime 已改成 input_to，因此直接送完整 human/avatar + LF。
+      // 使用單一 LF（換行）避免 Telnet/Neolith 將 CRLF 拆成「Race 輸入 + 下一狀態空輸入」。
+      const activeMenu = characterMenuFor(outputTail);
+      if (activeMenu?.type === "race" && ["1", "2", "human", "人類", "avatar", "克隆人"].includes(choice)) {
+        const raceChoice = choice === "人類" ? "1" : choice === "human" ? "1" : choice === "avatar" ? "2" : choice === "克隆人" ? "2" : choice;
+        socket.send("ES2RACE:" + raceChoice);
+        command.value = "";
+        return;
+      } else if (sendCharacterChoice(choice)) {
+        return;
+      } else if (ownerClaimPrompt.test(outputTail)) {
+        const prepared = prepareOwnerClaim(command.value);
+        if (!prepared.acceptable) {
+          status.textContent = `KING Claim 輸入長度：${prepared.byteLength} bytes；至少需要 ${MINIMUM_OWNER_CLAIM_BYTES} bytes，尚未送出。`;
+          command.focus();
+          return;
+        }
+        status.textContent = `KING Claim 安全傳輸：HEX-V1 已送出；輸入長度=${prepared.byteLength} bytes`;
+        socket.send(prepared.transport + "\r\n");
+      } else {
+        socket.send(command.value + "\r\n");
+      }
+    }
+    command.value = "";
+  });
+</script></body></html>

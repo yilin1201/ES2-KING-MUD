@@ -1,0 +1,15 @@
+{
+  "name": "es2-king-webtelnet",
+  "private": true,
+  "version": "0.1.0",
+  "description": "ES2-KING 瀏覽器到 Telnet 的最小橋接入口",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check server.mjs",
+    "smoke": "node ../scripts/test_m30_deployment_smoke.mjs"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
