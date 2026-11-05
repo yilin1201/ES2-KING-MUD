@@ -76,6 +76,13 @@ def validate(runtime_mudlib: Path) -> None:
         if not target.is_file():
             raise RuntimeError(f"Runtime 缺少交易相依檔：{item.path}")
         actual = digest(target)
+        expansion_source = ROOT / "es2_king_expansion" / "runtime" / "mudlib" / item.path
+        if item.path == "cmds/std/buy.c" and expansion_source.is_file() and actual == digest(expansion_source):
+            current_text = target.read_text(encoding="utf-8")
+            if BUY_QUANTITY_UNGUARDED not in current_text and BUY_QUANTITY_GUARDED not in current_text:
+                raise RuntimeError("KING Expansion buy.c 數量解析區塊與已知契約不同，停止自動修改")
+            continue
+
         latest_source = LATEST / item.path
         # 最新 ES2M 檔案若與 Runtime 相同，保留所有上游內容。
         # buy.c 只允許針對已知數量解析區塊加上 KING Guard，不可整檔回退。
@@ -98,6 +105,20 @@ def apply(runtime_mudlib: Path) -> int:
     for item in OVERLAYS:
         source = SOURCE / item.path
         target = runtime_mudlib / item.path
+        expansion_source = ROOT / "es2_king_expansion" / "runtime" / "mudlib" / item.path
+        if item.path == "cmds/std/buy.c" and expansion_source.is_file() and digest(target) == digest(expansion_source):
+            current_text = target.read_text(encoding="utf-8")
+            if BUY_QUANTITY_GUARDED not in current_text:
+                if BUY_QUANTITY_UNGUARDED not in current_text:
+                    raise RuntimeError("KING Expansion buy.c 數量解析區塊與已知契約不同，停止自動修改")
+                target.write_text(
+                    current_text.replace(BUY_QUANTITY_UNGUARDED, BUY_QUANTITY_GUARDED, 1),
+                    encoding="utf-8",
+                )
+                changed += 1
+            (runtime_mudlib / "bin" / Path(item.path).with_suffix(".b")).unlink(missing_ok=True)
+            continue
+
         latest_source = LATEST / item.path
         if latest_source.is_file() and digest(target) == digest(latest_source):
             if item.path == "cmds/std/buy.c":
