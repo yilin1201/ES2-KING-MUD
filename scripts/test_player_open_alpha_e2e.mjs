@@ -502,8 +502,8 @@ async function exerciseShopQuantityJourney(p) {
   console.log(`PLAYER_ES2M_SHOP_QUANTITY_PASS:${p.id}:ordinary-source-money-atomic-delivery-persistence-ready`);
 }
 
-// Human／人類：帳號與顯示名稱都刻意接近 KING，仍必須是普通玩家。
-const human = await createCharacter({ id: humanId, raceChoice: "1", raceLabel: "human", genderChoice: "M", name: "KING" });
+// Human／人類：帳號 kinglook 與中文顯示名稱「金王」刻意接近 KING，仍必須是普通玩家；符合 Original ES2 僅允許中文字的名稱規則。
+const human = await createCharacter({ id: humanId, raceChoice: "1", raceLabel: "human", genderChoice: "M", name: "金王" });
 for (const denied of ["khome", "kgoto /d/snow/square", "call me->query_class()", "clone /obj/money/coin", "kadmin list"]) {
   const result = await command(human, denied);
   assert.match(result, /沒有這個指令|權限|不能|不允許|無法|只有 KING|What\?/);
