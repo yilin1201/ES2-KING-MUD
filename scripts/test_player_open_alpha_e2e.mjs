@@ -179,7 +179,8 @@ async function getEquipmentAndFight(p) {
   p.lastSentAt = Date.now();
   const combat = await waitForAfter(p, fightOffset, /好呀.*比武|開始對.*發動攻擊|攻擊|閃躲|招架|刺進|氣喘噓噓|呀 ～ 呀 ～|哇.*哭|打我/, 30000);
   assert.doesNotMatch(combat, /這裡禁止戰鬥|你想攻擊誰/);
-  await waitForAfter(p, fightOffset, /哇.*哭|打我/, 90000);
+  const outcome = await waitForAfter(p, fightOffset, /哇.*哭|打我|輸掉了這場比試/, 90000);
+  const lost = /輸掉了這場比試/.test(outcome);
   await delay(2500);
   const scoreAfterFight = await command(p, "score");
   const combatAfter = Number((scoreAfterFight.match(/實戰經驗[^0-9]*([0-9]+)/) || [])[1] || 0);
@@ -190,7 +191,7 @@ async function getEquipmentAndFight(p) {
   assert.ok(combatAfter >= combatBefore, `combat score regressed during NPC combat: ${combatBefore} -> ${combatAfter}`);
   // 此段普通玩家只使用基本木劍；martial art 必須由已映射特殊武學的有效命中取得，不在此偽造。
   assert.equal(martialAfter, martialBefore, `plain weapon combat unexpectedly changed martial art: ${martialBefore} -> ${martialAfter}`);
-  console.log(`PLAYER_COMBAT_FLOW_PASS:${p.id}:combat-${combatBefore}-${combatAfter}:plain-martial-unchanged-${martialAfter}`);
+  console.log(`PLAYER_COMBAT_FLOW_PASS:${p.id}:outcome-${lost ? "loss" : "win"}:combat-${combatBefore}-${combatAfter}:plain-martial-unchanged-${martialAfter}`);
   const recovered = await command(p, "look");
   assert.match(recovered, /小廣場|廣場北邊/);
   // Combat Recovery／戰鬥結束後不能只看到畫面：普通玩家必須恢復可操作狀態並能繼續世界移動。
