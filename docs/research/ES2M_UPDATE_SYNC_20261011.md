@@ -174,7 +174,7 @@
 - 保留 KING Owner 技能上限與權限核心：`feature/char/skill.c`、KADM Owner 授權程式。
 - 保留冷梅劍法、寒梅心法、傲梅暗劍訣三項凍結武學。
 - 保留振武軍營已驗證的 KING／ES2M 合併檔案。
-- 保留李家村已驗證拓樸、Original race ID `rainnar)、梅影風傳授門檻、潛行相容層及 WebTelnet 4000 Port。
+- 保留李家村已驗證拓樸、Original race ID `rainnar`、梅影風傳授門檻、潛行相容層及 WebTelnet 4000 Port。
 - 來源 Mudlib 中不存在的 KING-only 檔案不刪除；本次只對 ES2M 來源存在的 2,017 個路徑逐檔新增／覆蓋／保留。
 - Pinned Original ES2 基準未修改。
 
