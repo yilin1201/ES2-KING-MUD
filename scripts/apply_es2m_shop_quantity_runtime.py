@@ -37,6 +37,17 @@ OVERLAYS = (
 )
 
 
+# Latest ES2M buy.c may already contain the multi-buy implementation but not
+# the KING safety guard. Patch only the parser block; never replace the full
+# latest upstream file with the older 2026-10-05 overlay.
+BUY_QUANTITY_UNGUARDED = """    if( sscanf(item, "%d %s", amount, rest) == 2 && amount > 0 ) item = rest;
+    else amount = 1;"""
+BUY_QUANTITY_GUARDED = """    if( sscanf(item, "%d %s", amount, rest) == 2 ) {
+        if( amount < 1 ) return notify_fail("購買數量必須至少是一個。\\\\n");
+        item = rest;
+    } else amount = 1;"""
+
+
 def digest(path: Path) -> str:
     """計算固定 SHA-256，避免未知 Runtime 被靜默覆蓋。"""
 
@@ -66,8 +77,13 @@ def validate(runtime_mudlib: Path) -> None:
             raise RuntimeError(f"Runtime 缺少交易相依檔：{item.path}")
         actual = digest(target)
         latest_source = LATEST / item.path
-        # 最新 ES2M source mirror 已有相同交易功能時，保留新版，不回退至 2026-10-05 舊 overlay。
+        # 最新 ES2M 檔案若與 Runtime 相同，保留所有上游內容。
+        # buy.c 只允許針對已知數量解析區塊加上 KING Guard，不可整檔回退。
         if latest_source.is_file() and actual == digest(latest_source):
+            if item.path == "cmds/std/buy.c":
+                current_text = target.read_text(encoding="utf-8")
+                if BUY_QUANTITY_UNGUARDED not in current_text and BUY_QUANTITY_GUARDED not in current_text:
+                    raise RuntimeError("最新 ES2M buy.c 數量解析區塊與已知契約不同，停止自動修改")
             continue
         accepted_source = digest(source)
         if actual not in (item.baseline_sha256, accepted_source):
@@ -84,6 +100,16 @@ def apply(runtime_mudlib: Path) -> int:
         target = runtime_mudlib / item.path
         latest_source = LATEST / item.path
         if latest_source.is_file() and digest(target) == digest(latest_source):
+            if item.path == "cmds/std/buy.c":
+                current_text = target.read_text(encoding="utf-8")
+                if BUY_QUANTITY_GUARDED not in current_text:
+                    if BUY_QUANTITY_UNGUARDED not in current_text:
+                        raise RuntimeError("最新 ES2M buy.c 數量解析區塊與已知契約不同，停止自動修改")
+                    target.write_text(
+                        current_text.replace(BUY_QUANTITY_UNGUARDED, BUY_QUANTITY_GUARDED, 1),
+                        encoding="utf-8",
+                    )
+                    changed += 1
             continue
         if digest(target) != item.source_sha256:
             shutil.copy2(source, target)
