@@ -3,16 +3,131 @@
   "source_root": "es2m_source_mirror/mudlib",
   "original_reference_root": "/tmp/original-es2/mudlib",
   "overlay_root": "es2_king_expansion/runtime/mudlib",
-  "source_file_count": 1991,
-  "copied_new_count": 2,
-  "overwritten_existing_king_count": 1,
-  "already_matching_count": 1967,
+  "source_file_count": 2017,
+  "copied_new_count": 28,
+  "overwritten_existing_king_count": 13,
+  "already_matching_count": 1955,
   "preserved_king_custom_count": 21,
   "runtime_compatibility_patches": [
     "adm/daemons/logind.c: explicit get_gender prompt output for WebTelnet four-argument input_to"
   ],
   "source_differs_from_pinned_original_count": 186,
   "copied_new": [
+    {
+      "path": "d/graveyard/forest.c",
+      "status": "copied-new-path",
+      "sha256": "cb3fb7d45e2c48d073cf37e0b8b7233baf08d310ed5ae89c200535bf83e2ab3c"
+    },
+    {
+      "path": "d/graveyard/forest_e.c",
+      "status": "copied-new-path",
+      "sha256": "d59718f630dbac240dcb60d32bc15db4597e9d1c09ec7982ac990ea17360bb41"
+    },
+    {
+      "path": "d/graveyard/forest_w.c",
+      "status": "copied-new-path",
+      "sha256": "b6e83c63cd286288385a967993d1820cae9e5f80b0d876c0c753a26c097e4f2b"
+    },
+    {
+      "path": "d/graveyard/grave1.c",
+      "status": "copied-new-path",
+      "sha256": "2f2e2a84c89bef6ffead6f9261861a7e5533f86e7ad80fea085e52c6de48b9ed"
+    },
+    {
+      "path": "d/graveyard/grave2.c",
+      "status": "copied-new-path",
+      "sha256": "f7d7dfeb0263265158d16b8cbabbcc3b2dd22171d93df2b95772c7e71f61fc0a"
+    },
+    {
+      "path": "d/graveyard/grave3.c",
+      "status": "copied-new-path",
+      "sha256": "f0285a5d311ee4a66992264dc032c2b6187083919074a64d3a014b40202c669f"
+    },
+    {
+      "path": "d/graveyard/grave4.c",
+      "status": "copied-new-path",
+      "sha256": "e3c23e8d37f1b021f982b2d3328de9e591653120c2db8d2192f32afdd18c2f3c"
+    },
+    {
+      "path": "d/graveyard/grave5.c",
+      "status": "copied-new-path",
+      "sha256": "cbfadb265820b8f26a236839a93c17fb305e413e9d5c297bbb5484002afab188"
+    },
+    {
+      "path": "d/graveyard/grave6.c",
+      "status": "copied-new-path",
+      "sha256": "ca35daefecbd02e516d4132722cd17dbfd0f9cc0e633fe7701abed87b1dcbfa5"
+    },
+    {
+      "path": "d/graveyard/grave7.c",
+      "status": "copied-new-path",
+      "sha256": "4eab2b7b9c2b1e2459d6a4d73e3a464ef74e4cf7b38ba9695bdcc329df9efd2d"
+    },
+    {
+      "path": "d/graveyard/grave8.c",
+      "status": "copied-new-path",
+      "sha256": "de3b6b2f906e8b8d24290cafd415e2e83a811c0bef31d5bb1069677be7aba853"
+    },
+    {
+      "path": "d/graveyard/npc/barbarian.c",
+      "status": "copied-new-path",
+      "sha256": "6c2cea90fd0aec729d08c0a7f47e549d18953030e3e88bb4966757d80cef85fc"
+    },
+    {
+      "path": "d/graveyard/npc/dirty_taoist.c",
+      "status": "copied-new-path",
+      "sha256": "0a7e7b917c77182068004c52553c129444bc886cc170107244338476e4f3afde"
+    },
+    {
+      "path": "d/graveyard/npc/old_bonze.c",
+      "status": "copied-new-path",
+      "sha256": "5da8afe282ca2a17ff9f50be0d89353cea4c667257cca6d2d88fb9186eb427d6"
+    },
+    {
+      "path": "d/graveyard/npc/young_bonze.c",
+      "status": "copied-new-path",
+      "sha256": "ffed87687deb897ce3bd2bbff04b081377671e32100cf301d48f1a7106f94787"
+    },
+    {
+      "path": "d/graveyard/obj/brass_zenstaff.c",
+      "status": "copied-new-path",
+      "sha256": "f2e20c6fd0586762d64471416ff9f1d08c61500a26a828d2ee98832a39c88e80"
+    },
+    {
+      "path": "d/graveyard/obj/chrysoberyl_ring.c",
+      "status": "copied-new-path",
+      "sha256": "3b04ef83528e66ff71264ec8e2afd58e1f4a6e68bad7f80f4dfd9f035fdd7752"
+    },
+    {
+      "path": "d/graveyard/obj/rosary.c",
+      "status": "copied-new-path",
+      "sha256": "9b287d552aaf70558284ffc943d7a8f2b55b51cd4ae252fd915fecf887c7e199"
+    },
+    {
+      "path": "d/graveyard/obj/urn.c",
+      "status": "copied-new-path",
+      "sha256": "34e7d14788e946d2746e59ddeaa3710f8bea0225f5977d680d6b6113b05d8d52"
+    },
+    {
+      "path": "d/graveyard/shrine.c",
+      "status": "copied-new-path",
+      "sha256": "f00fbf79480b72a9b12cfc451bdbd0d355caccfda52ad8d1176657a5371a9ebf"
+    },
+    {
+      "path": "d/graveyard/weeds.c",
+      "status": "copied-new-path",
+      "sha256": "1b7e7d085a838be25bb38cded6dbd8bf64fb8dcbc12c7942343311d6d018404a"
+    },
+    {
+      "path": "daemon/skill/fonxiaoken.c",
+      "status": "copied-new-path",
+      "sha256": "1da8ae733446e76acd438a6d3596421a103b905bd15de998fdba210930f5de5d"
+    },
+    {
+      "path": "daemon/skill/longyeforce.c",
+      "status": "copied-new-path",
+      "sha256": "92b3760039b7fbd14ebdd276a64a7e91fcb2a1c9873daf2d128579e1af9158f1"
+    },
     {
       "path": "data/chinese.o",
       "status": "copied-new-path",
@@ -22,14 +137,101 @@
       "path": "data/emoted.o",
       "status": "copied-new-path",
       "sha256": "2c384ba97da0f36083e64f756105ecc1cef39ecdbebcac2bb68a1f532b95a1f2"
+    },
+    {
+      "path": "docs/help/fonxiaoken.txt",
+      "status": "copied-new-path",
+      "sha256": "6da7b193e0ef7528328a836444d82e03bdc61b2ddca19aa85d0e1c741512d743"
+    },
+    {
+      "path": "docs/help/longyeforce.txt",
+      "status": "copied-new-path",
+      "sha256": "d0c299bd2f636a9cf621a026d3e028aae3176bccf4b962608e36999f3986fff2"
+    },
+    {
+      "path": "docs/help/thief.longye.txt",
+      "status": "copied-new-path",
+      "sha256": "e4cddbabf2c546c12a0746223c37da56f1373f8160d703d621cd14e08a0ffb32"
     }
   ],
   "overwritten_existing_king": [
+    {
+      "path": "adm/daemons/chard.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "c7e126e047df9ca175f5e4fafb8e91e3353900f0fa7da3d49badc27a9799e8e1",
+      "source_sha256": "a3cda3169eb0bcc2f5909a34e3d81805279b788662871becc8558895f07513aa"
+    },
     {
       "path": "adm/daemons/logind.c",
       "status": "overwritten-existing-KING-file",
       "previous_king_sha256": "64a553461314488d305829ade02a581ac55925c25f6b9805cadbe716dc131e0d",
       "source_sha256": "f2c5cbe53aeb87d77dc4568396738c391ce7293a5c4c3e9b98726a697a7b43e4"
+    },
+    {
+      "path": "cmds/std/conjure.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "59e98d6b2acc06ac915d356076f10594058b56339bebe675aebe62e965cf705e",
+      "source_sha256": "221919199a07234f1520d99a3d57ad77f251e7dfccef072d3c44eff2939f5bab"
+    },
+    {
+      "path": "custom/legacy_npc/barbarian_chief.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "96661b50c876f30336f64108f49171dfb60430c1ee931cda7cb5a7759e19839a",
+      "source_sha256": "7da2d6b885cea8e53714592e1701e5ea5e7d28b1730bf2100a18ba7848e0dc1d"
+    },
+    {
+      "path": "custom/legacy_npc/lady.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "a922338d4e62b3890ca4ce06d7c93f69cb66b3c3dde27314b243227d1824ce4d",
+      "source_sha256": "065c1d047639f0ec0550d352edb82bc3e84d123be814e9b63e243c94bf619647"
+    },
+    {
+      "path": "custom/legacy_npc/wu_changuei.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "07935aadb120cef905a8d57a1ef674fd482abe2f212bb1678a1285d0580870b5",
+      "source_sha256": "568f71d12b63d08183e6510b64b5417dda5fa472483fecd5b8a5f14d3a73c308"
+    },
+    {
+      "path": "d/snow/small_temple.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "1c919078711f351ae21215e32c0e197634e5242a44f586d3e9f68d3bd3a46bd2",
+      "source_sha256": "2243a5edc373d65b23208fe4d3b10d2ffaa17a61d2108981e19f8fb1babc2328"
+    },
+    {
+      "path": "d/snow/wgate.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "9690854c428990e0b4f8b19b26539908e99ef2f4a0baa2c17f8afa19b8422f72",
+      "source_sha256": "2611feae1f8234aa1dddc4f6c252a3cd46dda3e284859c877ec735fd2b6ff9a5"
+    },
+    {
+      "path": "d/wutang/npc/yung_tai.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "7b5e3baf74fd29e2216bfecaa1f1f7c7f9008e1954827a3ecbc4fc0f0cbc2b5e",
+      "source_sha256": "b475c4c9377f8a28782c36d545c32a9697750c0849f69218b4acf4c1c2cfc555"
+    },
+    {
+      "path": "daemon/race/yaksa/devour.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "53c2b2b9b75cc34c340724682f07ccf1a6336e70ec5774d533306669d1aa842c",
+      "source_sha256": "0d9a36531b34159d7883dabe03953a56684fd923d3c9e379cb333bc2a90ae4f4"
+    },
+    {
+      "path": "daemon/race/yaksa.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "2df41c13cab1b8ae80852fc4b8d062996725694b0398b77aa632246e0c37ef1a",
+      "source_sha256": "bc5f353f1fc6ab664921de67113b2ae3341beca3db387a036d3df50cf76f0906"
+    },
+    {
+      "path": "daemon/skill/alchemy-wealth.c",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "5a3a619f4871181439fc2f333e5005699035d4657b874c60b658ffd46b15bf30",
+      "source_sha256": "346914841d1bd67b17382d71ef886c244510dace07643d75147aa1e967b07976"
+    },
+    {
+      "path": "docs/help/yaksa.txt",
+      "status": "overwritten-existing-KING-file",
+      "previous_king_sha256": "2734ab4dce817b3dbf947bf6bdf565bdd20dc47d8e882c5d0c0fb5664fede3c9",
+      "source_sha256": "9e9df83f8334550c076c5063a224cae13bb60a1338436f70311afaeca6d88fa1"
     }
   ],
   "already_matching": [
@@ -62,11 +264,6 @@
       "path": "adm/daemons/channeld.c",
       "status": "already-matches-ES2M",
       "sha256": "523c6a3f7e0fa33e44e80abda3280e3aecf98e2c36caf36cc7470f4e0cd8f9ae"
-    },
-    {
-      "path": "adm/daemons/chard.c",
-      "status": "already-matches-ES2M",
-      "sha256": "c7e126e047df9ca175f5e4fafb8e91e3353900f0fa7da3d49badc27a9799e8e1"
     },
     {
       "path": "adm/daemons/chinesed.c",
@@ -537,11 +734,6 @@
       "path": "cmds/std/close.c",
       "status": "already-matches-ES2M",
       "sha256": "924d31792ae2e1492291ca1710f7bd0b30a9591dc6e032a8242b233bd92fbd53"
-    },
-    {
-      "path": "cmds/std/conjure.c",
-      "status": "already-matches-ES2M",
-      "sha256": "59e98d6b2acc06ac915d356076f10594058b56339bebe675aebe62e965cf705e"
     },
     {
       "path": "cmds/std/convert.c",
@@ -2659,11 +2851,6 @@
       "sha256": "164e1bf5569a0a1408d8b5dcd00061978ab28147708465954c46afffcba300c9"
     },
     {
-      "path": "custom/legacy_npc/barbarian_chief.c",
-      "status": "already-matches-ES2M",
-      "sha256": "96661b50c876f30336f64108f49171dfb60430c1ee931cda7cb5a7759e19839a"
-    },
-    {
       "path": "custom/legacy_npc/black_hell_agent.c",
       "status": "already-matches-ES2M",
       "sha256": "7c2620c66ae2255998016088dc0b9bc7587c9bb7430321aa32f100432a06a14a"
@@ -2837,11 +3024,6 @@
       "path": "custom/legacy_npc/ku_wu_wang.c",
       "status": "already-matches-ES2M",
       "sha256": "59562c39841327eb673a01e8c08efa264050c4eb2e27a3afd6963b9d312bd87d"
-    },
-    {
-      "path": "custom/legacy_npc/lady.c",
-      "status": "already-matches-ES2M",
-      "sha256": "a922338d4e62b3890ca4ce06d7c93f69cb66b3c3dde27314b243227d1824ce4d"
     },
     {
       "path": "custom/legacy_npc/lay_ton.c",
@@ -3122,11 +3304,6 @@
       "path": "custom/legacy_npc/white_hell_agent.c",
       "status": "already-matches-ES2M",
       "sha256": "338366238979ea1985f00e33bcd2cb49ce7a271235d37455bbdd328d0ff2e3b9"
-    },
-    {
-      "path": "custom/legacy_npc/wu_changuei.c",
-      "status": "already-matches-ES2M",
-      "sha256": "07935aadb120cef905a8d57a1ef674fd482abe2f212bb1678a1285d0580870b5"
     },
     {
       "path": "custom/legacy_npc/wu_dauton.c",
@@ -6164,11 +6341,6 @@
       "sha256": "92518b599f86ffc1c4207af72485302905264473339654df60160193f556586d"
     },
     {
-      "path": "d/snow/small_temple.c",
-      "status": "already-matches-ES2M",
-      "sha256": "1c919078711f351ae21215e32c0e197634e5242a44f586d3e9f68d3bd3a46bd2"
-    },
-    {
       "path": "d/snow/smithy.c",
       "status": "already-matches-ES2M",
       "sha256": "6b14b8cca5a0df7589569b4c3adee92512d88d35be516ac2f1499a766eec0a38"
@@ -6217,11 +6389,6 @@
       "path": "d/snow/tree.c",
       "status": "already-matches-ES2M",
       "sha256": "74e559a66231816cd81476a620e8737a63685498117827ed43e7a8bfe086e7b9"
-    },
-    {
-      "path": "d/snow/wgate.c",
-      "status": "already-matches-ES2M",
-      "sha256": "9690854c428990e0b4f8b19b26539908e99ef2f4a0baa2c17f8afa19b8422f72"
     },
     {
       "path": "d/snow/wstreet1.c",
@@ -7174,11 +7341,6 @@
       "sha256": "29a1932e2010c5656b8a89232e277eb75e68d9324351d6159c00fb14deb3a523"
     },
     {
-      "path": "d/wutang/npc/yung_tai.c",
-      "status": "already-matches-ES2M",
-      "sha256": "7b5e3baf74fd29e2216bfecaa1f1f7c7f9008e1954827a3ecbc4fc0f0cbc2b5e"
-    },
-    {
       "path": "d/wutang/obj/blue_cloth.c",
       "status": "already-matches-ES2M",
       "sha256": "5ed31869f93c812680b72e7f7a05a72cb0f54134a18a03b81bbacba46883ab00"
@@ -7759,16 +7921,6 @@
       "sha256": "05ae62870b47ed8e27d4b20e3b66c1d97b4622efa6ef9d206ba17df3598e30d3"
     },
     {
-      "path": "daemon/race/yaksa/devour.c",
-      "status": "already-matches-ES2M",
-      "sha256": "53c2b2b9b75cc34c340724682f07ccf1a6336e70ec5774d533306669d1aa842c"
-    },
-    {
-      "path": "daemon/race/yaksa.c",
-      "status": "already-matches-ES2M",
-      "sha256": "2df41c13cab1b8ae80852fc4b8d062996725694b0398b77aa632246e0c37ef1a"
-    },
-    {
       "path": "daemon/race/yenhold/breathe.c",
       "status": "already-matches-ES2M",
       "sha256": "193bd26caaac7d947573075a00c3e4d7c932498cd698a804404435db9a5b2a85"
@@ -7787,11 +7939,6 @@
       "path": "daemon/skill/alchemy-medication.c",
       "status": "already-matches-ES2M",
       "sha256": "0a3a0e8655d308d5cbfb7bcee604e12145f7c0c848fc9cf4e10ef8a4cf92fd3c"
-    },
-    {
-      "path": "daemon/skill/alchemy-wealth.c",
-      "status": "already-matches-ES2M",
-      "sha256": "5a3a619f4871181439fc2f333e5005699035d4657b874c60b658ffd46b15bf30"
     },
     {
       "path": "daemon/skill/amazing-needle.c",
@@ -8522,11 +8669,6 @@
       "path": "docs/help/wuto-needle.txt",
       "status": "already-matches-ES2M",
       "sha256": "438f19157a84cb76e98b9ce7fd9da7b7eb741387facec5aa5e4fa15c4092b009"
-    },
-    {
-      "path": "docs/help/yaksa.txt",
-      "status": "already-matches-ES2M",
-      "sha256": "2734ab4dce817b3dbf947bf6bdf565bdd20dc47d8e882c5d0c0fb5664fede3c9"
     },
     {
       "path": "docs/help/yenhold.txt",
@@ -9988,7 +10130,7 @@
       "path": "feature/char/skill.c",
       "status": "preserved-KING-owner-customization-pending-ES2M-merge",
       "king_sha256": "913252ad2c4604d10b5e5a551af1c2149a290c423fc1986f684d248c1d6e1990",
-      "es2m_sha256": "79b2cb42db3b092f5ba098a568aafd53ebb2e11087b6534e3565141c701499a5"
+      "es2m_sha256": "f6c36909f93c89def75c7519bac851d012cb38e3159095ad8e66fa9edb36619c"
     },
     {
       "path": "include/globals.h",
@@ -10007,7 +10149,7 @@
     {
       "path": "adm/daemons/chard.c",
       "status": "ES2M-differs-from-pinned-original",
-      "source_sha256": "c7e126e047df9ca175f5e4fafb8e91e3353900f0fa7da3d49badc27a9799e8e1",
+      "source_sha256": "a3cda3169eb0bcc2f5909a34e3d81805279b788662871becc8558895f07513aa",
       "original_sha256": "c583ed940d0c59e01af2e1b5c6eaddcfa1a222e3a14ef41cda45d6f9c178750d"
     },
     {
@@ -10151,7 +10293,7 @@
     {
       "path": "cmds/std/conjure.c",
       "status": "ES2M-differs-from-pinned-original",
-      "source_sha256": "59e98d6b2acc06ac915d356076f10594058b56339bebe675aebe62e965cf705e",
+      "source_sha256": "221919199a07234f1520d99a3d57ad77f251e7dfccef072d3c44eff2939f5bab",
       "original_sha256": "15f27fd01b019144197cb72be7866cf501369d6ef867b358d74ef47de9283192"
     },
     {
@@ -10667,7 +10809,7 @@
     {
       "path": "d/snow/small_temple.c",
       "status": "ES2M-differs-from-pinned-original",
-      "source_sha256": "1c919078711f351ae21215e32c0e197634e5242a44f586d3e9f68d3bd3a46bd2",
+      "source_sha256": "2243a5edc373d65b23208fe4d3b10d2ffaa17a61d2108981e19f8fb1babc2328",
       "original_sha256": "66fc3168e65c0a7247461e16de87b80ebba72d6badc71a6fb6d2bb153e6cece3"
     },
     {
@@ -10733,7 +10875,7 @@
     {
       "path": "d/snow/wgate.c",
       "status": "ES2M-differs-from-pinned-original",
-      "source_sha256": "9690854c428990e0b4f8b19b26539908e99ef2f4a0baa2c17f8afa19b8422f72",
+      "source_sha256": "2611feae1f8234aa1dddc4f6c252a3cd46dda3e284859c877ec735fd2b6ff9a5",
       "original_sha256": "4d034f33cc815d5e227d505ad6d5552611970187192930706733404f4a3cd134"
     },
     {
@@ -10835,7 +10977,7 @@
     {
       "path": "feature/char/skill.c",
       "status": "ES2M-differs-from-pinned-original",
-      "source_sha256": "79b2cb42db3b092f5ba098a568aafd53ebb2e11087b6534e3565141c701499a5",
+      "source_sha256": "f6c36909f93c89def75c7519bac851d012cb38e3159095ad8e66fa9edb36619c",
       "original_sha256": "0b9366f9ba05c0a242439605736ef4770dc2d1f17cd9ea03a1ad2d034abaf2f2"
     },
     {
