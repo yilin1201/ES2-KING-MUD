@@ -54,6 +54,12 @@ RUN bash scripts/test_race_phase2_static.sh \
 
 RUN echo "[M30 BUILD 4/5] Apply ES2-KING Expansion overlay" \
     && bash scripts/apply_es2_king_expansion.sh /opt/es2-king/runtime
+
+# Expansion may restore the frozen KING buy.c baseline; reapply the hash-guarded ES2M shop safety delta last.
+RUN python3 scripts/apply_es2m_shop_quantity_runtime.py --runtime /opt/es2-king/runtime/mudlib \
+    && grep -Fq 'if( amount < 1 )' /opt/es2-king/runtime/mudlib/cmds/std/buy.c \
+    && test ! -e /opt/es2-king/runtime/mudlib/bin/cmds/std/buy.b \
+    && echo "ES2M_SHOP_QUANTITY_FINAL_RUNTIME_PASS"
 # ES2M Sneak Progression／確認潛行成長規則與 Original combatd API 相容，且已進入生成 Runtime。
 RUN python3 scripts/test_es2m_sneak_progression.py --runtime /opt/es2-king/runtime/mudlib
 # ES2M Training Dummy／驗證假人命中、fight/kill/look 與私塾更新已實際套用到生成 Runtime。
