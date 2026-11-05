@@ -43,7 +43,7 @@ OVERLAYS = (
 BUY_QUANTITY_UNGUARDED = """    if( sscanf(item, "%d %s", amount, rest) == 2 && amount > 0 ) item = rest;
     else amount = 1;"""
 BUY_QUANTITY_GUARDED = """    if( sscanf(item, "%d %s", amount, rest) == 2 ) {
-        if( amount < 1 ) return notify_fail("購買數量必須至少是一個。\\\\n");
+        if( amount < 1 ) return notify_fail("購買數量必須至少是一個。\\n");
         item = rest;
     } else amount = 1;"""
 
