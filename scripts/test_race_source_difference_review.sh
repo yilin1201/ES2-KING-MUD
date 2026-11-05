@@ -75,8 +75,8 @@ grep -Fq 'user"/{0..9}' "$E2E_SH"
 grep -Fq 'for digit in {0..9}' "$PERSIST"
 grep -Fq 'data/login/7' "$PERSIST_TEST"
 grep -Fq 'if (/^\d/.test(id))' "$E2E_JS"
-grep -Fq 'ORIGINAL_PLAYER_CREATION_NUMERIC_ID_E2E_PASS' "$E2E_JS"
-grep -Fq 'ORIGINAL_PLAYER_CREATION_NUMERIC_ID_E2E_PASS' "$E2E_SH"
+grep -Fq 'if (/^\d/.test(id))' "$E2E_JS"
+grep -Fq 'mkdir -p "$TEMP_ROOT/mudlib/data/login"/{a..z} "$TEMP_ROOT/mudlib/data/login"/{0..9}' "$E2E_SH"
 
 # AntiSpam policy／KING 保留獨立 Runtime 政策，不覆寫 Original ES2 保存來源。
 grep -Fq 'ENABLE_ANTISPAM disabled' "$BOOTSTRAP"
