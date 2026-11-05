@@ -17,7 +17,11 @@ int main(object me, string arg)
         return notify_fail("指令格式﹕buy [數量] <某物> from <某人>\n");
 
     // buy 10 manto from waiter：一次買多個。
-    if( sscanf(item, "%d %s", amount, rest) == 2 && amount > 0 ) item = rest;
+    // KING Runtime Guard：明確拒絕 0／負數，避免被當成商品名稱送入 Vendor。
+    if( sscanf(item, "%d %s", amount, rest) == 2 ) {
+        if( amount < 1 ) return notify_fail("數量必須至少是一個。\n");
+        item = rest;
+    }
     else amount = 1;
     if( amount > 100 ) return notify_fail("一次最多只能買一百個。\n");
 
