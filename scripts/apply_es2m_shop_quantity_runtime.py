@@ -110,6 +110,8 @@ def apply(runtime_mudlib: Path) -> int:
                         encoding="utf-8",
                     )
                     changed += 1
+                # Targeted source patch must also invalidate Neolith's compiled LPC cache.
+                (runtime_mudlib / "bin" / Path(item.path).with_suffix(".b")).unlink(missing_ok=True)
             continue
         if digest(target) != item.source_sha256:
             shutil.copy2(source, target)
