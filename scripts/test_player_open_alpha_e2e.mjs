@@ -447,7 +447,10 @@ async function exerciseShopQuantityJourney(p) {
   assert.match(await command(p, "buy 1 fur hat from yu"), /買下一頂毛皮帽/);
   assert.match(await command(p, "wear fur hat"), /戴上.*毛皮帽|穿上.*毛皮帽|裝備.*毛皮帽/);
   assert.match(await command(p, "remove fur hat"), /脫了下來|卸除/);
-  assert.match(await command(p, "inventory"), /一百九十文錢/);
+  inventory = await command(p, "inventory");
+  // pay_money() 正常化面額：190 文等值為一兩碎銀 + 九十文錢。
+  assert.match(inventory, /一兩碎銀/);
+  assert.match(inventory, /九十文錢/);
   assert.match(await command(p, "west"), /街道/);
   assert.match(await command(p, "north"), /廣場/);
   assert.match(await command(p, "north"), /廣場中央/);
@@ -464,7 +467,8 @@ async function exerciseShopQuantityJourney(p) {
   assert.match(await command(p, "buy 31 chicken from waiter"), /只剩下三十隻/);
   assert.match(await command(p, "buy 1 chicken from waiter"), /錢不夠/);
   inventory = await command(p, "inventory");
-  assert.match(inventory, /一百九十文錢/);
+  assert.match(inventory, /一兩碎銀/);
+  assert.match(inventory, /九十文錢/);
 
   // Delivery Failure／交貨失敗：點餐後立刻離房，店小二取消交貨且不得扣款。
   const leaveBuyOffset = p.output.length;
@@ -477,7 +481,8 @@ async function exerciseShopQuantityJourney(p) {
   await waitForAfter(p, leaveOffset, /廣場的西邊/);
   await delay(3500);
   const unchanged = await command(p, "inventory");
-  assert.match(unchanged, /一百九十文錢/);
+  assert.match(unchanged, /一兩碎銀/);
+  assert.match(unchanged, /九十文錢/);
   assert.doesNotMatch(unchanged, /牛肉包子/);
   assert.match(await command(p, "west"), /客棧大堂/);
 
@@ -490,7 +495,9 @@ async function exerciseShopQuantityJourney(p) {
   await waitForAfter(p, singleOffset, /正忙著招呼其他客人/);
   await waitForAfter(p, singleOffset, /買下一個牛肉包子/, 30000);
   inventory = await command(p, "inventory");
-  assert.match(inventory, /一百八十文錢/);
+  // 180 文等值為一兩碎銀 + 八十文錢，確認只扣除一個包子的價格。
+  assert.match(inventory, /一兩碎銀/);
+  assert.match(inventory, /八十文錢/);
   assert.match(inventory, /牛肉包子/);
   assert.equal((inventory.match(/牛肉包子/g) || []).length, 1);
   assert.match(await command(p, "buy 50 dumpling from waiter"), /只剩下四十九個/);
