@@ -70,7 +70,7 @@ GitHub Actions `Sync ES2M Files Into KING Overlay`（Run 42541479251）成功：
 - Khome／梅寒霜靜態入口檢查：PASS（同步 Workflow step 6；M30 Alpha step 6）。\n- ES2M 最新來源鏡像：1,829／1,829 個 Blob SHA 與 ES2M-KDS HEAD 完全一致。\n- 技能指令回歸測試曾因仍拿舊 Snapshot 比較最新 Overlay 而 FAIL；已將測試基準修正為最新 Source Mirror，舊 Snapshot 保留為歷史備援。
 - M27 無極之境靜態與 Runtime Gate：PASS（本輪初始提交之 Workflow）。
 - ES2M Update Sync Regression：PASS（本輪初始提交之 Workflow）。
-- Khome 實際玩家 E2E：本次尚未執行；已將 `khome`、`look`、`look board`、`returnhome` 驗收加入既有 `test_cold_plum_arena_runtime_e2e.mjs`，待可用真實 Driver fixture 執行。
+- Khome 實際玩家 E2E：已將 `khome`、`look`、`look board`、`returnhome` 驗收加入 `test_cold_plum_arena_runtime_e2e.mjs` 與 `test_k_admin_runtime_e2e.mjs`；這兩支完整互動 E2E 本輪尚未執行。\n- M27 Runtime Gate 已擴充為檢查生成後 Runtime 的 Khome command/home hall、演武界 room、梅寒霜 NPC、`setup()` 及雙向出口，不只檢查 Repository 靜態路徑。
 - 梅寒霜完整戰鬥 E2E：既有測試程式保留；本次靜態入口通過不取代完整戰鬥 Runtime 驗收。
 - Render 正式部署：未因本次 GitHub commit 自動宣告完成，需以公開服務 build_commit 與部署狀態另行核對。
 

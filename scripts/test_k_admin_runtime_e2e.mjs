@@ -76,7 +76,13 @@ for (const command of [
 console.log("K_HELP_PASS:command-help");
 
 // Owner command／只做非破壞性查詢；Canon 與武學不在本輪改寫。
-has(await king.command("khome"), /天神殿・無極之境/);
+// Khome／Owner 私人家園與 kinghome 神域入口分離驗收。
+has(await king.command("khome"), /私人家園/);
+const homeLook = await king.command("look");
+has(homeLook, /家園大廳/); has(homeLook, /家園管家/); has(homeLook, /儲物箱/); has(homeLook, /告示板/);
+has(await king.command("look board"), /家園告示板/);
+has(await king.command("returnhome"), /飲風客棧/);
+has(await king.command("kinghome"), /天神殿・無極之境/);
 has(await king.command("kcreate list"), /KING 可建立項目/);
 has(await king.command("kcanon"), /格式：kcanon/);
 has(await king.command("kmartial daxie status"), /哭笑門心法/);
