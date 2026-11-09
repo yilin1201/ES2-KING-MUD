@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# ES2M Cold Plum LPC Load Gate／以真正 Neolith 載入新增武學、NPC 強度與五堂鎮 NPC。
+# ES2M Cold Plum + Khome/Mei LPC Load Gate／以真正 Neolith 載入武學、自宅、演武界及梅寒霜。
 # 這是編譯／載入驗證，不等同玩家完整拜師、學武或戰鬥 E2E。
 ROOT="${1:-.runtime/es2-king}"
 LOG="$(mktemp)"
@@ -33,7 +33,12 @@ for obj in \
   /daemon/skill/mayin \
   /daemon/skill/seven \
   /daemon/misc/npc_power \
-  /d/wutang/crossroad
+  /d/wutang/crossroad \
+  /cmds/adm/khome \
+  /custom/home/room/home_hall \
+  /d/king/wuji_realm \
+  /d/arena/yanwujie \
+  /d/arena/npc/mei_hanshuang
 do
   grep -Fqx "$obj" "$PRELOAD" || printf '%s\n' "$obj" >> "$PRELOAD"
 done
@@ -74,12 +79,12 @@ else:
     raise SystemExit("ES2M COLD PLUM LOAD FAIL：60 秒內未監聽 TCP 4000。")
 PY
 
-if grep -Eiq 'Error in loading object: /(std/martial_art|daemon/skill/(lunmay|hainmay_force|advance_lunmay|mayin|seven)|daemon/misc/npc_power|std/char/npc|d/wutang/(crossroad|npc/may_yin_fong))|((compile|syntax) error).*(martial_art|lunmay|hainmay_force|advance_lunmay|mayin|seven|npc_power|may_yin_fong|crossroad)' "$LOG" "$DEBUG_LOG"; then
+if grep -Eiq 'Error in loading object: /(std/martial_art|daemon/skill/(lunmay|hainmay_force|advance_lunmay|mayin|seven)|daemon/misc/npc_power|std/char/npc|d/wutang/(crossroad|npc/may_yin_fong)|cmds/adm/khome|custom/home/room/home_hall|d/king/wuji_realm|d/arena/(yanwujie|npc/mei_hanshuang))|((compile|syntax) error).*(martial_art|lunmay|hainmay_force|advance_lunmay|mayin|seven|npc_power|may_yin_fong|crossroad|khome|home_hall|wuji_realm|yanwujie|mei_hanshuang)' "$LOG" "$DEBUG_LOG"; then
   cat "$LOG"
   tail -n 200 "$DEBUG_LOG" 2>/dev/null || true
   echo "ES2M COLD PLUM LOAD FAIL：新增武學、NPC 強度或梅影風發生 LPC 載入錯誤。" >&2
   exit 1
 fi
 
-echo "ES2M COLD PLUM LPC LOAD PASS／Neolith 啟動與新版武學、NPC 強度、五堂鎮梅影風載入檢查通過。"
-echo "STATUS=LOAD_ONLY; PLAYER_APPRENTICESHIP_AND_COMBAT_E2E_NOT_CLAIMED"
+echo "ES2M COLD PLUM + KHOME/MEI LPC LOAD PASS／Neolith 已載入新版武學、Khome 指令、家園大廳、無極之境、演武界與梅寒霜 NPC。"
+echo "STATUS=LOAD_ONLY; KHOME_INTERACTIVE_AND_MEI_COMBAT_E2E_NOT_CLAIMED"
