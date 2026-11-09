@@ -22,6 +22,7 @@ ES2_TEST_PORT="$WEB_PORT" node -e 'const h=require("http"),d=Date.now()+10000;(f
 LOG="$TEMP_ROOT/cold-plum.log"
 ES2_E2E_WS_URL="ws://127.0.0.1:$WEB_PORT/mud" ES2_E2E_KING_PASSWORD="$TEST_PASSWORD" node "$REPO_ROOT/scripts/test_cold_plum_arena_runtime_e2e.mjs" | tee "$LOG"
 for marker in \
+  COLD_PLUM_PASS:khome-private-home \
   COLD_PLUM_PASS:king-99-skills-admin \
   COLD_PLUM_PASS:wuji-enter-yanwujie \
   COLD_PLUM_PASS:npc-attributes-skills \
@@ -39,4 +40,4 @@ for marker in \
 do
   grep -Fq "$marker" "$LOG"
 done
-echo "COLD PLUM RUNTIME PASS：真實 Neolith Driver 已驗證 KING 八屬性 99、KING 技能 Lv.300、冷梅莊技能、演武界雙向拓撲、梅寒霜 50/300、明鏡止水、冷梅 Phase 1、30 招傲劍切換、傲劍 Phase 2、劍領風騷隨機六段連擊、戰後冷梅 reset、Combat、Arena 敗北保護及 save／quit／relogin／restore。"
+echo "COLD PLUM RUNTIME PASS：真實 Neolith Driver 已驗證 Khome Owner 私人家園、KING 八屬性 99、KING 技能 Lv.300、冷梅莊技能、演武界雙向拓撲、梅寒霜 50/300、明鏡止水、冷梅 Phase 1、30 招傲劍切換、傲劍 Phase 2、劍領風騷隨機六段連擊、戰後冷梅 reset、Combat、Arena 敗北保護及 save／quit／relogin／restore。"

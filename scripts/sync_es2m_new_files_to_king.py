@@ -39,6 +39,8 @@ PROTECTED_KING_PATHS = {
     "d/lee/square_w.c",
     # KING WebTelnet 內部 MUD listener 使用 4000；上游 globals.h 的 4001 不可直接覆蓋 Runtime。
     "include/globals.h",
+    # Khome 是 KING Owner 私人家園入口；上游 help 同名檔不可覆蓋 KING 操作說明。
+    "docs/help/home_help.txt",
 }
 KING_ZHENWU_GUARDS = {
     "custom/zhenwu/npc/lu_xinien.c": (
@@ -127,6 +129,7 @@ def verify_king_owner_guards(overlay: Path, repo_root: Path) -> None:
         "adm/daemons/kadmind.c": ('query("id") == "king"', "is_owner"),
         "cmds/adm/kadmin.c": ("K->is_owner(me)", "KING Owner"),
         "cmds/adm/admin.c": ("ES2-KING Expansion", "管理員"),
+        "docs/help/home_help.txt": ("入口指令：khome", "kinghome", "/d/arena/yanwujie", "私人儲物箱"),
     }
     for rel, markers in checks.items():
         path = overlay / rel
@@ -300,6 +303,8 @@ def main() -> int:
                 status = "preserved-KING-WebTelnet-port-compatibility"
             elif rel_name in KING_LEE_TOPOLOGY_GUARDS:
                 status = "preserved-KING-LEE-topology-compatibility"
+            elif rel_name == "docs/help/home_help.txt":
+                status = "preserved-KING-private-home-command-documentation"
             else:
                 raise SystemExit(f"FAIL: unclassified protected KING path: {rel_name}")
             preserved_king.append({

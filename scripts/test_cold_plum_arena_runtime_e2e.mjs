@@ -106,12 +106,24 @@ for (const path of [
   "/adm/daemons/kingd",
   "/adm/daemons/kingmartiald",
   "/cmds/adm/kinghome",
+  "/cmds/adm/khome",
   "/d/arena/skill/lunmay",
   "/d/arena/skill/rulai_shenzhang",
   "/d/arena/obj/charred_plum_branch",
   "/d/arena/npc/mei_hanshuang",
   "/d/arena/yanwujie",
 ]) assert.match(await command("update " + path), /更新|載入|重新編譯|成功|Ok/i);
+
+// Khome／先驗證真正的 Owner 私人家園，而非誤入 kinghome 神域。
+assert.match(await command("khome"), /私人家園/);
+const homeLook = await command("look");
+assert.match(homeLook, /家園大廳/);
+assert.match(homeLook, /家園管家/);
+assert.match(homeLook, /儲物箱/);
+assert.match(homeLook, /告示板/);
+assert.match(await command("look board"), /家園告示板/);
+assert.match(await command("returnhome"), /飲風客棧/);
+console.log("COLD_PLUM_PASS:khome-private-home");
 
 assert.match(await command("kinghome"), /天神殿・無極之境/);
 await verifyKingProfile();

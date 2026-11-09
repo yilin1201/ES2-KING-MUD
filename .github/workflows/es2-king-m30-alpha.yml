@@ -18,6 +18,9 @@ jobs:
         run: bash scripts/bootstrap_original_es2.sh .runtime/es2-king
       - name: Apply Expansion／套用 M26-M29 overlay
         run: bash scripts/apply_es2_king_expansion.sh .runtime/es2-king
+      # Khome／梅寒霜入口靜態閘門：確認 Owner 家園與演武界 NPC 拓撲不再斷鏈。
+      - name: Khome and Mei entry wiring／自宅與梅寒霜入口
+        run: bash scripts/test_khome_mei_presence_static.sh
       # ES2M Training Dummy／實際生成 Runtime 的假人戰鬥與私塾更新閘門。
       - name: ES2M training dummy and teacher／練武假人與私塾整合
         run: python3 scripts/test_es2m_training_dummy.py --runtime .runtime/es2-king
