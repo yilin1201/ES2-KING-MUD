@@ -1,5 +1,5 @@
 name: Sync ES2M Files Into KING Overlay
-# 2026-11-03：依使用者授權重新執行最新 ES2M 全量同步；同路徑覆蓋、新檔新增，保留 KING 專屬保護項目。
+# 2026-11-09：來源改為使用者指定的 ES2M-KDS main；KING 僅讀取來源並單向整合。
 
 on:
   push:
@@ -36,10 +36,11 @@ jobs:
           git clone --no-checkout https://github.com/taedlar/es2_mudlib.git /tmp/original-es2
           git -C /tmp/original-es2 checkout --detach "$ORIGINAL_ES2_COMMIT"
 
-      - name: Fetch latest ES2M source and refresh read-only source mirror
+      - name: Fetch latest ES2M-KDS source and refresh read-only source mirror
         id: es2m
         run: |
-          git clone --depth 1 https://github.com/wolfer168/es2-webmud.git /tmp/es2m-latest
+          set -euo pipefail
+          git clone --depth 1 https://github.com/kds121tw/ES2M-KDS.git /tmp/es2m-latest
           ES2M_COMMIT=$(git -C /tmp/es2m-latest rev-parse HEAD)
           echo "commit=$ES2M_COMMIT" >> "$GITHUB_OUTPUT"
           test -d /tmp/es2m-latest/source/upstream/mudlib
@@ -58,8 +59,8 @@ jobs:
                   "sha256": hashlib.sha256(raw).hexdigest(),
               })
           manifest = {
-              "purpose": "ES2M 最新原始 Mudlib 唯讀鏡像；不得直接視為 Original ES2，也不直接取代 KING 專屬資料。",
-              "source_repository": "wolfer168/es2-webmud",
+              "purpose": "ES2M-KDS 最新原始 Mudlib 唯讀鏡像；不得直接視為 Original ES2，也不直接取代 KING 專屬資料。",
+              "source_repository": "kds121tw/ES2M-KDS",
               "source_branch": "main",
               "source_commit": os.environ["ES2M_COMMIT"],
               "source_path": "source/upstream/mudlib/",
@@ -68,10 +69,11 @@ jobs:
               "hash_algorithm": "SHA-256",
               "files": files,
               "policy": [
-                  "更新前以最新 ES2M main 為來源。",
+                  "更新前以 ES2M-KDS main 為來源。",
                   "鏡像只保留來源 Mudlib 當前存在的檔案。",
                   "KING runtime overlay 依來源同路徑覆蓋；不刪除來源中不存在的 KING 專屬檔案。",
-                  "Pinned Original ES2 checkout 僅供比較，絕不修改。"
+                  "Pinned Original ES2 checkout 僅供比較，絕不修改。",
+                  "本 Workflow 僅由 KING Repository 執行，不向 ES2M 或 KDS 推送。"
               ]
           }
           Path("es2m_source_mirror/MANIFEST.json").write_text(
@@ -84,13 +86,16 @@ jobs:
           }, ensure_ascii=False))
           PY
 
-      - name: Sync all latest ES2M files into KING overlay and overwrite same-path files
+      - name: Sync latest ES2M files into KING overlay with protected KING customizations
         run: |
           python3 scripts/sync_es2m_new_files_to_king.py \
             --source es2m_source_mirror/mudlib \
             --original /tmp/original-es2/mudlib \
             --overlay es2_king_expansion/runtime/mudlib \
             --report docs/research/ES2M_NEW_FILES_IMPORT_REPORT.json
+
+      - name: Verify Khome and Mei Han-shuang entry wiring
+        run: bash scripts/test_khome_mei_presence_static.sh
 
       - name: Commit synchronized mirror, KING overlay and import report
         env:
@@ -104,5 +109,5 @@ jobs:
             echo "KING overlay already matches the latest ES2M source: $ES2M_COMMIT"
             exit 0
           fi
-          git commit -m "sync: import latest ES2M $ES2M_COMMIT and overwrite KING overlay"
+          git commit -m "sync: import latest ES2M-KDS $ES2M_COMMIT into KING"
           git push origin "HEAD:refs/heads/$TARGET_BRANCH"
