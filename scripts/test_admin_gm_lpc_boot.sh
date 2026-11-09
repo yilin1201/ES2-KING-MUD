@@ -37,7 +37,9 @@ DRIVER="$(find "$ROOT/neolith/out" -type f -name neolith -perm -111 | head -n 1)
 
 # Load-only gate: production clients connect through WebTelnet/RealIPD; direct Telnet is not a valid E2E path.
 PRELOAD="$ROOT/mudlib/adm/etc/preload"
-grep -Fqx '/cmds/adm/admin' "$PRELOAD" || echo '/cmds/adm/admin' >> "$PRELOAD"
+for obj in /cmds/adm/admin /cmds/adm/khome; do
+  grep -Fqx "$obj" "$PRELOAD" || echo "$obj" >> "$PRELOAD"
+done
 
 cd "$ROOT"
 "$DRIVER" -f neolith.conf >"$LOG" 2>&1 &
@@ -65,9 +67,11 @@ if grep -Eiq "Error in loading object.*cmds/adm/admin|admin\.c.*(compile error|s
   exit 1
 fi
 
-if ! grep -Fq 'preloaded cmds/adm/admin' "$DEBUG_LOG"; then
-  echo 'ADMIN GM LPC LOAD FAIL：debug.log 未確認 admin command 成功 preload。' >&2
-  exit 1
-fi
+for obj in admin khome; do
+  if ! grep -Fq "preloaded cmds/adm/$obj" "$DEBUG_LOG"; then
+    echo "ADMIN GM LPC LOAD FAIL：debug.log 未確認 cmds/adm/$obj 成功 preload。" >&2
+    exit 1
+  fi
+done
 
-echo 'ADMIN GM LPC LOAD PASS／admin.c 已由 Neolith 成功編譯並載入。'
+echo 'ADMIN GM LPC LOAD PASS／admin.c 與 khome.c 已由 Neolith 成功編譯並載入。'
