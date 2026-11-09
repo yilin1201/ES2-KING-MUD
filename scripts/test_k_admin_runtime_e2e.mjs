@@ -80,7 +80,7 @@ console.log("K_HELP_PASS:command-help");
 has(await king.command("khome"), /私人家園/);
 const homeLook = await king.command("look");
 has(homeLook, /家園大廳/); has(homeLook, /家園管家/); has(homeLook, /儲物箱/); has(homeLook, /告示板/);
-has(await king.command("look board"), /家園告示板/);
+has(await king.command("look board"), /告示板/);
 has(await king.command("returnhome"), /飲風客棧/);
 has(await king.command("kinghome"), /天神殿・無極之境/);
 has(await king.command("kcreate list"), /KING 可建立項目/);

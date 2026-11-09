@@ -25,7 +25,7 @@ grep -Fq 'set("short", "廣場中央")' "$SQUARE"
 grep -Fq 'new("/custom/home/room/home_hall")' "$KHOME"
 grep -Fq 'home->set_home_owner(me)' "$KHOME"
 grep -Fq 'KING_D->authorized(me)' "$KHOME"
-grep -Fq 'set_home_owner(object owner)' "$HOME"
+grep -Fq 'void set_home_owner(object ob)' "$HOME"
 
 # 梅寒霜／演武界房間與 NPC 必須一起存在於生成 Runtime，並保留雙向出口及自動生成設定。
 grep -Fq '"enter" : "/d/arena/yanwujie"' "$ROOM"
