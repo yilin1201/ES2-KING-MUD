@@ -53,7 +53,8 @@ grep -Fq 'cmake --build out/build/linux --parallel' .github/workflows/es2-king-m
 ! grep -Fq -- '--preset linux-gcc' .github/workflows/es2-king-m30-alpha.yml
 
 # ADMIN GM LPC Load Gate／只驗證管理員指令可被 Neolith 編譯並 preload；不以繞過 RealIPD 的直連 Telnet 假冒正式 E2E。
-grep -Fq "preloaded cmds/adm/admin" scripts/test_admin_gm_lpc_boot.sh
+grep -Fq 'for obj in admin khome' scripts/test_admin_gm_lpc_boot.sh
+grep -Fq 'preloaded cmds/adm/$obj' scripts/test_admin_gm_lpc_boot.sh
 ! grep -Fq 'telnetlib' scripts/test_admin_gm_lpc_boot.sh
 ! grep -Fq 'gmtest' scripts/test_admin_gm_lpc_boot.sh
 
