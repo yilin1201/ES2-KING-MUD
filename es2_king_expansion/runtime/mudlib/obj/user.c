@@ -4,7 +4,6 @@ description: The user object, which represents a player in the game.
 author: Annihilator <taedlar@gmail.com>
 ---*/
 #include <ansi.h>
-#include <login.h>
 #include <origin.h>
 #include <user.h>
 #include <action.h>

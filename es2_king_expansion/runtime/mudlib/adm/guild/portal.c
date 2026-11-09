@@ -17,8 +17,7 @@ LONG
     ]));
     set ("exits", ([
         "east" : __DIR__"guildhall",
-        "snow": "/d/snow/inn_hall",
-        "50": "/d/swaylan/inn",
+        "inn": "/d/snow/inn_hall",
     ]));
 
     setup();
