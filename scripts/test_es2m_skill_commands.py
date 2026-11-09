@@ -7,6 +7,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SNAPSHOT = ROOT / "es2m_snapshot/mudlib/cmds/usr"
+LATEST_SOURCE = ROOT / "es2m_source_mirror/mudlib/cmds/usr"
 OVERLAY = ROOT / "es2_king_expansion/runtime/mudlib/cmds/usr"
 parser = argparse.ArgumentParser()
 parser.add_argument("--runtime", type=Path, help="可選：已套用 Expansion 的 Runtime 根目錄")
@@ -17,13 +18,14 @@ errors = []
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
 
-# 三個命令必須逐位元保留 ES2M 最新來源，避免來源快照與 Runtime 候選分叉。
+# 三個命令以最新 ES2M Source Mirror 為主；歷史 Snapshot 僅作舊版備援，避免最新 Overlay 被錯誤判為分叉。
 for name in ("disable.c", "enable.c", "abandon.c"):
-    source, overlay = SNAPSHOT / name, OVERLAY / name
+    source = LATEST_SOURCE / name if (LATEST_SOURCE / name).is_file() else SNAPSHOT / name
+    overlay = OVERLAY / name
     if not source.is_file() or not overlay.is_file():
         errors.append(f"缺少 ES2M 技能指令來源或 Expansion：{name}")
     elif digest(source) != digest(overlay):
-        errors.append(f"來源快照與 Expansion 指令不一致：{name}")
+        errors.append(f"最新 ES2M 來源與 Expansion 指令不一致：{name}")
 
 checks = {
     "disable.c": ("query_skill_map", "me->map_skill(arg, \"none\")",
@@ -55,7 +57,7 @@ if errors:
     print("\n".join(errors))
     raise SystemExit(1)
 
-print("ES2M_SKILL_COMMANDS_PASS commands=disable,enable,abandon source_overlay_consistent=true")
+print("ES2M_SKILL_COMMANDS_PASS commands=disable,enable,abandon latest_source_overlay_consistent=true")
 if RUNTIME is not None:
     print("ES2M_SKILL_COMMANDS_RUNTIME_PASS generated_overlay_files=3")
 print("STATUS=STATIC_AND_FILE_INTEGRITY; COMMAND_BEHAVIOR_E2E_REPORTED_SEPARATELY")

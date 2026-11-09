@@ -32,12 +32,12 @@ GitHub Actions `Sync ES2M Files Into KING Overlay`（Run 42541479251）成功：
 | 新增到 KING Overlay | 6 |
 | 覆蓋 KING 同路徑舊檔 | 63 |
 | 原本已相同 | 1,739 |
-| KING 保護檔案 | 21 |
+| KING 保護檔案 | 21（首次同步）／22（後續保護說明文件） |
 | ES2M 與固定 Original ES2 基準不同 | 181 |
 
 181 筆代表 ES2M 相對於固定 Original ES2 來源有內容差異，並非全部都是程式衝突。保護檔依同步報告保留，未把 KING Owner 技能上限、凍結冷梅技能、種族 ID、梅影風教學、振武整合、WebTelnet 連接埠及李家村拓樸相容性盲目覆蓋。
 
-詳細逐檔紀錄：`docs/research/ES2M_NEW_FILES_IMPORT_REPORT.json`。
+首次同步 Workflow Run 42541479251：新增 6、覆蓋 63、相同 1,739、保護 21。\n後續 Workflow Run 42541830102：新增 2、覆蓋 1、相同 1,804、保護 22；這次重新執行是為了把 KING 家園說明納入保護清單，最後報告以該次執行結果為準。\n\n詳細逐檔紀錄：`docs/research/ES2M_NEW_FILES_IMPORT_REPORT.json`。
 
 ## 4. Khome 自宅根因與修復
 
@@ -67,7 +67,7 @@ GitHub Actions `Sync ES2M Files Into KING Overlay`（Run 42541479251）成功：
 ## 6. 驗證紀錄與界線
 
 - ES2M 同步 Workflow：PASS。
-- Khome／梅寒霜靜態入口檢查：PASS（同步 Workflow step 6）。
+- Khome／梅寒霜靜態入口檢查：PASS（同步 Workflow step 6；M30 Alpha step 6）。\n- ES2M 最新來源鏡像：1,829／1,829 個 Blob SHA 與 ES2M-KDS HEAD 完全一致。\n- 技能指令回歸測試曾因仍拿舊 Snapshot 比較最新 Overlay 而 FAIL；已將測試基準修正為最新 Source Mirror，舊 Snapshot 保留為歷史備援。
 - M27 無極之境靜態與 Runtime Gate：PASS（本輪初始提交之 Workflow）。
 - ES2M Update Sync Regression：PASS（本輪初始提交之 Workflow）。
 - Khome 實際玩家 E2E：本次尚未執行；已將 `khome`、`look`、`look board`、`returnhome` 驗收加入既有 `test_cold_plum_arena_runtime_e2e.mjs`，待可用真實 Driver fixture 執行。
@@ -78,3 +78,4 @@ GitHub Actions `Sync ES2M Files Into KING Overlay`（Run 42541479251）成功：
 
 - 初始修復／同步 Workflow 更新：`3f45b3e9fc06246db9065bcc3dc9ea696180d6d2`
 - ES2M 最新鏡像及 Overlay 同步：`90ffe425bbb909484d78e9f31ccbd9c7d5dd0288`
+\n- 最新來源同步後 HEAD：`fbfda3e889ff554c7923f8c2472738ffb44cc7c9`（本次測試基準修正將另有 Commit）。\n
