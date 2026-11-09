@@ -1,7 +1,9 @@
 # M30 CURRENT STATUS — 目前唯一即時狀態入口
 
-> Status Date：2026-09-28  
+> Status Date：2026-11-09  
 > Branch：`build/original-es2-races-phase2`  
+> Verified HEAD：`e92b3fadee636bb857e4a6dd9e4961fe868e62b0`  
+> Latest ES2M Source：`kds121tw/ES2M-KDS@ced29a6e9cdb0ce6e2392a80702295e350dbcb57`  
 > Post-Neon Audit Baseline：`15e27c606886f1b96c2bbe5bda037989c767becb`  
 > Cold Plum Runtime Evidence Head：`f1b6798ce3562551a10d76521f886b5445d35b1f`  
 > 本文件是 Current Status（目前狀態），不是歷史測試報告。  
@@ -68,6 +70,14 @@ Owner 於 2026-09-26 正式指定 M31 主題為 Class 職業系統。Evidence �
 2026-09-28 隔離 `king`／`kprobe` 真 Driver 已通過 K 管理權限完整流程：KING 授予 Wizard、Wizard 唯讀工具、Arch 進階工具、KING-only denial、remove 後 Player denial，以及 save／quit／relogin。`help k` 與 `help wiz` 依角色過濾；所有正式 k* command 均由 Original `help` command 呼叫自身 `help()`。Original `k → kill` alias 實際輸入仍回覆「你想殺誰」，未被管理命令覆蓋。
 
 正式 markers：`K_ADMIN_RUNTIME_PASS`、`K_HELP_RUNTIME_PASS`、`K_PERMISSION_REGRESSION_PASS`。Remaining Original Content 依優先序收斂於 `original_es2/research/original_content_remaining_gap_list.md`；整體可玩性維持 PASS，歷史內容完整度維持 PARTIAL。
+
+### 1.4 Khome 私人家園／梅寒霜演武界（2026-11-09）
+
+- 根因已確認：原 `khome` 誤指向 `/d/king/wuji_realm`，與 `kinghome` 重複；現已改為 Owner 專屬 `/custom/home/room/home_hall`，先綁定 home owner 再移動玩家。
+- `kinghome` 仍是天神殿・無極之境入口；神域 `enter` 進入 `/d/arena/yanwujie`，演武界 `out` 返回神域。
+- 演武界 `objects` mapping 自動生成 `/d/arena/npc/mei_hanshuang`；真 Driver LPC preload 已載入家園大廳、無極之境、演武界與梅寒霜 NPC。
+- M27 generated Runtime Gate、M30 Alpha、ES2M Sync Regression、Neolith Driver Build 均 PASS（細節見 `docs/status/ES2M_KHOME_MEI_REPAIR_20261109.md`）。
+- 互動式 Khome 玩家 E2E 與梅寒霜完整 look／ask／戰鬥 E2E 尚未執行，不以 preload PASS 代替完整遊戲驗收。
 
 ## 2. Evidence 與 Runtime 分層
 

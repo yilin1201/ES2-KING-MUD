@@ -21,3 +21,10 @@ M26 `kingcreate` 白名單不得被房間功能放寬；Original `/d/snow/square
 ## UNKNOWN（未知）
 
 Canon 文件明定另行設計的召喚、神兵、武學授予與世界觀察功能保持 `UNKNOWN`，M27 不自行推定。
+
+## 2026-11-09 Khome／梅寒霜連線修復
+
+- `khome` 現在進入 Owner 私人家園 `/custom/home/room/home_hall`；`kinghome` 仍只進入本文件所述無極之境。
+- 本次 M27 Runtime Gate 同時核對生成後 Runtime 的 Khome command、home hall、無極之境、演武界、梅寒霜 NPC、`setup()` 及雙向出口。
+- M30 真 Neolith LPC Load Gate 已載入 `/custom/home/room/home_hall`、`/d/king/wuji_realm`、`/d/arena/yanwujie` 與 `/d/arena/npc/mei_hanshuang`，載入結果 PASS。
+- 上述為真 Driver LPC preload／房間 setup 載入證據；Owner 實際輸入 khome 的互動 E2E 與梅寒霜完整戰鬥 E2E 尚待獨立驗收，不以 preload 結果冒充。
