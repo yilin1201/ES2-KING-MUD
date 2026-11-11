@@ -276,7 +276,8 @@ PY
   python3 "$REPO_ROOT/scripts/test_es2m_wutang_topology.py" \
     --source "$REPO_ROOT/es2m_snapshot/mudlib" \
     --runtime "$ROOT/mudlib" \
-    --current-source "$REPO_ROOT/es2m_source_mirror/mudlib"
+    --current-source "$REPO_ROOT/es2m_source_mirror/mudlib" \
+    --include-expansion-boats
   echo 'ES2M WUTANG CONNECTED: latest source rooms, NPCs, ferries and objects; Zhenwu gate south <-> entrance north.'
 fi
 
