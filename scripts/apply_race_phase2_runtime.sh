@@ -232,6 +232,21 @@ if [[ -d "$ES2M_WUTANG_DIR" ]]; then
     cp -a "$ES2M_WUTANG_DIR/." "$ROOT/mudlib/d/wutang/"
   fi
 
+  # KING Expansion ferries／羿水渡船是 KING 自訂內容，不屬於 ES2M 上游區域清冊。
+  # Wutang topology gate 在 Expansion overlay 前執行，因此先安全暫存兩艘船；同名不同內容立即停止。
+  KING_FERRY_DIR="$REPO_ROOT/es2_king_expansion/runtime/mudlib/d/wutang"
+  for boat in ferry_boat_huang.c ferry_boat_ro.c; do
+    src="$KING_FERRY_DIR/$boat"
+    dst="$ROOT/mudlib/d/wutang/$boat"
+    [[ -f "$src" ]] || { echo "KING WUTANG FERRY FAIL: missing Expansion source $src" >&2; exit 1; }
+    if [[ -e "$dst" ]]; then
+      cmp -s "$src" "$dst" || { echo "KING WUTANG FERRY CONFLICT: $dst differs from Expansion source" >&2; exit 1; }
+    else
+      cp "$src" "$dst"
+    fi
+  done
+  echo 'KING WUTANG FERRY STAGE PASS／羿水渡兩艘 KING 自訂船隻已保留於 Runtime。'
+
   # 最新五堂鎮地圖的絕對出口依賴可能位於其他區域；補入來源存在而 Runtime 尚缺的檔案。
   python3 - "$REPO_ROOT/es2m_source_mirror/mudlib" "$ROOT/mudlib" <<'PY'
 from pathlib import Path, PurePosixPath
