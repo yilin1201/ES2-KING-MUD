@@ -183,7 +183,8 @@ RUN python3 scripts/test_es2m_wutang_topology.py \
     --source /build/repository/es2m_snapshot/mudlib \
     --runtime /opt/es2-king/runtime/mudlib \
     --current-source /build/repository/es2m_source_mirror/mudlib \
-    --include-expansion-boats
+    --include-expansion-boats \
+    --include-expansion-npcs
 
 # ES2M 2026-10-08 安全世界增量：只套用留言板與李家村非戰區，遇到同名異動即阻止建置。
 RUN python3 scripts/test_apply_es2m_20261008_world_delta.py
