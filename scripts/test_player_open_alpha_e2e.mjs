@@ -505,9 +505,9 @@ async function exerciseShopQuantityJourney(p) {
   await waitForAfter(p, singleOffset, /正忙著招呼其他客人/);
   await waitForAfter(p, singleOffset, /買下一個牛肉包子/, 30000);
   inventory = await command(p, "inventory");
-  // 180 文等值為一兩碎銀 + 八十文錢，確認只扣除一個包子的價格。
+  // 170 文等值為一兩碎銀 + 七十文錢，確認只扣除一個包子的價格。
   assert.match(inventory, /一兩碎銀/);
-  assert.match(inventory, /八十文錢/);
+  assert.match(inventory, /七十文錢/);
   assert.match(inventory, /牛肉包子/);
   assert.equal((inventory.match(/牛肉包子/g) || []).length, 1);
   assert.match(await command(p, "buy 50 dumpling from waiter"), /只剩下四十九個/);
