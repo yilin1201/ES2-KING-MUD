@@ -94,7 +94,7 @@ async function createCharacter({ id, raceChoice, raceLabel, genderChoice, name }
   await sendLine(p, name, "您確定要創造這個角色嗎");
   const entered = await sendLine(p, "Y", /目前權限: \(player\)/, 45000);
   assert.match(entered, /目前權限: \(player\)/);
-  await waitForAfter(p, 0, /客棧大堂/);
+  await waitForAfter(p, 0, /客棧大堂|雪亭鎮廣場的西邊/);
   await waitForAfter(p, 0, "> ");
 
   // 首次登入尚未執行 look、拾取或裝備時，兩種背包指令都必須有伺服器實際文字輸出。
