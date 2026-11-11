@@ -453,14 +453,14 @@ async function exerciseShopQuantityJourney(p) {
   assert.match(fishList, /藍衣套/);
   assert.match(fishList, /毛皮帽/);
   assert.match(fishList, /玻璃瓶/);
-  assert.match(fishList, /毛皮帽[^\n]*六十文錢/);
+  assert.match(fishList, /毛皮帽[^\n]*五十文錢/);
   assert.match(await command(p, "buy 1 fur hat from yu"), /買下一頂毛皮帽/);
   assert.match(await command(p, "wear fur hat"), /戴上.*毛皮帽|穿上.*毛皮帽|裝備.*毛皮帽/);
   assert.match(await command(p, "remove fur hat"), /脫了下來|卸除/);
   inventory = await command(p, "inventory");
-  // pay_money() 正常化面額：180 文等值為一兩碎銀 + 八十文錢。
+  // pay_money() 正常化面額：190 文等值為一兩碎銀 + 九十文錢。
   assert.match(inventory, /一兩碎銀/);
-  assert.match(inventory, /八十文錢/);
+  assert.match(inventory, /九十文錢/);
   assert.match(await command(p, "west"), /街道/);
   assert.match(await command(p, "north"), /廣場/);
   assert.match(await command(p, "north"), /廣場中央/);
@@ -492,7 +492,7 @@ async function exerciseShopQuantityJourney(p) {
   await delay(3500);
   const unchanged = await command(p, "inventory");
   assert.match(unchanged, /一兩碎銀/);
-  assert.match(unchanged, /八十文錢/);
+  assert.match(unchanged, /九十文錢/);
   assert.doesNotMatch(unchanged, /牛肉包子/);
   assert.match(await command(p, "west"), /客棧大堂/);
 
