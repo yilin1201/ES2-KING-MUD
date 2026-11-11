@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: es2-king-alpha
+    runtime: docker
+    plan: free
+    branch: build/original-es2-races-phase2
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: ES2_BUILD_SHA
+        value: game-completion-track
+      - key: ES2_SAVE_DIR
+        value: /var/lib/es2-king/data
+      # Owner Claim Secret／Owner 認領秘密：只由 Render Dashboard 注入，Repository 永遠不保存實際值。
+      - key: ES2_KING_CLAIM_TOKEN
+        sync: false

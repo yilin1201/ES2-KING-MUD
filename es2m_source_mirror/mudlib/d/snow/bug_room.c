@@ -1,0 +1,29 @@
+/*---
+description: bug report room, used for players to report bugs and strange occurrences.
+author: Annihilator <taedlar@gmail.com>
+---*/
+
+#include <room.h>
+
+inherit ROOM;
+
+private void
+create()
+{
+  set("short", "小廣場");
+  set("long", @LONG
+這裏是個小廣場，幾棵樹稀稀落落的長在附近，中央有個小型的
+留言版，可供民眾回報所遭遇的怪異現象，往南可回到人聲鼎沸的雪
+亭鎮廣場。
+LONG
+  );
+  set("exits", ([ /* sizeof() == 3 */
+	"south" : "/d/snow/square_w",
+  ]));
+  set("outdoors", "snow");
+  set("no_fight", 1);			// prevent pk when post
+
+  set("map/area", "雪亭鎮");
+    setup();
+  load_object("/daemon/board/bug_board");
+}

@@ -1,0 +1,156 @@
+name: Original ES2 M13 Force Runtime
+
+# Runtime／實機執行驗證：確認 Original force 映射、dragon force 內功與 exert 玩家指令可真正運作。
+on:
+  workflow_dispatch:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths:
+      - '.github/workflows/original-es2-m13-force-runtime.yml'
+      - 'original_es2/research/original_martial_force_m13.md'
+      - 'scripts/test_martial_force_m13_static.sh'
+      - 'scripts/bootstrap_original_es2.sh'
+  pull_request:
+    paths:
+      - '.github/workflows/original-es2-m13-force-runtime.yml'
+      - 'original_es2/research/original_martial_force_m13.md'
+      - 'scripts/test_martial_force_m13_static.sh'
+      - 'scripts/bootstrap_original_es2.sh'
+
+jobs:
+  m13-force-runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v4
+      - name: Install prerequisites／安裝編譯工具
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build bison netcat-openbsd
+          python -m pip install --upgrade cmake
+      - name: Bootstrap runtime／建立 Original ES2 執行環境
+        run: bash scripts/bootstrap_original_es2.sh
+      - name: Force static regression／內功架構靜態回歸
+        run: bash scripts/test_martial_force_m13_static.sh
+      - name: Install Runtime-only force probe／安裝僅測試用內功探針
+        run: |
+          cat > .runtime/original-es2/mudlib/cmds/usr/m13force.c <<'LPC'
+          inherit F_CLEAN_UP;
+          int main(object me, string arg)
+          {
+              if (arg == "prepare") {
+                  // USER_PROTECT／玩家資料保護：測試探針只準備技能與 Original Daemon，不改寫保存用 Original 原始碼。
+                  seteuid(MUDLIB_UID);
+                  // Skill Daemon／技能常駐程式：龍圖心經位於 d/snow，必須先載入，讓其 create() 向 DAEMON_D 登記真正路徑。
+                  // 若不先登記，SKILL_D 會依預設規則尋找 /daemon/skill/dragon_force，因而無法進入 Original exert_function。
+                  load_object("/d/snow/skill/dragon_force");
+                  me->set_skill("force", 80);
+                  me->set_skill("dragon force", 80);
+                  // map_skill／技能映射：沿用 Original feature/char/skill.c，將基礎內功映射到龍圖心經。
+                  me->map_skill("force", "dragon force");
+                  seteuid(getuid());
+              }
+              write(sprintf("M13FORCE FORCE=%d DRAGON=%d MAP=%s GIN=%d KEE=%d SEN=%d\n",
+                    me->query_skill("force", 1), me->query_skill("dragon force", 1),
+                    me->skill_mapped("force") || "NONE", me->query_stat("gin"),
+                    me->query_stat("kee"), me->query_stat("sen")));
+              return 1;
+          }
+          LPC
+      - name: Configure and build Neolith／設定並編譯 MUD Driver
+        working-directory: .runtime/original-es2/neolith
+        run: |
+          cmake --preset linux -DBUILD_TESTING=OFF
+          cmake --build --preset dev-linux
+      - name: Locate driver／尋找 MUD Driver 執行檔
+        run: |
+          DRIVER="$(find .runtime/original-es2/neolith/out -type f -name neolith -perm -111 | head -n 1)"
+          test -n "$DRIVER"
+          echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"
+      - name: Boot MUD／啟動 Original ES2
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd .runtime/original-es2
+          DRIVER_ABS="$(realpath "$GITHUB_WORKSPACE/$DRIVER")"
+          "$DRIVER_ABS" -f neolith.conf -c > "$RUNNER_TEMP/es2-m13-force-boot.log" 2>&1 &
+          PID=$!
+          echo "ES2_PID=$PID" >> "$GITHUB_ENV"
+          for i in $(seq 1 30); do
+            kill -0 "$PID" 2>/dev/null || break
+            if nc -z 127.0.0.1 4000; then exit 0; fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/es2-m13-force-boot.log"
+          exit 1
+      - name: Live force and persistence verification／真實內功與保存重登驗證
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          # Telnet／文字連線協定：由真實玩家送出 exert dragon force，走 Original exert.c 與 dragon_force.c。
+          import telnetlib,time,re,sys
+          ANSI=re.compile(r'\x1b\[[0-9;?]*[ -/]*[@-~]')
+          STATE=re.compile(r'M13FORCE FORCE=(\d+) DRAGON=(\d+) MAP=(.*?) GIN=(\d+) KEE=(\d+) SEN=(\d+)')
+          def session(): return telnetlib.Telnet('127.0.0.1',4000,timeout=5)
+          def read(tn,buf,t=.8):
+              end=time.time()+t
+              while time.time()<end:
+                  try:
+                      d=tn.read_very_eager()
+                      if d: buf.extend(d)
+                  except (EOFError,OSError): break
+                  time.sleep(.05)
+          def line(tn,buf,s,t=.8): tn.write(s.encode()+b'\r\n'); read(tn,buf,t)
+          def key(tn,buf,s,t=.8): tn.write(s.encode()); read(tn,buf,t)
+          def clean(buf): return ANSI.sub('',buf.decode(errors='replace'))
+          def state(text):
+              m=STATE.findall(text)
+              return m[-1] if m else None
+          tn=session(); buf=bytearray(); read(tn,buf,1)
+          line(tn,buf,'mforce'); key(tn,buf,'Y'); line(tn,buf,'mforcepass'); line(tn,buf,'mforcepass'); line(tn,buf,'none')
+          key(tn,buf,'\r'); key(tn,buf,'M'); line(tn,buf,'內功測試'); key(tn,buf,'Y',2.0)
+          mark=len(buf); line(tn,buf,'look',1.2)
+          world_text=clean(buf[mark:]); print(world_text)
+          if '客棧大堂' not in world_text:
+              print(clean(buf)); sys.exit('M13 FORCE FAIL／失敗：角色尚未完成建立並進入客棧大堂')
+          mark=len(buf); line(tn,buf,'m13force prepare',1.2)
+          before_text=clean(buf[mark:]); before=state(before_text); print(before_text)
+          if not before or before[:3] != ('80','80','dragon force'):
+              print(clean(buf)); sys.exit('M13 FORCE FAIL／失敗：技能前置或 force → dragon force 映射未建立')
+          # Original 新角色精／氣／神各 30，已高於 dragon_force.c 每輪要求的 10；不由測試探針偽造資源。
+          if any(int(v) < 10 for v in before[-3:]):
+              sys.exit('M13 FORCE FAIL／失敗：角色資源不足以啟動 Original 龍圖心經')
+          mark=len(buf); line(tn,buf,'exert dragon force',1.0); read(tn,buf,2.5)
+          exert_text=clean(buf[mark:]); print(exert_text)
+          if '開始修習龍圖心經的內功' not in exert_text:
+              sys.exit('M13 FORCE FAIL／失敗：Original exert 未進入龍圖心經 exert_function')
+          mark=len(buf); line(tn,buf,'m13force',.8)
+          after_text=clean(buf[mark:]); after=state(after_text); print(after_text)
+          if not after: sys.exit('M13 FORCE FAIL／失敗：exert 後無法讀取內功狀態')
+          before_resources=tuple(map(int,before[-3:])); after_resources=tuple(map(int,after[-3:]))
+          if not any(a < b for a,b in zip(after_resources,before_resources)):
+              sys.exit(f'M13 FORCE FAIL／失敗：內功運轉後資源未消耗 before={before_resources} after={after_resources}')
+          line(tn,buf,'halt',.6)
+          # Persistence／持久化：技能與映射必須在 quit → relogin 後仍存在。
+          line(tn,buf,'quit',1.2); tn.close()
+          tn2=session(); buf2=bytearray(); read(tn2,buf2,1)
+          line(tn2,buf2,'mforce'); line(tn2,buf2,'mforcepass',1.5)
+          mark=len(buf2); line(tn2,buf2,'m13force',.8)
+          restored_text=clean(buf2[mark:]); restored=state(restored_text); print(restored_text)
+          if not restored or restored[:3] != ('80','80','dragon force'):
+              sys.exit('M13 FORCE FAIL／失敗：重新登入後技能或 force 映射未保存')
+          print('M13 FORCE RUNTIME PASS／實機通過：Original force 映射、exert、龍圖心經資源消耗與重登保存均成立。')
+          try: line(tn2,buf2,'quit',.3); tn2.close()
+          except OSError: pass
+          PY
+      - name: Show MUD error log on failure／失敗時輸出 MUD 錯誤紀錄
+        if: failure()
+        run: |
+          # Error log／錯誤紀錄：下次若仍失敗，直接把 Mudlib 編譯／執行錯誤帶進 Actions Log，縮短修正週期。
+          cat "$RUNNER_TEMP/es2-m13-force-boot.log" || true
+          find .runtime/original-es2/mudlib/log -maxdepth 2 -type f -print -exec tail -n 80 {} \; 2>/dev/null || true
+      - name: Stop MUD／停止測試伺服器
+        if: always()
+        run: |
+          if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi

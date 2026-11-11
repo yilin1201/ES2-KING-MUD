@@ -1,0 +1,24 @@
+name: Original ES2 M10 Race Baseline
+
+# GitHub Actions／GitHub 自動化測試：每次 PR 更新時驗證 Original 種族證據基線。
+on:
+  pull_request:
+    paths:
+      - 'original_es2/research/original_race_*'
+      - 'scripts/test_race_original_*'
+      - '.github/workflows/original-es2-m10-race-baseline.yml'
+  workflow_dispatch:
+
+jobs:
+  verify-original-race-baseline:
+    # Ubuntu／Linux 測試環境：只做證據與資料完整性驗證，不修改 Original 保存原始碼。
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取出目前分支程式
+        uses: actions/checkout@v4
+
+      - name: Verify evidence boundary／驗證證據邊界
+        run: bash scripts/test_race_original_evidence_m10.sh
+
+      - name: Verify machine-readable baseline／驗證機器可讀種族基線
+        run: bash scripts/test_race_original_baseline_m10.sh

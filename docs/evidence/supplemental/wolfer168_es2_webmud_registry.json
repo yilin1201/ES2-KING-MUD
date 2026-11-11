@@ -1,0 +1,45 @@
+{
+  "schema": "es2-king-supplemental-source-v1",
+  "source": {
+    "repository": "wolfer168/es2-webmud",
+    "branch": "main",
+    "classification": "DERIVED_SOURCE_BACKED_CATALOG"
+  },
+  "upstream": {
+    "repository": "taedlar/es2_mudlib",
+    "commit": "cc45c06af4852380e5148dad3c9d53ff06854f2c",
+    "matches_es2_king_pinned_target": true
+  },
+  "accepted_catalogs": [
+    "snow_area_manifest",
+    "world_graph",
+    "npc_index",
+    "npc_combat_profiles",
+    "item_index",
+    "equipment_index",
+    "skill_index",
+    "skill_contract_index",
+    "damage_contract_index",
+    "combat_core_index",
+    "reference_graph",
+    "dependency_graph"
+  ],
+  "policy": {
+    "original_lpc_required_for_runtime_canon": true,
+    "derived_only_must_remain_labeled": true,
+    "overwrite_existing_canon": false
+  },
+  "observed": {
+    "snow_room_area_count": 43,
+    "unresolved_external_targets": [
+      "/d/snowkeep/entrance",
+      "/d/lee/r1",
+      "/d/goat/sroad1",
+      "/d/month/a1",
+      "/d/chixiao/river2",
+      "/d/oldpine/road1",
+      "/d/newcamp/gate",
+      "/d/graveyard/grave1"
+    ]
+  }
+}

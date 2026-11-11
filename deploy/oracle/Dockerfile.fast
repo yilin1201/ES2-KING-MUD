@@ -1,0 +1,18 @@
+ARG BASE_IMAGE=es2-king:oracle
+FROM ${BASE_IMAGE}
+
+# Oracle Fast Update 只覆蓋「不需要重新生成 MUD Runtime」的公開服務／啟動檔。
+# Gameplay、Original/ES2M overlay、武學、地圖、NPC 等任何變更一律回退完整 Dockerfile Build。
+USER root
+
+COPY --chown=10001:10001 scripts/start_es2_king_web.sh /opt/es2-king/scripts/start_es2_king_web.sh
+COPY --chown=10001:10001 scripts/prepare_es2_persistence.sh /opt/es2-king/scripts/prepare_es2_persistence.sh
+COPY --chown=10001:10001 scripts/sync_es2_persistence.sh /opt/es2-king/scripts/sync_es2_persistence.sh
+COPY --chown=10001:10001 scripts/healthcheck_es2_king.mjs /opt/es2-king/scripts/healthcheck_es2_king.mjs
+COPY --chown=10001:10001 scripts/test_public_player_session_smoke.mjs /opt/es2-king/scripts/test_public_player_session_smoke.mjs
+
+COPY --chown=10001:10001 webtelnet/public /opt/es2-king/webtelnet/public
+COPY --chown=10001:10001 webtelnet/server.mjs /opt/es2-king/webtelnet/server.mjs
+COPY --chown=10001:10001 webtelnet/telnet.mjs /opt/es2-king/webtelnet/telnet.mjs
+
+USER es2king

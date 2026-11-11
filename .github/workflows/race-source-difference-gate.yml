@@ -1,0 +1,63 @@
+name: Race Source Difference Gate
+
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths:
+      - '.github/workflows/race-source-difference-gate.yml'
+      - 'scripts/bootstrap_original_es2.sh'
+      - 'scripts/test_original_player_creation_e2e.sh'
+      - 'scripts/test_original_player_creation_e2e.mjs'
+      - 'scripts/test_race_source_difference_review.sh'
+      - 'scripts/prepare_es2_persistence.sh'
+      - 'scripts/test_m30_persistence_paths.sh'
+      - 'deploy/oracle/backup.sh'
+      - 'scripts/test_oracle_backup_smoke.sh'
+      - 'deploy/oracle/README.md'
+      - 'docs/research/RACE_SOURCE_DIFFERENCE_REVIEW_20261011.md'
+      - 'docs/research/THIRD_PARTY_CONTENT_INVENTORY_20261011.md'
+      - 'docs/SOURCES.md'
+      - 'es2_king_expansion/races/README.md'
+      - 'es2_king_expansion/races/headless.md'
+      - 'es2_king_expansion/races/human.md'
+      - 'original_es2/runtime/m5_race_framework_result.md'
+  pull_request:
+    paths:
+      - '.github/workflows/race-source-difference-gate.yml'
+      - 'scripts/bootstrap_original_es2.sh'
+      - 'scripts/test_original_player_creation_e2e.sh'
+      - 'scripts/test_original_player_creation_e2e.mjs'
+      - 'scripts/test_race_source_difference_review.sh'
+      - 'scripts/prepare_es2_persistence.sh'
+      - 'scripts/test_m30_persistence_paths.sh'
+      - 'deploy/oracle/backup.sh'
+      - 'scripts/test_oracle_backup_smoke.sh'
+      - 'deploy/oracle/README.md'
+      - 'docs/research/RACE_SOURCE_DIFFERENCE_REVIEW_20261011.md'
+      - 'docs/research/THIRD_PARTY_CONTENT_INVENTORY_20261011.md'
+      - 'docs/SOURCES.md'
+      - 'es2_king_expansion/races/README.md'
+      - 'es2_king_expansion/races/headless.md'
+      - 'original_es2/runtime/m5_race_framework_result.md'
+
+jobs:
+  source-difference:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ES2-KING／取得專案程式
+        uses: actions/checkout@v4
+      - name: Shell syntax／Shell 語法檢查
+        run: |
+          bash -n scripts/bootstrap_original_es2.sh
+          bash -n scripts/test_original_player_creation_e2e.sh
+          bash -n scripts/test_race_source_difference_review.sh
+          bash -n scripts/prepare_es2_persistence.sh
+          bash -n scripts/test_m30_persistence_paths.sh
+          bash -n deploy/oracle/backup.sh
+          bash -n scripts/test_oracle_backup_smoke.sh
+      - name: JavaScript syntax／JavaScript 語法檢查
+        run: node --check scripts/test_original_player_creation_e2e.mjs
+      - name: Source difference contract／來源差異契約
+        run: bash scripts/test_race_source_difference_review.sh
+      - name: Oracle backup smoke test／Oracle 備份冒煙測試
+        run: bash scripts/test_oracle_backup_smoke.sh

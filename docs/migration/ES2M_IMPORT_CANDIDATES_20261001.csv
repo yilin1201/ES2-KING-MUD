@@ -1,0 +1,4 @@
+category,es2m_source_path,es2m_source_commit,target_path,target_source_commit,evidence_class,compatibility,missing_refs,manual_review,decision,targeted_test,runtime_marker
+World/Map,,,d/snowkeep/entrance.c,,SOURCE_REQUIRED,unknown,d/snowkeep/entrance.c,true,BLOCKED,,
+NPC,,,d/snow/npc/girl.c,,CONFIRMED_SOURCE,unknown,d/snowkeep/entrance.c,true,BLOCKED,,
+Weapon/Equipment,,,d/choyin/npc/obj/red_wine.c,,SOURCE_REQUIRED,unknown,d/choyin/npc/obj/red_wine.c,true,BLOCKED,,

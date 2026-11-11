@@ -1,0 +1,21 @@
+name: ES2-KING M21-M30 Roadmap
+
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths: ['ROADMAP_M0_M30.md', 'scripts/test_roadmap_m21_m30.sh', '.github/workflows/roadmap-m21-m30.yml']
+  pull_request:
+    paths: ['ROADMAP_M0_M30.md', 'scripts/test_roadmap_m21_m30.sh', '.github/workflows/roadmap-m21-m30.yml']
+  workflow_dispatch:
+
+jobs:
+  roadmap-regression:
+    name: M21-M30 路線圖邊界驗證
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout／取得程式：載入目前分支的 Roadmap 與測試腳本。
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v5
+      # Regression Test／回歸測試：防止 Original 與 Expansion 階段邊界被改寫。
+      - name: Roadmap regression／執行路線圖回歸
+        run: bash scripts/test_roadmap_m21_m30.sh

@@ -1,0 +1,20 @@
+name: Original ES2 M12 Study Static
+
+# GitHub Actions／GitHub 自動化測試：先驗證 Original study 研讀證據與 Runtime 計畫沒有偏離來源。
+on:
+  pull_request:
+    paths:
+      - 'original_es2/research/original_study_*'
+      - 'scripts/test_study_m12_static.sh'
+      - '.github/workflows/original-es2-m12-study-static.yml'
+  workflow_dispatch:
+
+jobs:
+  verify-study-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取出目前分支程式
+        uses: actions/checkout@v4
+
+      - name: Verify study evidence／驗證研讀學習證據
+        run: bash scripts/test_study_m12_static.sh

@@ -1,0 +1,29 @@
+name: Original ES2 M15 Lengmei Runtime Gate
+
+# GitHub Actions／自動測試：實際準備 Original ES2 Mudlib，再確認冷梅莊／梅影風 Runtime 原始證據是否存在。
+on:
+  workflow_dispatch:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths:
+      - '.github/workflows/original-es2-m15-lengmei-runtime-gate.yml'
+      - 'scripts/test_lengmei_m15_runtime_gate.sh'
+      - 'scripts/bootstrap_original_es2.sh'
+      - 'original_es2/research/m15_lengmei_runtime_plan.md'
+  pull_request:
+    paths:
+      - '.github/workflows/original-es2-m15-lengmei-runtime-gate.yml'
+      - 'scripts/test_lengmei_m15_runtime_gate.sh'
+      - 'scripts/bootstrap_original_es2.sh'
+      - 'original_es2/research/m15_lengmei_runtime_plan.md'
+
+jobs:
+  m15-lengmei-runtime-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v4
+      - name: Bootstrap Original ES2／建立乾淨上游執行樹
+        run: bash scripts/bootstrap_original_es2.sh
+      - name: Runtime evidence gate／執行冷梅莊實機證據閘門
+        run: bash scripts/test_lengmei_m15_runtime_gate.sh

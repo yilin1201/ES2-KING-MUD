@@ -1,0 +1,23 @@
+name: Original ES2 M23 Core Gameplay
+
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths: ['original_es2/research/m23_*', 'original_es2/runtime/m23_*', 'scripts/test_m23_*', 'scripts/bootstrap_original_es2.sh', '.github/workflows/original-es2-m23-core-gameplay.yml']
+  pull_request:
+    paths: ['original_es2/research/m23_*', 'original_es2/runtime/m23_*', 'scripts/test_m23_*', 'scripts/bootstrap_original_es2.sh', '.github/workflows/original-es2-m23-core-gameplay.yml']
+  workflow_dispatch:
+
+jobs:
+  m23-core-gameplay:
+    name: M23 核心玩法完整化驗證
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v5
+      - name: Static regression／驗證整合文件與 UNKNOWN 邊界
+        run: bash scripts/test_m23_core_gameplay_static.sh
+      - name: Bootstrap Original ES2／建立乾淨執行樹
+        run: bash scripts/bootstrap_original_es2.sh
+      - name: Runtime Gate／驗證核心玩法整合鏈
+        run: bash scripts/test_m23_core_gameplay_runtime_gate.sh .runtime/original-es2

@@ -1,0 +1,301 @@
+# Repository Cleanup Inventory（逐檔清理盤點）
+
+> 基準 Branch：`build/original-es2-races-phase2`  
+> Cleanup 前 HEAD：`c1fc52dd5a938b2100c91cfabdbd9c59593f2fdc`  
+> PR #13：OPEN / NOT MERGED  
+> 規則：Original、Evidence、Canon、Runtime 與用途不明檔案不刪除。
+
+## 統計
+
+| 分類 | 數量 | 判定 |
+|---|---:|---|
+| KEEP | 246 | Runtime／Source／Evidence／Canon／Deployment／歷史追溯必要；含 Post-Neon 新增檔案與本輪 Audit |
+| MOVE | 0 | scripts 實體搬移風險高，維持穩定路徑 |
+| ARCHIVE | 25 | 已完成 Milestone Workflow，原文封存並停止自動觸發 |
+| DELETE | 0 | 未發現同 SHA 重複檔或已追蹤垃圾產物 |
+| UNKNOWN | 0 | 逐檔用途均可由既有治理／引用判定 |
+
+> Post-Neon 重驗總數：271（KEEP 246 + ARCHIVE 25）。DELETE 仍為 0；未因不執行而刪除任何 Evidence／History。
+
+## 逐檔分類
+
+- **KEEP** — `.dockerignore`
+- **KEEP** — `.github/workflows/es2-king-m26-admin-creation.yml`
+- **KEEP** — `.github/workflows/es2-king-m27-wuji-realm.yml`
+- **KEEP** — `.github/workflows/es2-king-m28-martial.yml`
+- **KEEP** — `.github/workflows/es2-king-m29-canon.yml`
+- **KEEP** — `.github/workflows/es2-king-m30-alpha.yml`
+- **KEEP** — `.github/workflows/original-es2-driver-build.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m10-race-baseline.yml` → `docs/archive/workflows/original-es2-m10-race-baseline.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m11-class.yml` → `docs/archive/workflows/original-es2-m11-class.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m11-school-static.yml` → `docs/archive/workflows/original-es2-m11-school-static.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m12-skill.yml` → `docs/archive/workflows/original-es2-m12-skill.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m12-study-runtime.yml` → `docs/archive/workflows/original-es2-m12-study-runtime.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m12-study-static.yml` → `docs/archive/workflows/original-es2-m12-study-static.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m13-force-runtime.yml` → `docs/archive/workflows/original-es2-m13-force-runtime.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m13-force-static.yml` → `docs/archive/workflows/original-es2-m13-force-static.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m14-apprentice-runtime.yml` → `docs/archive/workflows/original-es2-m14-apprentice-runtime.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m14-apprentice-static.yml` → `docs/archive/workflows/original-es2-m14-apprentice-static.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m15-lengmei-runtime-gate.yml` → `docs/archive/workflows/original-es2-m15-lengmei-runtime-gate.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m15-lengmei-static.yml` → `docs/archive/workflows/original-es2-m15-lengmei-static.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m16-npc-item-runtime-gate.yml` → `docs/archive/workflows/original-es2-m16-npc-item-runtime-gate.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m16-npc-item-static.yml` → `docs/archive/workflows/original-es2-m16-npc-item-static.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m17-world-runtime-gate.yml` → `docs/archive/workflows/original-es2-m17-world-runtime-gate.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m18-quest-runtime-gate.yml` → `docs/archive/workflows/original-es2-m18-quest-runtime-gate.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m19-lifecycle.yml` → `docs/archive/workflows/original-es2-m19-lifecycle.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m20-alpha.yml` → `docs/archive/workflows/original-es2-m20-alpha.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m21-world-content.yml` → `docs/archive/workflows/original-es2-m21-world-content.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m22-npc-item.yml` → `docs/archive/workflows/original-es2-m22-npc-item.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m23-core-gameplay.yml` → `docs/archive/workflows/original-es2-m23-core-gameplay.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m24-data-integrity.yml` → `docs/archive/workflows/original-es2-m24-data-integrity.yml`
+- **KEEP** — `.github/workflows/original-es2-m25-release-candidate.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m4-combat.yml` → `docs/archive/workflows/original-es2-m4-combat.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-m5-races.yml` → `docs/archive/workflows/original-es2-m5-races.yml`
+- **ARCHIVE** — `.github/workflows/original-es2-race-phase2.yml` → `docs/archive/workflows/original-es2-race-phase2.yml`
+- **KEEP** — `.github/workflows/roadmap-m21-m30.yml`
+- **KEEP** — `.gitignore`
+- **KEEP** — `AGENTS.md`
+- **KEEP** — `Dockerfile`
+- **KEEP** — `db/migrations/001_es2_persistence.sql`
+- **KEEP** — `docs/DOCUMENT_GOVERNANCE_ZH_TW.md`
+- **KEEP** — `docs/ES2_KING_REPOSITORY_GUIDE_ZH_TW.md`
+- **KEEP** — `docs/history/m30/M30_ALPHA_FINAL_AUDIT.md`
+- **KEEP** — `docs/history/m30/M30_DEPLOYMENT_READINESS.md`
+- **KEEP** — `docs/history/m30/M30_PLAYABLE_ALPHA_ENTRY.md`
+- **KEEP** — `docs/migration/REPOSITORY_MIGRATION_MAP.md`
+- **KEEP** — `docs/migration/SCRIPTS_LOGICAL_INDEX.md`
+- **KEEP** — `docs/migration/WORKFLOWS_LOGICAL_INDEX.md`
+- **KEEP** — `docs/REPOSITORY_MASTER_CLASSIFICATION_ZH_TW.md`
+- **KEEP** — `docs/SOURCES.md`
+- **KEEP** — `docs/status/CURRENT_M30_STATUS.md`
+- **KEEP** — `docs/status/GAME_COMPLETION_MATRIX.md`
+- **KEEP** — `docs/status/PLAYABLE_ENTRY.md`
+- **KEEP** — `docs/status/POST_NEON_RUNTIME_AUDIT.md`
+- **KEEP** — `docs/status/ORIGINAL_ES2_GAMEPLAY_GAP_ANALYSIS.md`
+- **KEEP** — `docs/status/REPOSITORY_CLEANUP_INVENTORY.md`
+- **KEEP** — `ES2_CN_STANDARD.md`
+- **KEEP** — `es2_king_expansion/admin_rooms/wuji_realm.md`
+- **KEEP** — `es2_king_expansion/canon/interface/score_interface_spec.md`
+- **KEEP** — `es2_king_expansion/characters/liu_yi_wangxuan.md`
+- **KEEP** — `es2_king_expansion/characters/mei_yingfeng.md`
+- **KEEP** — `es2_king_expansion/martial_arts/daxie_qisun_blade.md`
+- **KEEP** — `es2_king_expansion/martial_arts/yijinjing.md`
+- **KEEP** — `es2_king_expansion/races/headless.md`
+- **KEEP** — `es2_king_expansion/races/README.md`
+- **KEEP** — `es2_king_expansion/research/m26_king_admin_creation.md`
+- **KEEP** — `es2_king_expansion/research/m27_wuji_realm_runtime.md`
+- **KEEP** — `es2_king_expansion/research/m28_yijinjing_batian.md`
+- **KEEP** — `es2_king_expansion/research/m29_huntian_rulai_boundary.md`
+- **KEEP** — `es2_king_expansion/research/m30_king_owner_authorization.md`
+- **KEEP** — `es2_king_expansion/runtime/m26_king_admin_result.md`
+- **KEEP** — `es2_king_expansion/runtime/m27_wuji_realm_result.md`
+- **KEEP** — `es2_king_expansion/runtime/m28_martial_result.md`
+- **KEEP** — `es2_king_expansion/runtime/m29_canon_result.md`
+- **KEEP** — `es2_king_expansion/runtime/m30_alpha_result.md`
+- **KEEP** — `es2_king_expansion/runtime/mudlib/adm/daemons/kingcanon_d.c`
+- **KEEP** — `es2_king_expansion/runtime/mudlib/adm/daemons/kingd.c`
+- **KEEP** — `es2_king_expansion/runtime/mudlib/adm/daemons/kingmartiald.c`
+- **KEEP** — `es2_king_expansion/runtime/mudlib/adm/daemons/lengmei_d.c`
+- **KEEP** — `es2_king_expansion/runtime/mudlib/cmds/adm/kingcanon.c`
+- **KEEP** — `es2_king_expansion/runtime/mudlib/cmds/adm/kingcreate.c`
+- **KEEP** — `es2_king_expansion/runtime/mudlib/cmds/adm/kingmartial.c`
+- **KEEP** — `es2_king_expansion/runtime/mudlib/cmds/adm/kingrealm.c`
+- **KEEP** — `es2_king_expansion/runtime/mudlib/cmds/std/perform.c`
+- **KEEP** — `es2_king_expansion/runtime/mudlib/d/king/wuji_realm.c`
+- **KEEP** — `es2_king_expansion/runtime/mudlib/daemon/skill/daxie_qisun_blade.c`
+- **KEEP** — `es2_king_expansion/runtime/mudlib/daemon/skill/kuxiao_force.c`
+- **KEEP** — `es2_king_expansion/runtime/mudlib/obj/king/creation_mark.c`
+- **KEEP** — `king_library/characters/gu_feiyang_li_yunxiao.md`
+- **KEEP** — `king_library/martial_arts/batian_lianti_jue.md`
+- **KEEP** — `king_library/martial_arts/huntian_baojian.md`
+- **KEEP** — `king_library/martial_arts/rulai_shenzhang.md`
+- **KEEP** — `king_library/martial_arts/yijinjing.md`
+- **KEEP** — `king_library/README.md`
+- **KEEP** — `king_library/weapons/feiyun.md`
+- **KEEP** — `king_library/weapons/guxiao.md`
+- **KEEP** — `legacy_sources/gemini/characters/summary.md`
+- **KEEP** — `legacy_sources/gemini/corrections/exclusions.md`
+- **KEEP** — `legacy_sources/gemini/martial_arts/summary.md`
+- **KEEP** — `legacy_sources/gemini/narrative/combat_style.md`
+- **KEEP** — `legacy_sources/gemini/README.md`
+- **KEEP** — `original_es2/characters/liu_yi_wangxuan.md`
+- **KEEP** — `original_es2/characters/mei_yingfeng.md`
+- **KEEP** — `original_es2/data/historical_race_registry.json`
+- **KEEP** — `original_es2/data/m15_lengmei_mei_yingfeng.json`
+- **KEEP** — `original_es2/races/headless.md`
+- **KEEP** — `original_es2/races/README.md`
+- **KEEP** — `original_es2/research/CLASS_SCHOOL_EVIDENCE_TO_RUNTIME_MAP.md`
+- **KEEP** — `original_es2/research/closure/m18_quest_closure.md`
+- **KEEP** — `original_es2/research/closure/m23_core_gameplay_integration.md`
+- **KEEP** — `original_es2/research/closure/m24_system_data_integrity.md`
+- **KEEP** — `original_es2/research/closure/m25_release_candidate.md`
+- **KEEP** — `original_es2/research/closure/m30_completion_matrix.md`
+- **KEEP** — `original_es2/research/closure/m5_evidence_closure.md`
+- **KEEP** — `original_es2/research/CURRENT_GAME_DATA_GAP_EVIDENCE_COMPARISON.md`
+- **KEEP** — `original_es2/research/es2_actual_login_character_runtime_evidence_part1.md`
+- **KEEP** — `original_es2/research/es2_google_sites_index.md`
+- **KEEP** — `original_es2/research/EVIDENCE_CONFLICT_REGISTER.md`
+- **KEEP** — `original_es2/research/EVIDENCE_MASTER_INDEX.md`
+- **KEEP** — `original_es2/research/EVIDENCE_MASTER_SUMMARY_ZH_TW.md`
+- **KEEP** — `original_es2/research/EVIDENCE_RECOVERY_BACKLOG.md`
+- **KEEP** — `original_es2/research/EVIDENCE_RECOVERY_EXECUTION.md`
+- **KEEP** — `original_es2/research/EVIDENCE_RUNTIME_USABILITY_MATRIX.md`
+- **KEEP** — `original_es2/research/EVIDENCE_STATUS_STANDARD.md`
+- **KEEP** — `original_es2/research/EXTERNAL_EVIDENCE_RECOVERY_REGISTER.md`
+- **KEEP** — `original_es2/research/M11_M25_RUNTIME_GATE_SEMANTICS_AUDIT.md`
+- **KEEP** — `original_es2/research/m16_npc_item_evidence_registry.md`
+- **KEEP** — `original_es2/research/m17_world_evidence_registry.md`
+- **KEEP** — `original_es2/research/M18_EVIDENCE_TO_RUNTIME_FIELD_MAP.md`
+- **KEEP** — `original_es2/research/m18_quest_evidence_registry.md`
+- **KEEP** — `original_es2/research/m19_lifecycle_evidence_registry.md`
+- **KEEP** — `original_es2/research/m21_world_content_evidence_registry.md`
+- **KEEP** — `original_es2/research/m22_npc_item_evidence_registry.md`
+- **KEEP** — `original_es2/research/mei_yingfeng_skills_runtime_evidence.md`
+- **KEEP** — `original_es2/research/original_apprentice_m14.md`
+- **KEEP** — `original_es2/research/original_class_reconstruction_m11.md`
+- **KEEP** — `original_es2/research/original_class_school_evidence.md`
+- **KEEP** — `original_es2/research/original_martial_force_m13.md`
+- **KEEP** — `original_es2/research/original_race_google_sites_evidence.md`
+- **KEEP** — `original_es2/research/original_race_reconstruction_phase2.md`
+- **KEEP** — `original_es2/research/original_race_runtime_baseline_m10.tsv`
+- **KEEP** — `original_es2/research/original_skill_reconstruction_m12.md`
+- **KEEP** — `original_es2/research/original_study_formula_m12.md`
+- **KEEP** — `original_es2/research/original_study_learning_m12.md`
+- **KEEP** — `original_es2/research/original_world_map_google_sites_evidence.md`
+- **KEEP** — `original_es2/research/pixnet_clert2201_historical_gameplay_evidence.md`
+- **KEEP** — `original_es2/research/plans/m10_m12_next_execution.md`
+- **KEEP** — `original_es2/research/plans/m15_lengmei_runtime_plan.md`
+- **KEEP** — `original_es2/research/plans/m16_npc_item_runtime_plan.md`
+- **KEEP** — `original_es2/research/plans/m17_world_runtime_plan.md`
+- **KEEP** — `original_es2/research/plans/m18_quest_runtime_plan.md`
+- **KEEP** — `original_es2/research/plans/m19_lifecycle_runtime_plan.md`
+- **KEEP** — `original_es2/research/plans/m21_world_content_runtime_plan.md`
+- **KEEP** — `original_es2/research/plans/m22_npc_item_runtime_plan.md`
+- **KEEP** — `original_es2/research/plans/original_race_runtime_reconstruction_plan.md`
+- **KEEP** — `original_es2/research/plans/original_study_runtime_plan_m12.md`
+- **KEEP** — `original_es2/research/README.md`
+- **KEEP** — `original_es2/research/RECOVERY_ARCHITECTURE_MAP.md`
+- **KEEP** — `original_es2/research/results/m10_original_race_baseline_result.md`
+- **KEEP** — `original_es2/research/results/m12_study_runtime_result.md`
+- **KEEP** — `original_es2/research/status_history/development_acceleration_status.md`
+- **KEEP** — `original_es2/research/status_history/original_google_sites_ingestion_status.md`
+- **KEEP** — `original_es2/research/vovo2000_es2_character_historical_evidence.md`
+- **KEEP** — `original_es2/research/WORLD_EVENT_RUNTIME_MAP.md`
+- **KEEP** — `original_es2/runtime/m12_study_learning_result.md`
+- **KEEP** — `original_es2/runtime/m2_character_attribute_plan.md`
+- **KEEP** — `original_es2/runtime/m21_world_content_result.md`
+- **KEEP** — `original_es2/runtime/m22_npc_item_result.md`
+- **KEEP** — `original_es2/runtime/m23_core_gameplay_result.md`
+- **KEEP** — `original_es2/runtime/m24_data_integrity_result.md`
+- **KEEP** — `original_es2/runtime/m25_release_candidate_result.md`
+- **KEEP** — `original_es2/runtime/m3_persistence_relogin_result.md`
+- **KEEP** — `original_es2/runtime/m4_combat_skills_result.md`
+- **KEEP** — `original_es2/runtime/m5_race_framework_result.md`
+- **KEEP** — `original_es2/runtime/m6_m9_race_phase2_result.md`
+- **KEEP** — `original_es2/runtime/README.md`
+- **KEEP** — `original_es2/source_manifest.md`
+- **KEEP** — `original_es2/systems/character_foundation.md`
+- **KEEP** — `original_es2/tests/m20_original_alpha_acceptance.md`
+- **KEEP** — `original_es2/tests/minimum_playable_milestone.md`
+- **KEEP** — `original_es2/ui/score_interface.md`
+- **KEEP** — `README.md`
+- **KEEP** — `render.yaml`
+- **KEEP** — `ROADMAP_M0_M30.md`
+- **KEEP** — `scripts/apply_es2_king_expansion.sh`
+- **KEEP** — `scripts/apply_race_phase2_runtime.sh`
+- **KEEP** — `scripts/assert_m30_final_runtime.sh`
+- **KEEP** — `scripts/audit_game_completion_runtime.sh`
+- **KEEP** — `scripts/bootstrap_game_completion_character.sh`
+- **KEEP** — `scripts/bootstrap_original_es2.sh`
+- **KEEP** — `scripts/es2_neon_persistence.py`
+- **KEEP** — `scripts/healthcheck_es2_king.mjs`
+- **KEEP** — `scripts/prepare_es2_persistence.sh`
+- **KEEP** — `scripts/run_game_completion_track.sh`
+- **KEEP** — `scripts/start_es2_king_playable.sh`
+- **KEEP** — `scripts/start_es2_king_web.sh`
+- **KEEP** — `scripts/start_es2_king.sh`
+- **KEEP** — `scripts/sync_es2_persistence.sh`
+- **KEEP** — `scripts/test_apprentice_m14_static.sh`
+- **KEEP** — `scripts/test_class_m11_static.sh`
+- **KEEP** — `scripts/test_class_school_m11_static.sh`
+- **KEEP** — `scripts/test_daxie_qisun_runtime_e2e.mjs`
+- **KEEP** — `scripts/test_daxie_qisun_runtime_e2e.sh`
+- **KEEP** — `scripts/test_daxie_qisun_static.sh`
+- **KEEP** — `scripts/test_es2_cn_standard.sh`
+- **KEEP** — `scripts/test_game_completion_bootstrap_static.sh`
+- **KEEP** — `scripts/test_game_completion_full_driver_e2e.mjs`
+- **KEEP** — `scripts/test_game_completion_full_driver_e2e.sh`
+- **KEEP** — `scripts/test_game_completion_journey.sh`
+- **KEEP** — `scripts/test_game_completion_quest_evidence.sh`
+- **KEEP** — `scripts/test_king_owner_authorization_static.sh`
+- **KEEP** — `scripts/test_lengmei_m15_runtime_gate.sh`
+- **KEEP** — `scripts/test_lengmei_m15_static.sh`
+- **KEEP** — `scripts/test_m16_npc_item_runtime_gate.sh`
+- **KEEP** — `scripts/test_m16_npc_item_static.sh`
+- **KEEP** — `scripts/test_m17_world_runtime_gate.sh`
+- **KEEP** — `scripts/test_m18_quest_runtime_gate.sh`
+- **KEEP** — `scripts/test_m19_lifecycle_runtime_gate.sh`
+- **KEEP** — `scripts/test_m19_lifecycle_static.sh`
+- **KEEP** — `scripts/test_m20_original_alpha_static.sh`
+- **KEEP** — `scripts/test_m20_original_alpha.py`
+- **KEEP** — `scripts/test_m21_world_runtime_gate.sh`
+- **KEEP** — `scripts/test_m21_world_static.sh`
+- **KEEP** — `scripts/test_m22_npc_item_runtime_gate.sh`
+- **KEEP** — `scripts/test_m22_npc_item_static.sh`
+- **KEEP** — `scripts/test_m23_core_gameplay_runtime_gate.sh`
+- **KEEP** — `scripts/test_m23_core_gameplay_static.sh`
+- **KEEP** — `scripts/test_m24_data_integrity_runtime_gate.sh`
+- **KEEP** — `scripts/test_m24_data_integrity_static.sh`
+- **KEEP** — `scripts/test_m25_release_candidate_runtime_gate.sh`
+- **KEEP** — `scripts/test_m25_release_candidate_static.sh`
+- **KEEP** — `scripts/test_m26_king_admin_runtime_gate.sh`
+- **KEEP** — `scripts/test_m26_king_admin_static.sh`
+- **KEEP** — `scripts/test_m27_wuji_realm_runtime_gate.sh`
+- **KEEP** — `scripts/test_m27_wuji_realm_static.sh`
+- **KEEP** — `scripts/test_m28_martial_runtime_gate.sh`
+- **KEEP** — `scripts/test_m28_martial_static.sh`
+- **KEEP** — `scripts/test_m29_canon_runtime_gate.sh`
+- **KEEP** — `scripts/test_m29_canon_static.sh`
+- **KEEP** — `scripts/test_m30_alpha_runtime_gate.sh`
+- **KEEP** — `scripts/test_m30_alpha_static.sh`
+- **KEEP** — `scripts/test_m30_character_browser_input.mjs`
+- **KEEP** — `scripts/test_m30_claim_browser_input.mjs`
+- **KEEP** — `scripts/test_m30_deployment_smoke.mjs`
+- **KEEP** — `scripts/test_m30_deployment_static.sh`
+- **KEEP** — `scripts/test_m30_desktop_centering.mjs`
+- **KEEP** — `scripts/test_m30_final_audit.sh`
+- **KEEP** — `scripts/test_m30_final_runtime_permissions.sh`
+- **KEEP** — `scripts/test_m30_king_claim_e2e.mjs`
+- **KEEP** — `scripts/test_m30_king_claim_e2e.sh`
+- **KEEP** — `scripts/test_m30_king_reservation_e2e.mjs`
+- **KEEP** — `scripts/test_m30_king_reservation_e2e.sh`
+- **KEEP** — `scripts/test_m30_mobile_responsive.mjs`
+- **KEEP** — `scripts/test_m30_persistence_paths.sh`
+- **KEEP** — `scripts/test_m30_production_equivalent_king_reservation.sh`
+- **KEEP** — `scripts/test_m30_webtelnet_display.mjs`
+- **KEEP** — `scripts/test_m5_m18_closure.sh`
+- **KEEP** — `scripts/test_martial_force_m13_static.sh`
+- **KEEP** — `scripts/test_race_original_baseline_m10.sh`
+- **KEEP** — `scripts/test_race_original_evidence_m10.sh`
+- **KEEP** — `scripts/test_race_phase2_regression.sh`
+- **KEEP** — `scripts/test_race_phase2_static.sh`
+- **KEEP** — `scripts/test_roadmap_m21_m30.sh`
+- **KEEP** — `scripts/test_skill_m12_static.sh`
+- **KEEP** — `scripts/test_study_m12_static.sh`
+- **KEEP** — `webtelnet/package-lock.json`
+- **KEEP** — `webtelnet/package.json`
+- **KEEP** — `webtelnet/public/character-input.mjs`
+- **KEEP** — `webtelnet/public/claim-input.mjs`
+- **KEEP** — `webtelnet/public/index.html`
+- **KEEP** — `webtelnet/README.md`
+- **KEEP** — `webtelnet/server.mjs`
+- **KEEP** — `webtelnet/telnet.mjs`
+
+## 邊界結論
+
+- `original_es2/`：全部 KEEP；不刪除 Evidence、不補造 Canon。
+- `es2_king_expansion/`：全部 KEEP；與 Original 永久分離。
+- `king_library/`：8 份均為 Canon Library，與 Runtime 文件用途不同，無 authoritative duplicate。
+- `legacy_sources/`：5 份均為歷史參考，KEEP。
+- `scripts/`：80 份全部 KEEP；以 Logical Index 分類，不冒險搬路徑。
+- Garbage Scan：沒有 tracked log/tmp/bak/cache/node_modules/runtime save；以 `.gitignore` 加強預防。
