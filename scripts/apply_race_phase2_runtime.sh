@@ -254,7 +254,17 @@ if [[ -d "$ES2M_WUTANG_DIR" ]]; then
   else
     cp "$KING_FERRY_NPC" "$KING_FERRY_NPC_DST"
   fi
-  echo 'KING WUTANG FERRY STAGE PASS／羿水渡兩艘船與船夫 NPC 已保留於 Runtime。'
+  # KING Ferry bank／紫煙鎮渡口是船夫跨區移動的必要目的地；只補入已確認的 Expansion 房間。
+  KING_FERRY_BANK="$REPO_ROOT/es2_king_expansion/runtime/mudlib/d/ziyan/ferry.c"
+  KING_FERRY_BANK_DST="$ROOT/mudlib/d/ziyan/ferry.c"
+  [[ -f "$KING_FERRY_BANK" ]] || { echo "KING WUTANG FERRY FAIL: missing Expansion bank $KING_FERRY_BANK" >&2; exit 1; }
+  mkdir -p "$(dirname "$KING_FERRY_BANK_DST")"
+  if [[ -e "$KING_FERRY_BANK_DST" ]]; then
+    cmp -s "$KING_FERRY_BANK" "$KING_FERRY_BANK_DST" || { echo "KING WUTANG FERRY CONFLICT: $KING_FERRY_BANK_DST differs from Expansion source" >&2; exit 1; }
+  else
+    cp "$KING_FERRY_BANK" "$KING_FERRY_BANK_DST"
+  fi
+  echo 'KING WUTANG FERRY STAGE PASS／羿水渡兩艘船、船夫 NPC 與紫煙渡口已保留於 Runtime。'
 
   # 最新五堂鎮地圖的絕對出口依賴可能位於其他區域；補入來源存在而 Runtime 尚缺的檔案。
   python3 - "$REPO_ROOT/es2m_source_mirror/mudlib" "$ROOT/mudlib" <<'PY'
