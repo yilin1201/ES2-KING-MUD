@@ -458,9 +458,9 @@ async function exerciseShopQuantityJourney(p) {
   assert.match(await command(p, "wear fur hat"), /戴上.*毛皮帽|穿上.*毛皮帽|裝備.*毛皮帽/);
   assert.match(await command(p, "remove fur hat"), /脫了下來|卸除/);
   inventory = await command(p, "inventory");
-  // pay_money() 正常化面額：190 文等值為一兩碎銀 + 九十文錢。
+  // F_VENDOR 實際售價加成後扣 60 文；餘額 180 文等值為一兩碎銀 + 八十文錢。
   assert.match(inventory, /一兩碎銀/);
-  assert.match(inventory, /九十文錢/);
+  assert.match(inventory, /八十文錢/);
   assert.match(await command(p, "west"), /街道/);
   assert.match(await command(p, "north"), /廣場/);
   assert.match(await command(p, "north"), /廣場中央/);
@@ -478,7 +478,7 @@ async function exerciseShopQuantityJourney(p) {
   assert.match(await command(p, "buy 1 chicken from waiter"), /錢不夠/);
   inventory = await command(p, "inventory");
   assert.match(inventory, /一兩碎銀/);
-  assert.match(inventory, /九十文錢/);
+  assert.match(inventory, /八十文錢/);
 
   // Delivery Failure／交貨失敗：點餐後立刻離房，店小二取消交貨且不得扣款。
   const leaveBuyOffset = p.output.length;
@@ -492,7 +492,7 @@ async function exerciseShopQuantityJourney(p) {
   await delay(3500);
   const unchanged = await command(p, "inventory");
   assert.match(unchanged, /一兩碎銀/);
-  assert.match(unchanged, /九十文錢/);
+  assert.match(unchanged, /八十文錢/);
   assert.doesNotMatch(unchanged, /牛肉包子/);
   assert.match(await command(p, "west"), /客棧大堂/);
 
