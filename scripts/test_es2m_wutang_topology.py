@@ -110,6 +110,7 @@ def main() -> None:
     parser.add_argument("--runtime", type=Path)
     parser.add_argument("--current-source", type=Path, help="Latest ES2M source mirror for room inventory comparison")
     parser.add_argument("--include-expansion-boats", action="store_true", help="Include explicitly tracked KING Expansion ferry rooms and ferryman NPCs in the expected Runtime inventory")
+    parser.add_argument("--include-expansion-npcs", action="store_true", help="Include explicitly tracked KING Expansion NPCs in the expected Runtime inventory")
     parser.add_argument("--expansion-source", type=Path, default=Path(__file__).resolve().parents[1] / "es2_king_expansion/runtime/mudlib", help="KING Expansion files that are intentionally retained in Runtime")
     args = parser.parse_args()
     source_area = args.source / "d/wutang"
@@ -131,10 +132,12 @@ def main() -> None:
             # KING Expansion／羿水渡船與船夫不屬於 ES2M 上游清冊；最終 Runtime gate 必須一併保留。
             expansion_boat_names = set()
             expansion_npc_names = set()
-            if args.include_expansion_boats:
+            if args.include_expansion_boats or args.include_expansion_npcs:
                 expansion_area = args.expansion_source / "d/wutang"
-                expansion_boat_names = {p.name for p in expansion_area.glob("*.c") if p.stem in BOAT_ROOMS}
-                expansion_npc_names = {p.name for p in (expansion_area / "npc").glob("*.c")}
+                if args.include_expansion_boats:
+                    expansion_boat_names = {p.name for p in expansion_area.glob("*.c") if p.stem in BOAT_ROOMS}
+                if args.include_expansion_npcs:
+                    expansion_npc_names = {p.name for p in (expansion_area / "npc").glob("*.c")}
             expected_boat_names = current_boat_names | expansion_boat_names
             current_room_names = {p.name for p in current_area.glob("*.c") if p.stem not in BOAT_ROOMS}
             current_npc_names = {p.name for p in (current_area / "npc").glob("*.c")}
