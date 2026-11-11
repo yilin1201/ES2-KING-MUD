@@ -101,7 +101,8 @@ async function createCharacter({ id, raceChoice, raceLabel, genderChoice, name }
   assert.match(await command(p, "i"), /身上|攜帶|沒有|物品|木劍/);
   assert.match(await command(p, "inventory"), /身上|攜帶|沒有|物品|木劍/);
   console.log(`PLAYER_COLD_LOGIN_INVENTORY_PASS:${id}`);
-  assert.match(await command(p, "look"), /客棧大堂/);
+  // Innkeeper closes the inn at 22:00 and moves guests to the west plaza; accept either real room state.
+  assert.match(await command(p, "look"), /客棧大堂|雪亭鎮廣場的西邊/);
   const score = await command(p, "score");
   assert.match(score, /平民/);
   assert.match(score, /等級|Level|級/);
@@ -136,9 +137,16 @@ async function saveQuitRelogin(p, scoreMatcher) {
 }
 
 async function enterInnAsPlayer(p) {
-  await command(p, "open east", /打開|已經是開著/);
-  assert.match(await command(p, "east"), /雪亭鎮廣場的西邊/);
-  assert.match(await command(p, "west"), /客棧大堂/);
+  const current = await command(p, "look");
+  if (/雪亭鎮廣場的西邊/.test(current)) {
+    // At night the innkeeper closes the door and moves guests outside; reopen the west door from the plaza.
+    await command(p, "open west", /打開|已經是開著/);
+    assert.match(await command(p, "west"), /客棧大堂/);
+  } else {
+    await command(p, "open east", /打開|已經是開著/);
+    assert.match(await command(p, "east"), /雪亭鎮廣場的西邊/);
+    assert.match(await command(p, "west"), /客棧大堂/);
+  }
   assert.match(await command(p, "look waiter"), /店小二|小二/);
   console.log(`PLAYER_WORLD_PASS:${p.id}:movement-npc`);
 }
