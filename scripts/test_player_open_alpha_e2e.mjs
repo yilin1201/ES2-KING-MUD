@@ -553,6 +553,7 @@ avatar.socket.close();
 
 // Lee Village／李家村 ES2M Reconstruction：獨立普通玩家 Journey，驗證世界連線與 NPC clone。
 const lee = await createCharacter({ id: leeId, raceChoice: "1", raceLabel: "human", genderChoice: "M", name: "李村旅人" });
+await enterInnAsPlayer(lee);
 await exerciseShopQuantityJourney(lee);
 await exerciseLeeVillageJourney(lee);
 await saveQuitRelogin(lee, /平民/);
