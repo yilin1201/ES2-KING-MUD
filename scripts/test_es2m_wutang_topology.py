@@ -139,8 +139,8 @@ def main() -> None:
             assert runtime_room_count == len(current_room_names), (
                 f"ES2M_WUTANG_RUNTIME_ROOM_COUNT: {runtime_room_count} expected_current_source={len(current_room_names)}"
             )
-            assert runtime_boat_count == len(current_boat_names), (
-                f"ES2M_WUTANG_RUNTIME_BOAT_COUNT: {runtime_boat_count} expected_current_source={len(current_boat_names)}"
+            assert runtime_boat_count == len(expected_boat_names), (
+                f"ES2M_WUTANG_RUNTIME_BOAT_COUNT: {runtime_boat_count} expected_upstream_plus_expansion={len(expected_boat_names)}"
             )
             assert runtime_npc_count == len(current_npc_names), (
                 f"ES2M_WUTANG_RUNTIME_NPC_COUNT: {runtime_npc_count} expected_current_source={len(current_npc_names)}"
