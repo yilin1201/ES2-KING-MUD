@@ -109,6 +109,7 @@ def main() -> None:
     parser.add_argument("--source", required=True, type=Path)
     parser.add_argument("--runtime", type=Path)
     parser.add_argument("--current-source", type=Path, help="Latest ES2M source mirror for room inventory comparison")
+    parser.add_argument("--expansion-source", type=Path, default=Path(__file__).resolve().parents[1] / "es2_king_expansion/runtime/mudlib", help="KING Expansion files that are intentionally retained in Runtime")
     args = parser.parse_args()
     source_area = args.source / "d/wutang"
     source_boat_count = sum(1 for p in source_area.glob("*.c") if p.stem in BOAT_ROOMS)
@@ -126,6 +127,11 @@ def main() -> None:
         if args.current_source:
             current_area = args.current_source / "d/wutang"
             current_boat_names = {p.name for p in current_area.glob("*.c") if p.stem in BOAT_ROOMS}
+            # KING Expansion／羿水渡兩艘船是 KING 自訂內容，不在最新 ES2M 上游清冊內；
+            # Runtime 必須同時保留上游船隻與明確登錄的 Expansion 船隻。
+            expansion_area = args.expansion_source / "d/wutang"
+            expansion_boat_names = {p.name for p in expansion_area.glob("*.c") if p.stem in BOAT_ROOMS}
+            expected_boat_names = current_boat_names | expansion_boat_names
             current_room_names = {p.name for p in current_area.glob("*.c") if p.stem not in BOAT_ROOMS}
             current_npc_names = {p.name for p in (current_area / "npc").glob("*.c")}
             assert runtime_room_count == len(current_room_names), (
@@ -147,7 +153,10 @@ def main() -> None:
             runtime_boat_names = {p.name for p in runtime_area.glob("*.c") if p.stem in BOAT_ROOMS}
             runtime_npc_names = {p.name for p in (runtime_area / "npc").glob("*.c")}
             assert runtime_room_names == current_room_names, "ES2M_WUTANG_RUNTIME_ROOM_INVENTORY_MISMATCH"
-            assert runtime_boat_names == current_boat_names, "ES2M_WUTANG_RUNTIME_BOAT_INVENTORY_MISMATCH"
+            assert runtime_boat_names == expected_boat_names, (
+                "ES2M_WUTANG_RUNTIME_BOAT_INVENTORY_MISMATCH: "
+                f"runtime={sorted(runtime_boat_names)} expected_upstream_plus_expansion={sorted(expected_boat_names)}"
+            )
             assert runtime_npc_names == current_npc_names, "ES2M_WUTANG_RUNTIME_NPC_INVENTORY_MISMATCH"
     print(
         f"ES2M WUTANG TOPOLOGY PASS／來源 {source_room_count} 房間、{source_npc_count} NPC；"
