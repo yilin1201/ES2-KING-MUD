@@ -43,14 +43,6 @@ private void set_money_amount(string type, int amount)
     ob->set_amount(amount);
 }
 
-// refund_money／退還貨款：延遲交貨失敗時，將已收款退回並自動換算銀兩與銅錢。
-int refund_money(int amount)
-{
-    if (amount <= 0) return 1;
-    set_carried_money_value(query_carried_money_value() + amount);
-    return 1;
-}
-
 private void set_carried_money_value(int value)
 {
     int gold, silver, coin;
@@ -65,6 +57,14 @@ private void set_carried_money_value(int value)
     set_money_amount("gold", gold);
     set_money_amount("silver", silver);
     set_money_amount("coin", coin);
+}
+
+// refund_money／退還貨款：延遲交貨失敗時，將已收款退回並自動換算銀兩與銅錢。
+int refund_money(int amount)
+{
+    if (amount <= 0) return 1;
+    set_carried_money_value(query_carried_money_value() + amount);
+    return 1;
 }
 
 varargs int
