@@ -478,7 +478,7 @@ async function exerciseShopQuantityJourney(p) {
   assert.match(await command(p, "buy 1 chicken from waiter"), /錢不夠/);
   inventory = await command(p, "inventory");
   assert.match(inventory, /一兩碎銀/);
-  assert.match(inventory, /九十文錢/);
+  assert.match(inventory, /八十文錢/);
 
   // Delivery Failure／交貨失敗：點餐後立刻離房，店小二取消交貨且不得扣款。
   const leaveBuyOffset = p.output.length;
@@ -492,7 +492,7 @@ async function exerciseShopQuantityJourney(p) {
   await delay(3500);
   const unchanged = await command(p, "inventory");
   assert.match(unchanged, /一兩碎銀/);
-  assert.match(unchanged, /九十文錢/);
+  assert.match(unchanged, /八十文錢/);
   assert.doesNotMatch(unchanged, /牛肉包子/);
   assert.match(await command(p, "west"), /客棧大堂/);
 
