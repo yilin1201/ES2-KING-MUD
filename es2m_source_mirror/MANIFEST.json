@@ -2,7 +2,7 @@
   "purpose": "ES2M-KDS 最新原始 Mudlib 唯讀鏡像；不得直接視為 Original ES2，也不直接取代 KING 專屬資料。",
   "source_repository": "kds121tw/ES2M-KDS",
   "source_branch": "main",
-  "source_commit": "ced29a6e9cdb0ce6e2392a80702295e350dbcb57",
+  "source_commit": "79ce2b2c4046be0371b8245365d6aed12d84be1c",
   "source_path": "source/upstream/mudlib/",
   "mirror_path": "es2m_source_mirror/mudlib/",
   "file_count": 1829,
@@ -9160,5 +9160,7 @@
     "KING runtime overlay 依來源同路徑覆蓋；不刪除來源中不存在的 KING 專屬檔案。",
     "Pinned Original ES2 checkout 僅供比較，絕不修改。",
     "本 Workflow 僅由 KING Repository 執行，不向 ES2M 或 KDS 推送。"
-  ]
+  ],
+  "sync_requested_at": "2026-11-17",
+  "sync_note": "觸發 KING workflow 從 ES2M-KDS main 重新擷取完整最新 Mudlib；workflow 會重建 file manifest 並依保護規則同步 runtime overlay。"
 }
