@@ -102,6 +102,12 @@ def validate(runtime_mudlib: Path) -> None:
             if recognized:
                 continue
 
+        # KING 專屬 waiter 延遲交貨退款修正：只接受與 Repository Runtime overlay 完全同雜湊的檔案。
+        if item.path == "d/snow/npc/waiter.c":
+            king_waiter = ROOT / "es2_king_expansion" / "runtime" / "mudlib" / item.path
+            if king_waiter.is_file() and actual == digest(king_waiter):
+                continue
+
         # 其他交易檔若已是最新 ES2M 內容，保留上游版本。
         if latest_source.is_file() and actual == digest(latest_source):
             continue
@@ -146,6 +152,11 @@ def apply(runtime_mudlib: Path) -> int:
                 (runtime_mudlib / "bin" / Path(item.path).with_suffix(".b")).unlink(missing_ok=True)
                 continue
 
+        # 已套用 KING waiter 退款 overlay 時，保留此受控版本，不回退成舊版來源檔。
+        if item.path == "d/snow/npc/waiter.c":
+            king_waiter = ROOT / "es2_king_expansion" / "runtime" / "mudlib" / item.path
+            if king_waiter.is_file() and digest(target) == digest(king_waiter):
+                continue
         if latest_source.is_file() and digest(target) == digest(latest_source):
             continue
         if digest(target) != item.source_sha256:
