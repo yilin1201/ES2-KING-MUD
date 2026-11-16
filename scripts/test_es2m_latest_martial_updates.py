@@ -97,8 +97,8 @@ def main() -> None:
 
     pot = read(OVERLAY / "d/snow/npc/obj/pot.c")
     wine_pot = read(OVERLAY / "d/snow/npc/obj/wine_pot.c")
-    require('if( !(liquid = present("water", this_object())) )' in pot and 'liquid->set_volume(100000);' in pot,
-            "大水缸在水喝光後應能重新建立並補滿水。")
+    require('if( !(liquid = present("water", this_object())) )' in pot and 'liquid->set_volume(150000);' in pot,
+            "大水缸在水喝光後應能重新建立並補滿 150000 容量的水。")
     require('if( !(liquid = present("red wine", this_object())) )' in wine_pot and 'liquid->set_volume(150000);' in wine_pot,
             "大酒缸在酒喝光後應能重新建立並補滿酒。")
 
