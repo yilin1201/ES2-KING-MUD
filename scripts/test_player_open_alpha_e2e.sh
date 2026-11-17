@@ -31,6 +31,9 @@ cp -a "$SOURCE_RUNTIME/mudlib" "$TEMP_ROOT/mudlib"
 cp "$SOURCE_RUNTIME/neolith.conf" "$TEMP_ROOT/neolith.conf"
 bash "$REPO_ROOT/scripts/apply_race_phase2_runtime.sh" "$TEMP_ROOT"
 bash "$REPO_ROOT/scripts/apply_es2_king_expansion.sh" "$TEMP_ROOT"
+# 商品 autoload adapters 必須在 KING Expansion 覆蓋來源檔之後套用，避免被覆蓋回無保存版本。
+python3 "$REPO_ROOT/scripts/apply_combined_item_autoload_runtime.py" --runtime "$TEMP_ROOT/mudlib"
+python3 "$REPO_ROOT/scripts/apply_shop_item_autoload_runtime.py" --runtime "$TEMP_ROOT/mudlib"
 # Shop quantity safety overlay／隔離玩家 Runtime 也必須套用正式建置相同的 ES2M 購買數量防護。
 python3 "$REPO_ROOT/scripts/apply_es2m_shop_quantity_runtime.py" --runtime "$TEMP_ROOT/mudlib"
 bash "$REPO_ROOT/scripts/apply_combat_balance_instrumentation.sh" "$TEMP_ROOT"
