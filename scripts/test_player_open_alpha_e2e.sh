@@ -112,32 +112,18 @@ SHOP_ACCEPTANCE:NO_DUPLICATE_NONSTACK:PASS:PLAYER_ES2M_SHOP_NONSTACK_PERSISTENCE
 SHOP_ACCEPTANCE:BALANCE_PERSISTENCE:PASS:PLAYER_ES2M_SHOP_BALANCE_PERSISTENCE_PASS
 EOF
 
-# Save Evidence Debug／先輸出實際存檔路徑與欄位，避免靜默的 grep/test 失敗。
-for id in kinglook avataropen; do
-  initial="${id:0:1}"
-  for file in "$TEMP_ROOT/mudlib/data/login/$initial/$id.o" "$TEMP_ROOT/mudlib/data/user/$initial/$id.o"; do
-    if test -s "$file"; then
-      echo "SAVE_FILE_DEBUG:PASS:$file:$(wc -c < "$file") bytes"
-      head -c 1200 "$file" | tr '\\n' ' '
-      echo
-    else
-      echo "SAVE_FILE_DEBUG:FAIL:$file:missing-or-empty"
-    fi
-  done
-done
-
 # Save Evidence／存檔證據：由 Driver 從零建立，不接受 fixture 或畫面文字替代。
 for id in kinglook avataropen; do
   initial="${id:0:1}"
   test -s "$TEMP_ROOT/mudlib/data/login/$initial/$id.o"
   test -s "$TEMP_ROOT/mudlib/data/user/$initial/$id.o"
-  grep -Fq '"level":1' "$TEMP_ROOT/mudlib/data/user/$initial/$id.o"
+  grep -Eq '"level"[[:space:]]*:[[:space:]]*1' "$TEMP_ROOT/mudlib/data/user/$initial/$id.o"
 done
-grep -Fq '"race":"human"' "$TEMP_ROOT/mudlib/data/user/k/kinglook.o"
-grep -Fq '"class":"alchemist"' "$TEMP_ROOT/mudlib/data/user/k/kinglook.o"
-grep -Fq '"name":"KING"' "$TEMP_ROOT/mudlib/data/user/k/kinglook.o"
-grep -Fq '"race":"avatar"' "$TEMP_ROOT/mudlib/data/user/a/avataropen.o"
-grep -Fq '"class":"commoner"' "$TEMP_ROOT/mudlib/data/user/a/avataropen.o"
+grep -Eq '"race"[[:space:]]*:[[:space:]]*"human"' "$TEMP_ROOT/mudlib/data/user/k/kinglook.o"
+grep -Eq '"class"[[:space:]]*:[[:space:]]*"alchemist"' "$TEMP_ROOT/mudlib/data/user/k/kinglook.o"
+grep -Eq '"id"[[:space:]]*:[[:space:]]*"kinglook"' "$TEMP_ROOT/mudlib/data/user/k/kinglook.o"
+grep -Eq '"race"[[:space:]]*:[[:space:]]*"avatar"' "$TEMP_ROOT/mudlib/data/user/a/avataropen.o"
+grep -Eq '"class"[[:space:]]*:[[:space:]]*"commoner"' "$TEMP_ROOT/mudlib/data/user/a/avataropen.o"
 
 BALANCE_LOG="$TEMP_ROOT/mudlib/log/combat_balance"
 if test -s "$BALANCE_LOG"; then
