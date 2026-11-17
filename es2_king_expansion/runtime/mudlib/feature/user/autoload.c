@@ -37,7 +37,9 @@ void save_autoload()
 	inv = all_inventory();
 	autoload = allocate(sizeof(inv));
 	for(i=0, j=0; i<sizeof(inv); i++) {
-		if( !(param = inv[i]->query_autoload()) ) continue;
+		param = inv[i]->query_autoload();
+		tell_object(this_object(), sprintf("KING_AUTOLOAD_ITEM path=%s param=%O\\n", base_name(inv[i]), param));
+		if( !param ) continue;
 		autoload[j] = base_name(inv[i]);
 		if( stringp(param) ) autoload[j] += ":" + param;
 		j++;
