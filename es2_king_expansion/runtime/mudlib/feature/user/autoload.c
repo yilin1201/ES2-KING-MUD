@@ -37,17 +37,12 @@ void save_autoload()
 	inv = all_inventory();
 	autoload = allocate(sizeof(inv));
 	for(i=0, j=0; i<sizeof(inv); i++) {
-		param = inv[i]->query_autoload();
-		tell_object(this_object(), sprintf("KING_AUTOLOAD_ITEM path=%s param=%O\\n", base_name(inv[i]), param));
-		if( !param ) continue;
+		if( !(param = inv[i]->query_autoload()) ) continue;
 		autoload[j] = base_name(inv[i]);
 		if( stringp(param) ) autoload[j] += ":" + param;
 		j++;
 	}
 	autoload = autoload[0..j-1];
-	// KING Runtime：同步保存至玩家 DBASE，確保重新登入可還原一般商品。
-	this_object()->set("king_autoload_items", autoload);
-	tell_object(this_object(), sprintf("KING_AUTOLOAD_SAVE count=%d list=%O\\n", sizeof(autoload), autoload));
 }
 
 void restore_autoload()
@@ -55,14 +50,8 @@ void restore_autoload()
 	int i;
 	object ob;
 	string file, param, err;
-	mixed saved_autoload;
 
-	// 優先從玩家 DBASE 取回 autoload 清單，避免只依賴繼承變數的序列化。
-	saved_autoload = this_object()->query("king_autoload_items");
-	if( pointerp(saved_autoload) )
-		autoload = saved_autoload;
 	if( !pointerp(autoload) ) return;
-	tell_object(this_object(), sprintf("KING_AUTOLOAD_RESTORE count=%d list=%O\\n", sizeof(autoload), autoload));
 
 	for(i=0; i<sizeof(autoload); i++) {
 		if( sscanf(autoload[i], "%s:%s", file, param)!=2 ) {
@@ -81,5 +70,4 @@ void restore_autoload()
 		ob->autoload(param);
 	}
 	clean_up_autoload();		// To save memory.
-	this_object()->delete("king_autoload_items");
 }
