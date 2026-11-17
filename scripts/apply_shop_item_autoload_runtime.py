@@ -10,6 +10,7 @@ from pathlib import Path
 MARKER = "// ES2-KING SHOP ITEM AUTOLOAD 20261008"
 ITEMS = (
     "obj/armor/fur_hat.c",
+    "d/snow/npc/obj/fur_hat.c",
     "d/lee/obj/waterskin.c",
 )
 ADAPTER = r'''
