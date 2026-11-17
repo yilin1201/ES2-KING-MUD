@@ -113,7 +113,9 @@ async function createCharacter({ id, raceChoice, raceLabel, genderChoice, name }
 }
 
 async function saveQuitRelogin(p, scoreMatcher) {
-  assert.match(await command(p, "save"), /檔案儲存完畢/);
+  const saveOutput = await command(p, "save");
+  assert.match(saveOutput, /檔案儲存完畢/);
+  console.log(`KING_AUTOLOAD_SAVE_OUTPUT:${p.id}:${saveOutput.replace(/\\r/g, " ").slice(-500)}`);
   const quitOffset = p.output.length;
   p.socket.send("quit\r\n");
   await waitForAfter(p, quitOffset, "歡迎下次再來");
@@ -126,6 +128,7 @@ async function saveQuitRelogin(p, scoreMatcher) {
   const entered = await sendLine(p, password, /目前權限: \(player\)/, 45000);
   assert.match(entered, /目前權限: \(player\)/);
   await waitForAfter(p, 0, "> ");
+  console.log(`KING_AUTOLOAD_LOGIN_OUTPUT:${p.id}:${p.output.slice(-1000).replace(/\\r/g, " ")}`);
   // 既有角色重新登入後，先查背包，再執行 look/score，避免被後續動作掩蓋首次指令故障。
   assert.match(await command(p, "i"), /身上|攜帶|沒有|物品|木劍|Inventory/i);
   assert.match(await command(p, "inventory"), /身上|攜帶|沒有|物品|木劍|Inventory/i);
