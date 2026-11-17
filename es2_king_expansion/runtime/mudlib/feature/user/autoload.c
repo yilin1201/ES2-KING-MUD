@@ -45,6 +45,7 @@ void save_autoload()
 	autoload = autoload[0..j-1];
 	// KING Runtime：同步保存至玩家 DBASE，確保重新登入可還原一般商品。
 	this_object()->set("king_autoload_items", autoload);
+	tell_object(this_object(), sprintf("KING_AUTOLOAD_SAVE count=%d list=%O\\n", sizeof(autoload), autoload));
 }
 
 void restore_autoload()
@@ -59,6 +60,7 @@ void restore_autoload()
 	if( pointerp(saved_autoload) )
 		autoload = saved_autoload;
 	if( !pointerp(autoload) ) return;
+	tell_object(this_object(), sprintf("KING_AUTOLOAD_RESTORE count=%d list=%O\\n", sizeof(autoload), autoload));
 
 	for(i=0; i<sizeof(autoload); i++) {
 		if( sscanf(autoload[i], "%s:%s", file, param)!=2 ) {
