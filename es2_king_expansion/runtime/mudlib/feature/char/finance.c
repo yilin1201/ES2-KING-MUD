@@ -63,14 +63,6 @@ private void set_money_amount(string type, int amount)
     ob->set_amount(amount);
 }
 
-// KING 延遲交貨退款：保留金元寶／紀念金元寶，不拆大額幣，只把退款金額加回零錢。
-int refund_money(int amount)
-{
-    if( amount <= 0 ) return 1;
-    set_small_money_value(query_small_money_value() + amount);
-    return 1;
-}
-
 // 把零錢整理成黃金、碎銀、文錢（不會湊成金元寶）。
 private void set_small_money_value(int value)
 {
@@ -86,6 +78,14 @@ private void set_small_money_value(int value)
     set_money_amount("gold", gold);
     set_money_amount("silver", silver);
     set_money_amount("coin", coin);
+}
+
+// KING 延遲交貨退款：保留金元寶／紀念金元寶，不拆大額幣，只把退款金額加回零錢。
+int refund_money(int amount)
+{
+    if( amount <= 0 ) return 1;
+    set_small_money_value(query_small_money_value() + amount);
+    return 1;
 }
 
 varargs int
