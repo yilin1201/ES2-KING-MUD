@@ -16,11 +16,14 @@
   master       拜師與師父        books        書籍與讀書
 
 【 門派 】
-  fighter.lunmay 冷梅莊          fighter.tiger    虎刀門
-  fighter.fonxan 封山派          taoist.fire      朱衣派
-  taoist.storm   玄衣派          taoist.wind      隱風觀
-  soldier.ber    振武軍營        alchemist.dragon 龍圖丹派
-  taoist.fog     幻霧觀          alchemist.wuto   武陀灸堂
+  fighter.fonxan   封山派         fighter.lunmay   冷梅莊
+  fighter.tiger    虎刀門         taoist.fire      朱衣派
+  taoist.storm     玄衣派         mao-shan.fog     幻霧觀
+  mao-shan.wind    隱風觀         soldier.ber      振武軍營
+  scholar.myst     步玄派         alchemist.dragon 龍圖丹派
+  alchemist.wu     武陀灸堂       scholar.sky      玄天派
+  taoist.thunder   紫衣派         taoist.freeze    素衣派
+  fighter.huge     哭笑門
 
 【 茅山技能 】
   mao-shan_magic     茅山法術      taoism_of_nature   茅山幻術
@@ -29,6 +32,7 @@
 
 【 其他技能 】
   kee_anatomy  經脈穴道之學
+  enchance     強化之術
 
 【 種族 】
   human        人類／人類族      blackteeth   黑齒
@@ -37,6 +41,7 @@
   rainner      雨師妾            headless     刑天
   malik        巫首              ashura       阿修羅
   yaksa        夜叉              dance        刑天戰舞
+  race.detail  種族詳細資料
 
 【 世界功能 】
   world        世界與探索        snowkeep     雪亭

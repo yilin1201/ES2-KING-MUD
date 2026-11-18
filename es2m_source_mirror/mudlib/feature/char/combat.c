@@ -155,6 +155,8 @@ query_ability (string application)
  * 應該無效。若傳回 0 表示這個人物無法防禦，或防禦失敗。
  */
 
+private void defense_gin_cost(string key, string attr);
+
 int
 defend (int ability, int strength, object from)
 {
@@ -190,6 +192,7 @@ defend (int ability, int strength, object from)
             COMBAT_D->restored_dodge_gain(this_object(), from);
         else if( stringp(sk) && environment(from) && environment(from)->is_character() )
             COMBAT_D->restored_dodge_gain(this_object(), environment(from));
+        defense_gin_cost("dodge_gin_count", "dex");
         return 1;
     }
     return 0;
@@ -204,6 +207,23 @@ defend (int ability, int strength, object from)
  *
  * absorb 應該傳回一個整數值，表示有多少攻擊的強度被「吸收」了。
  */
+
+/* 閃躲、格擋成功的精神耗損（設計見 docs/COMBAT_DEFENSE_GIN.md）
+ * 每成功 N 次扣 1 點精，N = 1 + 屬性 / 7（無條件捨去）。
+ * 閃躲看敏捷（dex）、格擋看定力（cps），次數分開累計；玩家與 NPC 都適用。
+ * 招架不及不算。不顯示任何訊息。精歸零後的昏倒由 statistic 的 exhausted 機制處理。 */
+private void defense_gin_cost(string key, string attr)
+{
+    int n, c;
+
+    n = 1 + query_attr(attr) / 7;
+    c = query_temp(key) + 1;
+    if( c >= n ) {
+        set_temp(key, 0);
+        consume_stat("gin", 1, this_object());
+    }
+    else set_temp(key, c);
+}
 
 private int parry_attack(int strength, object from);
 
@@ -245,6 +265,7 @@ absorb (int ability, int strength, object from)
  * enable 在招架上的武功可以實作：
  *   string parry_message(object me, object attacker, int full)  拆招敘述
  *   void parry_success(object me, object attacker, int full)    格擋後的特效
+ *   int parry_multiplier(object me)                              格擋力道上限的倍率（預設 1）
  */
 private int parry_force_bonus()
 {
@@ -278,6 +299,15 @@ private int parry_attack(int strength, object from)
     // 重擋(heavy_parry，軍人技巧)：格擋力道上限放大，對方有內功時 ×5，沒有時 ×2。
     if( query_learn("heavy_parry") )
         max *= (objectp(attacker) && attacker->query_skill("force") > 0) ? 5 : 2;
+
+    // enable 在招架上的武功可以實作 parry_multiplier()，格擋力道上限再乘上這個倍率
+    // （玄天劍訣：內功同時 enable 玄天心法時 ×2，使用者同意，2026-11-14）。
+    art = skill_mapped("parry");
+    if( stringp(art) && art != "parry" ) daemon = SKILL_D(art);
+    if( objectp(daemon) && function_exists("parry_multiplier", daemon) ) {
+        int mult = (int)daemon->parry_multiplier(this_object());
+        if( mult > 1 ) max *= mult;
+    }
     if( max < 1 ) return 0;
 
     block = 1 + random(max);
@@ -295,11 +325,9 @@ private int parry_attack(int strength, object from)
     else full = block * 2 >= strength * 5;
     reduce = 1 + sk / 20;
 
+    defense_gin_cost("parry_gin_count", "cps");
     set_temp("parry_result", full ? 2 : 1);
     set_temp("parry_reduce", reduce);
-
-    art = skill_mapped("parry");
-    if( stringp(art) && art != "parry" ) daemon = SKILL_D(art);
 
     if( objectp(daemon) && function_exists("parry_message", daemon) )
         msg = daemon->parry_message(this_object(), attacker, full);

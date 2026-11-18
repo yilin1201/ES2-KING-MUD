@@ -23,6 +23,15 @@ int do_enter(string arg)
     return 1;
 }
 
+// 房間重置（reborn）時，廟祝補上一把飲血（蝶影幻步任務，每次重置只有一把）。
+void reset()
+{
+    object npc;
+
+    ::reset();
+    if( objectp(npc = present("keeper", this_object())) ) npc->reset_stock();
+}
+
 void create()
 {
     set("short", "鎮天神廟");
@@ -30,6 +39,7 @@ void create()
 這裡是這個地方最有名的鎮天神廟，也是這地方最古老的廟，從這間廟建築的老舊可是卻香火鼎盛，就可以知道人們一定認為這間廟很靈，而這間廟主要是供奉著雲棧鎮天神，在廟前的廣場通常也是村人舉行活動的好地方，而旁邊也有一條進入後院的路。
 LONG
     );
+    set("detail/後院", "廟旁有一條小路通往後院，路上的腳印不少，沿著小路可以走進 (enter) 後院。");
     set("exits", ([
         "south" : __DIR__"temple_road_n",
     ]));

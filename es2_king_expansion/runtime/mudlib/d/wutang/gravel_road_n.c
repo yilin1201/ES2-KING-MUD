@@ -30,15 +30,12 @@ void create()
 一條鋪滿碎石的小路，走起來沙沙作響。西側不遠就是羿水河邊，路旁長著一大叢茂密的草叢，旁邊還有一片竹蘆，風一吹便沙沙作響，似乎可以從草叢穿過去。往東是五堂鎮的街道，往北是菜田前的空地。
 LONG
     );
+    set("detail/草叢", "路旁一大叢茂密的草叢，旁邊還有一片竹蘆，似乎可以從草叢穿過 (pass) 去。");
     set("exits", ([
-        "west" : __DIR__"pavilion",
+        "enter" : __DIR__"pavilion",
         "east" : __DIR__"west_street2",
         "north" : __DIR__"clearing",
         "southwest" : __DIR__"gravel_road_s",
-    ]));
-    set("objects", ([
-        __DIR__"npc/yang_zlin" : 1,
-        __DIR__"npc/apprentice" : 1,
     ]));
     set("map/area", "五堂鎮");
     setup();

@@ -25,6 +25,8 @@ LONG
     }
     set("requirement", (["literate": 45, "alchemy-medication": 40]));
     set("pill_grade", 2);   // 丹藥階級：一階最高、三階最低（使用者指示 #7，2026-10-23）
+    set("no_pawn", 1);   // 丹藥不能賣給當鋪、不能典當，只能賣回藥鋪（使用者指示，2026-11-06）；
+							// 改用 no_pawn 而非 no_sell，黃白之術才轉得了丹藥（2026-11-07）
     set_amount(1);
     setup();
 }
@@ -38,7 +40,7 @@ int stuff_ob(object me)
 	me->supplement_stat("food", 5);
 	me->heal_stat("sen", 15 + random(6));
 	me->supplement_stat("sen", 30 + random(6));
-	me->consume_stat("sen", 8);
+	// 原本補神後再扣 8（神滿時吃反而少神），2026-11-14 使用者決定拿掉。
 	me->damage_stat("gin", 1);
 	me->consume_stat("gin", 5);
 	add_amount(-1);

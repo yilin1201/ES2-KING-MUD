@@ -40,7 +40,7 @@ private int say_to(object me, string text) { tell_object(me, replace_string(text
 private int is_alchemist(object me)
 {
     return objectp(me) && userp(me) && me->query_class() == "alchemist"
-        && me->query("custom_faction") != "alchemist.wuto";
+        && me->query("custom_faction") != "alchemist.wu";
 }
 
 private string money(int amount) { return BALANCE_CMD->money_string(amount); }
@@ -101,16 +101,20 @@ int cmd_herblist(object me, string arg)
         st = QUALIFY->status(me, pill);
         if (st < 0) continue;
         if (st == 0)
-            rows += ({ cjk_pad(pill->name(), 14) + cjk_pad(money(CATALOG->price(key, "recipe") * CATALOG->recipe_count(key)), 24)
-                       + money(CATALOG->price(key, "buy")) });
+            rows += ({ cjk_pad(pill->name() + "(" + pill->query("id") + ")", 26)
+                       + cjk_pad(money(CATALOG->price(key, "recipe") * CATALOG->recipe_count(key)), 20)
+                       + cjk_pad(CATALOG->sells_product(key) ? money(CATALOG->price(key, "buy")) : "不販售", 14)
+                       + money(CATALOG->price(key, "sell")) });
         else
             groups[st] += ({ pill->name() });
     }
 
     if (!sizeof(rows)) return say_to(me, "你目前還無法購買任何丹藥。");
 
-    msg = cjk_pad("丹藥名稱", 14) + cjk_pad("配方", 24) + "成丹\n";
-    msg += "------------------------------------------------------------\n";
+    // 四欄：丹藥名稱(ID)、一套配方（一次購買總價）、成丹販售價、成丹收購價（使用者指示 #19，2026-10-30）。
+    // 欄寬 26／20／14（2026-11-06 由 27／20／13 調整：販售價與收購價之間多留一格），全行不超過 80 格。
+    msg = cjk_pad("丹藥名稱", 26) + cjk_pad("一套配方", 20) + cjk_pad("成丹販售價", 14) + "成丹收購價\n";
+    msg += "--------------------------------------------------------------------------------\n";
     msg += implode(rows, "\n") + "\n";
     if (sizeof(groups[1])) msg += "※ " + implode(groups[1], "、") + "：讀書識字不足，無法購買。\n";
     if (sizeof(groups[2])) msg += "※ " + implode(groups[2], "、") + "：神農之術不足，無法購買。\n";
@@ -240,6 +244,8 @@ private int buy_product(object me, string key, int want)
     pill = CATALOG->product(key);
     if (!pill) return say_to(me, "這項商品的技能需求資料不完整，暫時無法交易。");
     name = pill->name();
+    // 藥鋪不販售的成丹（大還丹，2026-11-14），配方照常可買。
+    if (!CATALOG->sells_product(key)) return say_to(me, "藥鋪不販售" + name + "。");
     if (!QUALIFY->check(me, pill, name, "buy")) return 1;
 
     file = CATALOG->product_path(key);

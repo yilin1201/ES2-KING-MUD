@@ -27,11 +27,23 @@ void init()
     add_action("do_store", "store");
 }
 
+// 失敗訊息直接顯示並結束指令（使用者指示，2026-11-13）：
+// 若用 notify_fail 傳回 0，會被通用的 buy 等指令的格式提示蓋掉，玩家看不到真正原因。
+int fail(string msg)
+{
+    write(msg);
+    return 1;
+}
+
 string value_string(int value)
 {
     if( value < 1 ) return "不值一文";
     if( value < 100 )
         return chinese_number(value) + "文錢";
+    // 金額最多寫到金元寶（使用者指示，2026-11-07）。
+    if( value >= 1000000 )
+        return chinese_number(value/1000000) + "錠金元寶"
+            + (value%1000000? "又" + value_string(value%1000000): "");
     return chinese_number(value/100) + "兩"
         + (value%100? "又" + chinese_number(value%100) + "文錢": "");
 }
@@ -60,10 +72,10 @@ int do_value(string arg)
     int value;
 
     if( !arg || !(ob = present(arg, this_player())) )
-        return notify_fail("你要拿什麼物品給當鋪估價﹖\n");
+        return fail("你要拿什麼物品給當鋪估價﹖\n");
 
     if( ob->query("money_id") )
-        return notify_fail("這是「錢」﹐你沒見過嗎﹖\n");
+        return fail("這是「錢」﹐你沒見過嗎﹖\n");
 
     value = ob->query("value");
     if( value < 1 ) {
@@ -84,14 +96,16 @@ int do_pawn(string arg)
     int value;
 
     if( !arg || !(ob = present(arg, this_player())) )
-        return notify_fail("你要典當什麼物品﹖\n");
+        return fail("你要典當什麼物品﹖\n");
 
-    if( ob->query("money_id") )    return notify_fail("你要當「錢」﹖\n");
+    if( ob->query("money_id") )    return fail("你要當「錢」﹖\n");
 
     value = ob->query("value");
-    if( value < 1 ) return notify_fail("這樣東西不值錢。\n");
+    if( value < 1 ) return fail("這樣東西不值錢。\n");
 
-    if (ob->query("no_sell")) return notify_fail("這樣東西不能典當。\n");
+    if (ob->query("no_sell")) return fail("這樣東西不能典當。\n");
+    // no_pawn：只有當鋪不收（丹藥只能賣回藥鋪），其他系統照常把它當成可買賣的物品（2026-11-07）。
+    if (ob->query("no_pawn")) return fail("這樣東西不能典當。\n");
 
     message_vision("$N把身上的" + ob->query("name") + "拿出來典當了"
         + value_string(value * 60 / 100) + "﹐換得一張當票。\n", this_player());
@@ -110,15 +124,16 @@ int do_pawn(string arg)
     return 1;
 }
 
-int sell_item(object ob)
+int sell_item(object ob, int quiet)
 {
     int value;
 
-    if( ob->query("money_id") )    return notify_fail("你要賣「錢」﹖\n");
+    if( ob->query("money_id") )    return quiet? 0: fail("你要賣「錢」﹖\n");
     value = ob->query("value");
-    if( value < 1 ) return notify_fail("這樣東西不值錢。\n");
+    if( value < 1 ) return quiet? 0: fail("這樣東西不值錢。\n");
 
-    if (ob->query("no_sell")) return notify_fail("這樣東西不能賣。\n");
+    if (ob->query("no_sell")) return quiet? 0: fail("這樣東西不能賣。\n");
+    if (ob->query("no_pawn")) return quiet? 0: fail("這樣東西不能賣。\n");
 
     message_vision("$N把身上的" + ob->query("name") + "賣掉。\n",
         this_player());
@@ -138,7 +153,7 @@ int do_sell(string arg)
 {
     object ob;
 
-    if( !arg ) return notify_fail("你要賣斷什麼物品﹖\n");
+    if( !arg ) return fail("你要賣斷什麼物品﹖\n");
 
     if( arg=="all" ) {
         object *inv;
@@ -147,16 +162,16 @@ int do_sell(string arg)
         foreach(ob in inv) {
             if(!ob) continue;
             if( ob->query("keep_this") ) continue;
-            sell_item(ob);
+            sell_item(ob, 1);
         }
         write("Ok。\n");
         return 1;
     }
 
     if( !(ob = present(arg, this_player())) )
-        return notify_fail("你要賣斷什麼物品﹖\n");
+        return fail("你要賣斷什麼物品﹖\n");
 
-    return sell_item(ob);
+    return sell_item(ob, 0);
 }
 
 int do_retrieve(string arg)
@@ -165,10 +180,10 @@ int do_retrieve(string arg)
     int value;
 
     if( !arg || arg=="" || !(stamp = present(arg, this_player())) )
-        return notify_fail("你要贖回哪一張當票上的典物﹖\n");
+        return fail("你要贖回哪一張當票上的典物﹖\n");
 
     if( !stamp->id("pawn stamp") )
-        return notify_fail("這不是當票。\n");
+        return fail("這不是當票。\n");
 
     if( !(ob = stamp->query("pawned_item")) ) {
         write("這張當票上的典物因為你太久沒有來贖﹐已經被當鋪賣掉了。\n");
@@ -179,11 +194,11 @@ int do_retrieve(string arg)
 
     // 三間當鋪共用倉庫：任何一間都能贖回。
     if( !present(ob, HOCKSHOP_D->query_storage()) || !ob->query("hockshop_pawned") )
-        return notify_fail("這張當票上的典物已經不在當鋪裡了。\n");
+        return fail("這張當票上的典物已經不在當鋪裡了。\n");
 
     value = (int)ob->query("value") * 120 / 100;
     if( (int)this_player()->can_afford(value) != 1 )
-        return notify_fail("你身上的(零)錢不夠。\n");
+        return fail("你身上的(零)錢不夠。\n");
 
     message_vision("$N取出當票﹐花了" + value_string(value) + "贖回了"
         + ob->name() + "。\n", this_player());
@@ -213,7 +228,7 @@ int do_list(string arg)
 
     groups = HOCKSHOP_D->query_groups();
     if( !sizeof(groups) && !wizardp(this_player()) )
-        return notify_fail("當鋪裡現在沒有可供出售的貨物。\n");
+        return fail("當鋪裡現在沒有可供出售的貨物。\n");
 
     chunk = "當鋪裡現在有以下貨物出售﹕\n\n";
     // 名稱、數量與價格依畫面寬度補空白；價格靠右對齊。
@@ -234,7 +249,7 @@ int do_list(string arg)
         shown++;
     }
     if( arg && !shown && !wizardp(this_player()) )
-        return notify_fail("當鋪裡現在沒有可供出售的貨物。\n");
+        return fail("當鋪裡現在沒有可供出售的貨物。\n");
     if( wizardp(this_player()) ) {
         object *pawned = HOCKSHOP_D->query_pawned();
         mapping kinds = ([]);
@@ -268,15 +283,15 @@ int do_buy(string arg)
     string name_part;
     int index, price;
 
-    if( !arg ) return notify_fail("你要買什麼東西﹖\n");
+    if( !arg ) return fail("你要買什麼東西﹖\n");
 
     groups = HOCKSHOP_D->query_groups();
-    if( !sizeof(groups) ) return notify_fail("當鋪裡現在沒有貨物。\n");
+    if( !sizeof(groups) ) return fail("當鋪裡現在沒有貨物。\n");
 
     if( sscanf(arg, "%d", index) == 1 && ("" + index) == arg ) {
         // 照清單編號
         if( index < 1 || index > sizeof(groups) )
-            return notify_fail("當鋪的清單上沒有這一項。\n");
+            return fail("當鋪的清單上沒有這一項。\n");
         match = groups[index - 1];
     } else {
         // 照名稱；「buy dagger 2」= 清單上第二項 dagger。sscanf 失敗時不能動到 arg。
@@ -284,14 +299,14 @@ int do_buy(string arg)
         else index = 1;
         groups = filter_array(groups, (: $1[0]->id($(arg)) :));
         if( index < 1 || index > sizeof(groups) )
-            return notify_fail("你要買什麼東西﹖\n");
+            return fail("你要買什麼東西﹖\n");
         match = groups[index - 1];
     }
     ob = match[0];
     price = goods_price(ob);
 
     if( (int)this_player()->can_afford(price) != 1 )
-        return notify_fail("你的(零)錢不夠。\n");
+        return fail("你的(零)錢不夠。\n");
     message_vision("$N掏出錢買下" + (function_exists("query_amount", ob)
         ? ob->short() : "一" + ob->query("unit") + ob->name()) + "。\n", this_player());
     this_player()->pay_money(price);
