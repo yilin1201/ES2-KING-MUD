@@ -289,6 +289,13 @@ def main() -> int:
                 if '"avatar", "human", "rainnar", "malik"' not in raw or '"rainner"' in raw:
                     raise SystemExit(f"FAIL: KING Original race ID correction missing: {rel_name}")
                 status = "preserved-KING-original-race-id-correction"
+            elif rel_name == "daemon/skill/au-chan_sword.c":
+                raw = dest.read_text(encoding="utf-8", errors="replace")
+                required = ("mapping *aojian_actions", "mapping *aojian_parries", "mapping *jianling_forms",
+                            'usage=="sword"', 'usage=="twohanded sword"', "劍領風騷")
+                if any(token not in raw for token in required):
+                    raise SystemExit(f"FAIL: KING Aojian V0 skill guard missing: {rel_name}")
+                status = "preserved-KING-Aojian-V0-seven-moves-and-six-forms"
             elif rel_name in KING_NPC_COMPAT_PATHS:
                 raw = dest.read_text(encoding="utf-8", errors="replace")
                 required = ('set_power("S");', '"custom_faction", FACTION',
