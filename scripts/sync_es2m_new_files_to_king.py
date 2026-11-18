@@ -65,8 +65,8 @@ KING_ZHENWU_GUARDS = {
         'set_skill("twohanded pike", 60)', 'set_skill("unarmed", 60)',
     ),
     "custom/zhenwu/npc/target_stake.c": (
-        'set("training_dummy", 1);', 'void defend(int ability, int strength, object from)',
-        'void absorb(int ability, int strength, object from)', 'varargs int receive_damage(int damage, object from, object attacker)',
+        'set("training_dummy", 1);', 'int defend(int ability, int strength, object from)',
+        'int absorb(int ability, int strength, object from)', 'varargs int receive_damage(int damage, object from, object attacker)',
     ),
     "custom/zhenwu/obj/recruit_stone.c": (
         'set("custom_faction", "soldier.ber")',
