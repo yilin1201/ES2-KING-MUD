@@ -47,7 +47,7 @@ def literal_dependencies(path: Path, mudlib: Path) -> set[str]:
     return dependencies
 
 
-def validate_tree(mudlib: Path, require_runtime_link: bool, expected_room_count: int, expected_npc_count: int, expected_boat_count: int) -> None:
+def validate_tree(mudlib: Path, require_runtime_link: bool, expected_room_count: int, expected_npc_count: int, expected_boat_count: int, expected_object_count: int) -> None:
     area = mudlib / "d/wutang"
     all_root_files = sorted(area.glob("*.c"))
     boat_rooms = [p for p in all_root_files if p.stem in BOAT_ROOMS]
@@ -58,7 +58,9 @@ def validate_tree(mudlib: Path, require_runtime_link: bool, expected_room_count:
     # 2026-10-10 新增的 may_yin_fong.c 是已確認的 ES2M 來源 NPC，納入固定清冊。
     assert len(npcs) == expected_npc_count, f"ES2M_WUTANG_NPC_COUNT: {len(npcs)} expected={expected_npc_count}"
     assert (area / "npc" / "may_yin_fong.c").is_file(), "ES2M_WUTANG_MAY_YIN_FONG_MISSING"
-    assert len(objects) == 2, f"ES2M_WUTANG_OBJECT_COUNT: {len(objects)}"
+    assert len(objects) == expected_object_count, (
+        f"ES2M_WUTANG_OBJECT_COUNT: {len(objects)} expected={expected_object_count}"
+    )
     assert len(boat_rooms) == expected_boat_count, (
         f"ES2M_WUTANG_BOAT_ROOM_COUNT: {len(boat_rooms)} expected={expected_boat_count}"
     )
@@ -117,10 +119,12 @@ def main() -> None:
     source_boat_count = sum(1 for p in source_area.glob("*.c") if p.stem in BOAT_ROOMS)
     source_room_count = len(list(source_area.glob("*.c"))) - source_boat_count
     source_npc_count = len(list((source_area / "npc").glob("*.c")))
-    validate_tree(args.source, False, source_room_count, source_npc_count, source_boat_count)
+    source_object_count = len(list((source_area / "obj").glob("*.c")))
+    validate_tree(args.source, False, source_room_count, source_npc_count, source_boat_count, source_object_count)
     runtime_room_count = source_room_count
     runtime_npc_count = source_npc_count
     runtime_boat_count = source_boat_count
+    runtime_object_count = source_object_count
     if args.runtime:
         runtime_area = args.runtime / "d/wutang"
         runtime_boat_count = sum(1 for p in runtime_area.glob("*.c") if p.stem in BOAT_ROOMS)
@@ -141,6 +145,15 @@ def main() -> None:
             expected_boat_names = current_boat_names | expansion_boat_names
             current_room_names = {p.name for p in current_area.glob("*.c") if p.stem not in BOAT_ROOMS}
             current_npc_names = {p.name for p in (current_area / "npc").glob("*.c")}
+            current_object_names = {p.name for p in (current_area / "obj").glob("*.c")}
+            expansion_object_names = {p.name for p in (args.expansion_source / "d/wutang/obj").glob("*.c")} if args.expansion_source.exists() else set()
+            expected_object_names = current_object_names | expansion_object_names
+            runtime_object_names = {p.name for p in (runtime_area / "obj").glob("*.c")}
+            runtime_object_count = len(expected_object_names)
+            assert runtime_object_names == expected_object_names, (
+                "ES2M_WUTANG_RUNTIME_OBJECT_INVENTORY_MISMATCH: "
+                f"runtime={sorted(runtime_object_names)} expected_source_plus_expansion={sorted(expected_object_names)}"
+            )
             expected_npc_names = current_npc_names | expansion_npc_names
             assert runtime_room_count == len(current_room_names), (
                 f"ES2M_WUTANG_RUNTIME_ROOM_COUNT: {runtime_room_count} expected_current_source={len(current_room_names)}"
@@ -158,7 +171,7 @@ def main() -> None:
             assert runtime_room_count == source_room_count, f"ES2M_WUTANG_RUNTIME_ROOM_COUNT: {runtime_room_count}"
             assert runtime_npc_count == source_npc_count, f"ES2M_WUTANG_RUNTIME_NPC_COUNT: {runtime_npc_count}"
             assert runtime_boat_count == source_boat_count, f"ES2M_WUTANG_RUNTIME_BOAT_COUNT: {runtime_boat_count}"
-        validate_tree(args.runtime, True, runtime_room_count, runtime_npc_count, runtime_boat_count)
+        validate_tree(args.runtime, True, runtime_room_count, runtime_npc_count, runtime_boat_count, runtime_object_count)
         if args.current_source:
             runtime_room_names = {p.name for p in runtime_area.glob("*.c") if p.stem not in BOAT_ROOMS}
             runtime_boat_names = {p.name for p in runtime_area.glob("*.c") if p.stem in BOAT_ROOMS}
@@ -175,7 +188,7 @@ def main() -> None:
     print(
         f"ES2M WUTANG TOPOLOGY PASS／來源 {source_room_count} 房間、{source_npc_count} NPC；"
         f"Runtime {runtime_room_count} 鎮區房間、{runtime_npc_count} NPC、"
-        f"{runtime_boat_count} 艘羿水渡船、2 物件及振武入口引用閉合。"
+        f"{runtime_boat_count} 艘羿水渡船、{runtime_object_count} 物件及振武入口引用閉合。"
     )
 
 
