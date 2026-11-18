@@ -6,8 +6,8 @@
   "source_file_count": 2238,
   "copied_new_count": 2,
   "overwritten_existing_king_count": 1,
-  "already_matching_count": 2212,
-  "preserved_king_custom_count": 23,
+  "already_matching_count": 2211,
+  "preserved_king_custom_count": 24,
   "runtime_compatibility_patches": [
     "adm/daemons/logind.c: explicit get_gender prompt output for WebTelnet four-argument input_to"
   ],
@@ -8749,11 +8749,6 @@
       "sha256": "57752f3df2138ee36096aaedb0a0bf85129754524245e7259fa83996e2dca460"
     },
     {
-      "path": "daemon/skill/au-chan_sword.c",
-      "status": "already-matches-ES2M",
-      "sha256": "2a71b217d9f4bf144117d20578f9573df7e7e863dc306e96cab44744aaab6de3"
-    },
-    {
       "path": "daemon/skill/axe.c",
       "status": "already-matches-ES2M",
       "sha256": "49106e1de9b45af38d139e841d8d457ab5f5d58c87307a062e889d215846fc5c"
@@ -11202,6 +11197,12 @@
       "status": "preserved-KING-frozen-martial-baseline",
       "king_sha256": "0884a6cb0533f74a33fe5c1c163489db233199fc532c1adece901dfabce1c889",
       "es2m_sha256": "6e5fef9dfd705e49f49436e09e0d65960cb47d9466b3ab67e40339161a6e5bf2"
+    },
+    {
+      "path": "daemon/skill/au-chan_sword.c",
+      "status": "preserved-KING-Aojian-V0-seven-moves-and-six-forms",
+      "king_sha256": "6503a9679ac92508f80fdbd06087e82aed0c5a4af29744ade0b71828fb9c9db4",
+      "es2m_sha256": "2a71b217d9f4bf144117d20578f9573df7e7e863dc306e96cab44744aaab6de3"
     },
     {
       "path": "daemon/skill/hainmay_force.c",
