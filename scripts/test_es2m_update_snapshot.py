@@ -67,6 +67,11 @@ class TestES2MUpdateSnapshot(unittest.TestCase):
                         'string art_id;          // 技能代碼，例如 "sanmeendo"',
                         'string art_id;          // 技能代碼，例如 "ksanmando"',
                     )
+                    # ES2M 最新版只將文件註解中的減號字元正規化；不改變任何 LPC 執行邏輯。
+                    source_text = source_text.replace(
+                        "武學之道 = (lv − mm_minus)",
+                        "武學之道 = (lv - mm_minus)",
+                    )
                 # soldier.c：KING 已移除單純的升級提示訊息，不改變升級邏輯。
                 elif relative == "daemon/class/soldier.c":
                     source_text = source_text.replace(
