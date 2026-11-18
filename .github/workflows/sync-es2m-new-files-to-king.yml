@@ -1,5 +1,5 @@
 name: Sync ES2M Files Into KING Overlay
-# 2026-11-09：來源改為使用者指定的 ES2M-KDS main；KING 僅讀取來源並單向整合。
+# 2026-11-18：固定同步使用者指定的 ES2M 最新版 wolfer168/es2-webmud commit d0666da2；KING 僅讀取來源並單向整合。
 
 on:
   push:
@@ -36,12 +36,14 @@ jobs:
           git clone --no-checkout https://github.com/taedlar/es2_mudlib.git /tmp/original-es2
           git -C /tmp/original-es2 checkout --detach "$ORIGINAL_ES2_COMMIT"
 
-      - name: Fetch latest ES2M-KDS source and refresh read-only source mirror
+      - name: Fetch pinned latest ES2M source and refresh read-only source mirror
         id: es2m
         run: |
           set -euo pipefail
-          git clone --depth 1 https://github.com/kds121tw/ES2M-KDS.git /tmp/es2m-latest
+          git clone --no-checkout https://github.com/wolfer168/es2-webmud.git /tmp/es2m-latest
+          git -C /tmp/es2m-latest checkout --detach d0666da2cb48104eaa71c824a3bd030ede5fbf7d
           ES2M_COMMIT=$(git -C /tmp/es2m-latest rev-parse HEAD)
+          test "$ES2M_COMMIT" = "d0666da2cb48104eaa71c824a3bd030ede5fbf7d"
           echo "commit=$ES2M_COMMIT" >> "$GITHUB_OUTPUT"
           test -d /tmp/es2m-latest/source/upstream/mudlib
           mkdir -p es2m_source_mirror/mudlib
@@ -59,8 +61,8 @@ jobs:
                   "sha256": hashlib.sha256(raw).hexdigest(),
               })
           manifest = {
-              "purpose": "ES2M-KDS 最新原始 Mudlib 唯讀鏡像；不得直接視為 Original ES2，也不直接取代 KING 專屬資料。",
-              "source_repository": "kds121tw/ES2M-KDS",
+              "purpose": "ES2M 最新原始 Mudlib 唯讀鏡像；不得直接視為 Original ES2，也不直接取代 KING 專屬資料。",
+              "source_repository": "wolfer168/es2-webmud",
               "source_branch": "main",
               "source_commit": os.environ["ES2M_COMMIT"],
               "source_path": "source/upstream/mudlib/",
@@ -69,7 +71,7 @@ jobs:
               "hash_algorithm": "SHA-256",
               "files": files,
               "policy": [
-                  "更新前以 ES2M-KDS main 為來源。",
+                  "更新前固定以 wolfer168/es2-webmud commit d0666da2 為來源。",
                   "鏡像只保留來源 Mudlib 當前存在的檔案。",
                   "KING runtime overlay 依來源同路徑覆蓋；不刪除來源中不存在的 KING 專屬檔案。",
                   "Pinned Original ES2 checkout 僅供比較，絕不修改。",
@@ -109,5 +111,5 @@ jobs:
             echo "KING overlay already matches the latest ES2M source: $ES2M_COMMIT"
             exit 0
           fi
-          git commit -m "sync: import latest ES2M-KDS $ES2M_COMMIT into KING"
+          git commit -m "sync: import latest ES2M $ES2M_COMMIT into KING"
           git push origin "HEAD:refs/heads/$TARGET_BRANCH"
