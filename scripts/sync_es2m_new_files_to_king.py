@@ -20,6 +20,8 @@ PROTECTED_KING_PATHS = {
     "daemon/skill/advance_lunmay.c",
     "daemon/skill/hainmay_force.c",
     "daemon/skill/lunmay.c",
+    # KING 傲劍訣 V0 七式與劍領風騷六段模板，禁止被 ES2M 同名技能覆蓋。
+    "daemon/skill/au-chan_sword.c",
     "d/snow/npc/teacher.c",
     "d/wutang/npc/may_yin_fong.c",
     "cmds/std/sneak.c",
@@ -159,6 +161,16 @@ def verify_king_owner_guards(overlay: Path, repo_root: Path) -> None:
             raise SystemExit(f"FAIL: frozen KING martial baseline missing: {rel}")
         if digest(baseline) != digest(target):
             raise SystemExit(f"FAIL: frozen KING martial baseline mismatch: {rel}")
+
+    # KING 傲劍訣 V0：保留使用者確認的七式普攻、七式拆招與劍領風騷六段資料模板。
+    aojian = overlay / "daemon/skill/au-chan_sword.c"
+    if not aojian.is_file():
+        raise SystemExit("FAIL: KING Aojian V0 skill missing")
+    aojian_text = aojian.read_text(encoding="utf-8", errors="replace")
+    for marker in ("mapping *aojian_actions", "mapping *aojian_parries", "mapping *jianling_forms",
+                   'usage=="sword"', 'usage=="twohanded sword"', '劍領風騷'):
+        if marker not in aojian_text:
+            raise SystemExit(f"FAIL: KING Aojian V0 marker missing: {marker}")
 
     # Original ES2 種族代碼 rainnar：ES2M teacher.c 的 rainner 拼字不能覆蓋正式代碼。
     for rel in KING_RACE_COMPAT_PATHS:
