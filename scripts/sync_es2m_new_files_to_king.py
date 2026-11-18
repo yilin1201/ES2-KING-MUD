@@ -27,6 +27,8 @@ PROTECTED_KING_PATHS = {
     "custom/zhenwu/npc/mee_pei.c",
     "custom/zhenwu/npc/soldier.c",
     "custom/zhenwu/npc/zhenwu_soldier.c",
+    # KING 訓練假人具備專屬 training_dummy 行為，不可被上游同名 dummy NPC 覆蓋。
+    "custom/zhenwu/npc/target_stake.c",
     "custom/zhenwu/obj/recruit_stone.c",
     # 李家村路網：保留 KING 已確認的拓樸修正，避免上游房間程式缺少 LEE_TOPOLOGY 已登錄出口。
     "d/lee/square_s.c",
@@ -61,6 +63,10 @@ KING_ZHENWU_GUARDS = {
         'set_level(15)', 'set_power("C")', 'set_attr("str", 25)',
         'set_attr("cor", 22)', 'set_attr("con", 20)',
         'set_skill("twohanded pike", 60)', 'set_skill("unarmed", 60)',
+    ),
+    "custom/zhenwu/npc/target_stake.c": (
+        'set("training_dummy", 1);', 'void defend(int ability, int strength, object from)',
+        'void absorb(int ability, int strength, object from)', 'varargs int receive_damage(int damage, object from, object attacker)',
     ),
     "custom/zhenwu/obj/recruit_stone.c": (
         'set("custom_faction", "soldier.ber")',
