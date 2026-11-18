@@ -6,8 +6,8 @@
   "source_file_count": 2238,
   "copied_new_count": 2,
   "overwritten_existing_king_count": 1,
-  "already_matching_count": 2211,
-  "preserved_king_custom_count": 24,
+  "already_matching_count": 2209,
+  "preserved_king_custom_count": 26,
   "runtime_compatibility_patches": [
     "adm/daemons/logind.c: explicit get_gender prompt output for WebTelnet four-argument input_to"
   ],
@@ -6709,11 +6709,6 @@
       "sha256": "b86f3e9d4eb6aeb1fa54bada5603dcfff8b92f0dedfd97546bf0f383118d830b"
     },
     {
-      "path": "d/snow/npc/waiter.c",
-      "status": "already-matches-ES2M",
-      "sha256": "97838e38de53ee3672a1b0b663075b1ffe9361e44af6e90827a6dd510378e9ef"
-    },
-    {
       "path": "d/snow/npc/woman.c",
       "status": "already-matches-ES2M",
       "sha256": "8be5e0dc6226dbbb610c104308e422f5def5a2adbfb9bfc148db9c709a9e6de9"
@@ -9824,11 +9819,6 @@
       "sha256": "dc474ae16b47c6c5878ce9753f890c62bda9841611365c800ee7cce3bb0396f2"
     },
     {
-      "path": "feature/char/finance.c",
-      "status": "already-matches-ES2M",
-      "sha256": "d24ea7ae0671923a111205134e29df2b89ae1a44006839e146e3c306fb0eb0d8"
-    },
-    {
       "path": "feature/char/message.c",
       "status": "already-matches-ES2M",
       "sha256": "41ecff3871e1bae74977be94b1a17f0fbb13ed75f8461913624ab189e1d8fa24"
@@ -11187,6 +11177,12 @@
       "es2m_sha256": "73dfbdfaeaad62dd42171a5baa33b60eea766c39841a3865db4214bf663ce94a"
     },
     {
+      "path": "d/snow/npc/waiter.c",
+      "status": "preserved-KING-delayed-shop-refund-and-currency-compatibility",
+      "king_sha256": "502f8880d8f0432dfca7c87937da12bfed366e25b7e4c255f22cf3d651489c79",
+      "es2m_sha256": "97838e38de53ee3672a1b0b663075b1ffe9361e44af6e90827a6dd510378e9ef"
+    },
+    {
       "path": "d/wutang/npc/may_yin_fong.c",
       "status": "preserved-KING-cold-plum-NPC-progression-and-race",
       "king_sha256": "fe28569a05eeb3d5e84804869be5dda61a306ef1703243e01b1b0187d51c29ca",
@@ -11221,6 +11217,12 @@
       "status": "preserved-KING-private-home-command-documentation",
       "king_sha256": "ad98ff031cbfe2d88efc3430364ce95410209aba9ab43ce412984f353454cc25",
       "es2m_sha256": "1c92c742119f67349681918e4951ff18a471c87ae707b70085045b021c6d506f"
+    },
+    {
+      "path": "feature/char/finance.c",
+      "status": "preserved-KING-delayed-shop-refund-and-currency-compatibility",
+      "king_sha256": "c5f760ba644f6fa78a9db2b36a9e90e6d91cf4af449eab8d13c3862cd5f7e317",
+      "es2m_sha256": "d24ea7ae0671923a111205134e29df2b89ae1a44006839e146e3c306fb0eb0d8"
     },
     {
       "path": "feature/char/skill.c",
