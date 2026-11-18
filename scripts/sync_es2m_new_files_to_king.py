@@ -17,6 +17,10 @@ from pathlib import Path
 # KING 專屬核心檔：含唯一 admin KING 的 300 級上限，不能被 ES2M 原檔盲目取代。
 PROTECTED_KING_PATHS = {
     "feature/char/skill.c",
+    # KING 幣值系統保留 sycee／nugget，並提供延遲交易退款 API。
+    "feature/char/finance.c",
+    # KING 雪亭客棧延遲送餐：客人離房時退回已扣款項。
+    "d/snow/npc/waiter.c",
     "daemon/skill/advance_lunmay.c",
     "daemon/skill/hainmay_force.c",
     "daemon/skill/lunmay.c",
@@ -74,6 +78,18 @@ KING_ZHENWU_GUARDS = {
         'set("custom_faction", "soldier.ber")',
         'set("soldier/from_fighter", 1)',
         '強力格擋改由米沛傳授',
+    ),
+}
+KING_SHOP_REFUND_GUARDS = {
+    "feature/char/finance.c": (
+        "int refund_money(int amount)",
+        "set_small_money_value(query_small_money_value() + amount);",
+        "#define SYCEE_VALUE", "#define NUGGET_SYCEE",
+    ),
+    "d/snow/npc/waiter.c": (
+        'refund = item->query("value") * amount;',
+        "customer->refund_money(refund);",
+        "店小二未能送達，已將貨款退還給你。",
     ),
 }
 KING_RUNTIME_PORT_GUARDS = {
@@ -147,6 +163,15 @@ def verify_king_owner_guards(overlay: Path, repo_root: Path) -> None:
         for marker in markers:
             if marker not in raw:
                 raise SystemExit(f"FAIL: KING owner guard marker missing in {rel}: {marker}")
+
+    # KING Shop refund：確保雪亭店小二延遲交貨失敗退款，並與新版幣值系統相容。
+    for rel, markers in KING_SHOP_REFUND_GUARDS.items():
+        target = overlay / rel
+        if not target.is_file():
+            raise SystemExit(f"FAIL: KING shop refund file missing: {rel}")
+        raw = target.read_text(encoding="utf-8", errors="replace")
+        if any(marker not in raw for marker in markers):
+            raise SystemExit(f"FAIL: KING shop refund contract missing: {rel}")
 
     # KING WebTelnet：確認 gender_opts cursor 1，確保 Neolith 顯示 Male/Female 輸入提示。
     gender_path = overlay / KING_GENDER_PROMPT_PATH
@@ -296,6 +321,11 @@ def main() -> int:
                 if any(token not in raw for token in required):
                     raise SystemExit(f"FAIL: KING Aojian V0 skill guard missing: {rel_name}")
                 status = "preserved-KING-Aojian-V0-seven-moves-and-six-forms"
+            elif rel_name in KING_SHOP_REFUND_GUARDS:
+                raw = dest.read_text(encoding="utf-8", errors="replace")
+                if any(marker not in raw for marker in KING_SHOP_REFUND_GUARDS[rel_name]):
+                    raise SystemExit(f"FAIL: KING shop refund guard missing: {rel_name}")
+                status = "preserved-KING-delayed-shop-refund-and-currency-compatibility"
             elif rel_name in KING_NPC_COMPAT_PATHS:
                 raw = dest.read_text(encoding="utf-8", errors="replace")
                 required = ('set_power("S");', '"custom_faction", FACTION',
