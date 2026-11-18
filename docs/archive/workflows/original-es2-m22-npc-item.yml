@@ -1,0 +1,23 @@
+name: Original ES2 M22 NPC Item
+
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths: ['original_es2/research/m22_*', 'original_es2/runtime/m22_*', 'scripts/test_m22_*', 'scripts/bootstrap_original_es2.sh', '.github/workflows/original-es2-m22-npc-item.yml']
+  pull_request:
+    paths: ['original_es2/research/m22_*', 'original_es2/runtime/m22_*', 'scripts/test_m22_*', 'scripts/bootstrap_original_es2.sh', '.github/workflows/original-es2-m22-npc-item.yml']
+  workflow_dispatch:
+
+jobs:
+  m22-npc-item:
+    name: M22 NPC／裝備／物品完整化驗證
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v5
+      - name: Static regression／驗證證據邊界
+        run: bash scripts/test_m22_npc_item_static.sh
+      - name: Bootstrap Original ES2／建立乾淨執行樹
+        run: bash scripts/bootstrap_original_es2.sh
+      - name: Runtime Gate／驗證 NPC、物品與載入關係
+        run: bash scripts/test_m22_npc_item_runtime_gate.sh .runtime/original-es2

@@ -1,0 +1,3740 @@
+{
+  "report_type": "ES2M_MUDLIB_DEEP_FILE_COMPARISON",
+  "generated_from": {
+    "source_repository": "wolfer168/es2-webmud",
+    "source_ref": "main",
+    "source_commit": "ee12e717e2d3d88728607a01c2c2f1d634bf9616",
+    "source_prefix": "source/upstream/mudlib/",
+    "snapshot_repository": "yilin1201/ES2-KING-MUD",
+    "snapshot_ref": "build/original-es2-races-phase2",
+    "snapshot_commit": "c986e41be72684637ffd5ca92a98038378f4b05e",
+    "snapshot_prefix": "es2m_snapshot/mudlib/"
+  },
+  "method": "Compare relative paths and Git blob SHA values. Matching SHA means exact blob identity; differing SHA requires content review. This is inventory only; no source files were moved or overwritten by this report.",
+  "totals": {
+    "source_files": 1482,
+    "snapshot_files": 1142,
+    "matching_relative_paths": 1141,
+    "exact_blob_matches": 998,
+    "content_differences": 143,
+    "missing_from_snapshot": 341,
+    "snapshot_only_files": 1
+  },
+  "exact_matches": [
+    "adm/simul_efun/utf8.c",
+    "cmds/std/buy.c",
+    "cmds/std/sneak.c",
+    "cmds/usr/abandon.c",
+    "cmds/usr/disable.c",
+    "cmds/usr/enable.c",
+    "cmds/usr/gain.c",
+    "cmds/usr/score.c",
+    "custom/armor/armor/armor_of_violet_rohan.c",
+    "custom/armor/armor/banded_armor.c",
+    "custom/armor/armor/battle_armor.c",
+    "custom/armor/armor/bear_armor.c",
+    "custom/armor/armor/black_harness.c",
+    "custom/armor/armor/brimstony_armor.c",
+    "custom/armor/armor/chain_shirt.c",
+    "custom/armor/armor/dark_armor.c",
+    "custom/armor/armor/double_cloudy_plate.c",
+    "custom/armor/armor/dragon_armor.c",
+    "custom/armor/armor/dragon_jade_robe.c",
+    "custom/armor/armor/dragon_plate_of_knights.c",
+    "custom/armor/armor/full_plate_of_fire_hawk.c",
+    "custom/armor/armor/ghost_hell_plate.c",
+    "custom/armor/armor/hell_dragon_armor.c",
+    "custom/armor/armor/holy_dragon_armor.c",
+    "custom/armor/armor/iron_armor.c",
+    "custom/armor/armor/iron_torso.c",
+    "custom/armor/armor/light_plate.c",
+    "custom/armor/armor/magic_armor.c",
+    "custom/armor/armor/monkey_armor.c",
+    "custom/armor/armor/padded_armor.c",
+    "custom/armor/armor/purple_cloud_mail.c",
+    "custom/armor/armor/raw_iron_armor.c",
+    "custom/armor/armor/red_scale_plate.c",
+    "custom/armor/armor/ring_armor.c",
+    "custom/armor/armor/ring_mail.c",
+    "custom/armor/armor/ringmail.c",
+    "custom/armor/armor/royal_armor.c",
+    "custom/armor/armor/scale_armor.c",
+    "custom/armor/armor/shapeless_heartguard.c",
+    "custom/armor/armor/shoulder_armor.c",
+    "custom/armor/armor/side_armor.c",
+    "custom/armor/armor/silver_platemail_of_frost.c",
+    "custom/armor/armor/sky_cloud_mail.c",
+    "custom/armor/armor/soul_lapis_lazuli_plate.c",
+    "custom/armor/armor/steel_chain_armor.c",
+    "custom/armor/armor/studded_armor.c",
+    "custom/armor/armor/tiger_armor.c",
+    "custom/armor/armor/tiger_plate.c",
+    "custom/armor/armor/white_dragon_plate.c",
+    "custom/armor/armor/white_rainbow_armor.c",
+    "custom/armor/armor/wolf_armor.c",
+    "custom/armor/cloth/animitta_kasaya.c",
+    "custom/armor/cloth/black_cloth.c",
+    "custom/armor/cloth/black_dragon_dress.c",
+    "custom/armor/cloth/black_mandarin_jacket.c",
+    "custom/armor/cloth/black_robe.c",
+    "custom/armor/cloth/black_suit.c",
+    "custom/armor/cloth/blood_cloth.c",
+    "custom/armor/cloth/blood_stained_cloth.c",
+    "custom/armor/cloth/blue_dress.c",
+    "custom/armor/cloth/broken_iron_cloth.c",
+    "custom/armor/cloth/charm_robe.c",
+    "custom/armor/cloth/cloth_of_sorrow.c",
+    "custom/armor/cloth/cloudy_silk_cloth.c",
+    "custom/armor/cloth/cowhide_vest.c",
+    "custom/armor/cloth/crocodile_dress.c",
+    "custom/armor/cloth/cyan_cloth.c",
+    "custom/armor/cloth/dark_cloth.c",
+    "custom/armor/cloth/devilish_dress.c",
+    "custom/armor/cloth/dragon_cloth.c",
+    "custom/armor/cloth/embroidery_dress.c",
+    "custom/armor/cloth/exorcist_cassock.c",
+    "custom/armor/cloth/fire_wolf_cloak.c",
+    "custom/armor/cloth/firewu_cloth.c",
+    "custom/armor/cloth/force_cloth.c",
+    "custom/armor/cloth/fur_sarong.c",
+    "custom/armor/cloth/gold_robe.c",
+    "custom/armor/cloth/golden_robe.c",
+    "custom/armor/cloth/gray_robe.c",
+    "custom/armor/cloth/gray_taoist_robe.c",
+    "custom/armor/cloth/green_robe.c",
+    "custom/armor/cloth/green_suit.c",
+    "custom/armor/cloth/iron_cloth.c",
+    "custom/armor/cloth/judge_robe.c",
+    "custom/armor/cloth/leather_vest.c",
+    "custom/armor/cloth/malik_robe.c",
+    "custom/armor/cloth/omega_dress.c",
+    "custom/armor/cloth/pink_dress.c",
+    "custom/armor/cloth/purple_taoist_robe.c",
+    "custom/armor/cloth/rain_dragon_skin.c",
+    "custom/armor/cloth/rainbow_gown.c",
+    "custom/armor/cloth/red_cloth.c",
+    "custom/armor/cloth/red_robe.c",
+    "custom/armor/cloth/red_scale_cloth.c",
+    "custom/armor/cloth/seven_star_robe.c",
+    "custom/armor/cloth/silk_cloth.c",
+    "custom/armor/cloth/silkworm_tunic.c",
+    "custom/armor/cloth/silver_cloth.c",
+    "custom/armor/cloth/sky_earth_cloth.c",
+    "custom/armor/cloth/soft_cloth.c",
+    "custom/armor/cloth/straw_cloth.c",
+    "custom/armor/cloth/suncat_skin.c",
+    "custom/armor/cloth/tao_robe.c",
+    "custom/armor/cloth/taoist_robe.c",
+    "custom/armor/cloth/tender_cloth.c",
+    "custom/armor/cloth/tiger_coat.c",
+    "custom/armor/cloth/tigerish_robe.c",
+    "custom/armor/cloth/tigerish_skin.c",
+    "custom/armor/cloth/umber_robe.c",
+    "custom/armor/cloth/violet_cloth.c",
+    "custom/armor/cloth/white_cloth.c",
+    "custom/armor/cloth/white_robe.c",
+    "custom/armor/cloth/white_scholar_dress.c",
+    "custom/armor/cloth/white_taoist_robe.c",
+    "custom/armor/cloth/worn_robe.c",
+    "custom/armor/cloth/yellow_and_black_cloth.c",
+    "custom/armor/cloth/yellow_cloth.c",
+    "custom/armor/cloth/yellow_suit.c",
+    "custom/armor/feet/black_cloth_boots.c",
+    "custom/armor/feet/boots_of_cleanse.c",
+    "custom/armor/feet/boots_of_flying_cloud.c",
+    "custom/armor/feet/boots_of_heroism.c",
+    "custom/armor/feet/bull_boots.c",
+    "custom/armor/feet/buskins.c",
+    "custom/armor/feet/cloud_boots.c",
+    "custom/armor/feet/crocodile_boots.c",
+    "custom/armor/feet/dark_boots.c",
+    "custom/armor/feet/dragon_boots.c",
+    "custom/armor/feet/embroidery_boots.c",
+    "custom/armor/feet/flower_boots.c",
+    "custom/armor/feet/flycloud_boots.c",
+    "custom/armor/feet/flying_boots.c",
+    "custom/armor/feet/forgod_boots.c",
+    "custom/armor/feet/green_boots_of_soldier.c",
+    "custom/armor/feet/iron_boots.c",
+    "custom/armor/feet/jiaojao_boots.c",
+    "custom/armor/feet/red_boots.c",
+    "custom/armor/feet/red_scale_boots.c",
+    "custom/armor/feet/runners_boots.c",
+    "custom/armor/feet/snakeskin_boots.c",
+    "custom/armor/feet/soft_leather_boots.c",
+    "custom/armor/feet/spider_boots.c",
+    "custom/armor/feet/straw_boots.c",
+    "custom/armor/feet/violet_shoes.c",
+    "custom/armor/feet/wolf_boots.c",
+    "custom/armor/feet/wonder_boots.c",
+    "custom/armor/finger/ashura_ring.c",
+    "custom/armor/finger/beast_ring.c",
+    "custom/armor/finger/bloodjade_ring.c",
+    "custom/armor/finger/clear_ring.c",
+    "custom/armor/finger/dark_ring.c",
+    "custom/armor/finger/dragon_ring.c",
+    "custom/armor/finger/dragon_soul_ring.c",
+    "custom/armor/finger/dragon_tail_ring.c",
+    "custom/armor/finger/finger_ring.c",
+    "custom/armor/finger/freeze_ring.c",
+    "custom/armor/finger/frost_frog_ring.c",
+    "custom/armor/finger/gold_ring.c",
+    "custom/armor/finger/golden_ring.c",
+    "custom/armor/finger/han_jade_ring.c",
+    "custom/armor/finger/jade_ring.c",
+    "custom/armor/finger/lapis_ring.c",
+    "custom/armor/finger/leopard_ring.c",
+    "custom/armor/finger/lightning_ring.c",
+    "custom/armor/finger/magicians_ring.c",
+    "custom/armor/finger/meditation_ring.c",
+    "custom/armor/finger/pearl_ring.c",
+    "custom/armor/finger/rain_dragon_ring.c",
+    "custom/armor/finger/ring_of_mighty_dragon.c",
+    "custom/armor/finger/ring_of_mighty_lord.c",
+    "custom/armor/finger/ring_of_summon.c",
+    "custom/armor/finger/romantic_ring.c",
+    "custom/armor/finger/sapphire_ring.c",
+    "custom/armor/finger/sealed_dragon_ring.c",
+    "custom/armor/finger/sparkling_ring.c",
+    "custom/armor/finger/star_ring.c",
+    "custom/armor/finger/symbol_of_dao.c",
+    "custom/armor/finger/symbol_of_mao_shan.c",
+    "custom/armor/finger/thunder_ring.c",
+    "custom/armor/finger/tiger_ring.c",
+    "custom/armor/finger/topaz_symbol.c",
+    "custom/armor/finger/white_jade_ring.c",
+    "custom/armor/finger/white_ring.c",
+    "custom/armor/finger/woochan_ring.c",
+    "custom/armor/finger/wuzin_ring.c",
+    "custom/armor/finger/yimo_ring.c",
+    "custom/armor/finger/zhuoyu_ring.c",
+    "custom/armor/hand/bear_gloves.c",
+    "custom/armor/hand/black_gauntlets.c",
+    "custom/armor/hand/black_gloves.c",
+    "custom/armor/hand/bracers_of_darkness.c",
+    "custom/armor/hand/brutal_beasts_claw.c",
+    "custom/armor/hand/celestial_tigers_claw.c",
+    "custom/armor/hand/corrosive_hands.c",
+    "custom/armor/hand/crocodile_gloves.c",
+    "custom/armor/hand/dark_bracers.c",
+    "custom/armor/hand/embroidery_gloves.c",
+    "custom/armor/hand/gloves_of_heroism.c",
+    "custom/armor/hand/heartless_claw.c",
+    "custom/armor/hand/python_gloves.c",
+    "custom/armor/hand/red_scale_gloves.c",
+    "custom/armor/hand/royal_gloves.c",
+    "custom/armor/hand/silk_gloves.c",
+    "custom/armor/hand/silky_gloves.c",
+    "custom/armor/hand/skin_gloves.c",
+    "custom/armor/hand/snake_bracers.c",
+    "custom/armor/hand/snowy_bracers.c",
+    "custom/armor/hand/steel_bracers.c",
+    "custom/armor/hand/thunder_claw.c",
+    "custom/armor/hand/thunder_gloves.c",
+    "custom/armor/hand/wind_gloves.c",
+    "custom/armor/hand/yenhold_gauntlets.c",
+    "custom/armor/head/battle_helm.c",
+    "custom/armor/head/bigbird_feather.c",
+    "custom/armor/head/black_doli.c",
+    "custom/armor/head/brass_hat.c",
+    "custom/armor/head/copper_hat.c",
+    "custom/armor/head/coral_hairpin.c",
+    "custom/armor/head/eagle_helmet.c",
+    "custom/armor/head/ghost_mask.c",
+    "custom/armor/head/goat_hat.c",
+    "custom/armor/head/golden_feather_helm.c",
+    "custom/armor/head/hanba_hairpin.c",
+    "custom/armor/head/headgear.c",
+    "custom/armor/head/iron_helmet.c",
+    "custom/armor/head/jade_hairpin.c",
+    "custom/armor/head/jade_hat.c",
+    "custom/armor/head/lion_helmet.c",
+    "custom/armor/head/monkey_helmet.c",
+    "custom/armor/head/old_silver_hairpin.c",
+    "custom/armor/head/purple_helmet.c",
+    "custom/armor/head/python_headgear.c",
+    "custom/armor/head/red_hat.c",
+    "custom/armor/head/red_scale_helm.c",
+    "custom/armor/head/royal_helmet.c",
+    "custom/armor/head/skull_helmet.c",
+    "custom/armor/head/sun_helmet.c",
+    "custom/armor/head/tiger_helmet.c",
+    "custom/armor/head/violet_hairpin.c",
+    "custom/armor/head/war_hat.c",
+    "custom/armor/head/white_helmet.c",
+    "custom/armor/head/wind_lion_helmet.c",
+    "custom/armor/head/woof_hat.c",
+    "custom/armor/leg/bamboo_legs.c",
+    "custom/armor/leg/bear_legs.c",
+    "custom/armor/leg/dingling_legs.c",
+    "custom/armor/leg/leather_leggings.c",
+    "custom/armor/leg/legs_of_heroism.c",
+    "custom/armor/leg/red_dust_legs.c",
+    "custom/armor/leg/red_scale_leggings.c",
+    "custom/armor/leg/star_studded_legs.c",
+    "custom/armor/leg/sun_legs.c",
+    "custom/armor/neck/bodhi_rosary.c",
+    "custom/armor/neck/chixiao_necklace.c",
+    "custom/armor/neck/copper_rosary.c",
+    "custom/armor/neck/dark_necklace.c",
+    "custom/armor/neck/dipper_necklace.c",
+    "custom/armor/neck/dragon_bone.c",
+    "custom/armor/neck/iron_rosary.c",
+    "custom/armor/neck/malik_necklace.c",
+    "custom/armor/neck/mirror_of_chaos.c",
+    "custom/armor/neck/necklace_of_daughter.c",
+    "custom/armor/neck/psakaml.c",
+    "custom/armor/neck/ruby_necklace.c",
+    "custom/armor/neck/silance_rosary.c",
+    "custom/armor/neck/skull_rosary.c",
+    "custom/armor/neck/tan_amulet.c",
+    "custom/armor/neck/tiger_necklace.c",
+    "custom/armor/waist/blessed_jade.c",
+    "custom/armor/waist/brutal_beasts_tail.c",
+    "custom/armor/waist/crocodile_girth.c",
+    "custom/armor/waist/dog_tail_belt.c",
+    "custom/armor/waist/dragon_tail.c",
+    "custom/armor/waist/ghosts_girdle.c",
+    "custom/armor/waist/girdle_of_headless.c",
+    "custom/armor/waist/girdle_of_mighty_lord.c",
+    "custom/armor/waist/girl_girth.c",
+    "custom/armor/waist/golden_jade_belt.c",
+    "custom/armor/waist/iron_girth.c",
+    "custom/armor/waist/jade_spider_girdle.c",
+    "custom/armor/waist/lion_belt.c",
+    "custom/armor/waist/lunmay_jade.c",
+    "custom/armor/waist/perl_girth.c",
+    "custom/armor/waist/red_belt.c",
+    "custom/armor/waist/red_scale_girth.c",
+    "custom/armor/waist/silver_girth.c",
+    "custom/armor/waist/topaz_belt.c",
+    "custom/armor/waist/voliet_jade.c",
+    "custom/armor/waist/water_dragon_girdle.c",
+    "custom/armor/waist/white_girth.c",
+    "custom/armor/waist/white_jade_girth.c",
+    "custom/ghost/npc/hungry_ghost.c",
+    "custom/ghost/npc/mountain_sprite.c",
+    "custom/ghost/npc/tiger_thrall.c",
+    "custom/ghost/npc/wandering_soul.c",
+    "custom/ghost/npc/water_goblin.c",
+    "custom/ghost/npc/wronged_ghost.c",
+    "custom/ghost/std_ghost.c",
+    "custom/home/obj/bed.c",
+    "custom/home/obj/development_board.c",
+    "custom/home/room/bedroom.c",
+    "custom/home/room/future_room.c",
+    "custom/home/room/home_hall.c",
+    "custom/home/room/study_room.c",
+    "custom/item/dragon_skin_bag.c",
+    "custom/item/scroll/blank.c",
+    "custom/item/scroll/nature.c",
+    "custom/item/scroll/yang.c",
+    "custom/item/scroll/yin.c",
+    "custom/race/condition/blackteeth_gnaw.c",
+    "custom/race/condition/headless_dance.c",
+    "custom/race/condition/headless_ritual.c",
+    "custom/race/obj/rainner_snake.c",
+    "custom/weapon/axe/axe_of_bloodmoon.c",
+    "custom/weapon/axe/blackcloud_axe.c",
+    "custom/weapon/axe/blood_axe.c",
+    "custom/weapon/axe/dragon_killer_axe.c",
+    "custom/weapon/axe/dragon_tiger_axe.c",
+    "custom/weapon/axe/eight_ghost_axe.c",
+    "custom/weapon/axe/ghost_axe.c",
+    "custom/weapon/axe/grandaxe.c",
+    "custom/weapon/axe/hell_twibil.c",
+    "custom/weapon/axe/holy_axe.c",
+    "custom/weapon/axe/huge_axe.c",
+    "custom/weapon/axe/large_axe.c",
+    "custom/weapon/axe/red_axe.c",
+    "custom/weapon/axe/short_axe_of_bloodmoon.c",
+    "custom/weapon/axe/wyvern_axe.c",
+    "custom/weapon/blade/black_kris.c",
+    "custom/weapon/blade/blade_of_dragon.c",
+    "custom/weapon/blade/blade_of_dragon_awakened.c",
+    "custom/weapon/blade/blade_of_fire_spirit.c",
+    "custom/weapon/blade/blade_of_hydra_bone.c",
+    "custom/weapon/blade/blade_of_inferno.c",
+    "custom/weapon/blade/blade_of_nine_rings.c",
+    "custom/weapon/blade/blade_of_strange_iron.c",
+    "custom/weapon/blade/blood_blade.c",
+    "custom/weapon/blade/blue_poison_blade.c",
+    "custom/weapon/blade/butterfly_kris.c",
+    "custom/weapon/blade/ceremonial_moon.c",
+    "custom/weapon/blade/cloudy_ring_blade.c",
+    "custom/weapon/blade/colosus_blade.c",
+    "custom/weapon/blade/copper_blade.c",
+    "custom/weapon/blade/cursed_blade_of_darkness.c",
+    "custom/weapon/blade/devilish_blade.c",
+    "custom/weapon/blade/evil_lopsided_blade.c",
+    "custom/weapon/blade/feather_blade.c",
+    "custom/weapon/blade/fire_gods_wings.c",
+    "custom/weapon/blade/flame_weapon.c",
+    "custom/weapon/blade/flame_weapon_forged.c",
+    "custom/weapon/blade/ghost_blade.c",
+    "custom/weapon/blade/ghost_head_blade.c",
+    "custom/weapon/blade/ghosts_blade.c",
+    "custom/weapon/blade/golden_blade.c",
+    "custom/weapon/blade/green_blade.c",
+    "custom/weapon/blade/grin_weapon.c",
+    "custom/weapon/blade/horse_twohanded_blade.c",
+    "custom/weapon/blade/large_blade.c",
+    "custom/weapon/blade/moon_blade.c",
+    "custom/weapon/blade/poison_wind_blade.c",
+    "custom/weapon/blade/purple_dragon_blade.c",
+    "custom/weapon/blade/reckless_blade.c",
+    "custom/weapon/blade/snow_blade.c",
+    "custom/weapon/blade/steelblade.c",
+    "custom/weapon/blade/styx_blade.c",
+    "custom/weapon/blade/test_heart_blade.c",
+    "custom/weapon/blade/thunderfurry_blade.c",
+    "custom/weapon/blade/tiger_blade.c",
+    "custom/weapon/blade/warlord_blade.c",
+    "custom/weapon/blade/white_blade.c",
+    "custom/weapon/blade/wind_power_blade.c",
+    "custom/weapon/blade/wind_slasher_blade.c",
+    "custom/weapon/blade/wing_blade.c",
+    "custom/weapon/blunt/black_iron_hammer.c",
+    "custom/weapon/blunt/crasher_maul.c",
+    "custom/weapon/blunt/jade_rod.c",
+    "custom/weapon/blunt/skull_heart.c",
+    "custom/weapon/blunt/sledge_hammer.c",
+    "custom/weapon/blunt/thunder_gods_anger.c",
+    "custom/weapon/blunt/whirlwind_blunt.c",
+    "custom/weapon/blunt/wolf_hammer.c",
+    "custom/weapon/dagger/ancient_dagger.c",
+    "custom/weapon/dagger/beauty_dagger.c",
+    "custom/weapon/dagger/black_iron_dagger.c",
+    "custom/weapon/dagger/bloody_dagger.c",
+    "custom/weapon/dagger/butterfly_stiletto.c",
+    "custom/weapon/dagger/charming_dagger.c",
+    "custom/weapon/dagger/chi_dagger.c",
+    "custom/weapon/dagger/cloud_dagger.c",
+    "custom/weapon/dagger/coldblood_dagger.c",
+    "custom/weapon/dagger/cool_iron_dagger.c",
+    "custom/weapon/dagger/cruel_dagger.c",
+    "custom/weapon/dagger/dagger_of_fate.c",
+    "custom/weapon/dagger/dagger_of_frost_edge.c",
+    "custom/weapon/dagger/digested_holy_sword.c",
+    "custom/weapon/dagger/dimensional_dagger.c",
+    "custom/weapon/dagger/dire_spike.c",
+    "custom/weapon/dagger/dragon_dagger.c",
+    "custom/weapon/dagger/evil_grin_dagger.c",
+    "custom/weapon/dagger/fire_dragon_tooth.c",
+    "custom/weapon/dagger/lunmay_dagger.c",
+    "custom/weapon/dagger/piercing_dagger.c",
+    "custom/weapon/dagger/shadow_dagger.c",
+    "custom/weapon/dagger/shennong_dagger.c",
+    "custom/weapon/dagger/snow_dagger.c",
+    "custom/weapon/dagger/wicked_dagger.c",
+    "custom/weapon/dagger/wolf_dagger.c",
+    "custom/weapon/dagger/xiao_dagger.c",
+    "custom/weapon/needle/bee_needle.c",
+    "custom/weapon/needle/dragon_needle.c",
+    "custom/weapon/needle/embroidery_needle.c",
+    "custom/weapon/needle/iron_needle.c",
+    "custom/weapon/needle/needle_of_bone_maggot.c",
+    "custom/weapon/needle/silver_needle.c",
+    "custom/weapon/needle/steel_needle.c",
+    "custom/weapon/needle/tailors_needle.c",
+    "custom/weapon/pike/blood_pike.c",
+    "custom/weapon/pike/dragon_bone_pike.c",
+    "custom/weapon/pike/ghost_pike.c",
+    "custom/weapon/pike/gin_pike.c",
+    "custom/weapon/pike/golden_beast_lance.c",
+    "custom/weapon/pike/huge_halberd.c",
+    "custom/weapon/pike/hydra_lance.c",
+    "custom/weapon/pike/iron_fork.c",
+    "custom/weapon/pike/iron_pike.c",
+    "custom/weapon/pike/lightning_pike.c",
+    "custom/weapon/pike/royal_pike.c",
+    "custom/weapon/pike/sky_pike.c",
+    "custom/weapon/pike/solar_pike.c",
+    "custom/weapon/pike/spear_of_slaying.c",
+    "custom/weapon/pike/steel_short_spear.c",
+    "custom/weapon/pike/thunder_pike.c",
+    "custom/weapon/pike/tiger_pike.c",
+    "custom/weapon/pike/war_lance.c",
+    "custom/weapon/pike/wraith_of_warlord.c",
+    "custom/weapon/pike/yaksa_pike.c",
+    "custom/weapon/staff/black_iron_staff.c",
+    "custom/weapon/staff/black_spark.c",
+    "custom/weapon/staff/bone_staff.c",
+    "custom/weapon/staff/cane_of_spirit.c",
+    "custom/weapon/staff/celestial_bull_cane.c",
+    "custom/weapon/staff/change_cane.c",
+    "custom/weapon/staff/copper_staff.c",
+    "custom/weapon/staff/dragon_head_cane.c",
+    "custom/weapon/staff/flame_staff.c",
+    "custom/weapon/staff/flower_cane.c",
+    "custom/weapon/staff/god_cane.c",
+    "custom/weapon/staff/golden_dragon_cane.c",
+    "custom/weapon/staff/incantation_umbrella.c",
+    "custom/weapon/staff/rainlords_tooth.c",
+    "custom/weapon/staff/rainlords_tooth_awakened.c",
+    "custom/weapon/staff/rainlords_tooth_invoke.c",
+    "custom/weapon/staff/rune_staff.c",
+    "custom/weapon/staff/serpent_cane.c",
+    "custom/weapon/staff/staff_of_ancient_snow.c",
+    "custom/weapon/staff/staff_of_eroticism.c",
+    "custom/weapon/staff/staff_of_judgement.c",
+    "custom/weapon/staff/staff_of_wisdom.c",
+    "custom/weapon/staff/strange_copper_staff.c",
+    "custom/weapon/staff/wither_zenstaff.c",
+    "custom/weapon/sword/armor_dragon_sword.c",
+    "custom/weapon/sword/au_han_sword.c",
+    "custom/weapon/sword/black_shortsword.c",
+    "custom/weapon/sword/black_sword.c",
+    "custom/weapon/sword/blackthorn.c",
+    "custom/weapon/sword/broadsword.c",
+    "custom/weapon/sword/catastrophe_sword.c",
+    "custom/weapon/sword/celestial_sword.c",
+    "custom/weapon/sword/celestial_sword_awakened.c",
+    "custom/weapon/sword/charm_sword.c",
+    "custom/weapon/sword/cherry_blossoms_sword.c",
+    "custom/weapon/sword/cloud_magfire_sword.c",
+    "custom/weapon/sword/cloudslay_sword.c",
+    "custom/weapon/sword/colosus_sword.c",
+    "custom/weapon/sword/copper_sword.c",
+    "custom/weapon/sword/daoist_sword.c",
+    "custom/weapon/sword/dragon_heavy_sword.c",
+    "custom/weapon/sword/fishy_sword.c",
+    "custom/weapon/sword/flurry_sword.c",
+    "custom/weapon/sword/flying_tiger_sword.c",
+    "custom/weapon/sword/godness_sword.c",
+    "custom/weapon/sword/heaven_sword.c",
+    "custom/weapon/sword/hero_sword.c",
+    "custom/weapon/sword/hundreds_poison_sword.c",
+    "custom/weapon/sword/iron_sword.c",
+    "custom/weapon/sword/ironsword.c",
+    "custom/weapon/sword/jade_sword.c",
+    "custom/weapon/sword/jeweled_shortsword.c",
+    "custom/weapon/sword/legendary_sword_of_smoke.c",
+    "custom/weapon/sword/loving_sword.c",
+    "custom/weapon/sword/medication_king_sword.c",
+    "custom/weapon/sword/needle_sword.c",
+    "custom/weapon/sword/night_sword.c",
+    "custom/weapon/sword/numinous_sword.c",
+    "custom/weapon/sword/peachwood_sword.c",
+    "custom/weapon/sword/psychic_sword.c",
+    "custom/weapon/sword/pure_dragon_sword.c",
+    "custom/weapon/sword/pure_phonix_sword.c",
+    "custom/weapon/sword/rapid_sword.c",
+    "custom/weapon/sword/red_of_sword.c",
+    "custom/weapon/sword/royal_sword_of_honor.c",
+    "custom/weapon/sword/shome_sword.c",
+    "custom/weapon/sword/silver_sword.c",
+    "custom/weapon/sword/sky_sword.c",
+    "custom/weapon/sword/slasher_sword.c",
+    "custom/weapon/sword/smashing_sword.c",
+    "custom/weapon/sword/snake_sword.c",
+    "custom/weapon/sword/steel_longsword.c",
+    "custom/weapon/sword/storm_chasers_sword.c",
+    "custom/weapon/sword/storm_lords_feather.c",
+    "custom/weapon/sword/sword_of_black_justice.c",
+    "custom/weapon/sword/sword_of_destiny.c",
+    "custom/weapon/sword/sword_of_dragon_tears.c",
+    "custom/weapon/sword/sword_of_falling_maple.c",
+    "custom/weapon/sword/sword_of_frost_edge.c",
+    "custom/weapon/sword/sword_of_holy_frost.c",
+    "custom/weapon/sword/sword_of_killing_god.c",
+    "custom/weapon/sword/sword_of_mighty_dragon.c",
+    "custom/weapon/sword/sword_of_raven.c",
+    "custom/weapon/sword/sword_of_redrune.c",
+    "custom/weapon/sword/sword_of_wind_spring.c",
+    "custom/weapon/sword/white_dragon_fang.c",
+    "custom/weapon/sword/white_sword.c",
+    "custom/weapon/sword/yiluo_sword.c",
+    "custom/weapon/sword/yiyoung_sword.c",
+    "custom/weapon/whip/angry_whip.c",
+    "custom/weapon/whip/brimstony_whip.c",
+    "custom/weapon/whip/dragon_whip.c",
+    "custom/weapon/whip/fishing_stick.c",
+    "custom/weapon/whip/god_whip.c",
+    "custom/weapon/whip/golden_buddha_duster.c",
+    "custom/weapon/whip/silk_fishing_stick.c",
+    "custom/weapon/whip/thunderproof_whip.c",
+    "custom/weapon/whip/war_whip.c",
+    "custom/weapon/whip/whip_of_alchemy_cereal.c",
+    "custom/weapon/whip/whip_of_evil_beauties.c",
+    "custom/zhenwu/obj/fire_gauntlets.c",
+    "custom/zhenwu/obj/great_axe_of_mighty.c",
+    "custom/zhenwu/obj/short_pike.c",
+    "custom/zhenwu/obj/steel_armor.c",
+    "custom/zhenwu/obj/steel_boots.c",
+    "custom/zhenwu/room/big_tent.c",
+    "custom/zhenwu/room/camp.c",
+    "custom/zhenwu/room/gate.c",
+    "custom/zhenwu/room/shed.c",
+    "custom/zhenwu/room/yard02.c",
+    "custom/zhenwu/room/yard03.c",
+    "custom/zhenwu/room/yard04.c",
+    "custom/zhenwu/room/yard05.c",
+    "custom/zhenwu/room/yard06.c",
+    "custom/zhenwu/room/yard07.c",
+    "custom/zhenwu/room/yard08.c",
+    "custom/zhenwu/room/yard09.c",
+    "custom/zhenwu/room/yard10.c",
+    "custom/zhenwu/room/yard11.c",
+    "custom/zhenwu/room/yard12.c",
+    "custom/zhenwu/room/yard13.c",
+    "custom/zhenwu/room/yard14.c",
+    "d/lee/entrance_s.c",
+    "d/lee/eroad1.c",
+    "d/lee/eroad2.c",
+    "d/lee/farm_w1.c",
+    "d/lee/farm_w2.c",
+    "d/lee/gate_e.c",
+    "d/lee/gate_n.c",
+    "d/lee/gate_s.c",
+    "d/lee/gate_w.c",
+    "d/lee/grocery.c",
+    "d/lee/herb_shop.c",
+    "d/lee/hunter.c",
+    "d/lee/nie_backroom.c",
+    "d/lee/nroad1.c",
+    "d/lee/nroad2.c",
+    "d/lee/nroad3.c",
+    "d/lee/obj/big_candied_hawthorn.c",
+    "d/lee/obj/bronze_furnace.c",
+    "d/lee/obj/bronze_reactor.c",
+    "d/lee/obj/candied_hawthorn.c",
+    "d/lee/obj/crystal_ring.c",
+    "d/lee/obj/firewood.c",
+    "d/lee/obj/flour.c",
+    "d/lee/obj/heaven_dew.c",
+    "d/lee/obj/hemp_boots.c",
+    "d/lee/obj/hemp_cloth.c",
+    "d/lee/obj/hunter_pike.c",
+    "d/lee/obj/leather_boots.c",
+    "d/lee/obj/medicine_bottle.c",
+    "d/lee/obj/salt.c",
+    "d/lee/obj/snow_dagger.c",
+    "d/lee/obj/sugar.c",
+    "d/lee/obj/tight_cloth.c",
+    "d/lee/obj/watermelon.c",
+    "d/lee/obj/well.c",
+    "d/lee/obj/willow_blade.c",
+    "d/lee/obj/yellow_jade_ring.c",
+    "d/lee/riverside_n1.c",
+    "d/lee/riverside_n2.c",
+    "d/lee/riverside_s.c",
+    "d/lee/school.c",
+    "d/lee/shrine.c",
+    "d/lee/square_e.c",
+    "d/lee/square_w.c",
+    "d/lee/street1.c",
+    "d/lee/street2.c",
+    "d/lee/watermelon_n2.c",
+    "d/lee/watermelon_n3.c",
+    "d/lee/watermelon_s1.c",
+    "d/lee/watermelon_s2.c",
+    "d/lee/wroad1.c",
+    "d/lee/wroad2.c",
+    "d/lee/wroad3.c",
+    "d/lee/wroad4.c",
+    "d/oldpine/bandit_clearing.c",
+    "d/oldpine/bear_cave.c",
+    "d/oldpine/beast_trail.c",
+    "d/oldpine/cave1.c",
+    "d/oldpine/cave2.c",
+    "d/oldpine/cave3.c",
+    "d/oldpine/cave_mouth.c",
+    "d/oldpine/clearing_n.c",
+    "d/oldpine/clearing_w.c",
+    "d/oldpine/crossing.c",
+    "d/oldpine/entrance.c",
+    "d/oldpine/forest_n1.c",
+    "d/oldpine/forest_n2.c",
+    "d/oldpine/forest_n3.c",
+    "d/oldpine/forest_w.c",
+    "d/oldpine/glade.c",
+    "d/oldpine/grass1.c",
+    "d/oldpine/grass2.c",
+    "d/oldpine/gravel_road.c",
+    "d/oldpine/hideout.c",
+    "d/oldpine/highway.c",
+    "d/oldpine/inn.c",
+    "d/oldpine/kitchen.c",
+    "d/oldpine/ledge.c",
+    "d/oldpine/main_hall.c",
+    "d/oldpine/mist1.c",
+    "d/oldpine/mist2.c",
+    "d/oldpine/mist3.c",
+    "d/oldpine/mist4.c",
+    "d/oldpine/mist_entrance.c",
+    "d/oldpine/obj/coarse_cloth.c",
+    "d/oldpine/obj/dragon_pill.c",
+    "d/oldpine/obj/head_cloth.c",
+    "d/oldpine/obj/meat.c",
+    "d/oldpine/obj/venison.c",
+    "d/oldpine/path0.c",
+    "d/oldpine/path1.c",
+    "d/oldpine/path2.c",
+    "d/oldpine/reeds.c",
+    "d/oldpine/reeds2.c",
+    "d/oldpine/reeds3.c",
+    "d/oldpine/reeds4.c",
+    "d/oldpine/reeds5.c",
+    "d/oldpine/reeds_exit.c",
+    "d/oldpine/shrubs.c",
+    "d/oldpine/side_hall_e.c",
+    "d/oldpine/side_hall_w.c",
+    "d/oldpine/temple_gate.c",
+    "d/oldpine/temple_square.c",
+    "d/oldpine/wood1.c",
+    "d/oldpine/wood2.c",
+    "d/oldpine/wood3.c",
+    "d/oldpine/wood4.c",
+    "d/oldpine/wood_deep.c",
+    "d/snow/README.md",
+    "d/snow/bazar.c",
+    "d/snow/bug_room.c",
+    "d/snow/court.c",
+    "d/snow/ebridge.c",
+    "d/snow/egate.c",
+    "d/snow/epath.c",
+    "d/snow/fireplace.c",
+    "d/snow/herb_shop.c",
+    "d/snow/inn_kitchen.c",
+    "d/snow/inn_staff_room.c",
+    "d/snow/kitchen.c",
+    "d/snow/lane1.c",
+    "d/snow/lane2.c",
+    "d/snow/mill.c",
+    "d/snow/ngate.c",
+    "d/snow/npath1.c",
+    "d/snow/npath2.c",
+    "d/snow/npath3.c",
+    "d/snow/npc/obj/arrow.c",
+    "d/snow/npc/obj/blue_cloth.c",
+    "d/snow/npc/obj/blue_jacket.c",
+    "d/snow/npc/obj/broadsword.c",
+    "d/snow/npc/obj/cane.c",
+    "d/snow/npc/obj/clothboot.c",
+    "d/snow/npc/obj/coin.c",
+    "d/snow/npc/obj/comb.c",
+    "d/snow/npc/obj/crate.c",
+    "d/snow/npc/obj/fur_hat.c",
+    "d/snow/npc/obj/hairpin.c",
+    "d/snow/npc/obj/helmet.c",
+    "d/snow/npc/obj/hoe.c",
+    "d/snow/npc/obj/invitation.c",
+    "d/snow/npc/obj/leather_armor.c",
+    "d/snow/npc/obj/note.c",
+    "d/snow/npc/obj/pot.c",
+    "d/snow/npc/obj/roast_chicken.c",
+    "d/snow/npc/obj/shovel.c",
+    "d/snow/npc/obj/silversword.c",
+    "d/snow/npc/obj/slasher_sword.c",
+    "d/snow/npc/obj/smock.c",
+    "d/snow/npc/obj/syndicator.c",
+    "d/snow/npc/obj/tummy_cover.c",
+    "d/snow/npc/obj/wagon.c",
+    "d/snow/npc/obj/white_dress.c",
+    "d/snow/npc/obj/wine_pot.c",
+    "d/snow/npc/obj/woodblade.c",
+    "d/snow/npc/obj/woodsword.c",
+    "d/snow/npc/teacher.c",
+    "d/snow/npc/waiter.c",
+    "d/snow/nstreet1.c",
+    "d/snow/nstreet2.c",
+    "d/snow/obj/basic_book.c",
+    "d/snow/obj/literate_book.c",
+    "d/snow/obj/stone.c",
+    "d/snow/post_office.c",
+    "d/snow/river1.c",
+    "d/snow/riverbank.c",
+    "d/snow/ruin1.c",
+    "d/snow/ruin2.c",
+    "d/snow/school.c",
+    "d/snow/sgate.c",
+    "d/snow/small_temple.c",
+    "d/snow/smithy.c",
+    "d/snow/square.c",
+    "d/snow/square_e.c",
+    "d/snow/square_n.c",
+    "d/snow/square_s.c",
+    "d/snow/square_sw.c",
+    "d/snow/sstreet1.c",
+    "d/snow/store.c",
+    "d/snow/tree.c",
+    "d/snow/wgate.c",
+    "d/snow/wstreet1.c",
+    "d/snow/wstreet2.c",
+    "d/snow/wstreet3.c",
+    "d/wutang/backyard.c",
+    "d/wutang/bamboo_grove.c",
+    "d/wutang/bamboo_hall.c",
+    "d/wutang/bank.c",
+    "d/wutang/boardwalk_e.c",
+    "d/wutang/boardwalk_w.c",
+    "d/wutang/boat.c",
+    "d/wutang/city_god_temple.c",
+    "d/wutang/clearing.c",
+    "d/wutang/cloth_shop.c",
+    "d/wutang/crossroad.c",
+    "d/wutang/dark_alley_e.c",
+    "d/wutang/dark_alley_w.c",
+    "d/wutang/east_street1.c",
+    "d/wutang/east_street2.c",
+    "d/wutang/east_street3.c",
+    "d/wutang/east_street4.c",
+    "d/wutang/entrance.c",
+    "d/wutang/ferry.c",
+    "d/wutang/ferry_dock.c",
+    "d/wutang/field1.c",
+    "d/wutang/field2.c",
+    "d/wutang/field3.c",
+    "d/wutang/field4.c",
+    "d/wutang/field5.c",
+    "d/wutang/grass_ne.c",
+    "d/wutang/grass_nw.c",
+    "d/wutang/grass_se.c",
+    "d/wutang/grass_sw.c",
+    "d/wutang/gravel_road_n.c",
+    "d/wutang/gravel_road_s.c",
+    "d/wutang/guesthouse.c",
+    "d/wutang/hut.c",
+    "d/wutang/inn.c",
+    "d/wutang/inn2.c",
+    "d/wutang/inn3.c",
+    "d/wutang/market_square.c",
+    "d/wutang/north_street.c",
+    "d/wutang/npc/may_yin_fong.c",
+    "d/wutang/npc/town_god.c",
+    "d/wutang/obj/blue_cloth.c",
+    "d/wutang/obj/pie.c",
+    "d/wutang/path_e.c",
+    "d/wutang/pavilion.c",
+    "d/wutang/pawnshop.c",
+    "d/wutang/river_bank.c",
+    "d/wutang/riverside.c",
+    "d/wutang/school.c",
+    "d/wutang/south_street1.c",
+    "d/wutang/south_street2.c",
+    "d/wutang/temple.c",
+    "d/wutang/temple_road_n.c",
+    "d/wutang/temple_road_s.c",
+    "d/wutang/temple_yard.c",
+    "d/wutang/three_way.c",
+    "d/wutang/west_street1.c",
+    "d/wutang/west_street2.c",
+    "d/wutang/yan_gate.c",
+    "d/wutang/yan_hall.c",
+    "d/wutang/yan_mansion.c",
+    "daemon/class/alchemist.c",
+    "daemon/class/commoner.c",
+    "daemon/class/fighter.c",
+    "daemon/class/monk.c",
+    "daemon/class/scholar.c",
+    "daemon/class/soldier.c",
+    "daemon/class/taoist.c",
+    "daemon/class/thief.c",
+    "daemon/misc/npc_power.c",
+    "daemon/race/ashura.c",
+    "daemon/race/blackteeth.c",
+    "daemon/race/blackteeth/gnaw.c",
+    "daemon/race/dingling.c",
+    "daemon/race/dingling/hoof.c",
+    "daemon/race/headless.c",
+    "daemon/race/headless/dance.c",
+    "daemon/race/jiaojao.c",
+    "daemon/race/jiaojao/hide.c",
+    "daemon/race/malik.c",
+    "daemon/race/rainner.c",
+    "daemon/race/rainner/feed.c",
+    "daemon/race/woochan.c",
+    "daemon/race/woochan/replete.c",
+    "daemon/race/yaksa.c",
+    "daemon/race/yaksa/devour.c",
+    "daemon/race/yenhold.c",
+    "daemon/skill/advance_lunmay.c",
+    "daemon/skill/archaic_attainment.c",
+    "daemon/skill/axe.c",
+    "daemon/skill/beast.c",
+    "daemon/skill/blade.c",
+    "daemon/skill/blunt.c",
+    "daemon/skill/dagger.c",
+    "daemon/skill/hainmay_force.c",
+    "daemon/skill/literate.c",
+    "daemon/skill/lunmay.c",
+    "daemon/skill/mayin.c",
+    "daemon/skill/mysticism.c",
+    "daemon/skill/needle.c",
+    "daemon/skill/pike.c",
+    "daemon/skill/secondhand_axe.c",
+    "daemon/skill/secondhand_blade.c",
+    "daemon/skill/secondhand_blunt.c",
+    "daemon/skill/secondhand_dagger.c",
+    "daemon/skill/secondhand_needle.c",
+    "daemon/skill/secondhand_pike.c",
+    "daemon/skill/secondhand_staff.c",
+    "daemon/skill/secondhand_sword.c",
+    "daemon/skill/seven.c",
+    "daemon/skill/staff.c",
+    "daemon/skill/sword.c",
+    "daemon/skill/taoism-fire.c",
+    "daemon/skill/taoism-freeze.c",
+    "daemon/skill/taoism-storm.c",
+    "daemon/skill/taoism-thunder.c",
+    "daemon/skill/tiger-steps.c",
+    "daemon/skill/twohanded_axe.c",
+    "daemon/skill/twohanded_blade.c",
+    "daemon/skill/twohanded_blunt.c",
+    "daemon/skill/twohanded_pike.c",
+    "daemon/skill/twohanded_staff.c",
+    "daemon/skill/twohanded_sword.c",
+    "daemon/skill/unarmed.c",
+    "daemon/skill/whip.c",
+    "feature/armor/armor.c",
+    "feature/armor/cloth.c",
+    "feature/armor/feet_eq.c",
+    "feature/armor/finger_eq.c",
+    "feature/armor/hand_eq.c",
+    "feature/armor/head_eq.c",
+    "feature/armor/leg_eq.c",
+    "feature/armor/neck_eq.c",
+    "feature/armor/waist_eq.c",
+    "feature/attribute.c",
+    "feature/char/action.c",
+    "feature/char/attack.c",
+    "feature/char/command.c",
+    "feature/char/condition.c",
+    "feature/char/finance.c",
+    "feature/char/message.c",
+    "feature/char/relation.c",
+    "feature/char/score.c",
+    "feature/char/skill.c",
+    "feature/char/team.c",
+    "feature/clean_up.c",
+    "feature/dbase.c",
+    "feature/drink.c",
+    "feature/food.c",
+    "feature/move.c",
+    "feature/name.c",
+    "feature/npc/bandit.c",
+    "feature/npc/currency.c",
+    "feature/npc/fighter.c",
+    "feature/npc/scholar.c",
+    "feature/npc/soldier.c",
+    "feature/npc/traveler.c",
+    "feature/npc/vendor.c",
+    "feature/npc/villager.c",
+    "feature/save.c",
+    "feature/statistic.c",
+    "feature/unique.c",
+    "feature/user/alias.c",
+    "feature/user/autoload.c",
+    "feature/user/flag.c",
+    "feature/user/input.c",
+    "feature/weapon/axe.c",
+    "feature/weapon/blade.c",
+    "feature/weapon/blunt.c",
+    "feature/weapon/dagger.c",
+    "feature/weapon/needle.c",
+    "feature/weapon/pike.c",
+    "feature/weapon/staff.c",
+    "feature/weapon/sword.c",
+    "feature/weapon/whip.c",
+    "include/class_level.h",
+    "include/daemon.h",
+    "obj/area/man.c",
+    "obj/area/obj/axe.c",
+    "obj/area/obj/bag.c",
+    "obj/area/obj/belt.c",
+    "obj/area/obj/dice.c",
+    "obj/area/obj/knife.c",
+    "obj/area/obj/kris.c",
+    "obj/area/obj/leather_boot.c",
+    "obj/area/obj/leather_whip.c",
+    "obj/area/obj/pen.c",
+    "obj/area/obj/robe.c",
+    "obj/area/obj/whip.c",
+    "obj/area/obj/woodsword.c",
+    "obj/area/traveller.c",
+    "obj/area/vagabond.c",
+    "obj/books/anthology_of_classical_prose.c",
+    "obj/books/canon_of_true_words.c",
+    "obj/books/compendium_of_translations.c",
+    "obj/books/manual_of_six_yin_and_eight_trigrams.c",
+    "obj/books/nameless_ancient_tome.c",
+    "obj/books/simple_guide_to_words.c",
+    "obj/books/strange_tales_of_the_celestial_court.c",
+    "obj/books/studies_of_famous_mountains.c",
+    "obj/books/the_five_numbers.c",
+    "obj/books/the_literary_mind_and_carving_of_dragons.c",
+    "obj/books/travel_notes.c",
+    "obj/books/treatise_on_words.c",
+    "obj/books/verses_of_the_thirteen_spirits.c",
+    "obj/books/water_dragon_canon.c",
+    "obj/books/yellow_mountain_chess_manual.c",
+    "obj/books/yin_yang_canon.c",
+    "obj/drug/black_pill.c",
+    "obj/drug/boar_berry.c",
+    "obj/drug/dragon_saliva.c",
+    "obj/drug/flower_pill.c",
+    "obj/drug/gray_mushroom.c",
+    "obj/drug/wild_ginseng.c",
+    "obj/example/skill/fonxansword.c",
+    "obj/example/weapon/longsword.c",
+    "obj/food/dumpling.c",
+    "obj/food/manto.c",
+    "obj/food/mooncake.c",
+    "obj/food/pork.c",
+    "obj/food/ricedough.c",
+    "obj/medication/alchemist/aquapill.c",
+    "obj/medication/alchemist/black_pill.c",
+    "obj/medication/alchemist/green_pill.c",
+    "obj/medication/alchemist/major_heal_pill.c",
+    "obj/medication/alchemist/minor_heal_pill.c",
+    "obj/medication/alchemist/mix_recipe.c",
+    "obj/medication/alchemist/mjp_1.c",
+    "obj/medication/alchemist/mjp_2.c",
+    "obj/medication/alchemist/mjp_3.c",
+    "obj/medication/alchemist/refresh_pill.c",
+    "obj/medication/black_pill.c",
+    "obj/medication/boar_berry.c",
+    "obj/medication/dragon_saliva.c",
+    "obj/medication/flower_pill.c",
+    "obj/medication/gray_mushroom.c",
+    "obj/medication/wild_ginseng.c",
+    "obj/money/coin.c",
+    "obj/money/gold.c",
+    "obj/money/silver.c",
+    "obj/npc/death_black.c",
+    "obj/npc/death_white.c",
+    "obj/npc/demogorgon.c",
+    "obj/npc/garrison.c",
+    "obj/reagent/cinnabar.c",
+    "obj/reagent/crane_dye.c",
+    "obj/reagent/medlar.c",
+    "obj/reagent/strychin.c",
+    "std/char/npc.c",
+    "std/item/combined.c",
+    "std/item/liquid.c",
+    "std/item/pharmacy.c",
+    "std/item/reagent.c",
+    "std/martial_art.c",
+    "std/martial_art.h",
+    "std/room.c",
+    "std/room/hockshop.c"
+  ],
+  "content_differences": [
+    {
+      "path": "adm/daemons/combatd.c",
+      "source_sha": "7b104a1809241fcb7aa80f5dcdbf60ae4eec8cc7",
+      "snapshot_sha": "d16a5ae679b8de3bdcbe7a343a5a2e2e4fa68c8b",
+      "source_size": 28439,
+      "snapshot_size": 27973
+    },
+    {
+      "path": "custom/home/npc/butler.c",
+      "source_sha": "6e498180a7f7c629e7179ef7d0a2b576db13a002",
+      "snapshot_sha": "e7870d4266011272e8d12b83287fd51366d072bd",
+      "source_size": 1233,
+      "snapshot_size": 1190
+    },
+    {
+      "path": "custom/home/obj/storage_chest.c",
+      "source_sha": "2a6fcab2584841f38571d7b6462b025a7c43ff7b",
+      "snapshot_sha": "1a9c445394cbf4498f1467b9aec4468bf7547003",
+      "source_size": 4292,
+      "snapshot_size": 3888
+    },
+    {
+      "path": "custom/taoism/npc/fire_taoist.c",
+      "source_sha": "a99aedfa885b56656fd59ddc8c1c6f6d132498bd",
+      "snapshot_sha": "c740576ee053584a45afd0477e1cf3b16a56ba9b",
+      "source_size": 875,
+      "snapshot_size": 1032
+    },
+    {
+      "path": "custom/taoism/npc/freeze_taoist.c",
+      "source_sha": "c002d71c0d18e35ef7115a1da748b3b1818359e7",
+      "snapshot_sha": "e2af7aa7ee79b36c91ab3d42c3a1a71795868da6",
+      "source_size": 886,
+      "snapshot_size": 1043
+    },
+    {
+      "path": "custom/taoism/npc/storm_taoist.c",
+      "source_sha": "28f725b8ca8cd88633da99a4acac8300f5b7465d",
+      "snapshot_sha": "d73bd6936c20d2f448626ae8cb26ea4c5c2db39c",
+      "source_size": 883,
+      "snapshot_size": 1040
+    },
+    {
+      "path": "custom/taoism/npc/thunder_taoist.c",
+      "source_sha": "062955caa5c05b4e2c838ac6b2511e656bb622cf",
+      "snapshot_sha": "dc6cee2ded84c83dc720af38522a09307382ec0b",
+      "source_size": 890,
+      "snapshot_size": 1047
+    },
+    {
+      "path": "custom/weapon/staff/long_staff.c",
+      "source_sha": "afa9cdbb24c23175455ccd16af9706ae140e214a",
+      "snapshot_sha": "2f976cb749503b63a93e1086e3b828c8e9c47fbe",
+      "source_size": 651,
+      "snapshot_size": 486
+    },
+    {
+      "path": "custom/weapon/staff/zenstaff.c",
+      "source_sha": "994370f3c5ee44c9143a57ef6def48d55e0d0d1c",
+      "snapshot_sha": "0b312477812559244daccb19f945b3fa454df17c",
+      "source_size": 716,
+      "snapshot_size": 508
+    },
+    {
+      "path": "custom/weapon/whip/bamboo_fishing_rod.c",
+      "source_sha": "eac5d36166ee0093dd9bd71a886d56443a4571b8",
+      "snapshot_sha": "c5414058d5d8587a64af77a46b49a4e111fa3b64",
+      "source_size": 875,
+      "snapshot_size": 835
+    },
+    {
+      "path": "custom/zhenwu/npc/lu_xinien.c",
+      "source_sha": "18bb33616687bc8a909ae86a1c87544df4377c57",
+      "snapshot_sha": "acf20f6e50954ae3d590e26fbd4d6cba3acb91a7",
+      "source_size": 2808,
+      "snapshot_size": 2773
+    },
+    {
+      "path": "custom/zhenwu/npc/mee_pei.c",
+      "source_sha": "e4a09e0733c366b18fcf90394521563da97666b3",
+      "snapshot_sha": "96ee229539562dbed1c405d2f860d73dbef3b6bd",
+      "source_size": 3099,
+      "snapshot_size": 1434
+    },
+    {
+      "path": "custom/zhenwu/npc/soldier.c",
+      "source_sha": "fee09b00e8296cc72c9657cf69e0b99da7b93858",
+      "snapshot_sha": "024d2d98777b210d3e885de590576254c859d75b",
+      "source_size": 742,
+      "snapshot_size": 809
+    },
+    {
+      "path": "custom/zhenwu/npc/target_stake.c",
+      "source_sha": "186e854e88e98dc55a9154b27dca865a8a8150c4",
+      "snapshot_sha": "e4af78e7ae5ea34b06589c09cb15b2f0e8efa64b",
+      "source_size": 1214,
+      "snapshot_size": 1126
+    },
+    {
+      "path": "custom/zhenwu/npc/zhenwu_soldier.c",
+      "source_sha": "eb400c559cea1f28fd564c4f9f0c15613ec68896",
+      "snapshot_sha": "79f9bc10d4b5592a9e370408397c424ad5540c37",
+      "source_size": 941,
+      "snapshot_size": 1097
+    },
+    {
+      "path": "custom/zhenwu/obj/recruit_stone.c",
+      "source_sha": "7a1916b63116862a9e1875bc23bf27752696cf78",
+      "snapshot_sha": "53f9fbfd173af9dbf4918e7381a3d3f338570bcd",
+      "source_size": 2335,
+      "snapshot_size": 2315
+    },
+    {
+      "path": "d/lee/creek.c",
+      "source_sha": "41bb2ae0cc1bfe022ae3638c089225dea75d38a9",
+      "snapshot_sha": "11dd993edde676296de308f9492fa704fd826d68",
+      "source_size": 700,
+      "snapshot_size": 700
+    },
+    {
+      "path": "d/lee/inn.c",
+      "source_sha": "afe22681740ccc574c4c406585f0a97791f93a3e",
+      "snapshot_sha": "2f0c5dee71302d57d9536e8c82757cf408f02b88",
+      "source_size": 890,
+      "snapshot_size": 866
+    },
+    {
+      "path": "d/lee/LEE_TOPOLOGY.json",
+      "source_sha": "22589002f4bfc18ed86381a1bf52f3533823471e",
+      "snapshot_sha": "42cfd84daa64f7d372500924662f6e4a4c97face",
+      "source_size": 6993,
+      "snapshot_size": 8121
+    },
+    {
+      "path": "d/lee/npc/child.c",
+      "source_sha": "48f9c0d9ecd171593324f241641349acfb6b43db",
+      "snapshot_sha": "588a109a285ecd49b954ee4e721847c9c2c3c596",
+      "source_size": 564,
+      "snapshot_size": 643
+    },
+    {
+      "path": "d/lee/npc/farmer.c",
+      "source_sha": "22a4a9269fa372248aac35a8bade6177dc82b17a",
+      "snapshot_sha": "c049c9ddf5b9a7d2c280b310ae41ac49c477f2b6",
+      "source_size": 350,
+      "snapshot_size": 454
+    },
+    {
+      "path": "d/lee/npc/guard.c",
+      "source_sha": "e24eeb00adc1264078b72a035347289de828ecc7",
+      "snapshot_sha": "7f9f7a70d7d126a2488df9e8b795d79a9fc17524",
+      "source_size": 1056,
+      "snapshot_size": 1187
+    },
+    {
+      "path": "d/lee/npc/hawthorn_seller.c",
+      "source_sha": "9b54252e04cd733a10f3d88e14387e12895d39e5",
+      "snapshot_sha": "5b1e7389cc95ff1a3f85d4d20fd4759f567e3419",
+      "source_size": 885,
+      "snapshot_size": 865
+    },
+    {
+      "path": "d/lee/npc/herb_boy.c",
+      "source_sha": "4e458cbcdf7162e6e036f82439c1f8f8d31dd92d",
+      "snapshot_sha": "3eb417364d5e90005f968d8a3ffd5d696808ceee",
+      "source_size": 813,
+      "snapshot_size": 918
+    },
+    {
+      "path": "d/lee/npc/hunter.c",
+      "source_sha": "8f13073d61d4f2a4dc659f2196024ac9de1ea2ca",
+      "snapshot_sha": "93649315745e65c630d593359a1764476dad73f3",
+      "source_size": 337,
+      "snapshot_size": 317
+    },
+    {
+      "path": "d/lee/npc/lee_hsu_hsien.c",
+      "source_sha": "3198c4057262fbda177968fdba7330e838d892be",
+      "snapshot_sha": "7f847831f3490e244a1a1f85a93b89ebfb26b094",
+      "source_size": 572,
+      "snapshot_size": 578
+    },
+    {
+      "path": "d/lee/npc/lee_xiao_tian.c",
+      "source_sha": "a9cabb7f09b9e84bf0fe444021d19e967c48574f",
+      "snapshot_sha": "fd4f99359fbdd5dcf79387030099d33fdefac9bc",
+      "source_size": 778,
+      "snapshot_size": 886
+    },
+    {
+      "path": "d/lee/npc/lee_yen.c",
+      "source_sha": "64cda7ead2baff6f58960ff0859f62bea8fbe962",
+      "snapshot_sha": "2bf1807a5527f7be6c9a1bd298bdf28161cbf5be",
+      "source_size": 1015,
+      "snapshot_size": 995
+    },
+    {
+      "path": "d/lee/npc/lee_yong.c",
+      "source_sha": "e55767d080e94f82396ab15dbd368611720f3f20",
+      "snapshot_sha": "4cb46ea6334f8a166119574259dc609534e907bc",
+      "source_size": 906,
+      "snapshot_size": 1037
+    },
+    {
+      "path": "d/lee/npc/lee_zhong.c",
+      "source_sha": "57a4d75c74118f500f7b98c5fdec244760181309",
+      "snapshot_sha": "56f430dce3d28d6efa191e5fa292376ef4fc8c84",
+      "source_size": 853,
+      "snapshot_size": 833
+    },
+    {
+      "path": "d/lee/npc/li_ban_xian.c",
+      "source_sha": "2c2dd74978c42977a6d0a47b0c60412e82183d28",
+      "snapshot_sha": "cc6b1204dfb314ea570fdccb1675157f25d4d834",
+      "source_size": 743,
+      "snapshot_size": 723
+    },
+    {
+      "path": "d/lee/npc/nee_cheng.c",
+      "source_sha": "b4560b40fe1a789f1ca026cb5bdb90a37e5c8c9c",
+      "snapshot_sha": "912d3518e05f02bd3c2b6b84029ceead22ae14f4",
+      "source_size": 963,
+      "snapshot_size": 1194
+    },
+    {
+      "path": "d/lee/npc/teacher.c",
+      "source_sha": "2a0df9a5ef3b5106c7307b6dde2979a42c770d03",
+      "snapshot_sha": "472cf3ffb30a590d1a0473e6d61906e8e07a330a",
+      "source_size": 421,
+      "snapshot_size": 401
+    },
+    {
+      "path": "d/lee/npc/traveller.c",
+      "source_sha": "e7e2b57a6b4565305c6ab7b5bcdcc92d4587a419",
+      "snapshot_sha": "09eafe3bc4d6bdca7af02316a4d5ee998418a015",
+      "source_size": 744,
+      "snapshot_size": 724
+    },
+    {
+      "path": "d/lee/npc/waiter.c",
+      "source_sha": "3f9790eef2e39af73cb74ee5d28ee6bb0113d435",
+      "snapshot_sha": "308c0af7d120d4c87152d334bfe83434935ea937",
+      "source_size": 615,
+      "snapshot_size": 595
+    },
+    {
+      "path": "d/lee/npc/woman.c",
+      "source_sha": "756d581c0286eb16f162c1df0ca75a25fdd73342",
+      "snapshot_sha": "1bf595c50e3a397d096061067dc86c79d5c22567",
+      "source_size": 345,
+      "snapshot_size": 449
+    },
+    {
+      "path": "d/lee/obj/brow_staff.c",
+      "source_sha": "7e1e2f063b7e010626ed3ac18601d7b74cb1c17d",
+      "snapshot_sha": "c802abfbc174e6e19223393edcbe44d04c7f22c1",
+      "source_size": 1228,
+      "snapshot_size": 1023
+    },
+    {
+      "path": "d/lee/obj/waterskin.c",
+      "source_sha": "a607a32c3f618d8e1f81cea93c055d03110bfa4d",
+      "snapshot_sha": "a7061155547a83b0f83c4868a60a38910debcc0d",
+      "source_size": 979,
+      "snapshot_size": 870
+    },
+    {
+      "path": "d/lee/pawnshop.c",
+      "source_sha": "2f464517038c758867fbd6c172bd174989638db6",
+      "snapshot_sha": "fb531ec27d45abbc622ff09f881bb54aa2403a7d",
+      "source_size": 1176,
+      "snapshot_size": 1213
+    },
+    {
+      "path": "d/lee/square_c.c",
+      "source_sha": "a51d93a784b2c5f64bad71f63fe8a67f8100c938",
+      "snapshot_sha": "4455a5eac107064899a82efde947c34b4656e07f",
+      "source_size": 932,
+      "snapshot_size": 973
+    },
+    {
+      "path": "d/lee/square_s.c",
+      "source_sha": "1bff0c8606bd24e8e3e9646a4952a9ada031e3b9",
+      "snapshot_sha": "48608edc16dcd1ce33263eb041c7e260e1ddf762",
+      "source_size": 652,
+      "snapshot_size": 689
+    },
+    {
+      "path": "d/lee/watermelon_n1.c",
+      "source_sha": "1117a4c911043a609038d640a0099d86be5ffc34",
+      "snapshot_sha": "fd0dbe06f67bc61ad57a82ace7c6d123a5237402",
+      "source_size": 1718,
+      "snapshot_size": 1754
+    },
+    {
+      "path": "d/lee/watermelon_s3.c",
+      "source_sha": "93ee986da871d52850d366242a062ffa69effd81",
+      "snapshot_sha": "753a7a2e2bc284e47d45046b8cdebb0d57f3152f",
+      "source_size": 688,
+      "snapshot_size": 721
+    },
+    {
+      "path": "d/oldpine/cave_deep.c",
+      "source_sha": "484cb9f9c8af57699f65cf3e9c09f998792ec8ea",
+      "snapshot_sha": "5c415b337151a997f9d1426a453288ca57864662",
+      "source_size": 1425,
+      "snapshot_size": 1473
+    },
+    {
+      "path": "d/oldpine/npc/bandit_minion.c",
+      "source_sha": "ff23bc08e53dc06084ed2eaa7c643bd5e34667e1",
+      "snapshot_sha": "b1bcbe4a33d3ef0edc0d68608c1c23dad864676f",
+      "source_size": 792,
+      "snapshot_size": 1075
+    },
+    {
+      "path": "d/oldpine/npc/bandit.c",
+      "source_sha": "eb7a7fedc950dfc75c32591ca5af4b5bd61149e5",
+      "snapshot_sha": "3fa7e58e1fccb45944a24f966f3688929f343034",
+      "source_size": 1071,
+      "snapshot_size": 1360
+    },
+    {
+      "path": "d/oldpine/npc/big_bear.c",
+      "source_sha": "c63a3c94490b19d3b0121c6a2b4d66d3fecf06ca",
+      "snapshot_sha": "9aeab804a60912031389bf1c71237e8d2dd88e2e",
+      "source_size": 1592,
+      "snapshot_size": 1560
+    },
+    {
+      "path": "d/oldpine/npc/da_guan.c",
+      "source_sha": "7091d5360bc6c1d928984625f65a11879a27bb55",
+      "snapshot_sha": "38f8a1fc0e67a06dde35b44e2ec49a00e933243f",
+      "source_size": 829,
+      "snapshot_size": 1146
+    },
+    {
+      "path": "d/oldpine/npc/deer.c",
+      "source_sha": "4a5c6750a0110e7f7566dc5cfce1691ddb98153c",
+      "snapshot_sha": "606c0e73fe5b07fbbaa913fc35d63285692ad499",
+      "source_size": 710,
+      "snapshot_size": 678
+    },
+    {
+      "path": "d/oldpine/npc/herbalist.c",
+      "source_sha": "f1e81f42e7fbb4c28314610d9a8f72c2198dd117",
+      "snapshot_sha": "de6ec2f8cddd3e0b2edb09a9465c8c5a93d1f47b",
+      "source_size": 813,
+      "snapshot_size": 793
+    },
+    {
+      "path": "d/oldpine/npc/injured_traveller.c",
+      "source_sha": "b11c18a6becb0a59a931f3396fc4781609b786ce",
+      "snapshot_sha": "5082998335c2f32e42e8331b9c0e70d456e02aad",
+      "source_size": 612,
+      "snapshot_size": 592
+    },
+    {
+      "path": "d/oldpine/npc/kao_shen.c",
+      "source_sha": "ff83bcc98874bdd6c887fb7f374cbf5a4b9455dd",
+      "snapshot_sha": "a58f653f0c6fc6b4be6b401584acf3ff114666dd",
+      "source_size": 4905,
+      "snapshot_size": 5615
+    },
+    {
+      "path": "d/oldpine/npc/lin_yuchan.c",
+      "source_sha": "2a0fbd7cb511eeb5ee079e7e3d7f00e85a7b6474",
+      "snapshot_sha": "19544d2084e670896e03ce8cff06fbea3b8e2db6",
+      "source_size": 929,
+      "snapshot_size": 1346
+    },
+    {
+      "path": "d/oldpine/npc/little_bear.c",
+      "source_sha": "b04340e2805e87a6757e2bd36e3efbb763022c3c",
+      "snapshot_sha": "08b093834ea6caa87ce2e6750dfdfcd50a4df0ff",
+      "source_size": 1485,
+      "snapshot_size": 1453
+    },
+    {
+      "path": "d/oldpine/npc/rat.c",
+      "source_sha": "32fecafe794a122096fe8ed95ba9526231531903",
+      "snapshot_sha": "cf28c2b61004b96759f2248fa0f74cc2336f759b",
+      "source_size": 653,
+      "snapshot_size": 621
+    },
+    {
+      "path": "d/oldpine/npc/seller.c",
+      "source_sha": "233cb5638fce9f177a167baa558e53d16bcea6ba",
+      "snapshot_sha": "e62a24d65f21f6c796210b00322b6ffbc6f258f5",
+      "source_size": 884,
+      "snapshot_size": 864
+    },
+    {
+      "path": "d/oldpine/npc/squirrel.c",
+      "source_sha": "42b134dbfc4feea011e4d5de0924ce5a1a969003",
+      "snapshot_sha": "0d4b3060180b436915e3a353e2425088364d83f5",
+      "source_size": 690,
+      "snapshot_size": 658
+    },
+    {
+      "path": "d/oldpine/npc/waiter.c",
+      "source_sha": "f36009d3636a6fd59d770e7965d616a498ff231d",
+      "snapshot_sha": "c793314f34894dd44a7aa7a06abb0e5fd92e62fc",
+      "source_size": 908,
+      "snapshot_size": 888
+    },
+    {
+      "path": "d/oldpine/npc/wild_bear.c",
+      "source_sha": "55143c58d6b1db12ddf9f081008e6d668f26d54e",
+      "snapshot_sha": "2da7f7631ff223f5208f58ede60cef089613f391",
+      "source_size": 1182,
+      "snapshot_size": 1150
+    },
+    {
+      "path": "d/oldpine/npc/wolf.c",
+      "source_sha": "9fc547ea58d858d97d31210f7fe710226727f10a",
+      "snapshot_sha": "46665f9ade70db42588691a215a5964538e1202e",
+      "source_size": 1107,
+      "snapshot_size": 1075
+    },
+    {
+      "path": "d/oldpine/npc/xue_biao.c",
+      "source_sha": "6460625555a4edccfb3f9ab70e0a5a54ca3dd974",
+      "snapshot_sha": "617ec29cf1f24ce11f23392850327863a2c7c8d7",
+      "source_size": 1362,
+      "snapshot_size": 1654
+    },
+    {
+      "path": "d/snow/inn_hall.c",
+      "source_sha": "a9869863c408525908f91121e10a2bed610272f7",
+      "snapshot_sha": "9e9dbf2529ac21e4638767f663815f79884db5d4",
+      "source_size": 2413,
+      "snapshot_size": 2345
+    },
+    {
+      "path": "d/snow/npc/alchemist.c",
+      "source_sha": "58d32a6cb7288a94c570ce3f14b67ca85fd48621",
+      "snapshot_sha": "800c19ec86296c88bb51f598e54b9d33500e1ecb",
+      "source_size": 4099,
+      "snapshot_size": 4294
+    },
+    {
+      "path": "d/snow/npc/child.c",
+      "source_sha": "4c48f7bf79e9b0458224ace2aaf56cffb5cfdec2",
+      "snapshot_sha": "524d072f1e9c6bff12d0ef6dbdee3a015926cbc8",
+      "source_size": 6113,
+      "snapshot_size": 6187
+    },
+    {
+      "path": "d/snow/npc/child1.c",
+      "source_sha": "81e043a4e48dcd5cf9da72c78ea5043bf2bdb9f3",
+      "snapshot_sha": "373f2abe522b505016fe772502ec2eb67ed635d6",
+      "source_size": 666,
+      "snapshot_size": 716
+    },
+    {
+      "path": "d/snow/npc/child2.c",
+      "source_sha": "2e473c86ab5398c0808d2afdfb05c3c06a5fd1e9",
+      "snapshot_sha": "74112f2d0c8b21c9115f17a8cc29770562457ea3",
+      "source_size": 827,
+      "snapshot_size": 787
+    },
+    {
+      "path": "d/snow/npc/child3.c",
+      "source_sha": "e025717f9cd55fbb4cf8282214d5012bf5bebb0d",
+      "snapshot_sha": "29ef336dcb570c033343d1ba30c445ca5c8f28fc",
+      "source_size": 755,
+      "snapshot_size": 805
+    },
+    {
+      "path": "d/snow/npc/child4.c",
+      "source_sha": "10973370d1850490e440a4372abaa3aea78ef8ac",
+      "snapshot_sha": "ee873c6ec9041172c9fcb76ff63bd057a592890a",
+      "source_size": 708,
+      "snapshot_size": 758
+    },
+    {
+      "path": "d/snow/npc/foreman.c",
+      "source_sha": "c40457732f9501ffb595a4de5ab62febc2d7ce8a",
+      "snapshot_sha": "137e3f304196238b37aac5e6a0346d5b6303f71b",
+      "source_size": 2416,
+      "snapshot_size": 2494
+    },
+    {
+      "path": "d/snow/npc/gammer.c",
+      "source_sha": "c7a3360dd171b904facd82a6d11d95391832c9f3",
+      "snapshot_sha": "11ea20374643c896080581a45c219e8d20ad8f62",
+      "source_size": 6034,
+      "snapshot_size": 6188
+    },
+    {
+      "path": "d/snow/npc/garrison.c",
+      "source_sha": "ce9efed96383bfb904c7af24627c319dace63a99",
+      "snapshot_sha": "ef1a5cb4abd8e1b3afc8bedca6764bc73bf8f8cb",
+      "source_size": 1182,
+      "snapshot_size": 1213
+    },
+    {
+      "path": "d/snow/npc/girl.c",
+      "source_sha": "bb07be3e22edee092f28b22ec05faf95564b0e60",
+      "snapshot_sha": "68afa5307c59d4889dc3da5980e205be94048be7",
+      "source_size": 2988,
+      "snapshot_size": 3183
+    },
+    {
+      "path": "d/snow/npc/guard.c",
+      "source_sha": "37ee393548b9e12f7d2b0f256a1fe294423a7d29",
+      "snapshot_sha": "329eed6499813511a8463fde12e51bb190d3348b",
+      "source_size": 1638,
+      "snapshot_size": 1669
+    },
+    {
+      "path": "d/snow/npc/herbalist.c",
+      "source_sha": "5f1a83034f02591111ba11a7b5bca2ce61847353",
+      "snapshot_sha": "bb26fd398a689e793f62adf316673390e4770e1a",
+      "source_size": 891,
+      "snapshot_size": 874
+    },
+    {
+      "path": "d/snow/npc/innkeeper.c",
+      "source_sha": "4336369fe851cb3f642d5b2b7865b55c5b478ccc",
+      "snapshot_sha": "fc1ef980f61017f4cc83703a2b446c1d790cfa49",
+      "source_size": 3080,
+      "snapshot_size": 3036
+    },
+    {
+      "path": "d/snow/npc/junkman.c",
+      "source_sha": "cef52c4015e1d40aeb99bb8d418700b88ebc7737",
+      "snapshot_sha": "52591bff8743ac77bdfcc551b84471cb4c6b1770",
+      "source_size": 1417,
+      "snapshot_size": 1377
+    },
+    {
+      "path": "d/snow/npc/lieutenant.c",
+      "source_sha": "8a94e0e8ae84ef2d6e9876a84cb2d38282961c11",
+      "snapshot_sha": "26ae4f728b84fa648adf6bcdc5f8f24efe2091e9",
+      "source_size": 1386,
+      "snapshot_size": 1417
+    },
+    {
+      "path": "d/snow/npc/miller.c",
+      "source_sha": "22c6473af68f366999c915771df56b951f123a61",
+      "snapshot_sha": "5b1a12ab0bf79639bb13a154a1f866cded55a209",
+      "source_size": 505,
+      "snapshot_size": 465
+    },
+    {
+      "path": "d/snow/npc/oldman.c",
+      "source_sha": "74f7ec8180dee9caf40db3f82e4ce5516a5b6f92",
+      "snapshot_sha": "2b3c5ad4cf1a9584292856318d804f73393e5c57",
+      "source_size": 1133,
+      "snapshot_size": 1177
+    },
+    {
+      "path": "d/snow/npc/patrol.c",
+      "source_sha": "a75ecd11f1ed3fe4ef81090075ae1c4fca24f605",
+      "snapshot_sha": "7a5fce23af150a5cea36d58aeb2977c088b0bdc3",
+      "source_size": 1008,
+      "snapshot_size": 1057
+    },
+    {
+      "path": "d/snow/npc/smith.c",
+      "source_sha": "39d7b6551a27bae4c32154b4dfbd2f2157d3b2f7",
+      "snapshot_sha": "a14108c26beadd1e37f06cb4617f3e3e2f0ec06a",
+      "source_size": 1687,
+      "snapshot_size": 1793
+    },
+    {
+      "path": "d/snow/npc/woman.c",
+      "source_sha": "74adea8c1bb5d8176c15890e469c0343586af7c2",
+      "snapshot_sha": "85902b65eb21e6bbf231a0cad4e47019c09b7d0b",
+      "source_size": 361,
+      "snapshot_size": 321
+    },
+    {
+      "path": "d/snow/npc/yu.c",
+      "source_sha": "f91bd7251a7f1a49bc0d739cd3b920702546f990",
+      "snapshot_sha": "3fed86f81a693a517579b30ddf17eb56c75da428",
+      "source_size": 2760,
+      "snapshot_size": 2720
+    },
+    {
+      "path": "d/snow/skill/dragon_force.c",
+      "source_sha": "c6ccf7a744161d72d70cdac7b51e0db4a901b647",
+      "snapshot_sha": "ccf087f4bf1f5f44ef82062a48d5ac36cfdaa481",
+      "source_size": 2711,
+      "snapshot_size": 2600
+    },
+    {
+      "path": "d/snow/square_w.c",
+      "source_sha": "269e60c4643d6231c3a62556da03195796e13970",
+      "snapshot_sha": "0092656a06c87d05cf36dd2397b227b4a4bcf383",
+      "source_size": 1040,
+      "snapshot_size": 1015
+    },
+    {
+      "path": "d/wutang/npc/apprentice.c",
+      "source_sha": "91c7efdffb4d20562452120abeb17999da9bf50e",
+      "snapshot_sha": "e84ed7bf901daa2099112d47c9959577e5dc4aab",
+      "source_size": 545,
+      "snapshot_size": 837
+    },
+    {
+      "path": "d/wutang/npc/big_boar.c",
+      "source_sha": "4d8121119ef1518000cd8623f421b5f93afca682",
+      "snapshot_sha": "80570e6d0ffc779d4a7c63e0954e8b140f6fe1bf",
+      "source_size": 1181,
+      "snapshot_size": 1230
+    },
+    {
+      "path": "d/wutang/npc/boar.c",
+      "source_sha": "ac158fcbdb3184bf3a18fa1d10fdae517d40bc86",
+      "snapshot_sha": "496d6a86392ee53819a80e1292d1471f98c28300",
+      "source_size": 1141,
+      "snapshot_size": 1190
+    },
+    {
+      "path": "d/wutang/npc/fisher.c",
+      "source_sha": "7f7033608e2a72ef847c2c3c97df651f37c3cf70",
+      "snapshot_sha": "a09e2a131f8bd0ec5cf08df3178d8f779496c914",
+      "source_size": 544,
+      "snapshot_size": 524
+    },
+    {
+      "path": "d/wutang/npc/guard.c",
+      "source_sha": "961141b5e5b0ec7b7dbe5a7246a385c197e4b356",
+      "snapshot_sha": "054a312563a28bb0f756f1dc383577f371a4a423",
+      "source_size": 658,
+      "snapshot_size": 864
+    },
+    {
+      "path": "d/wutang/npc/guo_boo.c",
+      "source_sha": "cb826c055107fd0e26004cd2f0367d3e2ff87bec",
+      "snapshot_sha": "27d5fa0c9c44b67b27faf27bee15a3fce7568209",
+      "source_size": 990,
+      "snapshot_size": 1485
+    },
+    {
+      "path": "d/wutang/npc/huang.c",
+      "source_sha": "fda46673b44f33d4fdf8b278bb36d678569363d7",
+      "snapshot_sha": "0797ef51c1dcc0b378af48aa19ed5d383e78dc27",
+      "source_size": 499,
+      "snapshot_size": 479
+    },
+    {
+      "path": "d/wutang/npc/huyen_guan.c",
+      "source_sha": "88a3430f4b6627fac89226b0848e8dc0f3159a67",
+      "snapshot_sha": "052cbe5157ba6aa11b8d6c67221c89fede782a1c",
+      "source_size": 811,
+      "snapshot_size": 1278
+    },
+    {
+      "path": "d/wutang/npc/jeweller.c",
+      "source_sha": "288d43cd9f7ff15fd344c34627b42fdac413eef8",
+      "snapshot_sha": "058aee0ead6120ed9271f9a115eeb323eb5420a9",
+      "source_size": 959,
+      "snapshot_size": 1248
+    },
+    {
+      "path": "d/wutang/npc/keeper.c",
+      "source_sha": "f96e692cd3d281262d1d539a62964df4a7eead32",
+      "snapshot_sha": "35e57dcacd1d35596e1ff559f991f66d09e0f1c0",
+      "source_size": 951,
+      "snapshot_size": 931
+    },
+    {
+      "path": "d/wutang/npc/lee_shan.c",
+      "source_sha": "ea097702c82fb117a4d13e8003216842681cf103",
+      "snapshot_sha": "e7b8104e22a20891ba05c4a0227419040eb95fb8",
+      "source_size": 873,
+      "snapshot_size": 1156
+    },
+    {
+      "path": "d/wutang/npc/lu_estimator.c",
+      "source_sha": "674f8619a2edd4206245e2bc718260bf5575c9fa",
+      "snapshot_sha": "a21b1a4ef0a770e8de6875735604f2ced41792ed",
+      "source_size": 915,
+      "snapshot_size": 895
+    },
+    {
+      "path": "d/wutang/npc/old_fire.c",
+      "source_sha": "0692d74fcfc92add7d15eda6c75e3cfdbe743aab",
+      "snapshot_sha": "2d8f4be7af8fbb115370a26a332b4cbdb583ac8b",
+      "source_size": 872,
+      "snapshot_size": 852
+    },
+    {
+      "path": "d/wutang/npc/oldman.c",
+      "source_sha": "9013bef49fd48ce6a0ab2ee1b680c6727a1d7b88",
+      "snapshot_sha": "c2998d95f26c361007b07051b5701dbe09eb8387",
+      "source_size": 872,
+      "snapshot_size": 852
+    },
+    {
+      "path": "d/wutang/npc/red_taoist.c",
+      "source_sha": "93f47c6f30bd700718ab66a87611f765a4fde1bb",
+      "snapshot_sha": "827d3a6f55d08bdb879547f1ddb776b76fff04fc",
+      "source_size": 842,
+      "snapshot_size": 1134
+    },
+    {
+      "path": "d/wutang/npc/ro.c",
+      "source_sha": "d03bdbf21a4eca0def8a7dd60f6baf27c3c9b1be",
+      "snapshot_sha": "52e1a48fed8cfae37f08f5de888542b7a8f97d62",
+      "source_size": 499,
+      "snapshot_size": 479
+    },
+    {
+      "path": "d/wutang/npc/royalist.c",
+      "source_sha": "0feaf9c8446e11c4889094596cd4471fe951af28",
+      "snapshot_sha": "035fd6770e8fef761a20958bbe4298cb4e2a4ef9",
+      "source_size": 672,
+      "snapshot_size": 961
+    },
+    {
+      "path": "d/wutang/npc/seller.c",
+      "source_sha": "7f4dc92e988502169cee4236fa0e7734ebc3b251",
+      "snapshot_sha": "db093d388246e0bb98176632109e023010263c4f",
+      "source_size": 1182,
+      "snapshot_size": 1162
+    },
+    {
+      "path": "d/wutang/npc/sheep.c",
+      "source_sha": "274fcec63a676912bfef299a2e5d3c5018ac1cbc",
+      "snapshot_sha": "44e12c7b0b62381162372fb1a4212e0249521e55",
+      "source_size": 446,
+      "snapshot_size": 361
+    },
+    {
+      "path": "d/wutang/npc/shepherd.c",
+      "source_sha": "e9d075b2726fe0c80ebea93b1ca4278cd24948f3",
+      "snapshot_sha": "1731e88dabed835112a89f2027f98af1314d69c7",
+      "source_size": 501,
+      "snapshot_size": 787
+    },
+    {
+      "path": "d/wutang/npc/smoke_fisher.c",
+      "source_sha": "f26ebdb649925f15c0844c7e73f99e42d996cb18",
+      "snapshot_sha": "15a80546c3ad8a89beef52095181644d68c769d7",
+      "source_size": 759,
+      "snapshot_size": 1176
+    },
+    {
+      "path": "d/wutang/npc/tao.c",
+      "source_sha": "54ad9814532c6fb6f38d1c58a14f2242c374930e",
+      "snapshot_sha": "d728569c93573033cf4000b38bb29eaf8c92be9a",
+      "source_size": 543,
+      "snapshot_size": 826
+    },
+    {
+      "path": "d/wutang/npc/waiter.c",
+      "source_sha": "983353047fafa9aceb430f415e6251f34b22ca5f",
+      "snapshot_sha": "1156a6edcbf7e38b816ed7418e234dfa920b60a5",
+      "source_size": 926,
+      "snapshot_size": 906
+    },
+    {
+      "path": "d/wutang/npc/white_taoist.c",
+      "source_sha": "9bca04c505c5cc51c10ae7c48adc0f1480c78f12",
+      "snapshot_sha": "153d7905754a3c8901a13f9722b30772d15469a4",
+      "source_size": 873,
+      "snapshot_size": 1215
+    },
+    {
+      "path": "d/wutang/npc/yaesae.c",
+      "source_sha": "b10363b454cb2e3d8c1fad62d6c03c6574dd4563",
+      "snapshot_sha": "c0433a9855e38b967de9c8f0713b140793142833",
+      "source_size": 1141,
+      "snapshot_size": 1533
+    },
+    {
+      "path": "d/wutang/npc/yang_zlin.c",
+      "source_sha": "70035e0634ec78b3951e1643ba7c739e946e68d0",
+      "snapshot_sha": "c0c6233f6727cc04c2fe7b6f48a5a258cda17f6e",
+      "source_size": 1429,
+      "snapshot_size": 1774
+    },
+    {
+      "path": "d/wutang/npc/young_gentleman.c",
+      "source_sha": "c8c1e845078861ed90711b716b37793578b062bb",
+      "snapshot_sha": "f8aa9da23b69340e2f9eb66aaea931f66848335a",
+      "source_size": 655,
+      "snapshot_size": 944
+    },
+    {
+      "path": "d/wutang/npc/young_man.c",
+      "source_sha": "5640a496d0876b14b11e308b81a3b13ea112d4fd",
+      "snapshot_sha": "1173728aa2ef3c5c03366f88cdf4cfbe1b8f1df6",
+      "source_size": 878,
+      "snapshot_size": 858
+    },
+    {
+      "path": "d/wutang/npc/young_scholar.c",
+      "source_sha": "f0d5fcc8904ecb6c055c443fa269093abfab8814",
+      "snapshot_sha": "f9bbf410465ab46829371ad18a9a5332727834f2",
+      "source_size": 734,
+      "snapshot_size": 1023
+    },
+    {
+      "path": "d/wutang/npc/yung_tai.c",
+      "source_sha": "daf28c55d47f2d9ed53ec77c3b2df700943aac52",
+      "snapshot_sha": "53a05aea50132b84ea837e8c281a59ef53fc5d91",
+      "source_size": 1251,
+      "snapshot_size": 1668
+    },
+    {
+      "path": "daemon/race/avatar.c",
+      "source_sha": "f8fabda0a598c2044b8e37c32695e4a0ee932d8c",
+      "snapshot_sha": "41de6963abc2d779798138f06328853a77c8ae06",
+      "source_size": 1323,
+      "snapshot_size": 1555
+    },
+    {
+      "path": "daemon/race/human.c",
+      "source_sha": "ae3120da042f425ccaf2847c1b6b41f498b9db12",
+      "snapshot_sha": "1e339ef44e23ea5b360a8a51ba16827b88cc6b7e",
+      "source_size": 1506,
+      "snapshot_size": 1737
+    },
+    {
+      "path": "daemon/race/yenhold/breathe.c",
+      "source_sha": "6aca4dc824bc3c36fb1361dd0c0f45e919d82116",
+      "snapshot_sha": "03d870214c719e4ab80c52b269862e9578bd3771",
+      "source_size": 1734,
+      "snapshot_size": 1577
+    },
+    {
+      "path": "daemon/skill/sanmeendo.c",
+      "source_sha": "57435ca174b60c9bde029dde924551b5666dc8ba",
+      "snapshot_sha": "9db9e1b18e9c06ff8b39949403e1c583422bceb1",
+      "source_size": 4107,
+      "snapshot_size": 2146
+    },
+    {
+      "path": "daemon/skill/taoism-spells.c",
+      "source_sha": "f8abe2f547842f5ad008d995126e44b8c56ea4e4",
+      "snapshot_sha": "1ca12fb60f53c1ef17d41ca7c70a3943b8c5c38a",
+      "source_size": 12825,
+      "snapshot_size": 12590
+    },
+    {
+      "path": "daemon/skill/tiger-blade.c",
+      "source_sha": "415205923e625493f2a6a4a14f55fb19c1734ce7",
+      "snapshot_sha": "08e010eaaaf95448adc3043a3ab445c4d18b0268",
+      "source_size": 4353,
+      "snapshot_size": 2799
+    },
+    {
+      "path": "daemon/skill/tiger-force.c",
+      "source_sha": "ba77d8d16b253e3a0e24240cbc7ae88f64def009",
+      "snapshot_sha": "2e4196305bb311b3bafae709934a2420565cf796",
+      "source_size": 6910,
+      "snapshot_size": 5384
+    },
+    {
+      "path": "feature/char/combat.c",
+      "source_sha": "fad1bf7f5908b4f3e3c72ee4874df7aafd62044a",
+      "snapshot_sha": "fd5e3b4f666f0448f8eb63d3aa5918efdb7a5aa8",
+      "source_size": 14258,
+      "snapshot_size": 12559
+    },
+    {
+      "path": "feature/equip.c",
+      "source_sha": "cd4ea240add2f48a3ffa2b43ca9d8189082b2325",
+      "snapshot_sha": "b27bfa8fc53d94588873d1ace632c71e625ffe4e",
+      "source_size": 9048,
+      "snapshot_size": 8406
+    },
+    {
+      "path": "feature/study.c",
+      "source_sha": "fa1e8e8e36d534af1e7cf6a71e5c752f5857a0d6",
+      "snapshot_sha": "ac9827095344492c27e9ead1a9d7f82bca602cbd",
+      "source_size": 3543,
+      "snapshot_size": 3471
+    },
+    {
+      "path": "feature/user/edit.c",
+      "source_sha": "7ca8ab0187e97edc5dea248d4792be3b41eadf05",
+      "snapshot_sha": "e7f8020fb64dec3f8b4126d9d36689bcab153ba2",
+      "source_size": 1246,
+      "snapshot_size": 1101
+    },
+    {
+      "path": "feature/user/more.c",
+      "source_sha": "03cd201e591687a3db7b978a6971cf5bef841ec5",
+      "snapshot_sha": "e2b1565a00308d0ce4cc49c38911c98dbb88741d",
+      "source_size": 2633,
+      "snapshot_size": 2258
+    },
+    {
+      "path": "obj/area/obj/bastardsword.c",
+      "source_sha": "d12cba9d7ff76ddd1d89f385dda83f4fbe58b847",
+      "snapshot_sha": "f85bb0fd15338726c4f4f599fe18195b4c8f07c4",
+      "source_size": 846,
+      "snapshot_size": 706
+    },
+    {
+      "path": "obj/area/obj/blade.c",
+      "source_sha": "b0f93def2ccbd8b6e1b0d1b262bd79c1ca0201ee",
+      "snapshot_sha": "e2d5d8e9ff2f0d0f0ad897b5d786be4ba911868f",
+      "source_size": 630,
+      "snapshot_size": 490
+    },
+    {
+      "path": "obj/area/obj/broadaxe.c",
+      "source_sha": "427dd9bd85a30eb08448b821e6f9d0ccd658adaa",
+      "snapshot_sha": "b530961c59e136b06c1d7a43003af7043f64c184",
+      "source_size": 707,
+      "snapshot_size": 567
+    },
+    {
+      "path": "obj/area/obj/broadsword.c",
+      "source_sha": "96ec86a37fe721bb2becb31b94c642e82823bf40",
+      "snapshot_sha": "1f3b84a3c274271acd5dc139c8b982f307017bf8",
+      "source_size": 807,
+      "snapshot_size": 667
+    },
+    {
+      "path": "obj/area/obj/cloth.c",
+      "source_sha": "0d540a05ee3f6da47a6ea614f21b47d83d6c8358",
+      "snapshot_sha": "932d195a69d687eb45a9589b61ec0749ff34a20c",
+      "source_size": 395,
+      "snapshot_size": 393
+    },
+    {
+      "path": "obj/area/obj/curved_blade.c",
+      "source_sha": "5586650b19794bd859f10af0bf7d4dc472d0bbc2",
+      "snapshot_sha": "1a800ba872da067e6b59c88bb77ba003345e67c8",
+      "source_size": 689,
+      "snapshot_size": 549
+    },
+    {
+      "path": "obj/area/obj/dagger.c",
+      "source_sha": "cea0f6cb0f2df9e558b5e4adcc0e454c5e4a3db2",
+      "snapshot_sha": "c0dc2d8ea60b2713f29de648ca4368e46ce6e58b",
+      "source_size": 616,
+      "snapshot_size": 452
+    },
+    {
+      "path": "obj/area/obj/glaive.c",
+      "source_sha": "9a0c134489fd32c3049e4c1a6844f3d940852559",
+      "snapshot_sha": "11ca48cc5e69924219ed0e138d27676c695db79f",
+      "source_size": 737,
+      "snapshot_size": 597
+    },
+    {
+      "path": "obj/area/obj/greatsword.c",
+      "source_sha": "a6b92055d60d7ce0a7e123e4776b120eafe710c9",
+      "snapshot_sha": "f4c52e62f9a1bcf1a9e793f1b576a18765f17bb8",
+      "source_size": 888,
+      "snapshot_size": 751
+    },
+    {
+      "path": "obj/area/obj/longsword.c",
+      "source_sha": "2b823f8fb99ff1606e497fbeb4f74345f6a3ce13",
+      "snapshot_sha": "b1d2000eb65c49ad4b5ae638b6488bc25789dd9b",
+      "source_size": 736,
+      "snapshot_size": 596
+    },
+    {
+      "path": "obj/area/obj/pike.c",
+      "source_sha": "cf8bb5ec73e8b8af5b4caa84dcf384e2dbb039bd",
+      "snapshot_sha": "3995281a36f2dbfa82ddbc1479be6dc97308ac53",
+      "source_size": 838,
+      "snapshot_size": 699
+    },
+    {
+      "path": "obj/area/obj/rod.c",
+      "source_sha": "0a4faf8b3d26465e2da3feaa826a0e4a0bbf1c59",
+      "snapshot_sha": "ae8ae9c0b814e78ab0147f20a8cd3deef9039b0e",
+      "source_size": 722,
+      "snapshot_size": 545
+    },
+    {
+      "path": "obj/area/obj/shortsword.c",
+      "source_sha": "f0d2c4a95b7dd75a296226c04d0b519b3ecbb72e",
+      "snapshot_sha": "3fda0884432e417227803df115ca28c9424f1722",
+      "source_size": 750,
+      "snapshot_size": 610
+    },
+    {
+      "path": "obj/area/obj/weirblade.c",
+      "source_sha": "2fea001993b1e95785b688e03474ff2cc93ffd99",
+      "snapshot_sha": "25dd4d461a988013795b6a087a5b25b48271ebe5",
+      "source_size": 712,
+      "snapshot_size": 572
+    },
+    {
+      "path": "std/bboard.c",
+      "source_sha": "da64d142ff5e0fc6ae1f4555e6bbb3556f2e1f60",
+      "snapshot_sha": "2b21c87893e7a470e635c21bb66d58068682acfe",
+      "source_size": 10772,
+      "snapshot_size": 10293
+    },
+    {
+      "path": "std/item/container.c",
+      "source_sha": "e54f28575a9b0f7d8192f5f0077e44b422db2d5e",
+      "snapshot_sha": "e8f9eb55b588e50990459da08a213c73774a6a20",
+      "source_size": 1253,
+      "snapshot_size": 984
+    }
+  ],
+  "missing_from_snapshot": [
+    {
+      "path": "adm/daemons/aliasd.c",
+      "source_sha": "f4d220db201467e45495135db1ce8ded8100f451",
+      "source_size": 1606
+    },
+    {
+      "path": "adm/daemons/channeld.c",
+      "source_sha": "e30f1f24e657468c8c76d7607bf118df0f3f14cc",
+      "source_size": 6615
+    },
+    {
+      "path": "adm/daemons/chard.c",
+      "source_sha": "3599866532c56c1a3487b3f936eed80426c6ac89",
+      "source_size": 13804
+    },
+    {
+      "path": "adm/daemons/chinesed.c",
+      "source_sha": "5f5e166c395f361c6a8abc2349281459e26713d4",
+      "source_size": 4747
+    },
+    {
+      "path": "adm/daemons/cmd_d.c",
+      "source_sha": "dd1a49e33af3e72722fcd3a950908666a4d1584d",
+      "source_size": 1420
+    },
+    {
+      "path": "adm/daemons/daemond.c",
+      "source_sha": "352f329705ad3d7c8e345c021bb3c899c87feb81",
+      "source_size": 3422
+    },
+    {
+      "path": "adm/daemons/emoted.c",
+      "source_sha": "2cd712b73e2baa7e9c94aab373f56d81db360d97",
+      "source_size": 4367
+    },
+    {
+      "path": "adm/daemons/enhanced.c",
+      "source_sha": "a65269109cb47a6822578acae748f7690d84cd45",
+      "source_size": 14585
+    },
+    {
+      "path": "adm/daemons/enterd.c",
+      "source_sha": "3f61db79055fb44fe02da8b0d590699aa6ad016b",
+      "source_size": 3913
+    },
+    {
+      "path": "adm/daemons/fingerd.c",
+      "source_sha": "2ceffe783d047a4c25b6396c8b60eac9802dac48",
+      "source_size": 4206
+    },
+    {
+      "path": "adm/daemons/httpd.c",
+      "source_sha": "2c9761a1c578c131a154194b6ad2a1170ca17eb7",
+      "source_size": 614
+    },
+    {
+      "path": "adm/daemons/logind.c",
+      "source_sha": "fe94f9dce35f21107330532e15fe1262d474db3c",
+      "source_size": 26549
+    },
+    {
+      "path": "adm/daemons/natured.c",
+      "source_sha": "9e42d5273b82e6595ef1ed343e8b11586791676a",
+      "source_size": 3200
+    },
+    {
+      "path": "adm/daemons/profiled.c",
+      "source_sha": "724de9121b8cb8505da00628696e5d4b076d9bff",
+      "source_size": 1667
+    },
+    {
+      "path": "adm/daemons/README",
+      "source_sha": "9ce47373ea130df07ed92f06fc68ee402b52fbe4",
+      "source_size": 118
+    },
+    {
+      "path": "adm/daemons/securityd.c",
+      "source_sha": "2c0a6370aa44b746c66d88fee24f5bce333ba271",
+      "source_size": 9121
+    },
+    {
+      "path": "adm/daemons/smtpd.c",
+      "source_sha": "f71bba1dd62b21503dc3af1ec3c58a722dcf7314",
+      "source_size": 950
+    },
+    {
+      "path": "adm/daemons/userid.c",
+      "source_sha": "c87b30ecda0414383e866527c1602868eb8a94e3",
+      "source_size": 2528
+    },
+    {
+      "path": "adm/daemons/virtuald.c",
+      "source_sha": "ac0084474ee8520cf9558f1eaea93710bf346813",
+      "source_size": 417
+    },
+    {
+      "path": "adm/etc/motd",
+      "source_sha": "52985f022b724a137b051d8ea2445553ce5522a6",
+      "source_size": 128
+    },
+    {
+      "path": "adm/etc/nature/day_phase",
+      "source_sha": "071094836ed7b53e07658476d8c05d144aee4710",
+      "source_size": 1438
+    },
+    {
+      "path": "adm/etc/preload",
+      "source_sha": "571d3ea433c3767ef3d6dcc49bb668206483731c",
+      "source_size": 286
+    },
+    {
+      "path": "adm/etc/welcome",
+      "source_sha": "99bffa62bda9bb4f15386110a37ecec7b236ed01",
+      "source_size": 385
+    },
+    {
+      "path": "adm/guild/academy.c",
+      "source_sha": "40f3c29e9ad4eb23fd6c04aa1bd032408a630c56",
+      "source_size": 739
+    },
+    {
+      "path": "adm/guild/guildhall.c",
+      "source_sha": "c11c3a25bb1791bba56eda08039ac0f3f41749dc",
+      "source_size": 784
+    },
+    {
+      "path": "adm/guild/meetingroom.c",
+      "source_sha": "ab624f65b3d242b53b01d9c28f3a3c45d5af5964",
+      "source_size": 731
+    },
+    {
+      "path": "adm/guild/portal.c",
+      "source_sha": "76bbe575a806073d1bb7736bbae66854764f4fc9",
+      "source_size": 693
+    },
+    {
+      "path": "adm/intermud/_gchannel.c",
+      "source_sha": "66dffac720aeeba0608b88c4c720b853fc07f505",
+      "source_size": 1998
+    },
+    {
+      "path": "adm/intermud/_mudlist.c",
+      "source_sha": "1c6c39d00b489e86cbf301781ff288f3bae8d196",
+      "source_size": 1213
+    },
+    {
+      "path": "adm/intermud/_ping.c",
+      "source_sha": "fb7ead2b7ffe99af5344cdfcd9d9c56124fe4a42",
+      "source_size": 1773
+    },
+    {
+      "path": "adm/intermud/i2d.c",
+      "source_sha": "2a7c1cadb880bb468248268de4d993b2ec0332b5",
+      "source_size": 5270
+    },
+    {
+      "path": "adm/obj/mailbox.c",
+      "source_sha": "106a8330df94303c37a443d636b2ee2ebbf9a066",
+      "source_size": 5766
+    },
+    {
+      "path": "adm/obj/master.c",
+      "source_sha": "af3dcb28cf3da390bc036776f6e35f430bb9b31f",
+      "source_size": 9115
+    },
+    {
+      "path": "adm/obj/simul_efun.c",
+      "source_sha": "d23ecaa6dd677325c48ca1f7aa43808d667877d6",
+      "source_size": 431
+    },
+    {
+      "path": "adm/README.md",
+      "source_sha": "2df3f6dd97bc5f88f0324015e2674c8b1903328c",
+      "source_size": 658
+    },
+    {
+      "path": "adm/simul_efun/atoi.c",
+      "source_sha": "687166a2c4c704cce9b914d5b8ec592a1d380caf",
+      "source_size": 112
+    },
+    {
+      "path": "adm/simul_efun/chinese.c",
+      "source_sha": "e650e88b4233d21ccb72a72e8f4eb9aa852ac5a7",
+      "source_size": 534
+    },
+    {
+      "path": "adm/simul_efun/cursor.c",
+      "source_sha": "a44231ff43b441616d0f2bbfca829e829ca57221",
+      "source_size": 1498
+    },
+    {
+      "path": "adm/simul_efun/file.c",
+      "source_sha": "41d2ba8c013d97a599cbc8bc978609c6bfb46f7f",
+      "source_size": 1034
+    },
+    {
+      "path": "adm/simul_efun/gender.c",
+      "source_sha": "29efd80c091877918fa71543dc461bbe6a43a280",
+      "source_size": 722
+    },
+    {
+      "path": "adm/simul_efun/message.c",
+      "source_sha": "3bebce86289b7f7bdba16cb0dd03c7263421a120",
+      "source_size": 3165
+    },
+    {
+      "path": "adm/simul_efun/object.c",
+      "source_sha": "fd497ea8e6c2b17d6e2ae1d4132f96a7537d9389",
+      "source_size": 883
+    },
+    {
+      "path": "adm/simul_efun/path.c",
+      "source_sha": "3027eeb4b7127680fac6e64b880d20ba26ddb59b",
+      "source_size": 1675
+    },
+    {
+      "path": "adm/simul_efun/wizard.c",
+      "source_sha": "70f296766f73c01c9838e7fa69a22201989042b6",
+      "source_size": 142
+    },
+    {
+      "path": "AGENTS.md",
+      "source_sha": "b8e6a3ba7437b4c230e0cd6f628f9bf2e417dfc6",
+      "source_size": 4095
+    },
+    {
+      "path": "cmds/adm/chpass.c",
+      "source_sha": "8af36e8fbc9f799ddf9c31af10292a08b1583b1b",
+      "source_size": 1848
+    },
+    {
+      "path": "cmds/adm/disassemble.c",
+      "source_sha": "1e65800d1d8f03a3830b93925f6f8f32dda9df49",
+      "source_size": 725
+    },
+    {
+      "path": "cmds/adm/dump.c",
+      "source_sha": "46ee845c5e579a25cead9ac317d981cb2b205a1f",
+      "source_size": 318
+    },
+    {
+      "path": "cmds/adm/profile.c",
+      "source_sha": "f6539fa7e4702ec74f4a040608f7d9a94f2d6e24",
+      "source_size": 340
+    },
+    {
+      "path": "cmds/adm/renew.c",
+      "source_sha": "929edb3f0a93ee9bc6b7ec68d24cae919ae88e62",
+      "source_size": 336
+    },
+    {
+      "path": "cmds/adm/restart.c",
+      "source_sha": "7634c7e5dc915526650e139b6d7639d90a4f6a17",
+      "source_size": 594
+    },
+    {
+      "path": "cmds/adm/resurrect.c",
+      "source_sha": "75975c5c0729a70b181f50659f4f2b88ef05eb94",
+      "source_size": 628
+    },
+    {
+      "path": "cmds/adm/shutdown.c",
+      "source_sha": "38c411fff4d187304dbbcf63a5b081debdbe3134",
+      "source_size": 554
+    },
+    {
+      "path": "cmds/adm/socket.c",
+      "source_sha": "b6b022906a4aada6c71fa734e84b02cea57471a9",
+      "source_size": 111
+    },
+    {
+      "path": "cmds/arch/callouts.c",
+      "source_sha": "a71eca2d8b3ef6fc074e683afddd6d76f26d966c",
+      "source_size": 593
+    },
+    {
+      "path": "cmds/arch/chinese.c",
+      "source_sha": "6e1df16cf0fdca0706d1f09e572637d4cfd576ad",
+      "source_size": 422
+    },
+    {
+      "path": "cmds/arch/cleanup.c",
+      "source_sha": "e6ae99545e4eede7b1b4aca9ee090620802f1b2f",
+      "source_size": 870
+    },
+    {
+      "path": "cmds/arch/force.c",
+      "source_sha": "3ca5fdb0ce30a3686979ca6d58c9f5cd721cd906",
+      "source_size": 1112
+    },
+    {
+      "path": "cmds/arch/heal.c",
+      "source_sha": "e32bcab1773fe090617b2bbdfcc1a5b3d142d71c",
+      "source_size": 754
+    },
+    {
+      "path": "cmds/arch/overview.c",
+      "source_sha": "e7f725f5e980f396bf95a63e5dfffe876f427593",
+      "source_size": 2598
+    },
+    {
+      "path": "cmds/arch/possess.c",
+      "source_sha": "21f6c6b95c72765325a814e5eccac192f7013215",
+      "source_size": 891
+    },
+    {
+      "path": "cmds/arch/promote.c",
+      "source_sha": "e53cb6b33c97811692bbbe6e10aa6ac45afbe2e2",
+      "source_size": 1296
+    },
+    {
+      "path": "cmds/arch/purge.c",
+      "source_sha": "9325d9c632a9f303935d6dcf4c562058143934c0",
+      "source_size": 3743
+    },
+    {
+      "path": "cmds/arch/reboot.c",
+      "source_sha": "0c00c52b9042c7454a8503298b99feefdb34a77a",
+      "source_size": 511
+    },
+    {
+      "path": "cmds/arch/reclaim.c",
+      "source_sha": "35da6d77e0b2e5940d1e2bde203870595fe8544f",
+      "source_size": 328
+    },
+    {
+      "path": "cmds/arch/rehash.c",
+      "source_sha": "f4604a331b4438824d6cd6920e1c670a48a8317e",
+      "source_size": 653
+    },
+    {
+      "path": "cmds/arch/reset_okip.c",
+      "source_sha": "025c4ad21f0d74d1299f02fe81a603f87ad32926",
+      "source_size": 768
+    },
+    {
+      "path": "cmds/arch/restore.c",
+      "source_sha": "ac03bd58a7a3b8787534649fb9e53428ca8974ac",
+      "source_size": 944
+    },
+    {
+      "path": "cmds/arch/wizlock.c",
+      "source_sha": "218dfaca33643ec13f25f8f1caa5b10c56026b4f",
+      "source_size": 726
+    },
+    {
+      "path": "cmds/imm/cd.c",
+      "source_sha": "402c5aba17221e44aebfc63bf183d8562e4b8a17",
+      "source_size": 720
+    },
+    {
+      "path": "cmds/imm/delink.c",
+      "source_sha": "6850626b6074cf2ec67bf46c64dff607ecae2893",
+      "source_size": 3537
+    },
+    {
+      "path": "cmds/imm/edemote.c",
+      "source_sha": "3355f18c0387c05205756bc2dfcfdbc15b7d12f5",
+      "source_size": 6039
+    },
+    {
+      "path": "cmds/imm/goto.c",
+      "source_sha": "1033f2271e6f827b2ca416eb8039c5ff42840021",
+      "source_size": 1994
+    },
+    {
+      "path": "cmds/imm/ls.c",
+      "source_sha": "1c2dc84a7854a8cae9907cda69bc93f3df75282f",
+      "source_size": 1496
+    },
+    {
+      "path": "cmds/imm/mem.c",
+      "source_sha": "8ab5f02940e42810ce8e1476c9c65e093b2bd09a",
+      "source_size": 1216
+    },
+    {
+      "path": "cmds/imm/more.c",
+      "source_sha": "cc39a277adcf7f92f9826e9cf10e8fea7f934d5b",
+      "source_size": 908
+    },
+    {
+      "path": "cmds/imm/pwd.c",
+      "source_sha": "48229abed16fb512caa0fcd6c17a4c0b2cd415d9",
+      "source_size": 560
+    },
+    {
+      "path": "cmds/imm/status.c",
+      "source_sha": "d4f8c28898ce246b8faaecacdbaa5fbc6b1be3a4",
+      "source_size": 391
+    },
+    {
+      "path": "cmds/imm/where.c",
+      "source_sha": "cb77e280800e23daadced43a051aa251f93fe6a4",
+      "source_size": 2366
+    },
+    {
+      "path": "cmds/imm/which.c",
+      "source_sha": "21b8334018720b279686ad5045e012f47e634327",
+      "source_size": 441
+    },
+    {
+      "path": "cmds/README.md",
+      "source_sha": "fcc5528d426c4233e292f96cfc95338e72a60a55",
+      "source_size": 399
+    },
+    {
+      "path": "cmds/std/acquire.c",
+      "source_sha": "5944d2ded14425c7e51222897d7afc15e26b4168",
+      "source_size": 1939
+    },
+    {
+      "path": "cmds/std/acupuncture.c",
+      "source_sha": "765031e9e48cfab8e8d76b5103daea38612e4bd1",
+      "source_size": 1795
+    },
+    {
+      "path": "cmds/std/apprentice.c",
+      "source_sha": "7c018fd8c151b14d59f8cdd9bc6ddf6fda1235c6",
+      "source_size": 1095
+    },
+    {
+      "path": "cmds/std/ask.c",
+      "source_sha": "ec421d90670dba4e11f333eff6cd2f1c66b17aa0",
+      "source_size": 2406
+    },
+    {
+      "path": "cmds/std/backstab.c",
+      "source_sha": "a483b9db3d0841cfbf648e94ef6ff0445d178f9b",
+      "source_size": 7854
+    },
+    {
+      "path": "cmds/std/balance.c",
+      "source_sha": "8180305b2022fa8b34a6abe654d5ce049e42f8c8",
+      "source_size": 1333
+    },
+    {
+      "path": "cmds/std/berserk.c",
+      "source_sha": "01b4b65dbe12d6afe6b5447efca1763a75b0e919",
+      "source_size": 4464
+    },
+    {
+      "path": "cmds/std/cast.c",
+      "source_sha": "94a0256648081db60643b01988e982fdbba70b33",
+      "source_size": 2035
+    },
+    {
+      "path": "cmds/std/ccmd.c",
+      "source_sha": "191f8e49c572dc615a623a14940829ce77e80392",
+      "source_size": 10250
+    },
+    {
+      "path": "cmds/std/cestablish.c",
+      "source_sha": "396e5049e3cc8cc0a586a4d518268ec9136381b1",
+      "source_size": 4570
+    },
+    {
+      "path": "cmds/std/charge.c",
+      "source_sha": "092ab225a57d1621dcb400b3f668828e037aa087",
+      "source_size": 1221
+    },
+    {
+      "path": "cmds/std/close.c",
+      "source_sha": "4ce9f3a4628ff8a60cfc29f8f9a8d2bcffaf5f83",
+      "source_size": 1003
+    },
+    {
+      "path": "cmds/std/conjure.c",
+      "source_sha": "1b54607b7dce27f7534f2353f542e29cb28281df",
+      "source_size": 1232
+    },
+    {
+      "path": "cmds/std/convert.c",
+      "source_sha": "b6d49ee16dc2a8b6ce0d3d64acd1ce6c96dbc021",
+      "source_size": 431
+    },
+    {
+      "path": "cmds/std/deposit.c",
+      "source_sha": "95d06d4a7051e4b794686da6bfe99798c4ee5d8e",
+      "source_size": 407
+    },
+    {
+      "path": "cmds/std/drink.c",
+      "source_sha": "90f80ad1d54ac0e3f67295e19de9e7da4ae2d154",
+      "source_size": 1443
+    },
+    {
+      "path": "cmds/std/drop.c",
+      "source_sha": "687f0c4caa55b46d1f31c1ba7f3b241373f2b315",
+      "source_size": 3111
+    },
+    {
+      "path": "cmds/std/eat.c",
+      "source_sha": "594eb7f957ff8f104db72c515c9797fef37e7a1b",
+      "source_size": 1031
+    },
+    {
+      "path": "cmds/std/emote.c",
+      "source_sha": "c1fe4b318004ee85ed3406f4c0f75bb11568f906",
+      "source_size": 1013
+    },
+    {
+      "path": "cmds/std/enter.c",
+      "source_sha": "74312b49ec8f8a805ff3ea010ef47c5b54e35f82",
+      "source_size": 123
+    },
+    {
+      "path": "cmds/std/exert.c",
+      "source_sha": "0811804c317accb0ab80118cb2736b5b4f235618",
+      "source_size": 2363
+    },
+    {
+      "path": "cmds/std/fight.c",
+      "source_sha": "ad0669e72a810796092094faeba887c29a0c550e",
+      "source_size": 3726
+    },
+    {
+      "path": "cmds/std/fill.c",
+      "source_sha": "c7e2dc2b25675da611be09ec99719a98a9bc220b",
+      "source_size": 3846
+    },
+    {
+      "path": "cmds/std/follow.c",
+      "source_sha": "12f93d6b8c4c90e2d35195f25b4bd3e60c9825d5",
+      "source_size": 1039
+    },
+    {
+      "path": "cmds/std/get.c",
+      "source_sha": "cdb70f5c0a3271fb7ea5854c1963e100f2ee9d13",
+      "source_size": 4364
+    },
+    {
+      "path": "cmds/std/give.c",
+      "source_sha": "af7a2cc397c246bb9a7a9cc7e9cd9eaba1cbec78",
+      "source_size": 3561
+    },
+    {
+      "path": "cmds/std/go.c",
+      "source_sha": "0952e73b9fb4c5e31cb88853b254ea8ec291bc80",
+      "source_size": 3285
+    },
+    {
+      "path": "cmds/std/guard.c",
+      "source_sha": "919871bec2c17e51537bcf96e9f4c2ba2edfb13a",
+      "source_size": 1645
+    },
+    {
+      "path": "cmds/std/halt.c",
+      "source_sha": "d45289d208548b1403c735e19dbe29f5b05ea7e3",
+      "source_size": 1113
+    },
+    {
+      "path": "cmds/std/identify.c",
+      "source_sha": "52a84a188aa9d64495ef5f5b6f41e889141e8fe3",
+      "source_size": 3131
+    },
+    {
+      "path": "cmds/std/ignore.c",
+      "source_sha": "89449c9c3d0101519e9fbbc199d66a40f8f05a06",
+      "source_size": 1458
+    },
+    {
+      "path": "cmds/std/kill.c",
+      "source_sha": "420e9b3295c83c188ac6f653503576b27bc4fa85",
+      "source_size": 3273
+    },
+    {
+      "path": "cmds/std/lock.c",
+      "source_sha": "6c4d89ca1ee665f278df07791d5cb52ba9ce3f45",
+      "source_size": 1128
+    },
+    {
+      "path": "cmds/std/look.c",
+      "source_sha": "de2200e97e1e7c8d037d75626059e41e62f9d475",
+      "source_size": 4116
+    },
+    {
+      "path": "cmds/std/open.c",
+      "source_sha": "13e842f1db3c5fd222dd1bfd9b308b3e6e6ccea3",
+      "source_size": 1303
+    },
+    {
+      "path": "cmds/std/perform.c",
+      "source_sha": "12e590e301367ee830175a6ff81006f65f5eea7f",
+      "source_size": 1977
+    },
+    {
+      "path": "cmds/std/put.c",
+      "source_sha": "7a01a1138a99d3a560544a2885ae7bff3a501ec2",
+      "source_size": 3354
+    },
+    {
+      "path": "cmds/std/README",
+      "source_sha": "d507e6052aa9312197538d5cf2eadbbcb2d64e9a",
+      "source_size": 87
+    },
+    {
+      "path": "cmds/std/remove.c",
+      "source_sha": "1988ab0c9103f675738dd2735aa58b7b422c98c7",
+      "source_size": 1657
+    },
+    {
+      "path": "cmds/std/reply.c",
+      "source_sha": "a26c15db1b2d68e5baabe0f57f5f38d7f1fbb0f4",
+      "source_size": 2893
+    },
+    {
+      "path": "cmds/std/say.c",
+      "source_sha": "6963a48663cb0d347ff15303a3881c1d829cf8f4",
+      "source_size": 608
+    },
+    {
+      "path": "cmds/std/search.c",
+      "source_sha": "f810761db77264ee045cb98fda2b349da6340c13",
+      "source_size": 2298
+    },
+    {
+      "path": "cmds/std/shout.c",
+      "source_sha": "452bfb5265fbd818b22a8acf093dd610f5dc2ea4",
+      "source_size": 604
+    },
+    {
+      "path": "cmds/std/steal.c",
+      "source_sha": "8c82d8f4944f5088a9dced7f769b0da0130b7297",
+      "source_size": 9310
+    },
+    {
+      "path": "cmds/std/study.c",
+      "source_sha": "f58392d499efcda6c29293520e5927c63cbe5bc6",
+      "source_size": 787
+    },
+    {
+      "path": "cmds/std/suicide.c",
+      "source_sha": "d8c4fd62507d29306c2e0b9973327c3a9b09c2fd",
+      "source_size": 1719
+    },
+    {
+      "path": "cmds/std/team.c",
+      "source_sha": "9aed232fda570ce0be89acbd4f632cffed011966",
+      "source_size": 3510
+    },
+    {
+      "path": "cmds/std/tell.c",
+      "source_sha": "5a47ac7f76a5266fdd66564780f82e5416c27baf",
+      "source_size": 3471
+    },
+    {
+      "path": "cmds/std/unlock.c",
+      "source_sha": "f5fdf441292e817f21bf3d6b2293438fd6576ec1",
+      "source_size": 1147
+    },
+    {
+      "path": "cmds/std/unwield.c",
+      "source_sha": "2bf822d878a299bceee82a89306d2d435ee9f535",
+      "source_size": 967
+    },
+    {
+      "path": "cmds/std/wear.c",
+      "source_sha": "b4255f7bc2291d3ef762ea2bcefd85dd79b4aad7",
+      "source_size": 1764
+    },
+    {
+      "path": "cmds/std/whisper.c",
+      "source_sha": "33b10f5e5dd5291744c8e19fb046213c7e17a445",
+      "source_size": 1045
+    },
+    {
+      "path": "cmds/std/wield.c",
+      "source_sha": "a1c9a592323c72ac901c0e71867e56ba3f6f82fe",
+      "source_size": 1747
+    },
+    {
+      "path": "cmds/std/withdraw.c",
+      "source_sha": "1557552fc0e62f4333a966e3ff2a861b381a6fb7",
+      "source_size": 411
+    },
+    {
+      "path": "cmds/usr/alias.c",
+      "source_sha": "fd1f8762c37f58c0b30e57bce2f3d1c8b313363b",
+      "source_size": 2070
+    },
+    {
+      "path": "cmds/usr/backup.c",
+      "source_sha": "4d0aadadaa5af0e42f7058e813676528eb552aa6",
+      "source_size": 1198
+    },
+    {
+      "path": "cmds/usr/chfn.c",
+      "source_sha": "cddddcbbce364a2c907d7bcdf586620d2597db58",
+      "source_size": 1227
+    },
+    {
+      "path": "cmds/usr/describe.c",
+      "source_sha": "68b790a80293d4e9c8951333adedacd2f937c7b9",
+      "source_size": 728
+    },
+    {
+      "path": "cmds/usr/estimate.c",
+      "source_sha": "e0681ad193061e1b4232390de81ae96990676e5b",
+      "source_size": 5041
+    },
+    {
+      "path": "cmds/usr/finger.c",
+      "source_sha": "3d7274c4c2acd663b7414edba789c47ce0350e09",
+      "source_size": 683
+    },
+    {
+      "path": "cmds/usr/help.c",
+      "source_sha": "13da586ace6fda58207299c4856611d73cf56d42",
+      "source_size": 1969
+    },
+    {
+      "path": "cmds/usr/hp.c",
+      "source_sha": "97dd13e7dacb6587224d95d0598522b150b75118",
+      "source_size": 1691
+    },
+    {
+      "path": "cmds/usr/id.c",
+      "source_sha": "912af7ae0854072d8ffbf1469354e9f7f54ceca7",
+      "source_size": 1183
+    },
+    {
+      "path": "cmds/usr/inventory.c",
+      "source_sha": "5567e70a0d7a39f53b95d4fcc7df58c3d643fb12",
+      "source_size": 1505
+    },
+    {
+      "path": "cmds/usr/keep.c",
+      "source_sha": "ec489d7f35c7ecb25d89cafd69eac98367e12ee3",
+      "source_size": 1744
+    },
+    {
+      "path": "cmds/usr/localtime.c",
+      "source_sha": "93cd49bd39a212207084c8eb3c80700c8cfe332a",
+      "source_size": 382
+    },
+    {
+      "path": "cmds/usr/nick.c",
+      "source_sha": "70ee5028f98d62acf378707ae04461a1fc15c248",
+      "source_size": 992
+    },
+    {
+      "path": "cmds/usr/okip.c",
+      "source_sha": "8f3d77f263137c0407a0411963d9482f42ee18ca",
+      "source_size": 2341
+    },
+    {
+      "path": "cmds/usr/option.c",
+      "source_sha": "93e6230b89a8149d195ea40254e116823d610c17",
+      "source_size": 1191
+    },
+    {
+      "path": "cmds/usr/order.c",
+      "source_sha": "e5ea90d75840274bc77b8e8a7f3632f4f3af3b15",
+      "source_size": 1441
+    },
+    {
+      "path": "cmds/usr/passwd.c",
+      "source_sha": "335ed2b8683c19454ba500f664b727449110a2a8",
+      "source_size": 2002
+    },
+    {
+      "path": "cmds/usr/praise.c",
+      "source_sha": "5c0d7a00c8883b57b201605b0b7fb912dd77a1df",
+      "source_size": 2160
+    },
+    {
+      "path": "cmds/usr/quit.c",
+      "source_sha": "475c1c58a9a89f42a7789bdb40ca943b0be93a5f",
+      "source_size": 2713
+    },
+    {
+      "path": "cmds/usr/recall.c",
+      "source_sha": "41c58d15b5354059f8476feb0eb65244573ef2bb",
+      "source_size": 1395
+    },
+    {
+      "path": "cmds/usr/save.c",
+      "source_sha": "ca9c6c9c266a286fe3e5e1cbb09bdd6bc49d86b9",
+      "source_size": 1318
+    },
+    {
+      "path": "cmds/usr/semote.c",
+      "source_sha": "d497fd0c9224e7ba4df3a2294e7b82096d42e93c",
+      "source_size": 1025
+    },
+    {
+      "path": "cmds/usr/skills.c",
+      "source_sha": "544b28eaadc6776fddc7a8ad036e28a595bf9fd7",
+      "source_size": 5211
+    },
+    {
+      "path": "cmds/usr/time.c",
+      "source_sha": "7b9f77fc6084f53f89460fdb61e2a6c18414c333",
+      "source_size": 292
+    },
+    {
+      "path": "cmds/usr/to.c",
+      "source_sha": "f1c0610f6162bc62eed550e127a86ec3225db403",
+      "source_size": 1164
+    },
+    {
+      "path": "cmds/usr/tune.c",
+      "source_sha": "5c7746d711b0fb0b45654957d62ab790f1471601",
+      "source_size": 1340
+    },
+    {
+      "path": "cmds/usr/undescribe.c",
+      "source_sha": "cc01808fdf72ac186f74df40c675379143dad155",
+      "source_size": 277
+    },
+    {
+      "path": "cmds/usr/uptime.c",
+      "source_sha": "4d500dc7cff25fd1102acc25e0bbe858cc76f569",
+      "source_size": 494
+    },
+    {
+      "path": "cmds/usr/version.c",
+      "source_sha": "79b027cad2c380794d8db72830d2c3d642e2ff0d",
+      "source_size": 405
+    },
+    {
+      "path": "cmds/usr/visitor.c",
+      "source_sha": "d6d27fee66265f25cc17d74f582620c994b87ac3",
+      "source_size": 449
+    },
+    {
+      "path": "cmds/usr/webhud.c",
+      "source_sha": "e57c9542300483008270d429deea7467bb28e1fd",
+      "source_size": 5007
+    },
+    {
+      "path": "cmds/usr/who.c",
+      "source_sha": "214fc0253e18f4d22e95327054145c3edc0ca8fc",
+      "source_size": 11832
+    },
+    {
+      "path": "cmds/usr/wimpy.c",
+      "source_sha": "ded695c1ed7d405dbcbad73b5a474e6ac9588899",
+      "source_size": 2033
+    },
+    {
+      "path": "cmds/usr/wizlist.c",
+      "source_sha": "4afb4b39210d9f76f8710ca9187ed79fbdfbbdf3",
+      "source_size": 2398
+    },
+    {
+      "path": "cmds/wiz/analyze.c",
+      "source_sha": "50d6603b052d6501a49c49c9ee25bc7a73b25a2e",
+      "source_size": 3586
+    },
+    {
+      "path": "cmds/wiz/arrest.c",
+      "source_sha": "2828bb619d5c720548412d7f0422dc05aea66926",
+      "source_size": 1044
+    },
+    {
+      "path": "cmds/wiz/call.c",
+      "source_sha": "4f8dcd2fb6f0b0506a0d9f34318a166c0f3ced17",
+      "source_size": 2746
+    },
+    {
+      "path": "cmds/wiz/cat.c",
+      "source_sha": "64f76221f7ca99de892450acec4037f16b5b01f6",
+      "source_size": 546
+    },
+    {
+      "path": "cmds/wiz/clone.c",
+      "source_sha": "2ab05c9da32992afb1ff9a239790b89f899dd4e1",
+      "source_size": 2613
+    },
+    {
+      "path": "cmds/wiz/cost.c",
+      "source_sha": "b23cac2a25f0735f9e8a31d1317ac813d05bd9e1",
+      "source_size": 780
+    },
+    {
+      "path": "cmds/wiz/cp.c",
+      "source_sha": "79baf840b0113ede479ba51cfacaa1b4e8813f97",
+      "source_size": 789
+    },
+    {
+      "path": "cmds/wiz/daemon.c",
+      "source_sha": "a4741279472657f4c695d9a1ebfef35a17d0149a",
+      "source_size": 1353
+    },
+    {
+      "path": "cmds/wiz/dest.c",
+      "source_sha": "f3975679c09717909dc1127c6493e7d662167bad",
+      "source_size": 1842
+    },
+    {
+      "path": "cmds/wiz/edit.c",
+      "source_sha": "62b35dec4ba0ce53f501900600f2a524c8dbcd46",
+      "source_size": 522
+    },
+    {
+      "path": "cmds/wiz/ff.c",
+      "source_sha": "103d5423ce089d5b1cdd86f718b0e2728e6a040d",
+      "source_size": 899
+    },
+    {
+      "path": "cmds/wiz/home.c",
+      "source_sha": "efc5bea296db61d1508f88beb5a6328758879818",
+      "source_size": 993
+    },
+    {
+      "path": "cmds/wiz/ilist.c",
+      "source_sha": "ce20fc6249b27ce4629a06effc3d5ca02e6996bc",
+      "source_size": 1591
+    },
+    {
+      "path": "cmds/wiz/info.c",
+      "source_sha": "68cd9ff7295ee299bc7454ba7504cfe3fcc7e8b5",
+      "source_size": 1751
+    },
+    {
+      "path": "cmds/wiz/invis.c",
+      "source_sha": "5e88e0fb0f919b674616fea78b1a176958d2dbc2",
+      "source_size": 656
+    },
+    {
+      "path": "cmds/wiz/link.c",
+      "source_sha": "ae94b17781ef7b3797ae6a51dc970539f015c78f",
+      "source_size": 5982
+    },
+    {
+      "path": "cmds/wiz/localcmds.c",
+      "source_sha": "f9704a9611ad2cd5483b6975c7e5349820c9fea7",
+      "source_size": 505
+    },
+    {
+      "path": "cmds/wiz/log.c",
+      "source_sha": "8724a973e1d4a28f28878810a8847af04a29b171",
+      "source_size": 634
+    },
+    {
+      "path": "cmds/wiz/mkdir.c",
+      "source_sha": "8bbeb2224d239ae45108476aeb36a82136357c43",
+      "source_size": 557
+    },
+    {
+      "path": "cmds/wiz/mudlist.c",
+      "source_sha": "4726eb6eacbe98e571864c484d64468232bb80f9",
+      "source_size": 3158
+    },
+    {
+      "path": "cmds/wiz/mv.c",
+      "source_sha": "8cd33a5e70a4214bb95e62ff0d0fe568c568fe7e",
+      "source_size": 678
+    },
+    {
+      "path": "cmds/wiz/ping.c",
+      "source_sha": "1f10adc300a0126579c30939751aba39a7b4171a",
+      "source_size": 866
+    },
+    {
+      "path": "cmds/wiz/qload.c",
+      "source_sha": "c4fbe9d5b2c763e7518f184586f5cecfb3ef6aeb",
+      "source_size": 297
+    },
+    {
+      "path": "cmds/wiz/quiet.c",
+      "source_sha": "24128610864e548cbdb9efc813d617994ec271f8",
+      "source_size": 989
+    },
+    {
+      "path": "cmds/wiz/rm.c",
+      "source_sha": "b371f696efd7cd28c769d2f1aba07716a9ba5054",
+      "source_size": 632
+    },
+    {
+      "path": "cmds/wiz/rmdir.c",
+      "source_sha": "5b415f53de9800ea564008dfe84bd7ce72325232",
+      "source_size": 504
+    },
+    {
+      "path": "cmds/wiz/snoop.c",
+      "source_sha": "46ff1b13d9a0b7337016a7ec1f91bbf3ae9b0b68",
+      "source_size": 1568
+    },
+    {
+      "path": "cmds/wiz/summon.c",
+      "source_sha": "deb5df0dd9afadf7536586ded3ddf1b6be92e7be",
+      "source_size": 1164
+    },
+    {
+      "path": "cmds/wiz/tail.c",
+      "source_sha": "4e4f3e0ba4257d253f11d67ef90cc77ea710830e",
+      "source_size": 471
+    },
+    {
+      "path": "cmds/wiz/ulist.c",
+      "source_sha": "b4dce9a4bd8faf85f56434dbcfd1c7bae965fbc2",
+      "source_size": 417
+    },
+    {
+      "path": "cmds/wiz/update.c",
+      "source_sha": "d3bdbd1ca4adee2ce97269caf44b7a5e8c098188",
+      "source_size": 3222
+    },
+    {
+      "path": "cmds/wiz/userid.c",
+      "source_sha": "8b41f9daec93c430607dc7f975264b067c53beaa",
+      "source_size": 482
+    },
+    {
+      "path": "cmds/wiz/whoami.c",
+      "source_sha": "a3663ab6de7ebf3c496cf5bfcec8c0c768b9ee06",
+      "source_size": 288
+    },
+    {
+      "path": "custom/condition/weapon_poison.c",
+      "source_sha": "d871f3cc4804907ac283b714cabd11c7042db60b",
+      "source_size": 3362
+    },
+    {
+      "path": "custom/test/obj/infinite_100_gold.c",
+      "source_sha": "07cf7e3ea08f08c6c5bd6b09f36165fe1122249a",
+      "source_size": 1042
+    },
+    {
+      "path": "custom/wizroom/j/juys/aera/workroom.c.1789329689",
+      "source_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "source_size": 0
+    },
+    {
+      "path": "custom/wizroom/j/juys/aera/workroom.c.1789352435",
+      "source_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "source_size": 0
+    },
+    {
+      "path": "custom/wizroom/j/juys/aera/workroom.c.1789356197",
+      "source_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "source_size": 0
+    },
+    {
+      "path": "custom/wizroom/w/windstory/npc/gammer.c",
+      "source_sha": "11ea20374643c896080581a45c219e8d20ad8f62",
+      "source_size": 6188
+    },
+    {
+      "path": "custom/wizroom/w/windstory/room/dragon_inn.c",
+      "source_sha": "e3d41375b96af95633fd3a28a374b1c17efad021",
+      "source_size": 2276
+    },
+    {
+      "path": "custom/wizroom/w/windstory/room/home.c",
+      "source_sha": "a6f21e4d4763d1adf39c7c75bc9597608f963fc8",
+      "source_size": 404
+    },
+    {
+      "path": "custom/wizroom/w/windstory/room/inn_w.c",
+      "source_sha": "2d1b76ac2aa4e9aea21b5f4c7316bb4a6bcff916",
+      "source_size": 656
+    },
+    {
+      "path": "daemon/board/bug_board.c",
+      "source_sha": "a2f0fad4be6986c13f2451840007750d855d0258",
+      "source_size": 427
+    },
+    {
+      "path": "daemon/board/celestial_board.c",
+      "source_sha": "1f2e6b7b49460c5657f4357c3949e64178a9dafa",
+      "source_size": 714
+    },
+    {
+      "path": "daemon/board/snow_board.c",
+      "source_sha": "e28ac3d4a91835c9fbcb9d2bd20fa56f776214f3",
+      "source_size": 611
+    },
+    {
+      "path": "daemon/condition/blue_venom.c",
+      "source_sha": "92ff9f089e45beb81d4dc633bce922631dd41b29",
+      "source_size": 3167
+    },
+    {
+      "path": "daemon/condition/drunk.c",
+      "source_sha": "6ee2197b460468375af7890f0ec7b68521dd4f4d",
+      "source_size": 3998
+    },
+    {
+      "path": "daemon/condition/hundred_poison.c",
+      "source_sha": "901c005d9ec792fc0d743d0e5f3084a18ff1f3b9",
+      "source_size": 638
+    },
+    {
+      "path": "daemon/condition/maggot_poison.c",
+      "source_sha": "cfdca4c0c183effe11e3e1ae6725129599de4d6a",
+      "source_size": 680
+    },
+    {
+      "path": "daemon/condition/phoenix_poison.c",
+      "source_sha": "4498f30f6ea647f15730d2bc40c73e90b52f25aa",
+      "source_size": 582
+    },
+    {
+      "path": "daemon/condition/poison.c",
+      "source_sha": "690f034dbf586494396950af6ac64440944559f5",
+      "source_size": 895
+    },
+    {
+      "path": "daemon/condition/rain_blessing.c",
+      "source_sha": "c41dc07347295ca83fc347978ec0fd81ed00e5c9",
+      "source_size": 2739
+    },
+    {
+      "path": "daemon/condition/rain_poison.c",
+      "source_sha": "c56542f0c57c2c53304fae31e2086600f6291f91",
+      "source_size": 655
+    },
+    {
+      "path": "daemon/condition/skull_heart_poison.c",
+      "source_sha": "60a6fd54dbf84943cda05597bd52af69effbea70",
+      "source_size": 638
+    },
+    {
+      "path": "daemon/condition/wraith_poison.c",
+      "source_sha": "abe8817401845e01ca102c6d76a31f74b7abfac0",
+      "source_size": 575
+    },
+    {
+      "path": "daemon/misc/traveler.c",
+      "source_sha": "e9332ef135763a446a76ea42c07bf0051d6efa8c",
+      "source_size": 1110
+    },
+    {
+      "path": "daemon/race/avatar/radiate.c",
+      "source_sha": "cc4ba28b6fe23bcad0fd12837cec3387dcc74222",
+      "source_size": 1019
+    },
+    {
+      "path": "daemon/race/beast.c",
+      "source_sha": "6a0e6d2af99daee7bdcc797332d808d0cf0596e7",
+      "source_size": 3482
+    },
+    {
+      "path": "daemon/race/human/resurge.c",
+      "source_sha": "b193b6a0a62f2477314467d088f8ac072f3f7e8e",
+      "source_size": 1392
+    },
+    {
+      "path": "daemon/README.md",
+      "source_sha": "1c1c80f52214b467be0542cbcb3b60b468a36ea8",
+      "source_size": 743
+    },
+    {
+      "path": "daemon/skill/berserk.c",
+      "source_sha": "f0d5d2736509fb69094b4d1e784d0ea5361d30b8",
+      "source_size": 2026
+    },
+    {
+      "path": "daemon/skill/heavy_parry.c",
+      "source_sha": "a2dacaec305bead8fba77254c6d3d79bd4b289a8",
+      "source_size": 2488
+    },
+    {
+      "path": "daemon/skill/powerblow.c",
+      "source_sha": "96f3f1838173b496df3b1fcc61bc1b9623bad72e",
+      "source_size": 1474
+    },
+    {
+      "path": "daemon/virtual/field.c",
+      "source_sha": "119c9c6fc5f3f656cf84b884e54bdb2288abe8e3",
+      "source_size": 1737
+    },
+    {
+      "path": "data/chinese.o",
+      "source_sha": "43b0739db4a9ab80e8319cfc9aa53ff4ba792951",
+      "source_size": 8184
+    },
+    {
+      "path": "data/emoted.o",
+      "source_sha": "03f42500a949f65647086b177f20890553fc3fd7",
+      "source_size": 62074
+    },
+    {
+      "path": "data/mail/.keep",
+      "source_sha": "319423b7e7685c83983d40ee112386f7f71b42df",
+      "source_size": 66
+    },
+    {
+      "path": "data/README.md",
+      "source_sha": "f2c2a5e7b756004fb6ace6a5cbd20cd87fda34f6",
+      "source_size": 183
+    },
+    {
+      "path": "docs/help/character.txt",
+      "source_sha": "1a001285a706bf936bf8a525b781539c165595d5",
+      "source_size": 325
+    },
+    {
+      "path": "docs/help/combat_cmds.txt",
+      "source_sha": "a98eab0ed6c5c9e84f6e67242911b3b67992724c",
+      "source_size": 236
+    },
+    {
+      "path": "docs/help/combat.txt",
+      "source_sha": "62ff05a4b9dda57f932be2579a7cc0b879486169",
+      "source_size": 448
+    },
+    {
+      "path": "docs/help/commands.txt",
+      "source_sha": "4e07d4963ce45f3d6f805a9aa0ad188c3de7a0ce",
+      "source_size": 451
+    },
+    {
+      "path": "docs/help/communication.txt",
+      "source_sha": "c94b058981325f1532892c9ad13120f8ceb4a993",
+      "source_size": 349
+    },
+    {
+      "path": "docs/help/death.txt",
+      "source_sha": "10e89496b7453d96d02722fc913d804544e1f797",
+      "source_size": 230
+    },
+    {
+      "path": "docs/help/home_help.txt",
+      "source_sha": "bd00deca03a4dac13c7cbd65135bcaaabb495651",
+      "source_size": 288
+    },
+    {
+      "path": "docs/help/inn.txt",
+      "source_sha": "fb95adfc5a2694e8f135fd56816f51989e8db4d3",
+      "source_size": 168
+    },
+    {
+      "path": "docs/help/items.txt",
+      "source_sha": "eef5315913f3783d11606d406e0ba6c5e9e754a2",
+      "source_size": 439
+    },
+    {
+      "path": "docs/help/master.txt",
+      "source_sha": "d85466e1a4640fbbdea75712a91deff9b83e8da5",
+      "source_size": 258
+    },
+    {
+      "path": "docs/help/movement.txt",
+      "source_sha": "c03a0473acb3ca7c38df19051faf37606a65f094",
+      "source_size": 391
+    },
+    {
+      "path": "docs/help/newbie.txt",
+      "source_sha": "7e09195613d9997a6d477d94f1b19ed127739564",
+      "source_size": 578
+    },
+    {
+      "path": "docs/help/recall.txt",
+      "source_sha": "a173a71389fa12ad033c197e1a7a138a9e0ff296",
+      "source_size": 161
+    },
+    {
+      "path": "docs/help/rules.txt",
+      "source_sha": "3d614c49fecfc013ed9c6d0c2b8084b9769a29c5",
+      "source_size": 313
+    },
+    {
+      "path": "docs/help/skill_help.txt",
+      "source_sha": "0dee4044f89fe5df65ffce8add0782208bf5fe03",
+      "source_size": 403
+    },
+    {
+      "path": "docs/help/snowkeep.txt",
+      "source_sha": "d6504d4c14ecac4524701ec10df3023fcd59e902",
+      "source_size": 205
+    },
+    {
+      "path": "docs/help/tiger.txt",
+      "source_sha": "c2c1fba965687b80276934e7568423e4f4557867",
+      "source_size": 694
+    },
+    {
+      "path": "docs/help/topics.txt",
+      "source_sha": "56a9260d568f807e89373e462ad51761e35ba74b",
+      "source_size": 1538
+    },
+    {
+      "path": "docs/help/web.txt",
+      "source_sha": "c864dcb9e694e8e72ce9ae73fb856af0392dcc97",
+      "source_size": 275
+    },
+    {
+      "path": "docs/help/wizard_help.txt",
+      "source_sha": "d79f8dac9aa3653ec296ddd51afd840e3ef03370",
+      "source_size": 561
+    },
+    {
+      "path": "docs/help/world.txt",
+      "source_sha": "949c97cc1d795077585c2de7dd5afed95ff2712d",
+      "source_size": 326
+    },
+    {
+      "path": "docs/help/zmud.txt",
+      "source_sha": "c285fbe436365d32282cbaceb35b288ceadcb540",
+      "source_size": 204
+    },
+    {
+      "path": "feature/README.md",
+      "source_sha": "6698a1dbce4bd7c7fad5917ee2f2cf4384438e74",
+      "source_size": 307
+    },
+    {
+      "path": "include/action.h",
+      "source_sha": "0a5a9bca43ef64280780ca14c6c0538a5a166586",
+      "source_size": 312
+    },
+    {
+      "path": "include/ansi.h",
+      "source_sha": "ca5832000492c78040161e202ad90bfeca4e2480",
+      "source_size": 4039
+    },
+    {
+      "path": "include/armor.h",
+      "source_sha": "72c77d588bafae418d18d8ebe348c07963e1a546",
+      "source_size": 613
+    },
+    {
+      "path": "include/attack.h",
+      "source_sha": "bbccd56044f6ef666d2e16a729450b5f26f39599",
+      "source_size": 222
+    },
+    {
+      "path": "include/attribute.h",
+      "source_sha": "ada3d92e906fcd5334ee00d530c5f665f0ac8660",
+      "source_size": 455
+    },
+    {
+      "path": "include/char.h",
+      "source_sha": "2fef6975362d6d7c8f7173b8293a53b919c0e8e3",
+      "source_size": 585
+    },
+    {
+      "path": "include/combat.h",
+      "source_sha": "4d73533924a21639284e976f8eabe5e4cf16ae97",
+      "source_size": 265
+    },
+    {
+      "path": "include/command.h",
+      "source_sha": "176e037163233a8f2965800777c0aaadac7d5770",
+      "source_size": 2746
+    },
+    {
+      "path": "include/condition.h",
+      "source_sha": "adc6ec2673913c22186b7e68dbf838c7e09f6046",
+      "source_size": 107
+    },
+    {
+      "path": "include/dbase_security.h",
+      "source_sha": "43026b32a4d23473097022a4c2638076086c5bf8",
+      "source_size": 1542
+    },
+    {
+      "path": "include/dbase.h",
+      "source_sha": "3e2988f76b85762f06a0ef846b18281871e1b405",
+      "source_size": 757
+    },
+    {
+      "path": "include/explore.h",
+      "source_sha": "6ef0ba42a4432d01bb4ee04c2c8ed52a0e7ec0bc",
+      "source_size": 666
+    },
+    {
+      "path": "include/function.h",
+      "source_sha": "fec6d1c17a5a3aa3ff09301a9e71acb707b74f19",
+      "source_size": 479
+    },
+    {
+      "path": "include/globals.h",
+      "source_sha": "b7ddbed666854425caa1936f9f8e03c6563dbf30",
+      "source_size": 3275
+    },
+    {
+      "path": "include/help.h",
+      "source_sha": "f17de9b9343cdd31e63072cbc47d3eaf6f9866f5",
+      "source_size": 262
+    },
+    {
+      "path": "include/html.h",
+      "source_sha": "178763d517068978b31c39ee0f6009a522649fab",
+      "source_size": 210
+    },
+    {
+      "path": "include/http.h",
+      "source_sha": "f747dc6ea71148cc56988d242d328ddeac377ea1",
+      "source_size": 470
+    },
+    {
+      "path": "include/intermud.h",
+      "source_sha": "f557c467c28bd966e300f726168363cbfb396a05",
+      "source_size": 1131
+    },
+    {
+      "path": "include/localtime.h",
+      "source_sha": "92122daebc033938613d1897be86255243313fe6",
+      "source_size": 304
+    },
+    {
+      "path": "include/login.h",
+      "source_sha": "f8b4ad899e6650878dd4066fc1e9931285fc8c8a",
+      "source_size": 1504
+    },
+    {
+      "path": "include/move.h",
+      "source_sha": "05cd775120402836bc7b0d743a70d4ae81bafa63",
+      "source_size": 209
+    },
+    {
+      "path": "include/mudlib.h",
+      "source_sha": "796036a87f4448cd66ec33ae7fb964b51ccac44a",
+      "source_size": 1466
+    },
+    {
+      "path": "include/name.h",
+      "source_sha": "53ffe7573d42b5e163b9e47ae8d95f2a25309edf",
+      "source_size": 167
+    },
+    {
+      "path": "include/npc.h",
+      "source_sha": "f5e55f2b2620a8fd833a07699b568b731c8f9374",
+      "source_size": 450
+    },
+    {
+      "path": "include/obj.h",
+      "source_sha": "b18991d86d4ed776b07f8b231fa1991d20f29f07",
+      "source_size": 115
+    },
+    {
+      "path": "include/origin.h",
+      "source_sha": "d4940f133c8417ba5a146ed6c2e6b8560909b0cd",
+      "source_size": 631
+    },
+    {
+      "path": "include/race.h",
+      "source_sha": "38ee41c405db2c45d5826c22c675a465039df7ad",
+      "source_size": 86
+    },
+    {
+      "path": "include/reboot.h",
+      "source_sha": "026ff5a5146f683b61996002795cbc833354d8de",
+      "source_size": 113
+    },
+    {
+      "path": "include/room.h",
+      "source_sha": "fa5a4b3c0f859e13cc6704248acfbcf5b4ea34a5",
+      "source_size": 417
+    },
+    {
+      "path": "include/runtime_config.h",
+      "source_sha": "57fd8313379f3ce4a683d4817c7f54caddb4d47b",
+      "source_size": 2970
+    },
+    {
+      "path": "include/score.h",
+      "source_sha": "53dd328b37c5597265245fc431edcae1a9676431",
+      "source_size": 106
+    },
+    {
+      "path": "include/skill.h",
+      "source_sha": "b11f7c5e84f996c1f68c5e35eaf4de6cc905988a",
+      "source_size": 239
+    },
+    {
+      "path": "include/socket_err.h",
+      "source_sha": "80bc77d908b9c54330bf1d442d3a40e7647f8880",
+      "source_size": 2094
+    },
+    {
+      "path": "include/statistic.h",
+      "source_sha": "0086f92d58e2687fd11e83d8d67ec4f70badedee",
+      "source_size": 1048
+    },
+    {
+      "path": "include/team.h",
+      "source_sha": "c305b604f965caa69005e77f5e6ce412cd8112ff",
+      "source_size": 95
+    },
+    {
+      "path": "include/type.h",
+      "source_sha": "540df08346f8442d59c05a120b484c3e17c44e1e",
+      "source_size": 336
+    },
+    {
+      "path": "include/user.h",
+      "source_sha": "c26b8463811421f26e4a07438848933f40164920",
+      "source_size": 1189
+    },
+    {
+      "path": "include/weapon.h",
+      "source_sha": "3d329b9b4ee2a09e818ef0c082ce65d56bdf2655",
+      "source_size": 573
+    },
+    {
+      "path": "obj/armor/cloth.c",
+      "source_sha": "932d195a69d687eb45a9589b61ec0749ff34a20c",
+      "source_size": 393
+    },
+    {
+      "path": "obj/armor/fur_hat.c",
+      "source_sha": "6725e3290421a68d84ce8caec6ef764ca05badd8",
+      "source_size": 401
+    },
+    {
+      "path": "obj/bankbond.c",
+      "source_sha": "c5432026f500469eee11cde8caaffdca9af11d59",
+      "source_size": 969
+    },
+    {
+      "path": "obj/block_robot.c",
+      "source_sha": "2d603798fe3b64f1ede53ae92fb891f18f7d5fda",
+      "source_size": 677
+    },
+    {
+      "path": "obj/block.c",
+      "source_sha": "9e3bf4dba60b52326cf87a3beb60dae7764d85ef",
+      "source_size": 1059
+    },
+    {
+      "path": "obj/bottle.c",
+      "source_sha": "c4d5342fa65e0935b98ab2ec073ff4b48b4434a5",
+      "source_size": 627
+    },
+    {
+      "path": "obj/clan_symbol.c",
+      "source_sha": "b29b78bdaed0bbb7a87e7c76d9de42329e2425c6",
+      "source_size": 6060
+    },
+    {
+      "path": "obj/cloth.c",
+      "source_sha": "8ab2309d6d438249b08cae5b7b9dc7704f5599f8",
+      "source_size": 395
+    },
+    {
+      "path": "obj/corpse.c",
+      "source_sha": "b5c6652011c20b1449cbcab354b8590d9b965297",
+      "source_size": 1865
+    },
+    {
+      "path": "obj/dust.c",
+      "source_sha": "97ce3d0b483c92d4b3cf11c51f137e4c92a70a24",
+      "source_size": 974
+    },
+    {
+      "path": "obj/example/army.c",
+      "source_sha": "ee17ddaec4ae32a1cfb0bb651de27d610f198f74",
+      "source_size": 491
+    },
+    {
+      "path": "obj/example/daemon/README",
+      "source_sha": "0baa5e43c9c2c5c344bea1d471b5f4d0ace43623",
+      "source_size": 157
+    },
+    {
+      "path": "obj/example/es2_bottle.c",
+      "source_sha": "c46184ef0c3cf21c73f80f5fba554300541c9d01",
+      "source_size": 514
+    },
+    {
+      "path": "obj/example/infantry.c",
+      "source_sha": "8a5bd93797caaa201b866d9855e0942cbfb186cb",
+      "source_size": 118
+    },
+    {
+      "path": "obj/example/README",
+      "source_sha": "15eaf9bbbca792445115be97c43daa446edd5225",
+      "source_size": 217
+    },
+    {
+      "path": "obj/example/weapon/shortsword.c",
+      "source_sha": "4a86c66dd123cd29115daa5b177256256c574fbe",
+      "source_size": 512
+    },
+    {
+      "path": "obj/http.c",
+      "source_sha": "79557adc05f3678336cb1895d636e64532c27d07",
+      "source_size": 1148
+    },
+    {
+      "path": "obj/login.c",
+      "source_sha": "bb30742869061185e8b6425669ccc28323a09aba",
+      "source_size": 3082
+    },
+    {
+      "path": "obj/magic.c",
+      "source_sha": "87d21e0bce652bb6ef865b5b11f9a6974bc55547",
+      "source_size": 260
+    },
+    {
+      "path": "obj/map.c",
+      "source_sha": "dc519a51043c0ad32c10eb1dbd1b385bf06fc02f",
+      "source_size": 699
+    },
+    {
+      "path": "obj/obj/firework.c",
+      "source_sha": "e61516e3894db1214a869d839c8c5c71131d113d",
+      "source_size": 1361
+    },
+    {
+      "path": "obj/obj/ghostbaby.c",
+      "source_sha": "83dc9aec9527c805de47d5fbd48c9cdc1928f4f0",
+      "source_size": 464
+    },
+    {
+      "path": "obj/README.md",
+      "source_sha": "bb85e313f26d49a17e9c037cf79c81ceb316dacc",
+      "source_size": 230
+    },
+    {
+      "path": "obj/roommaker.c",
+      "source_sha": "379d7a4c66c718b12c5bb1f75927ac2744c80e6b",
+      "source_size": 5103
+    },
+    {
+      "path": "obj/spirit.c",
+      "source_sha": "f361bed99d67f356723805d27ef9202b04628e7d",
+      "source_size": 6007
+    },
+    {
+      "path": "obj/user.c",
+      "source_sha": "e5b7980f42f63c3af858ff7278dcfb2e912aa9bd",
+      "source_size": 8315
+    },
+    {
+      "path": "obj/void.c",
+      "source_sha": "bc9ef7f55587919f393aea99fa90dbde335c5527",
+      "source_size": 924
+    },
+    {
+      "path": "obj/water.c",
+      "source_sha": "1e2b603a7b5d68ffa37c50b092f995aced9294dc",
+      "source_size": 235
+    },
+    {
+      "path": "README.md",
+      "source_sha": "03d8efb5d87308c86f8ae16e8414559b5156461e",
+      "source_size": 558
+    },
+    {
+      "path": "std/char.c",
+      "source_sha": "c7c12aab588e162a4ffec5519088879e5d93c98a",
+      "source_size": 11024
+    },
+    {
+      "path": "std/condition.c",
+      "source_sha": "73b4c4034deeaeb45f3785f6422d4689fa57e02b",
+      "source_size": 36
+    },
+    {
+      "path": "std/item.c",
+      "source_sha": "bd59c7bce424adb59eda75ef7f55f4f6907e415b",
+      "source_size": 262
+    },
+    {
+      "path": "std/money.c",
+      "source_sha": "2191f235d6546cdb3c70eaca4415f0363e9a0214",
+      "source_size": 324
+    },
+    {
+      "path": "std/race/humanoid.c",
+      "source_sha": "7650ca5b75ea6cff70212a945584714bede5e0b5",
+      "source_size": 10382
+    },
+    {
+      "path": "std/race/README",
+      "source_sha": "49e5a0cd5e59e76985bcbefd4923e6badf4ad84e",
+      "source_size": 131
+    },
+    {
+      "path": "std/README.md",
+      "source_sha": "54aded798b63f7aa5b867cdd33aaebb7654fd5c3",
+      "source_size": 414
+    },
+    {
+      "path": "std/room/bank.c",
+      "source_sha": "bda761fcb3dc404f221b72bd4a2b9545e90ed096",
+      "source_size": 7990
+    },
+    {
+      "path": "std/room/hockshop_storage.c",
+      "source_sha": "2a400eae2d525c9f67dc0a7a4d2f06a78c19dcc7",
+      "source_size": 818
+    },
+    {
+      "path": "std/room/inn.c",
+      "source_sha": "0b4fef8461007124a230cefa6edfebb0d5560449",
+      "source_size": 255
+    },
+    {
+      "path": "std/room/journey.c",
+      "source_sha": "ff8b97ee2caac14d7bd91437649d6e05b31a496d",
+      "source_size": 2024
+    },
+    {
+      "path": "std/room/obj/pawn_stamp.c",
+      "source_sha": "3d4c3c9e48464e7a1bd5b902b20e4c2a2d94acbf",
+      "source_size": 212
+    },
+    {
+      "path": "std/room/temple.c",
+      "source_sha": "60173480d06f316b1d422401b9cf68b43a13e82e",
+      "source_size": 1146
+    },
+    {
+      "path": "std/skill.c",
+      "source_sha": "8bb0d613e765254cd0730ef0331d18a7847d1172",
+      "source_size": 107
+    }
+  ],
+  "snapshot_only_files": [
+    {
+      "path": "d/lee/ES2M_SOURCE_MANIFEST.json",
+      "snapshot_sha": "60fe97857c02cfa1ba294a25cc274ec2a5490c0e",
+      "snapshot_size": 1210
+    }
+  ]
+}

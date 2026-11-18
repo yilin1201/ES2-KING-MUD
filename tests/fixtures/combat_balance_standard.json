@@ -1,0 +1,33 @@
+{
+  "schema": "es2-king-combat-benchmark-v1",
+  "ordinary_player_levels": [50, 100, 150, 200],
+  "excluded_general_balance_profiles": ["KING_OWNER_LV300"],
+  "metrics": [
+    "attempts",
+    "landed_hits",
+    "hit_rate",
+    "damage_mean",
+    "damage_p50",
+    "damage_p95",
+    "damage_min",
+    "damage_max",
+    "combat_rounds",
+    "ttk_seconds",
+    "resource_cost",
+    "damage_per_resource",
+    "post_combat_recovery"
+  ],
+  "ttk_target_rounds": {
+    "normal": [3, 6],
+    "strong": [8, 15],
+    "elite": [15, 30],
+    "boss": [30, null]
+  },
+  "relative_role_targets": {
+    "basic_steady": [0.90, 1.10],
+    "standard_school": [1.00, 1.20],
+    "advanced": [1.15, 1.35],
+    "perform_burst": [1.40, 1.80]
+  },
+  "evidence_policy": "measure-before-tune; source-values-preserved; no-KING-substitution"
+}

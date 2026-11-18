@@ -1,0 +1,27 @@
+name: Original ES2 M15 Lengmei Static
+
+# GitHub Actions／自動測試：鎖定冷梅莊與梅影風的 Original ES2 證據邊界，避免擴充設定回寫原版。
+on:
+  workflow_dispatch:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths:
+      - '.github/workflows/original-es2-m15-lengmei-static.yml'
+      - 'scripts/test_lengmei_m15_static.sh'
+      - 'original_es2/data/m15_lengmei_mei_yingfeng.json'
+      - 'original_es2/characters/mei_yingfeng.md'
+  pull_request:
+    paths:
+      - '.github/workflows/original-es2-m15-lengmei-static.yml'
+      - 'scripts/test_lengmei_m15_static.sh'
+      - 'original_es2/data/m15_lengmei_mei_yingfeng.json'
+      - 'original_es2/characters/mei_yingfeng.md'
+
+jobs:
+  m15-lengmei-static:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v4
+      - name: Lengmei evidence regression／冷梅莊證據回歸
+        run: bash scripts/test_lengmei_m15_static.sh

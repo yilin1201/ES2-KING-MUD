@@ -48,16 +48,28 @@ ES2-KING 專案中文名稱統一使用「刑天」。歷史資料若出現「�
 
 待確認 Original ES2 中 `headless` 的：
 
-- Str 力量
-- Con 體魄
-- Dex 身法
-- Int 悟性
-- Wis 慧根
-- Cor 定力
+- str 臂力
+- cor 膽識
+- int 悟性
+- spi 靈性
+- cps 定力
+- dex 機敏
+- con 根骨
+- wis 慧根
 - 屬性生成公式
 - 種族 Bonus / Penalty
 
 不得使用 ES2-KING 的設計值反推 Original ES2。
+
+---
+
+## 4. 第三方資料索引（不在本原版考證檔保存數值）
+
+為避免把第三方重建資料與 Original ES2 證據混放，wolfer168 的刑天屬性、精氣神、攻防、護甲、裝備限制及職業等級資料，統一記錄於：
+
+`docs/research/THIRD_PARTY_CONTENT_INVENTORY_20261011.md`
+
+第三方資料僅供差異研究，尚未確認為 Original ES2。此檔案不以第三方數值補完任何 Original ES2 欄位。
 
 ---
 
@@ -112,7 +124,7 @@ ES2-KING 專案中文名稱統一使用「刑天」。歷史資料若出現「�
 
 - Original Race daemon / source file
 - 中文名稱在原始遊戲中的正式顯示
-- 六大 Attribute 公式
+- 八大 Attribute 公式
 - Kee / Gin / Sen / Force 公式
 - 特殊能力與 Command
 - 武器、職業、門派限制

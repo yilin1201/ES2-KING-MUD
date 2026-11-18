@@ -6,6 +6,7 @@ set -euo pipefail
 # upstream checkout of Annihilator's ES2 Mudlib + Neolith driver for testing.
 
 UPSTREAM_REPO="https://github.com/taedlar/es2_mudlib.git"
+ORIGINAL_ES2_COMMIT="${ORIGINAL_ES2_COMMIT:-cc45c06af4852380e5148dad3c9d53ff06854f2c}"
 WORKDIR="${1:-.runtime/original-es2}"
 
 if [[ -e "$WORKDIR" ]]; then
@@ -16,11 +17,21 @@ fi
 mkdir -p "$(dirname "$WORKDIR")"
 git clone --recurse-submodules "$UPSTREAM_REPO" "$WORKDIR"
 
+# Always test against the same pinned Original ES2 baseline as Dockerfile.
+# The default branch may contain newer .lpc files that are not part of the approved baseline.
+git -C "$WORKDIR" checkout "$ORIGINAL_ES2_COMMIT"
+git -C "$WORKDIR" submodule update --init --recursive
+ACTUAL_ORIGINAL_COMMIT="$(git -C "$WORKDIR" rev-parse HEAD)"
+[[ "$ACTUAL_ORIGINAL_COMMIT" == "$ORIGINAL_ES2_COMMIT" ]] || { echo "ERROR: Original ES2 commit mismatch: $ACTUAL_ORIGINAL_COMMIT" >&2; exit 1; }
+echo "Original ES2 pinned commit verified: $ACTUAL_ORIGINAL_COMMIT"
+
 # Original ES2 keeps account/login data and character/body data separately.
 # Prepare both persistent directory trees so a newly created account can be
 # saved and then recognized on the next login.
 mkdir -p "$WORKDIR/mudlib/data/login"/{a..z}
+mkdir -p "$WORKDIR/mudlib/data/login"/{0..9}
 mkdir -p "$WORKDIR/mudlib/data/user"/{a..z}
+mkdir -p "$WORKDIR/mudlib/data/user"/{0..9}
 
 # ES2-KING design decision: keep the Original source checkout intact as the
 # research baseline, but disable the historical anti-spam attribute penalty in
@@ -35,13 +46,13 @@ fi
 
 cat <<EOF
 Original ES2 source prepared at: $WORKDIR
-ES2-KING runtime persistence directories prepared: mudlib/data/login/a..z and mudlib/data/user/a..z
+ES2-KING runtime persistence directories prepared: mudlib/data/login/a..z,0..9 and mudlib/data/user/a..z,0..9
 ES2-KING runtime policy applied: ENABLE_ANTISPAM disabled
 
 Next build steps (Linux):
   cd $WORKDIR/neolith
-  cmake --preset linux -DBUILD_TESTING=OFF
-  cmake --build --preset dev-linux
+  cmake --preset linux-gcc -DBUILD_TESTING=OFF
+  cmake --build --preset dev-linux-gcc
 
 Then locate the built neolith executable and run from the ES2 repository root:
   ./neolith/<path-to-built-neolith> -f neolith.conf -c

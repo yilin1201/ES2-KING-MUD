@@ -1,0 +1,35 @@
+name: Original ES2 M19 Lifecycle
+
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths:
+      - 'original_es2/research/m19_lifecycle_*'
+      - 'scripts/test_m19_lifecycle_*'
+      - 'scripts/bootstrap_original_es2.sh'
+      - '.github/workflows/original-es2-m19-lifecycle.yml'
+  pull_request:
+    paths:
+      - 'original_es2/research/m19_lifecycle_*'
+      - 'scripts/test_m19_lifecycle_*'
+      - 'scripts/bootstrap_original_es2.sh'
+      - '.github/workflows/original-es2-m19-lifecycle.yml'
+  workflow_dispatch:
+
+jobs:
+  m19-lifecycle:
+    name: M19 角色生命週期證據驗證
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout／取得程式：把目前分支內容放入測試主機。
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v5
+      # Static Regression／靜態回歸：先驗證文件的證據分級與未知邊界。
+      - name: Static regression／執行生命週期靜態回歸
+        run: bash scripts/test_m19_lifecycle_static.sh
+      # Bootstrap／建立執行樹：取得未被 ES2-KING 內容污染的 Original 上游。
+      - name: Bootstrap Original ES2／建立乾淨上游執行樹
+        run: bash scripts/bootstrap_original_es2.sh
+      # Runtime Gate／實機證據閘門：逐項鎖定 Original 生命週期程式。
+      - name: Runtime evidence gate／執行生命週期實機證據閘門
+        run: bash scripts/test_m19_lifecycle_runtime_gate.sh .runtime/original-es2

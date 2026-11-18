@@ -1,0 +1,15 @@
+# M10 Original ES2 種族靜態基線／Static baseline
+# 欄位：race_id, 中文名, karma, gin, kee, sen, str, cps, int, spi, cor, dex, con, wis
+# 注意：八屬性是網站「初始屬性上限」，不是宣稱每次創角固定出生值。
+race_id	name_zh	karma	gin	kee	sen	str	cps	int	spi	cor	dex	con	wis
+human	人類	5	35	35	35	18	18	18	18	18	18	18	18
+headless	刑天	25	80	100	30	30	20	15	10	16	24	28	18
+yenhold	厭火	5	20	30	20	20	14	10	12	20	14	22	15
+yaksa	夜叉	35	140	70	70	25	25	20	25	20	25	25	25
+malik	巫首	30	70	40	100	11	11	30	30	28	25	15	25
+woochan	無腸	5	30	20	60	15	15	20	20	18	20	15	22
+jiaojao	焦僥	10	40	25	25	14	13	19	19	19	24	16	18
+dingling	釘靈	10	70	40	20	20	15	15	10	20	25	20	15
+ashura	阿修羅	30	80	80	80	25	40	15	25	10	20	20	20
+rainnar	雨師妾	25	40	30	70	9	9	22	24	20	13	13	28
+blackteeth	黑齒	3	35	25	10	25	15	15	10	15	20	20	10

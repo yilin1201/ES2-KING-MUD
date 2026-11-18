@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Full Game Journey／完整遊戲旅程前置閘門。
+# Public Race 與 Game Completion 分離；Test Character 必須來自 real Runtime save_object。
+REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+SOURCE_RUNTIME="${1:-$REPO_ROOT/m30/.runtime/es2-king}"
+FIXTURE="${2:-$REPO_ROOT/.runtime/game-completion-fixture/king}"
+DATA_ROOT="${3:-$REPO_ROOT/.runtime/game-completion-data}"
+DRIVER_BIN="${ES2_DRIVER_BIN:-$SOURCE_RUNTIME/neolith/out/build/linux/src/Debug/neolith}"
+
+test -x "$DRIVER_BIN" || { echo "GAME COMPLETION JOURNEY BLOCKED：缺少可執行 Neolith Driver；需在有本機 Runtime 的環境執行。" >&2; exit 2; }
+test -f "$FIXTURE/login/king.o" -a -f "$FIXTURE/user/king.o" || {
+  echo "GAME COMPLETION JOURNEY BLOCKED：缺少 real Runtime KING fixture。" >&2
+  echo "先由 test_m30_king_claim_e2e.sh 搭配 ES2_GAME_COMPLETION_FIXTURE_DIR 產生。" >&2
+  exit 2
+}
+
+bash "$REPO_ROOT/scripts/bootstrap_game_completion_character.sh" "$DATA_ROOT" "$FIXTURE"
+
+# Existing Gates／既有閘門：先確保完整旅程依賴的 Original + Expansion 介面仍存在。
+for gate in \
+  test_m21_world_runtime_gate.sh \
+  test_m22_npc_item_runtime_gate.sh \
+  test_m23_core_gameplay_runtime_gate.sh \
+  test_m24_data_integrity_runtime_gate.sh \
+  test_m25_release_candidate_runtime_gate.sh \
+  test_m26_king_admin_runtime_gate.sh \
+  test_m27_wuji_realm_runtime_gate.sh \
+  test_m28_martial_runtime_gate.sh \
+  test_m29_canon_runtime_gate.sh \
+  test_m30_alpha_runtime_gate.sh \
+  test_game_completion_quest_evidence.sh
+do
+  bash "$REPO_ROOT/scripts/$gate" "$SOURCE_RUNTIME"
+done
+
+# Full Driver Journey／完整驅動器旅程：介面閘門通過後，必須由同一個真正 Neolith
+# Session 串行驗證 NPC、經濟／商店、物品／裝備、戰鬥、技能與門派／拜師；Static Gate 不得冒充 Runtime PASS。
+ES2_DRIVER_BIN="$DRIVER_BIN" \
+bash "$REPO_ROOT/scripts/test_game_completion_full_driver_e2e.sh" "$SOURCE_RUNTIME" "$FIXTURE"
+
+echo "GAME COMPLETION JOURNEY PASS：real Runtime Test Character、M21-M30 gates 與單一 Full Driver Journey 全部通過。"

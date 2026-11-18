@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "purpose": "ES2M-first map source provenance; snapshot is a working integration copy, not asserted byte-identical to upstream",
+  "primary_source": {
+    "repository": "wolfer168/es2-webmud",
+    "branch": "main",
+    "commit": "ee12e717e2d3d88728607a01c2c2f1d634bf9616",
+    "topology_path": "source/upstream/mudlib/d/lee/LEE_TOPOLOGY.json",
+    "topology_blob_sha": "22589002f4bfc18ed86381a1bf52f3533823471e"
+  },
+  "auxiliary_source": {
+    "repository": "ES2-KDS",
+    "policy": "cross-check only; not authoritative over ES2M"
+  },
+  "king_snapshot": {
+    "path": "es2m_snapshot/mudlib/d/lee/",
+    "listed_file_count": 81,
+    "content_parity": "NOT_YET_PROVEN_BY_PER_FILE_HASH"
+  },
+  "policy": "ES2M topology graph is authoritative for expected exits; LPC room files are implementation and may contain stale exits; repair KING snapshot only; mark KING-only routes as reconstruction/expansion.",
+  "known_repairs": [
+    "square_s.south -> pawnshop",
+    "square_c.east -> watermelon_n1",
+    "watermelon_n1.west -> square_c",
+    "pawnshop.north -> square_s",
+    "watermelon_s3.east -> creek",
+    "creek.west -> watermelon_s3"
+  ],
+  "runtime_status": "NOT_YET_VERIFIED"
+}
