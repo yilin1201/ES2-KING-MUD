@@ -55,10 +55,20 @@ varargs mixed affirm_merchandise (object customer, string item_name, int amount)
 }
 
 private void handover (object customer, mixed item, int amount) {
+    int refund;
+
     on_service = 0;
     if (!customer || environment(customer)!=environment()) {
+        // 延遲送餐期間客人離房：退回與 buy.c 相同的來源商品單價，不能收錢卻不交貨。
+        if (customer) {
+            refund = item->query("value") * amount;
+            if (refund > 0) {
+                customer->refund_money(refund);
+                tell_object(customer, "店小二未能送達，已將貨款退還給你。\\n");
+            }
+        }
         command ("say 咦﹖剛剛那位客倌人呢﹖怎麼付了錢人又不見了 ...");
-        say ("店小二把端出來的" + item->name() + "又端了回去。\n");
+        say ("店小二把端出來的" + item->name() + "又端了回去。\\n");
         return;
     }
     command ("say 客倌﹐您的" + item->name() + "來啦﹗");
