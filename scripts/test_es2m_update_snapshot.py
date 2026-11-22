@@ -43,7 +43,9 @@ class TestES2MUpdateSnapshot(unittest.TestCase):
                       (SNAPSHOT / "cmds/std/buy.c").read_text(encoding="utf-8"))
 
     def test_compatible_martial_engine_and_soldier_runtime_match_es2m(self):
-        # ES2M-first policy：這兩個已確認相容的 Runtime 檔案須與保存的 ES2M 來源逐字一致。
+        # ES2M-first policy：以本次匯入的最新唯讀來源鏡像比對 Runtime，
+        # 不使用較舊的歷史 es2m_snapshot，避免把已更新的上游檔案誤判為 KING 差異。
+        source_root = ROOT / "es2m_source_mirror/mudlib"
         pairs = [
             ("std/martial_art.c",
              ROOT / "es2_king_expansion/runtime/mudlib/std/martial_art.c"),
@@ -54,35 +56,15 @@ class TestES2MUpdateSnapshot(unittest.TestCase):
         ]
         for relative, runtime_path in pairs:
             with self.subTest(path=relative):
-                snapshot_path = SNAPSHOT / relative
-                self.assertTrue(snapshot_path.is_file(), f"ES2M snapshot 缺少 {relative}")
+                source_path = source_root / relative
+                self.assertTrue(source_path.is_file(), f"最新 ES2M source mirror 缺少 {relative}")
                 self.assertTrue(runtime_path.is_file(), f"KING Runtime overlay 缺少 {relative}")
-                source_text = snapshot_path.read_text(encoding="utf-8")
+                source_text = source_path.read_text(encoding="utf-8")
                 runtime_text = runtime_path.read_text(encoding="utf-8")
-
-                # 僅正規化兩項已確認的 KING 專屬差異；其餘內容仍要求逐字一致。
-                # martial_art.c：KING 技能代碼已將 sanmeendo 更名為 ksanmando。
-                if relative == "std/martial_art.c":
-                    source_text = source_text.replace(
-                        'string art_id;          // 技能代碼，例如 "sanmeendo"',
-                        'string art_id;          // 技能代碼，例如 "ksanmando"',
-                    )
-                    # ES2M 最新版只將文件註解中的減號字元正規化；不改變任何 LPC 執行邏輯。
-                    source_text = source_text.replace(
-                        "武學之道 = (lv − mm_minus)",
-                        "武學之道 = (lv - mm_minus)",
-                    )
-                # soldier.c：KING 已移除單純的升級提示訊息，不改變升級邏輯。
-                elif relative == "daemon/class/soldier.c":
-                    source_text = source_text.replace(
-                        '    tell_object(ob, HIY "常年的軍旅操練讓你的精氣神更加充沛！\\n" NOR);\n\n',
-                        "",
-                    )
-
                 self.assertEqual(
                     source_text,
                     runtime_text,
-                    f"KING Runtime 的 {relative} 除已核准的 KING 專屬差異外，必須與 ES2M 快照一致。",
+                    f"KING Runtime 的 {relative} 必須與本次最新 ES2M source mirror 逐字一致。",
                 )
 
     def test_martial_engine_dependency_contract_is_visible(self):
