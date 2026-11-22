@@ -1,5 +1,5 @@
 name: Sync ES2M Files Into KING Overlay
-# 2026-11-18：固定同步使用者指定的 ES2M 最新版 wolfer168/es2-webmud commit d0666da2；KING 僅讀取來源並單向整合。
+# 2026-11-22：固定同步使用者指定的 ES2M 最新版 wolfer168/es2-webmud commit d0666da2；KING 僅讀取來源並單向整合。
 
 on:
   push:
@@ -41,9 +41,9 @@ jobs:
         run: |
           set -euo pipefail
           git clone --no-checkout https://github.com/wolfer168/es2-webmud.git /tmp/es2m-latest
-          git -C /tmp/es2m-latest checkout --detach d0666da2cb48104eaa71c824a3bd030ede5fbf7d
+          git -C /tmp/es2m-latest checkout --detach 62683cd9d72e4000a8a82b44c30ad0def60bd938
           ES2M_COMMIT=$(git -C /tmp/es2m-latest rev-parse HEAD)
-          test "$ES2M_COMMIT" = "d0666da2cb48104eaa71c824a3bd030ede5fbf7d"
+          test "$ES2M_COMMIT" = "62683cd9d72e4000a8a82b44c30ad0def60bd938"
           echo "commit=$ES2M_COMMIT" >> "$GITHUB_OUTPUT"
           test -d /tmp/es2m-latest/source/upstream/mudlib
           mkdir -p es2m_source_mirror/mudlib
