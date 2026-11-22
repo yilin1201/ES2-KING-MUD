@@ -7,6 +7,7 @@ import hashlib
 
 ROOT = Path(__file__).resolve().parents[1]
 SNAPSHOT = ROOT / "es2m_snapshot/mudlib"
+SOURCE_MIRROR = ROOT / "es2m_source_mirror/mudlib"
 OVERLAY = ROOT / "es2_king_expansion/runtime/mudlib"
 
 
@@ -35,7 +36,7 @@ def main() -> None:
     args = parser.parse_args()
 
     # 狻猊步法：只在實際閃避成功後，由戰鬥系統顯示 defend_message。
-    steps_path = SNAPSHOT / "daemon/skill/tiger-steps.c"
+    steps_path = SOURCE_MIRROR / "daemon/skill/tiger-steps.c"
     steps = read(steps_path)
     require(steps.count('"$n') == 5, "狻猊步法應使用最新五句閃避成功敘述。")
     require('set_temp("defend_message"' in steps, "狻猊步法沒有交由戰鬥系統在閃避成功後顯示敘述。")
@@ -109,7 +110,7 @@ def main() -> None:
                     "daemon/skill/tiger-force.c",
                     "daemon/skill/sanmeendo.c",
                     "d/oldpine/npc/kao_shen.c"):
-            expected = SNAPSHOT / rel
+            expected = (SOURCE_MIRROR if rel == "daemon/skill/tiger-steps.c" else SNAPSHOT) / rel
             actual = runtime / rel
             require(actual.is_file(), "生成 Runtime 缺少 " + rel)
             if rel == "d/oldpine/npc/kao_shen.c":
