@@ -10,6 +10,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--runtime", type=Path, help="可選：檢查已套用 Expansion 的 Runtime 根目錄")
 ARGS = parser.parse_args()
 SNAPSHOT = ROOT / "es2m_snapshot/mudlib"
+SOURCE_MIRROR = ROOT / "es2m_source_mirror/mudlib"
 FROZEN_BASELINE = ROOT / "es2m_snapshot/king_frozen_baseline"
 OVERLAY = ROOT / "es2_king_expansion/runtime/mudlib"
 RUNTIME = ARGS.runtime / "mudlib" if ARGS.runtime else None
@@ -21,9 +22,10 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
 
 errors = []
-# 五門武學來源與 Expansion 覆蓋檔必須逐位元一致，避免證據與執行候選分叉。
+# 新增武學以本次最新唯讀來源鏡像為準；歷史 es2m_snapshot 只保留舊版考證，不可當成最新同步來源。
+# 最新 ES2M source mirror 與 KING Expansion overlay 必須逐位元一致，避免證據與執行候選分叉。
 for name in SKILL_FILES:
-    source = SNAPSHOT / "daemon/skill" / name
+    source = SOURCE_MIRROR / "daemon/skill" / name
     overlay = OVERLAY / "daemon/skill" / name
     if not source.is_file() or not overlay.is_file():
         errors.append(f"缺少來源或 Expansion 技能檔：{name}")
