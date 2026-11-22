@@ -2,10 +2,10 @@
   "purpose": "ES2M 最新原始 Mudlib 唯讀鏡像；不得直接視為 Original ES2，也不直接取代 KING 專屬資料。",
   "source_repository": "wolfer168/es2-webmud",
   "source_branch": "main",
-  "source_commit": "d0666da2cb48104eaa71c824a3bd030ede5fbf7d",
+  "source_commit": "62683cd9d72e4000a8a82b44c30ad0def60bd938",
   "source_path": "source/upstream/mudlib/",
   "mirror_path": "es2m_source_mirror/mudlib/",
-  "file_count": 2238,
+  "file_count": 2259,
   "hash_algorithm": "SHA-256",
   "files": [
     {
@@ -40,8 +40,8 @@
     },
     {
       "path": "adm/daemons/chard.c",
-      "size": 15701,
-      "sha256": "d6a0e87965caa1c2fddae2c6068229cc4a17346413707cf3cf99b9cbaa162a40"
+      "size": 17323,
+      "sha256": "d30e57e808bcf9b65da2163007187ee1f3f356ba66fc03487357081c3560d7c9"
     },
     {
       "path": "adm/daemons/chinesed.c",
@@ -155,8 +155,8 @@
     },
     {
       "path": "adm/guild/guildhall.c",
-      "size": 784,
-      "sha256": "610b004a7efeceb76324c74e5fa6f4ecd49e32744a03bfab1c5d6abcddf1d32b"
+      "size": 808,
+      "sha256": "481abfd6b5ed64076bbe30ec29959872c860eb4c9c68a1a61e7b007e40abb9b0"
     },
     {
       "path": "adm/guild/meetingroom.c",
@@ -334,6 +334,11 @@
       "sha256": "004681df30e4af13799720bfbed8d255cef1003a4225b6bcae8c6a24f30ed218"
     },
     {
+      "path": "cmds/arch/devourlog.c",
+      "size": 6092,
+      "sha256": "a82cc470cfc984e879d176fdc20762245d8e3dfbfbbbb55b360e44b73700c57f"
+    },
+    {
       "path": "cmds/arch/force.c",
       "size": 1112,
       "sha256": "cbaf38ffa1d1df726bb8793431306a9d3c1a4608c16fcee40c4dcb083ee988f0"
@@ -490,8 +495,8 @@
     },
     {
       "path": "cmds/std/buy.c",
-      "size": 2685,
-      "sha256": "f203898d6f8298a80aa5977cbff84d0914f408bb83d58a544ad732a881760ebf"
+      "size": 2793,
+      "sha256": "924b724bc9dc7a09b45d7c819e96ebebac0b819e5b724102d512686ed59542a8"
     },
     {
       "path": "cmds/std/cast.c",
@@ -520,8 +525,8 @@
     },
     {
       "path": "cmds/std/conjure.c",
-      "size": 3198,
-      "sha256": "2373036ec007179c91b38c7ba360279f084d5c0692740292b17c7d759d438ab9"
+      "size": 3200,
+      "sha256": "f5be84e1cca929b33496ca492714ee6e35179895102b6fd402dae4f4ca467772"
     },
     {
       "path": "cmds/std/convert.c",
@@ -565,13 +570,18 @@
     },
     {
       "path": "cmds/std/fight.c",
-      "size": 3726,
-      "sha256": "29be8bec58717a9ac5278bd233bf7991e9fdfc227dad1129a08af9950290e528"
+      "size": 3933,
+      "sha256": "89b31c2788656d43fdb1cba8aff94f9e8351988a4920a12ccac94265f41badf6"
     },
     {
       "path": "cmds/std/fill.c",
       "size": 3846,
       "sha256": "1ff975041a1098b3e192823e518b9f6e3f3fb3df18d262d4ab8d62284ac96cd5"
+    },
+    {
+      "path": "cmds/std/fish.c",
+      "size": 4260,
+      "sha256": "cc1f6d45b9c5da897b6304788946d82c8f3ccb5fd042082fc79f6d2946ec28df"
     },
     {
       "path": "cmds/std/follow.c",
@@ -585,8 +595,8 @@
     },
     {
       "path": "cmds/std/give.c",
-      "size": 3561,
-      "sha256": "47bcbbf879442d3481fca9d862619821be876da3a711f45c768527658c5ac5ac"
+      "size": 4330,
+      "sha256": "e40054e3fb7e0fc364382ee86c56d4d7349a055c44db8970d28d375dce08cfa5"
     },
     {
       "path": "cmds/std/go.c",
@@ -600,8 +610,8 @@
     },
     {
       "path": "cmds/std/halt.c",
-      "size": 1113,
-      "sha256": "30c55d4815848a14f7a9ac45bf69fcdcbf1b9256f001e80da2790f13e2a1c177"
+      "size": 1323,
+      "sha256": "bf3ae65bd4f1a16725495f734379b85cd094b44638eaaabb5fd4137143f09798"
     },
     {
       "path": "cmds/std/identify.c",
@@ -635,8 +645,8 @@
     },
     {
       "path": "cmds/std/perform.c",
-      "size": 2352,
-      "sha256": "504bea01884c7ecc8e96f3f04f388375944417b9ea5a61af896f1de1c9d759eb"
+      "size": 2863,
+      "sha256": "09aa397d23bb83b61d573531605229fa312ed4e1c167cbfc0bcda50621b0dd29"
     },
     {
       "path": "cmds/std/prepare.c",
@@ -2619,6 +2629,11 @@
       "sha256": "49ab13af253652ef0a1535fa925650f201ef78df7772de8e1a9fda2b088eaa6b"
     },
     {
+      "path": "custom/item/ancient_bag.c",
+      "size": 796,
+      "sha256": "ba95f42252d8292efcc141c95d99357d7485b62dbb084ae84a24b16092feee33"
+    },
+    {
       "path": "custom/item/dragon_skin_bag.c",
       "size": 572,
       "sha256": "42443040e0400fd2bfa8eb877f6fc1cd6ec1c63a8e171accabbb3d1e537cde85"
@@ -2642,6 +2657,16 @@
       "path": "custom/item/scroll/yin.c",
       "size": 439,
       "sha256": "7d3378f5d113eb45e62eb9338bf1c817b62159beb9babf2831c5bc3d74c83836"
+    },
+    {
+      "path": "custom/item/super_skin.c",
+      "size": 1323,
+      "sha256": "7c7d20712cc1aaedcf8003cfb3ada9d4fe01db1505ef7a01df6ef73794c84d43"
+    },
+    {
+      "path": "custom/item/super_skin_water.c",
+      "size": 903,
+      "sha256": "16ad95ecb1723d7a32f8b2c667159afd4edca55f9161b68f07d9b65e849c6b92"
     },
     {
       "path": "custom/legacy_npc/abbot_wu_nian.c",
@@ -2700,8 +2725,8 @@
     },
     {
       "path": "custom/legacy_npc/cheng_huai.c",
-      "size": 1200,
-      "sha256": "b2f97b2769600aa145cb3cc417e74921f7510e9b18a0c1f6c32170d9fc80700f"
+      "size": 11668,
+      "sha256": "e82c02835810795dc57c436a47d146be7d310f2efe4286f449708f18677b7a47"
     },
     {
       "path": "custom/legacy_npc/chin_chao_tian.c",
@@ -2715,8 +2740,8 @@
     },
     {
       "path": "custom/legacy_npc/chu_xang_when.c",
-      "size": 1811,
-      "sha256": "10f20ff75a7889a338b8fa6077cb45329c45975efc701bd89daa482b9a9d4a55"
+      "size": 2079,
+      "sha256": "ecbf95c44603a64b24d48a8a05b03419ee7dba0ec838b4ff926f28acb27b95bb"
     },
     {
       "path": "custom/legacy_npc/dong_fang_gu_ming.c",
@@ -2945,8 +2970,8 @@
     },
     {
       "path": "custom/legacy_npc/liuye_the_master_of_grimace.c",
-      "size": 6267,
-      "sha256": "12ae98d80531bedfa79586dfd3d882faa7bf00d97529099e7b0b6d2a5a479a3d"
+      "size": 9150,
+      "sha256": "b777adae6c14102e5b7981fe07c62c758364b8fd173982972bf64600c0268852"
     },
     {
       "path": "custom/legacy_npc/lu_fei.c",
@@ -3010,8 +3035,8 @@
     },
     {
       "path": "custom/legacy_npc/old_taoist.c",
-      "size": 4164,
-      "sha256": "e2bcc89f6833fc1fea210fbd483d625c5cd9a7e8fa234c5eca3078c1f9e7e2af"
+      "size": 4432,
+      "sha256": "c606eb92cf889456b16845d3030edd4ac02694e171c563a2c95725dfb14ee68b"
     },
     {
       "path": "custom/legacy_npc/ou_yan_wu_ji.c",
@@ -3100,8 +3125,8 @@
     },
     {
       "path": "custom/legacy_npc/taoist_master.c",
-      "size": 1510,
-      "sha256": "31dcf9820aca762d9445ab786a08894d82a6a54b026fb8095221b2dcf3ea71c2"
+      "size": 1775,
+      "sha256": "f27e0e79528e82dd76011d52504128b998c219818e42d9a54d4850e26f8318e6"
     },
     {
       "path": "custom/legacy_npc/tian_long.c",
@@ -3210,8 +3235,8 @@
     },
     {
       "path": "custom/legacy_npc/yu_lan_jian_yi.c",
-      "size": 4120,
-      "sha256": "fcccb122faae7319c8817a2df78d0c613a0025f4ced6efb8e1d126d72e68bde0"
+      "size": 4495,
+      "sha256": "282c5747a068fff723cbb6b3e3f38176ef289e7063c2aa5e14a27616396194fb"
     },
     {
       "path": "custom/legacy_npc/yu_pingyin.c",
@@ -3225,8 +3250,8 @@
     },
     {
       "path": "custom/legacy_npc/yu_tieshan.c",
-      "size": 6209,
-      "sha256": "d50e33686a75163c4bb02b001dcbf77dc7275701832e581ca7cf1d5e13e4af2d"
+      "size": 6796,
+      "sha256": "b300c152eb6e385efaaf8b66f980459f0310e858ae5fe49568374be299e42de1"
     },
     {
       "path": "custom/legacy_npc/yu_wen.c",
@@ -3250,8 +3275,8 @@
     },
     {
       "path": "custom/legacy_npc/zhao_hong_chun.c",
-      "size": 1322,
-      "sha256": "b89ba612affbfbeaeace4849fdb895f8a60e2b5022600f6978602d39dd9da24a"
+      "size": 2573,
+      "sha256": "efec9caa3a9884e6c15311e24db16e9943ce5518602e92455a24c8844a0e425b"
     },
     {
       "path": "custom/legacy_npc/zhao_xiao_jiu.c",
@@ -3605,8 +3630,8 @@
     },
     {
       "path": "custom/weapon/blade/white_blade.c",
-      "size": 978,
-      "sha256": "591e96310a25477afb776c1a2f8ff4b2cf9015909f80dcb0a6a980c107d089ea"
+      "size": 1019,
+      "sha256": "406485994724b103c831a9e30825608c9942dac9ada3a3e3f77caf0032a97afe"
     },
     {
       "path": "custom/weapon/blade/wind_power_blade.c",
@@ -4370,8 +4395,8 @@
     },
     {
       "path": "custom/weapon/sword/sword_of_raven.c",
-      "size": 1029,
-      "sha256": "9dda77fdb84605ff4ea9b39c3547bd59e700f851d141616832fcc351e2ed6f61"
+      "size": 1070,
+      "sha256": "75e7271b52dd239a23694168cd6b1f2f3e54a0f1d1ced81561971f0c05178fb9"
     },
     {
       "path": "custom/weapon/sword/sword_of_redrune.c",
@@ -4405,8 +4430,8 @@
     },
     {
       "path": "custom/weapon/sword/yiyoung_sword.c",
-      "size": 873,
-      "sha256": "0e919ddded71b0c9c811f39af2fe7481780b9ad1a139ff2d40f92b904d25db12"
+      "size": 914,
+      "sha256": "aebdfdd074f4cb0756149c9d47ff50b66225cb3d5efa6607107f9173537079b9"
     },
     {
       "path": "custom/weapon/whip/angry_whip.c",
@@ -4489,6 +4514,11 @@
       "sha256": "012dc359cfab07cdced862fced1131b3d48adb09eabd16ab905bfcd9dfa93148"
     },
     {
+      "path": "custom/wizroom/w/windstory/obj/stone_stake.c",
+      "size": 605,
+      "sha256": "ed92ffe3fdbcc1f300ead1437cd8cd2f383802755918dbf37f7fbe443d1cf2ab"
+    },
+    {
       "path": "custom/wizroom/w/windstory/room/dragon_inn.c",
       "size": 2276,
       "sha256": "d0f6e0f65e9d3194948d367ed9a153f66ccabedb53f8bc863b18d54449a9d3ed"
@@ -4505,8 +4535,8 @@
     },
     {
       "path": "custom/zhenwu/npc/lu_xinien.c",
-      "size": 3068,
-      "sha256": "d02aadb8bbd582cac53365b7b3f291e9bfddd77257444ac592e2da7f96df5b9a"
+      "size": 3357,
+      "sha256": "5c6ca2f28221936473ca8d717418de74351c837ab41854d16af5c6f463f3a0db"
     },
     {
       "path": "custom/zhenwu/npc/mee_pei.c",
@@ -4685,8 +4715,8 @@
     },
     {
       "path": "d/baihua/npc/kao_yeu.c",
-      "size": 1182,
-      "sha256": "2543ed2058f8bd00d8fe4fc16dab393b7fb0e37fed664956316a6a5ddbb0f0d5"
+      "size": 3226,
+      "sha256": "111ce9faa031cd4c3a0a9c23ca446b9e789a10146b1cf60a883dd66c464c6685"
     },
     {
       "path": "d/baihua/npc/nan_kong_hen.c",
@@ -4695,8 +4725,8 @@
     },
     {
       "path": "d/baihua/npc/old_wang.c",
-      "size": 501,
-      "sha256": "54e94dfada0bf61270bb0440b5b68f622fed5000d2fb8968fc8f1c9eca292ccc"
+      "size": 8338,
+      "sha256": "393092d8113a3cd429aa293ef7775d94532c24b2485a94b68331877c5dda6cee"
     },
     {
       "path": "d/baihua/npc/san.c",
@@ -4729,6 +4759,16 @@
       "sha256": "595695779c9076ff7de47e5ac260aafa9b5fb68ee8b4bc12e85a2b14fa34b931"
     },
     {
+      "path": "d/baihua/obj/ling_tzi.c",
+      "size": 478,
+      "sha256": "cc27519dfce33c8c5e561db4fb88426990107ec3d030036a37342cdb32d7b013"
+    },
+    {
+      "path": "d/baihua/obj/sister_letter.c",
+      "size": 734,
+      "sha256": "9bc343284440fc72570aaae8f878b696ec2a49af218ca92b58589fd9074e4811"
+    },
+    {
       "path": "d/baihua/platform.c",
       "size": 724,
       "sha256": "2e25180cb051e4b25017834732938ba229e72cf2ace6d4e666764ce432299426"
@@ -4747,6 +4787,11 @@
       "path": "d/baihua/school.c",
       "size": 633,
       "sha256": "223a7afca72b03b24c1d68aba8e9c85ec04db9a915f374389f312e4403b6fc3a"
+    },
+    {
+      "path": "d/baihua/skypike_quest.h",
+      "size": 3163,
+      "sha256": "5ba573afcac989ccd1ef945f29213a5c33f884109a709efd684f3abaa63a0322"
     },
     {
       "path": "d/baihua/stone_road1.c",
@@ -4775,8 +4820,8 @@
     },
     {
       "path": "d/baihua/wang_home.c",
-      "size": 668,
-      "sha256": "cedceb7ef59e2b196d8739f75767e8e301323f1ce5bcd1cb04babb808665e53b"
+      "size": 1200,
+      "sha256": "7b42c431a66052e1b93315ddcfe9a57de31a8b509fe62e63c34673d37bf64891"
     },
     {
       "path": "d/baobao/armory.c",
@@ -4920,13 +4965,13 @@
     },
     {
       "path": "d/fengcheng/npc/hua_zi_yi.c",
-      "size": 4760,
-      "sha256": "c8bb99e6b05c4142536f2180775e8d2f0d21ef669cfc2ce473541d52db3557f8"
+      "size": 4545,
+      "sha256": "620b0b365032b5d8a19d26c13828cc5390c7a4511a291a3419e0046fb78a7b1d"
     },
     {
       "path": "d/fengcheng/npc/seller.c",
-      "size": 947,
-      "sha256": "55f3064cec02f66a72b4b46e292d201c4d4ba756798b440e90d15fa965c7dc7d"
+      "size": 1007,
+      "sha256": "fda1a54ae0ba566804f3035cee1a10c77534deae2e7f8311630873bec37f51af"
     },
     {
       "path": "d/fengcheng/npc/waiter.c",
@@ -5125,8 +5170,8 @@
     },
     {
       "path": "d/lee/creek.c",
-      "size": 700,
-      "sha256": "88b4216ced04ac87f9dba8c309b07d9b14023d354cd3705e4fc6beb899d74e36"
+      "size": 872,
+      "sha256": "33db9341cb2b2eccc339c0592a611fe62f708c054ef609bc02304edcd2359f03"
     },
     {
       "path": "d/lee/entrance_s.c",
@@ -5250,8 +5295,8 @@
     },
     {
       "path": "d/lee/npc/lee_zhong.c",
-      "size": 995,
-      "sha256": "4bf64b787c307edd1fcf3b035a4e84abb00208664695d8b07cfb69bd5639dcfd"
+      "size": 1059,
+      "sha256": "3324540800eb1b005fe04d55965711ff1966a423889ab55f4c1aee6488504597"
     },
     {
       "path": "d/lee/npc/li_ban_xian.c",
@@ -5405,18 +5450,18 @@
     },
     {
       "path": "d/lee/riverside_n1.c",
-      "size": 778,
-      "sha256": "b7e232cfaa309ecf556863f4c9d402185a67621fd296f1e80cce35ccb836b0c4"
+      "size": 953,
+      "sha256": "dbc1506826e94b84ba85bf1649db867e49fe9e1c7d142fd980acfce193e7edb6"
     },
     {
       "path": "d/lee/riverside_n2.c",
-      "size": 667,
-      "sha256": "3f121f092d988c79da641be40811ff2161b715a85934146e5586504bcae032f6"
+      "size": 845,
+      "sha256": "c406b626e5d8481ef6f385f45311ec51410a77d977fe6be2bdcd2c94b9599e45"
     },
     {
       "path": "d/lee/riverside_s.c",
-      "size": 851,
-      "sha256": "d8c23da6f32d1dddb85f883048306d491c861fa031f246ffef08aae50e83ab60"
+      "size": 1041,
+      "sha256": "1a800df8fef2232fe3ac0706db29555c1ed03bad3da1fbb1e37bcdd5b3e2e9b9"
     },
     {
       "path": "d/lee/school.c",
@@ -5815,8 +5860,8 @@
     },
     {
       "path": "d/oldpine/npc/seller.c",
-      "size": 884,
-      "sha256": "2f5b23cadc3676f247aaf1fd43cfbcb3ed8c04d9f60bb645e15e2823e9f1c703"
+      "size": 948,
+      "sha256": "40aa137cda60ec873da21c0fc282994307540848f23f05047d939c9a0448fe54"
     },
     {
       "path": "d/oldpine/npc/squirrel.c",
@@ -6080,8 +6125,8 @@
     },
     {
       "path": "d/qiaoyin/npc/crone.c",
-      "size": 2158,
-      "sha256": "ef8b54f823a9f9c7d19fa389f73fb0929d7fe0ea3293458afacf05f6dd2018d2"
+      "size": 2407,
+      "sha256": "81516e3e4be9b6c8f2ebd98951aa1965997e19a86c21fcce6431653b82410a95"
     },
     {
       "path": "d/qiaoyin/npc/doo_yeng.c",
@@ -6115,8 +6160,8 @@
     },
     {
       "path": "d/qiaoyin/npc/old_ho.c",
-      "size": 1178,
-      "sha256": "86f4c7f4804d787d09758f5318bb332e5514cc43d540a9e486ef701d1cf12bf3"
+      "size": 1242,
+      "sha256": "db0e48318efa98317c110e69d21bd21f3340bef9f51cb9665841ec91c352fb79"
     },
     {
       "path": "d/qiaoyin/npc/oldman.c",
@@ -6415,8 +6460,8 @@
     },
     {
       "path": "d/shuiyue/waterfall.c",
-      "size": 1361,
-      "sha256": "7006e165029b8176547c58d580b33cebf7ef33d4e812e084ea4e0474a4a498f5"
+      "size": 1532,
+      "sha256": "fcb8cebe0a32272c0943ad71365819410cb43e87cd87f37c3af8865bc2a88019"
     },
     {
       "path": "d/shuiyue/woods.c",
@@ -6450,8 +6495,8 @@
     },
     {
       "path": "d/snow/egate.c",
-      "size": 747,
-      "sha256": "a205cd8d73dfe33708397272b3dba3c0fc4c6f1e50053e82373efa4d77e86abb"
+      "size": 928,
+      "sha256": "f8ad526029ad55dd58b5e24a17226ab71c4086a3bca4eb991911da11fffd8115"
     },
     {
       "path": "d/snow/epath.c",
@@ -6525,8 +6570,8 @@
     },
     {
       "path": "d/snow/npc/alchemist.c",
-      "size": 5368,
-      "sha256": "9b4bd403590f60c29ca32375ce7d51d9da88577cbb4aaf2932f7e09e89990471"
+      "size": 6350,
+      "sha256": "831b374de884dc66eb276642d6b11d99625572b7ed45b33ee5ba10b9c5bc5862"
     },
     {
       "path": "d/snow/npc/child.c",
@@ -6560,8 +6605,8 @@
     },
     {
       "path": "d/snow/npc/gammer.c",
-      "size": 8692,
-      "sha256": "25bd988acb99ef9d7ebff394a2d2a03dbc49ca2bd37ef20f8f279b646a9ee5d5"
+      "size": 8971,
+      "sha256": "adee82cbb65090288aa4c09c3bbddab81d8b651dbd86c0ab0e1603d6533d0262"
     },
     {
       "path": "d/snow/npc/garrison.c",
@@ -6570,8 +6615,8 @@
     },
     {
       "path": "d/snow/npc/girl.c",
-      "size": 2988,
-      "sha256": "508de843998ac11b4006c5f0c8e096cff226807cb4e6c4bc4b684013362fad5a"
+      "size": 3241,
+      "sha256": "f9dbc9beba1e1627cec0a3d0ddb5c86c73b48849b39fa3b6c177a43f3cb7c1ad"
     },
     {
       "path": "d/snow/npc/guard.c",
@@ -6760,8 +6805,8 @@
     },
     {
       "path": "d/snow/npc/smith.c",
-      "size": 1816,
-      "sha256": "b86f3e9d4eb6aeb1fa54bada5603dcfff8b92f0dedfd97546bf0f383118d830b"
+      "size": 2066,
+      "sha256": "c55313e940d274031a63c9813b60f737b04ec244519fba42494c1b80a47548b7"
     },
     {
       "path": "d/snow/npc/teacher.c",
@@ -6780,8 +6825,8 @@
     },
     {
       "path": "d/snow/npc/yu.c",
-      "size": 2829,
-      "sha256": "f54af126381b028b311093de4cf20aa7f6205df9e8c961b538a44667e2ea7079"
+      "size": 3134,
+      "sha256": "ae3771095ea50a5d615c08f63e159d69154dde65479893785fcc5763f1189d3d"
     },
     {
       "path": "d/snow/nstreet1.c",
@@ -6810,8 +6855,8 @@
     },
     {
       "path": "d/snow/riverbank.c",
-      "size": 536,
-      "sha256": "f4d9a1a543bcc59249a5f1ee2c8518d15e0134a525f2d2512b3d60feabad4b23"
+      "size": 726,
+      "sha256": "112cee41ddfce82de5d0701b6b25c803c7f7ef3750830769fb09179fe37d42ab"
     },
     {
       "path": "d/snow/ruin1.c",
@@ -7085,8 +7130,8 @@
     },
     {
       "path": "d/swaylan/buxuan/pond.c",
-      "size": 597,
-      "sha256": "77660bf09b3f7a5ae7963e02e20b88e2210cadf79e797a61e4a7989bcedc062a"
+      "size": 784,
+      "sha256": "13e0dbbd4d6fb47917ab82546b6e7c45f1f61b3023fae12ee371839ea9c39f10"
     },
     {
       "path": "d/swaylan/buxuan/residence.c",
@@ -7175,8 +7220,8 @@
     },
     {
       "path": "d/swaylan/ferry.c",
-      "size": 617,
-      "sha256": "987768e53bcfdbfe7112dadbd1d75b4667d7d1def0eb23bac1292c8f43f3bf4a"
+      "size": 804,
+      "sha256": "cf098b88fa6a87abd4683cdfcafaca91f1c10226ca744ade59af8dd6d8f188da"
     },
     {
       "path": "d/swaylan/forest/chamber.c",
@@ -7220,8 +7265,8 @@
     },
     {
       "path": "d/swaylan/forest/npc/bandit_captain.c",
-      "size": 1446,
-      "sha256": "3086a85f39aa36c4e1adda33bbae2770eb6a8aeaa42980639e113da4ac414cd0"
+      "size": 6673,
+      "sha256": "2cd1d855d6a508e15c5afcfec6addc20e798ffbf8e94045873ce3640f09a4ff1"
     },
     {
       "path": "d/swaylan/forest/npc/bandit_chief.c",
@@ -7830,8 +7875,8 @@
     },
     {
       "path": "d/wutang/city_god_temple.c",
-      "size": 715,
-      "sha256": "6b875c620480bb4c57fc30f0feacf7c1e8bf3c552b266d3d0a80c3c653617bc4"
+      "size": 751,
+      "sha256": "110822373810be8d02e09c44b0c2409ea4c66b6389a7f9d424e921a0fe6f41a4"
     },
     {
       "path": "d/wutang/clearing.c",
@@ -7900,8 +7945,8 @@
     },
     {
       "path": "d/wutang/ferry_dock.c",
-      "size": 1068,
-      "sha256": "a4b9f353082ad2a837afcdcbc2fb6dc3de4c92997b145df36964a78c345ee72e"
+      "size": 1285,
+      "sha256": "f694c1609dc4adc268b1206a033c29dc70d863e3455015408c29dc7230265a61"
     },
     {
       "path": "d/wutang/field1.c",
@@ -8045,8 +8090,8 @@
     },
     {
       "path": "d/wutang/npc/jeweller.c",
-      "size": 959,
-      "sha256": "f3fa186c19454e92d4eb966e66d935a8c5c4616ca94950d340088073f1199a30"
+      "size": 5375,
+      "sha256": "4193b7a4e83d5976228495e123e3a885a0f561b3b4fd575e65ea191e271ebed9"
     },
     {
       "path": "d/wutang/npc/keeper.c",
@@ -8072,6 +8117,11 @@
       "path": "d/wutang/npc/old_fire.c",
       "size": 872,
       "sha256": "f651e569cced82a778651fe8db228a70aedea7308c68525b451bec296ce85628"
+    },
+    {
+      "path": "d/wutang/npc/old_woman.c",
+      "size": 2903,
+      "sha256": "28ea315a929109595d54a8fa695ac6b119190f512fe720ba0435d7f6e93946d4"
     },
     {
       "path": "d/wutang/npc/oldman.c",
@@ -8135,8 +8185,8 @@
     },
     {
       "path": "d/wutang/npc/yaesae.c",
-      "size": 3705,
-      "sha256": "efc7e425d512560b8f644d9b3277c863b12d38b9317e34d681a6a9e2700c5549"
+      "size": 3954,
+      "sha256": "9f65e1b0265866b17bcd72e060a8f17c44d35d4e4d25eaf1f9939017e5428336"
     },
     {
       "path": "d/wutang/npc/yang_zlin.c",
@@ -8160,8 +8210,8 @@
     },
     {
       "path": "d/wutang/npc/yung_tai.c",
-      "size": 7447,
-      "sha256": "b475c4c9377f8a28782c36d545c32a9697750c0849f69218b4acf4c1c2cfc555"
+      "size": 7734,
+      "sha256": "0ae78053be9abc18de947e0e6641f571549468e44604c97407d511dd09712c41"
     },
     {
       "path": "d/wutang/obj/blue_cloth.c",
@@ -8205,13 +8255,13 @@
     },
     {
       "path": "d/wutang/river_bank.c",
-      "size": 575,
-      "sha256": "9eb643f595ae36700e7c5f4b4bf1e84645bb3ee4820e458c08624a2b75fccc04"
+      "size": 813,
+      "sha256": "c67c6eca52eee491e96d56f435f9361b272b11d88349b2e173662d1bda3713fd"
     },
     {
       "path": "d/wutang/riverside.c",
-      "size": 1441,
-      "sha256": "a6ec1bfda8cb675bbd96bc3f25737367d7de565deb56ef1c691f24fb0dea63ca"
+      "size": 1715,
+      "sha256": "b57e5eefb73b4108e3eed75b2993289c9b3e227d20a6696771844912d2e014fe"
     },
     {
       "path": "d/wutang/school.c",
@@ -8300,8 +8350,8 @@
     },
     {
       "path": "d/ziyan/ferry.c",
-      "size": 635,
-      "sha256": "9f02b26f002744208054a12e897a50c5509f39c314e86fb5fb2129c738043a12"
+      "size": 1023,
+      "sha256": "7428650fde3eb76f996dd0f120521de31972005636c1b6f2079593033e2b3171"
     },
     {
       "path": "d/ziyan/herb_yard.c",
@@ -8310,8 +8360,8 @@
     },
     {
       "path": "d/ziyan/house.c",
-      "size": 1784,
-      "sha256": "798aff502459ee025639343e3a0292b7e86e50abc8cc3f6f52472b7bde617c12"
+      "size": 4526,
+      "sha256": "be81bb1d897331b2218bd3dcbfcac8a5b51e3172a17e6e0c5111a2177b23a50b"
     },
     {
       "path": "d/ziyan/hut.c",
@@ -8390,8 +8440,8 @@
     },
     {
       "path": "d/ziyan/obj/bloody_letter.c",
-      "size": 426,
-      "sha256": "75e42ef3196b5df18917a0a8f78f156f6e2b9031685b23c2cae5872fc40928e2"
+      "size": 746,
+      "sha256": "adaa15ca4a4d0cee3697468c75098980876ee6a88c2faf07eade458587e87051"
     },
     {
       "path": "d/ziyan/obj/juice.c",
@@ -8399,9 +8449,19 @@
       "sha256": "db6fad7e4149ce81979f074ad451846f1004a220986c2ab5a8a1a2423bae70a3"
     },
     {
+      "path": "d/ziyan/obj/magistrate_seal.c",
+      "size": 656,
+      "sha256": "07b13fd88ec402f2022f7942a5e253ec867e3f3237457d965fdc6e3be9a701c0"
+    },
+    {
       "path": "d/ziyan/obj/pig_heart.c",
       "size": 659,
       "sha256": "f4bb47c62dfb7bd7484be5d114535a06b1db601d9311b56b490e2ee9909acc02"
+    },
+    {
+      "path": "d/ziyan/obj/secret_letter.c",
+      "size": 1126,
+      "sha256": "87a3c252325d9cedce71f5596ffdc86a78ce9e7018b8f6537f94fb84c2db9b4b"
     },
     {
       "path": "d/ziyan/obj/stone_key.c",
@@ -8467,6 +8527,11 @@
       "path": "daemon/board/snow_board.c",
       "size": 611,
       "sha256": "5f6f183892712f4fcd2039402414d064c0b16610fce2290b29ca0019d84a5e65"
+    },
+    {
+      "path": "daemon/board/wizard_board.c",
+      "size": 683,
+      "sha256": "2130b632c729de582d3546a1d291ae25377d830e261e27ee7ca3fb6b97acbacb"
     },
     {
       "path": "daemon/class/alchemist.c",
@@ -8655,8 +8720,8 @@
     },
     {
       "path": "daemon/misc/npc_skill.c",
-      "size": 14343,
-      "sha256": "604d0ceff18a77750338cdf289ddf3817cf1a41abbe6343eb69f1774052d3201"
+      "size": 14632,
+      "sha256": "46d7fac9b2d6cbe150222239a173e97c2029e511eddf60e2c800c1ff4f1da4a1"
     },
     {
       "path": "daemon/misc/traveler.c",
@@ -8740,8 +8805,8 @@
     },
     {
       "path": "daemon/race/malik.c",
-      "size": 1180,
-      "sha256": "9da8211f94707b611c3655ff565faa00fe63ae6286e1d7095ef8d054e1fca8f7"
+      "size": 2289,
+      "sha256": "f91e5dc87b9b21dac16ca8b5405218c67775af0ab212bd79da29af8b737e510a"
     },
     {
       "path": "daemon/race/rainner/feed.c",
@@ -8765,8 +8830,8 @@
     },
     {
       "path": "daemon/race/yaksa/devour.c",
-      "size": 9048,
-      "sha256": "0d9a36531b34159d7883dabe03953a56684fd923d3c9e379cb333bc2a90ae4f4"
+      "size": 18659,
+      "sha256": "82e1b708b8bfebdf12abe18da43e4a9e11d7d9a276f2a112d8a47a4cd261377f"
     },
     {
       "path": "daemon/race/yaksa.c",
@@ -8790,18 +8855,18 @@
     },
     {
       "path": "daemon/skill/advance-sky_sword.c",
-      "size": 9716,
-      "sha256": "e63b74573fe25d1212717c0a40797557ccdf1bbf5273f414a6ea0ff909447db9"
+      "size": 11710,
+      "sha256": "c8bcb1b84655f16e333949c3e16be66783cf83665a464339005dfceb31039c94"
     },
     {
       "path": "daemon/skill/advance_lunmay.c",
-      "size": 6776,
-      "sha256": "6e5fef9dfd705e49f49436e09e0d65960cb47d9466b3ab67e40339161a6e5bf2"
+      "size": 7236,
+      "sha256": "ca5572858c7d85d53410ca4ba3beef777b172cab4b799b0d79735f6193a0641e"
     },
     {
       "path": "daemon/skill/alchemy-medication.c",
-      "size": 5997,
-      "sha256": "0a3a0e8655d308d5cbfb7bcee604e12145f7c0c848fc9cf4e10ef8a4cf92fd3c"
+      "size": 6045,
+      "sha256": "ff80eea1e0b2d4d9e7e636e96b816e939dd9f63f4e7744d56dedd84ea63a74a8"
     },
     {
       "path": "daemon/skill/alchemy-wealth.c",
@@ -8850,8 +8915,8 @@
     },
     {
       "path": "daemon/skill/butterfly-steps.c",
-      "size": 4546,
-      "sha256": "aeb2676c282fc421942579781bf7c714028c11ff64296473fe59d69bfa1d6d53"
+      "size": 4552,
+      "sha256": "e12ab33b9b51f3bb51c081a3925777136253d6d3b64479ea67a79614d331c897"
     },
     {
       "path": "daemon/skill/cauterization.c",
@@ -8860,38 +8925,38 @@
     },
     {
       "path": "daemon/skill/celestial_force.c",
-      "size": 8642,
-      "sha256": "93d8fe8a8bea674a7ad6e8e5c570662d9c9f1c1b31cc5da922e8fb363ee5bc93"
+      "size": 10937,
+      "sha256": "c94d3dd7600a1efcca3c3ddab058d69a3ad2f4b86a24743588cda1626beb769e"
     },
     {
       "path": "daemon/skill/celestial_palm.c",
-      "size": 6482,
-      "sha256": "f28fec6da820507757fc6b518cfddf2088e1a446583837b3875dc24f4310f241"
+      "size": 6654,
+      "sha256": "bebcc76f5e9a9d37f502523dfc5081ac2d62117133ef2afafcb694c0429e3848"
     },
     {
       "path": "daemon/skill/chaos-steps.c",
-      "size": 3965,
-      "sha256": "a036bd63784e3b17f473dc3d75080ae840564c653f6f768b807e1ad8eb17992d"
+      "size": 4072,
+      "sha256": "72a7ec9456872f269b0497843fe1d5dc860f326830994a5edc46db56d4ad4ed7"
     },
     {
       "path": "daemon/skill/chin-steps.c",
       "size": 2403,
-      "sha256": "8d86db5ace8fad4c5d498e8c2556d3a667f0c204d58b4f5ea1badd3555ce2135"
+      "sha256": "d546c52e64f815435324dc8f110e762d205e6029816ac0a918d0484047da53ab"
     },
     {
       "path": "daemon/skill/chin_staff.c",
-      "size": 4875,
-      "sha256": "c9f6446c64414416d7caed2300d5e236d72f31f8de37d94cac96c5f698575eec"
+      "size": 12496,
+      "sha256": "6dc76e9507a395d9a3b1c783674dd0d14db5d463484da05d323b2f9d08b7c9d7"
     },
     {
       "path": "daemon/skill/chitensword.c",
-      "size": 2386,
-      "sha256": "eb96d16ef4001d6fb7bcac026a97663e8181295ac51c2f03383ada53887cbe25"
+      "size": 2394,
+      "sha256": "6d17dc428c798f076166b1cbd7a8cf05cda4ba2963c65d082d3fb4a6c8f4aef7"
     },
     {
       "path": "daemon/skill/chivi_sutra.c",
-      "size": 6672,
-      "sha256": "4bf4a13789f603fcc696de5e8c09c46f802646b1aec28d2880e959a7d3c6854b"
+      "size": 6732,
+      "sha256": "fcbcb653fb750d7b9cebc99b098ba31565e9c4af7f6d70cb89330f98a714bf3e"
     },
     {
       "path": "daemon/skill/close_myst-sword.c",
@@ -8905,13 +8970,13 @@
     },
     {
       "path": "daemon/skill/dao_force.c",
-      "size": 7896,
-      "sha256": "68b2c079938407232ee4a051e82dd54687748e392c2d4c528018af089c5fe165"
+      "size": 7912,
+      "sha256": "41bc59113783aaca15d9e37a26b90e0bc63a32e72e61237bb331b006e0140ce7"
     },
     {
       "path": "daemon/skill/deep_blade.c",
-      "size": 4085,
-      "sha256": "972d265c8e89d0517328c3daef965dc1a69aeed9fe5b5eca1ff91c86c7092831"
+      "size": 4763,
+      "sha256": "8c32a02fbe21ac2006e72b600fd2f23509832d4f9fa19b1e7b884cf6c2861984"
     },
     {
       "path": "daemon/skill/dragon_force.c",
@@ -8925,28 +8990,28 @@
     },
     {
       "path": "daemon/skill/enchance.c",
-      "size": 5966,
-      "sha256": "e2d6ddb0b6b6d8b29c336c228dcbec1a68d4a51598dce15ec9ec34fca9178868"
+      "size": 6015,
+      "sha256": "eda8a877e5d9c626dd5f82766261a4e72fd633e081cea1efa12eddbdd0899712"
     },
     {
       "path": "daemon/skill/five-steps.c",
       "size": 2825,
-      "sha256": "1929333981dc17e9090fbac155c36504908628a6f35ec2972a19125fc03c6115"
+      "sha256": "9ae846ea3efe92393e60121ea7ea219aab2595475c4065b0a5596ecb1873ff0b"
     },
     {
       "path": "daemon/skill/five-tiger_blade.c",
-      "size": 4408,
-      "sha256": "171f2ae32ce6eb89934c5a6e217f47dbadada984d3f049865d37b6c3f7820e9c"
+      "size": 4983,
+      "sha256": "af3b70cd91085850763f63444a4b6b0be8b109ac9529d2f26dbd0f98fd93bbaf"
     },
     {
       "path": "daemon/skill/flurry_force.c",
-      "size": 6065,
-      "sha256": "e5491de9dbdfea3c02fd458813d9f2636ec256211d9c3896c37faa2981c989b3"
+      "size": 6300,
+      "sha256": "20c2d1d6d78440c7d708387e892ba8c6477932e99a39d76c0237b359d8f83d9c"
     },
     {
       "path": "daemon/skill/fonxan_force.c",
-      "size": 6822,
-      "sha256": "2938dcd063c1dfa853f2783788b1771d4d26e7385cebfecd842e5d0fa2f57831"
+      "size": 6846,
+      "sha256": "2b07e40e8439d1e1832932ec6fd75910e18583ebc6fe6b9e2781a158aa5b2028"
     },
     {
       "path": "daemon/skill/fonxansword.c",
@@ -8960,8 +9025,13 @@
     },
     {
       "path": "daemon/skill/hainmay_force.c",
-      "size": 7232,
-      "sha256": "aee498e12a214e7aff2366f6b1c604828681fce06006c7f5f6031dade9c71f3a"
+      "size": 7329,
+      "sha256": "fc3cb42cea4dd1b3bf0560a9aff55beed02b240181a9423966a3263584b4ea1f"
+    },
+    {
+      "path": "daemon/skill/halieutics.c",
+      "size": 1293,
+      "sha256": "0643e2e80ac5c8b3da8c0f36016a44018af3417fb7da03d7b8a52664b8140feb"
     },
     {
       "path": "daemon/skill/heavy_parry.c",
@@ -8970,13 +9040,18 @@
     },
     {
       "path": "daemon/skill/hesanzhang.c",
-      "size": 3287,
-      "sha256": "57c08519b585167bb3f720910de2bcaa57d917c6457d982fe2108218219beda4"
+      "size": 3295,
+      "sha256": "49312156c5c5a480c78b0fb32fc9af370d56613015715453a8e196cfb83f5a40"
     },
     {
       "path": "daemon/skill/huge_force.c",
-      "size": 6027,
-      "sha256": "e9bf393a3b0bc8832ed1751e0cc6d67641be8007e26e485335405fb18229a0fd"
+      "size": 6103,
+      "sha256": "2d342c3b1883ff919048faa34ee09f659f80e0c0929cf5d0d4b998bd4ad91e9f"
+    },
+    {
+      "path": "daemon/skill/ice-fire_axe.c",
+      "size": 6032,
+      "sha256": "ec6af68c09af499ea5b0b08427dbe47286b2ab8d13141916e47a80bdc119b6e3"
     },
     {
       "path": "daemon/skill/kee_anatomy.c",
@@ -8985,8 +9060,8 @@
     },
     {
       "path": "daemon/skill/ksanmando.c",
-      "size": 4263,
-      "sha256": "19f459b0745fb65eb1c052140e2b07142798866cbc3b84f2ab1857d2b1e5e9ce"
+      "size": 4282,
+      "sha256": "7504c6337fe72946be66bf978c6c930b052501505bdf305fd764546202000f1d"
     },
     {
       "path": "daemon/skill/literate.c",
@@ -9001,12 +9076,12 @@
     {
       "path": "daemon/skill/longyeforce.c",
       "size": 6642,
-      "sha256": "c8c5ffe386c630e6af36a973df606b0d1cf9d4f07067a211b9df5333f4f6d22f"
+      "sha256": "f2e6322da7ec3ba5c014457965be40a327f7ff13d56742fb13a8607ffa24c0f6"
     },
     {
       "path": "daemon/skill/lunmay.c",
-      "size": 5604,
-      "sha256": "f40f0f070dbf956c0181770d0d4a0aed1894f5e8d2b9baca0b2be089ec95df1e"
+      "size": 5607,
+      "sha256": "54f8461f624a4d07307b659c51e8eea7deeeb6db776592981f93fe485e0646cf"
     },
     {
       "path": "daemon/skill/magic_steps.c",
@@ -9015,28 +9090,28 @@
     },
     {
       "path": "daemon/skill/mao-shan_magic.c",
-      "size": 6104,
-      "sha256": "929e18af2ceb0f641b03916774d800be25fd51370c928b4a5f9ac312a90ee190"
+      "size": 6290,
+      "sha256": "b5f906e171d160d8a0660ec10fc8c45294837eae9f39171b33fb9aceb91fc4cc"
     },
     {
       "path": "daemon/skill/mao-shan_mysticism.c",
-      "size": 18074,
-      "sha256": "11cbafe5d8ff24456ec8da332ed4f520a1bbfdbe201ee8d2ab26452b5f0b3d3e"
+      "size": 18182,
+      "sha256": "242867b74571588a0859a9c67512f5badd9957c65112039ececdcc54da2bf2d2"
     },
     {
       "path": "daemon/skill/mayin.c",
       "size": 2814,
-      "sha256": "494f102e7421499cc292008aff3cb606c0901f73d1fc21d773d0e6b99735a901"
+      "sha256": "fc4bc9c4d56d540011d67856d496d3b056581cc34b74423791a906be65b8b9a5"
     },
     {
       "path": "daemon/skill/myst-force.c",
-      "size": 6595,
-      "sha256": "06f957979812a7056751de5b4e11fdb8562677eba940b503b663a5c15789c6cc"
+      "size": 6629,
+      "sha256": "e4f4f61f556c504ff63cf80034a7a408dee19f14e4f7ecc921be274ed57b9fad"
     },
     {
       "path": "daemon/skill/myst-steps.c",
-      "size": 4354,
-      "sha256": "d73ad8915c1e35f4fb59dded0e7aca873121d694d0321af9ab6eb660afcc7530"
+      "size": 4360,
+      "sha256": "161dd357db85049e448189c0bca6d8733c207ff59aa393fa1d10d4451b8ad23e"
     },
     {
       "path": "daemon/skill/mysticism.c",
@@ -9050,8 +9125,8 @@
     },
     {
       "path": "daemon/skill/nine-dragon_force.c",
-      "size": 6042,
-      "sha256": "c1eed506cd6a06f420e4f408217eb65f74f259eb8bdb32e96af4415a899fc9e0"
+      "size": 6082,
+      "sha256": "0142ecef0ac73ca11cfe73d5365d1d40af10833792624a0a325374d459f2a00b"
     },
     {
       "path": "daemon/skill/pike.c",
@@ -9060,13 +9135,13 @@
     },
     {
       "path": "daemon/skill/polar-silkworm_force.c",
-      "size": 9218,
-      "sha256": "f11e214505e2fa5c7b72d592001d43ae3de8547d8f26e6e12bb470fd30c37c1e"
+      "size": 9264,
+      "sha256": "da26d41929b1ebceb7b09871cf0bf51da778600f2d469bed0bc02c0d538a027e"
     },
     {
       "path": "daemon/skill/potency-needle.c",
-      "size": 5505,
-      "sha256": "2681fc475b1403e9e8ebd26864137fa3b54e2e69175b8d7c92d4b7d0e91ec029"
+      "size": 6099,
+      "sha256": "c352a03d9f61a00d34a7df6d5da653ab93706cbe40114f0017305ca12bf316a2"
     },
     {
       "path": "daemon/skill/powerblow.c",
@@ -9075,8 +9150,8 @@
     },
     {
       "path": "daemon/skill/recovery-needle.c",
-      "size": 3037,
-      "sha256": "e1c2b7cfa16c3f9e93e97405fb4e92f7a278d9cdfbb00a7e88f0ee8f31983ba6"
+      "size": 3061,
+      "sha256": "8b99071ce31aa8a4780cac47c5bdd949602eac770a91d3463d0ff49772e2baf9"
     },
     {
       "path": "daemon/skill/reflecting_star_sword.c",
@@ -9085,8 +9160,8 @@
     },
     {
       "path": "daemon/skill/sayuensword.c",
-      "size": 5292,
-      "sha256": "59fc12afe88e04ae42a1de056800f0e853c16a5129ef46a04f0c73040d1a2732"
+      "size": 5298,
+      "sha256": "53053fb2424038835687cef23fe440b891c8e356bac6345f0cb5fedc3c4c3213"
     },
     {
       "path": "daemon/skill/sayuensword_essence.c",
@@ -9145,23 +9220,23 @@
     },
     {
       "path": "daemon/skill/six-chaos-sword.c",
-      "size": 2900,
-      "sha256": "d501e1d7e361f60a582f1b89968743d2946dfc9b8c0b2f192ac043f8ba8e546e"
+      "size": 3004,
+      "sha256": "8f3f4aeb52af1d790cdfacdd3ad7880028b2af146bbd0ecff1a480210abe20b9"
     },
     {
       "path": "daemon/skill/six-dao-sword.c",
-      "size": 3966,
-      "sha256": "4a950ea4468c230cd2aef8662a3c6251bf53528f5dc5975f91f13a92c59a2606"
+      "size": 4070,
+      "sha256": "fe9d99af33c9079c0b935816bc48f701e4b80bfcf90e5a34c9039f33cdf314a3"
     },
     {
       "path": "daemon/skill/sky_force.c",
-      "size": 6242,
-      "sha256": "57f337b36664b841a7d23fbccf6d95a8fced55e45f232602116453fe5a811d4f"
+      "size": 6386,
+      "sha256": "bebedc2d8e0e5ce17ab01bbe7cfb05b508782b3964d75c883736bd4b95b6575c"
     },
     {
       "path": "daemon/skill/sky_pike.c",
-      "size": 5511,
-      "sha256": "0e572e5c692248e3f5098d6363c9cbb7bbbf9d141fcb0139c9c1d196ed0d8843"
+      "size": 5546,
+      "sha256": "111db65f1bccddd60f35125c893bc24de2b1081d63e1ff75ea50492a280e9365"
     },
     {
       "path": "daemon/skill/soonlight_axe.c",
@@ -9175,8 +9250,8 @@
     },
     {
       "path": "daemon/skill/sun_force.c",
-      "size": 7744,
-      "sha256": "6d515502e429fdefca5957a2805472f83b6d6646808f73092d0bb0ba7ac0eee8"
+      "size": 7784,
+      "sha256": "a9f025c4901c54a5b3cbf7633c838e9460f06f5f255e50fa92b18154a8ade070"
     },
     {
       "path": "daemon/skill/sword.c",
@@ -9200,8 +9275,8 @@
     },
     {
       "path": "daemon/skill/taoism-spells.c",
-      "size": 24842,
-      "sha256": "cd0fd93c09368cbe2b1ec81739768786e083457071e8924fd65af530633398e0"
+      "size": 27716,
+      "sha256": "7dda15468d003d2d0a9d71edb1a7d7f34355eca5e841cfa91ed3ccbe0cd613e7"
     },
     {
       "path": "daemon/skill/taoism-storm.c",
@@ -9215,38 +9290,38 @@
     },
     {
       "path": "daemon/skill/taoism_of_darkness.c",
-      "size": 8955,
-      "sha256": "154c59fea81250066f836f029e4ae318a5f1ce16d3e356bf7ddb06de17785771"
+      "size": 9473,
+      "sha256": "d8d93fdbf1136bb1fca0ccacb8aba9f61f6201c55650ef1cfb1d2f1607394b31"
     },
     {
       "path": "daemon/skill/taoism_of_dunja.c",
-      "size": 8568,
-      "sha256": "484418699fd50479f8dcaefbe84aac48aaf7d0f2453c2e4aa895d44134b009a6"
+      "size": 8600,
+      "sha256": "1840638ed88becdc9e74256475d0dd8e1eb14d9df76bd63cc6a425d55bf05ae6"
     },
     {
       "path": "daemon/skill/taoism_of_nature.c",
-      "size": 11297,
-      "sha256": "4d2a605c3126397986d80654ea4a386f71baaccf6f27cd7003564f0fe794fbad"
+      "size": 11357,
+      "sha256": "ab84888bd0eecc73d88ccfb18e1a3ee0659f7be550a47b58896179eaa48a7310"
     },
     {
       "path": "daemon/skill/tidy_force.c",
-      "size": 3638,
-      "sha256": "19aca41206ba8e3cae0a4326c7326df867f3bb84676517002c8e6555ac46b179"
+      "size": 3658,
+      "sha256": "b327ced055a6914e0c07d0d645ec616a19f1c14f46b76edb2ab426de195275ec"
     },
     {
       "path": "daemon/skill/tiger-blade.c",
-      "size": 4353,
-      "sha256": "8c43a65f3973b58a07384ee61a3e9c10b30514489dd2f4acab786cde96bc7fc9"
+      "size": 4463,
+      "sha256": "ae4b22096350524c8459fe5c1d2cbb08ff7a8967fa2dc953d80ff8580b46fb38"
     },
     {
       "path": "daemon/skill/tiger-steps.c",
-      "size": 2265,
-      "sha256": "714756ee7db6e7ca864f42411d5fe461f7cd58f6737736002fdf1ebca0031a27"
+      "size": 2321,
+      "sha256": "c4c09bdceb16597ffa8f44012b3e7d8b8c97cead258e686f1cb4029fa0bc95c9"
     },
     {
       "path": "daemon/skill/tiger_force.c",
-      "size": 6966,
-      "sha256": "dc1e69988e27dc767bb4d05a035f8f25aabee64e314d266d0a10e934b4f51059"
+      "size": 7041,
+      "sha256": "56c00ce47a06c3aaba4394a4e829cddcd3f09f2d9a7f822efb5a618ede464382"
     },
     {
       "path": "daemon/skill/twohanded_axe.c",
@@ -9280,8 +9355,8 @@
     },
     {
       "path": "daemon/skill/uenfon.c",
-      "size": 3993,
-      "sha256": "893d1755a9e516e0e6cbb019a889d5ebf6dd1c7b2a6e91415d9d8ecfa73d7eeb"
+      "size": 3996,
+      "sha256": "7a7b35c2bacf650ee06b82fe3162653918a3b26111cc38e02491a44668b7e766"
     },
     {
       "path": "daemon/skill/unarmed.c",
@@ -9295,8 +9370,8 @@
     },
     {
       "path": "daemon/skill/wuto-needle.c",
-      "size": 6786,
-      "sha256": "4f5df3df6adf2614f2627c1e9a9662cf249ab3bd8e57fa0d2e21e653dc44fa49"
+      "size": 7562,
+      "sha256": "d6030c535737af863297806276563c9542baaf1899cebe9dfc6aacc8cfea874f"
     },
     {
       "path": "daemon/skill/wuto_needle.h",
@@ -9305,8 +9380,8 @@
     },
     {
       "path": "daemon/skill/zushang.c",
-      "size": 5322,
-      "sha256": "4639920638eeb178685c7b369d99fb0015a29ea4f2e4c00123957b66ab167c70"
+      "size": 5342,
+      "sha256": "15637fd0afb9bd253d3e97e7885207803f4635bd6498481508488461ac9a83be"
     },
     {
       "path": "daemon/virtual/field.c",
@@ -9345,38 +9420,38 @@
     },
     {
       "path": "docs/help/advance-sky_sword.txt",
-      "size": 1656,
-      "sha256": "5ab513f79f1df521e323539557ac5c2a44641469c0f31dabb4665fea5297fdc9"
+      "size": 1969,
+      "sha256": "2ab818a0384833df29bd27183e27e427fac668d803b5a5ce6fd1679446084d2b"
     },
     {
       "path": "docs/help/alchemist.dragon.txt",
-      "size": 2629,
-      "sha256": "9b937b1da30a44f168c6cbc5f45459d62f93e478c160577299e25088b1f60032"
+      "size": 3449,
+      "sha256": "4f4f1efe88f68d23f3626d8123aa622b51e22491fb93c8349e9d2bbd62de0df1"
     },
     {
       "path": "docs/help/alchemist.pill.txt",
-      "size": 1349,
-      "sha256": "b35d82db66e80b3a531c85a8a78c6921576be6796daf0b8f560eff887aef97f1"
+      "size": 1348,
+      "sha256": "c1e92263b8505c91d0a91f9543d60fc3e669db51b23cdf33e25f76e86ab62118"
     },
     {
       "path": "docs/help/alchemist.wu.txt",
-      "size": 4586,
-      "sha256": "b919085bb517bdbd6d1b0a51714f44cff6654493c10b736c2d18b68e9e053a68"
+      "size": 5176,
+      "sha256": "665eff4acb331b2f6ae9aee5e057eb53ffb2c36d612b675bdff47b79227738c5"
     },
     {
       "path": "docs/help/alchemy-medication.txt",
-      "size": 1920,
-      "sha256": "f17936745d9d968580fe96f968092df3a25f7d86665bab96338c201de978bf16"
+      "size": 2344,
+      "sha256": "65029d5205e67e685834188cebd99f2f87dde3e35a819c28d2a8786b31f1debe"
     },
     {
       "path": "docs/help/alchemy-wealth.txt",
-      "size": 1421,
-      "sha256": "8d4570ae7f61651fdd769dd63f7a87b65c8fc40e3223cd07df1102ebd1d1abb5"
+      "size": 1779,
+      "sha256": "209eb93e88c6dd166826f83deab4dbada958deb70acad540128b9eea6ce21f68"
     },
     {
       "path": "docs/help/amazing-needle.txt",
-      "size": 1074,
-      "sha256": "a1d0d0a7d5e831a07079b1fa92683a994d2081b707fb5f395e3c2051e9191f2d"
+      "size": 1367,
+      "sha256": "12f2ce62ae659c22b7dae1bc83068bc30834fbd6696d7cc37d30beac86d3682f"
     },
     {
       "path": "docs/help/ashura.txt",
@@ -9385,8 +9460,8 @@
     },
     {
       "path": "docs/help/au-chan_sword.txt",
-      "size": 1351,
-      "sha256": "4c5cf224e673bcda0732e83501be4c25ff2c4ad73c80d1f9b57974b32d1311a7"
+      "size": 1538,
+      "sha256": "8b42d18117d91deede0cd61980ac2dca88f922f4512abcac59ea130635b77b22"
     },
     {
       "path": "docs/help/avatar.txt",
@@ -9395,8 +9470,8 @@
     },
     {
       "path": "docs/help/berserk.txt",
-      "size": 902,
-      "sha256": "33439c70862f9ac0bc0cb7b10f829965ec4b498fdd51b08da92bcbab634582e1"
+      "size": 1167,
+      "sha256": "cc6bc954909b57710c790a324443523f4928b328598f0dbd7a6800cdf0418709"
     },
     {
       "path": "docs/help/blackteeth.txt",
@@ -9405,28 +9480,28 @@
     },
     {
       "path": "docs/help/books.txt",
-      "size": 8098,
-      "sha256": "b3cec96c7179ae141527e22fa7eb4cf0573d302beed37c60893920134b3ef92d"
+      "size": 8100,
+      "sha256": "82d0582f0972a2ba0562c64d53c06585a7d1a54f9fed5dc2dcbdad30e0d0dc2e"
     },
     {
       "path": "docs/help/butterfly-steps.txt",
-      "size": 1047,
-      "sha256": "314db557f5db36306078b05234d8fd79090080fc2070a586f8f691dcf37e0c44"
+      "size": 1093,
+      "sha256": "4094b9937b75618094fe57dfa5ab72a81eedc4fc54495ab49babd69e908fb66b"
     },
     {
       "path": "docs/help/cauterization.txt",
-      "size": 635,
-      "sha256": "53fa3b21b1d99558dd2e27d96fff3dfaa48e3bc1b61e84be533220609c7329d7"
+      "size": 669,
+      "sha256": "bf1f3867e5d05b02c6bf6c84b4b2bd264ff8b7fda26a91031edb4fc855c64538"
     },
     {
       "path": "docs/help/celestial_force.txt",
-      "size": 1364,
-      "sha256": "cb2d630f9bef20d8bacf214f8cbd5caf30bc268ac07a16b10019bb153672d721"
+      "size": 2152,
+      "sha256": "1706f32b60216ebfffcbc0a00b1e775100e73eeac1d2b79b7b2e14822022585b"
     },
     {
       "path": "docs/help/celestial_palm.txt",
-      "size": 951,
-      "sha256": "348c366d452d6152238adda7f0347ef7d9f6ea7c7839ef8726baaaa0fc27b092"
+      "size": 929,
+      "sha256": "cfbcb98a2c90620cfaafc31180a96c7e04d81059318091b2283e5fdcc07b04de"
     },
     {
       "path": "docs/help/character.txt",
@@ -9435,28 +9510,28 @@
     },
     {
       "path": "docs/help/chin-steps.txt",
-      "size": 273,
-      "sha256": "50375f287c22c35ab1fe7bb55822228535be3592eb8239c11eff7bb0421cf7c8"
+      "size": 645,
+      "sha256": "c987022adb58dabdcd914feeff22e2556756cc54a017bf412762666bfd4dd2cf"
     },
     {
       "path": "docs/help/chin_staff.txt",
-      "size": 635,
-      "sha256": "7a6e834344d59b681e05d5a96169f5b3cbc4659113d22797f6baee43785846af"
+      "size": 1891,
+      "sha256": "9c05818df96eb6e5e7fe971dcd1cf0dc74b8f201c064612acab78a6e48ee633a"
     },
     {
       "path": "docs/help/chitensword.txt",
-      "size": 357,
-      "sha256": "8c6982704d56d587e0c1791027ccd54561f41bcdae278d287c4f464070f8d91b"
+      "size": 671,
+      "sha256": "b6618086f5ded754f151ab51507752873f42874db9ea18c9c876f008f3e6e0a7"
     },
     {
       "path": "docs/help/chivi_sutra.txt",
-      "size": 1237,
-      "sha256": "cebfd053c1cfd5001cfa74cad094fe847f88df7824524253819024ab9641de67"
+      "size": 1530,
+      "sha256": "a749bd86592d386f09e7b87dcc6e0124c72babe433b1490d2a378537ceba3ecc"
     },
     {
       "path": "docs/help/close_myst-sword.txt",
-      "size": 457,
-      "sha256": "f114813f3f34791ae05fca0372afd083adde166613c5eb6a1fb0aed7579eda1b"
+      "size": 855,
+      "sha256": "281c899d5b50aef486a9292b9aab76c7e06ae0ad27b81e70e4a6fbd95b681d51"
     },
     {
       "path": "docs/help/combat.txt",
@@ -9481,7 +9556,7 @@
     {
       "path": "docs/help/dance.txt",
       "size": 1043,
-      "sha256": "01f4065f843a89fd94a4e2206c8150f201043849a73fa2eba174dde8e0cbc450"
+      "sha256": "de18c6449e3498f4a521d7ddbf6bc5bc1b3d95169b46a91431a8a05652d2885e"
     },
     {
       "path": "docs/help/death.txt",
@@ -9490,8 +9565,8 @@
     },
     {
       "path": "docs/help/deep_blade.txt",
-      "size": 639,
-      "sha256": "6cd6c7f94b4a4ad6703733094ce706d23d9dd2272a3c611e964457a22f3f5d13"
+      "size": 1017,
+      "sha256": "e548c855428947a151eacbc90e459ec04586f3862b477a3e87f8453aeb3b4cc6"
     },
     {
       "path": "docs/help/dingling.txt",
@@ -9500,53 +9575,58 @@
     },
     {
       "path": "docs/help/dragon_force.txt",
-      "size": 1684,
-      "sha256": "4e602228fdc2b149d9854e9724ec95f36cb59b7e9ca000b897aa8fe3a84e241d"
+      "size": 2121,
+      "sha256": "875f4259db8d57c4ca3174ccf47eb889da8ad4f982c0f550105f9d45861df5de"
     },
     {
       "path": "docs/help/enchance.txt",
-      "size": 2046,
-      "sha256": "702d6faaebfe1b03ef53e7bbc0e9cd2bcba3076d5484fac0b92ac2f57819f441"
+      "size": 2290,
+      "sha256": "40a948ffbb4f3faef7b628035185dc9bdd6338e4e9ddab5a754788a7c5a8632c"
     },
     {
       "path": "docs/help/fighter.fonxan.txt",
-      "size": 1211,
-      "sha256": "bdce94f19ef571073b826235b56bd659a006ffe15132f78cd386be29fff34b2e"
+      "size": 1814,
+      "sha256": "6c7035d5c836b5e274f37e54adfcdadcdabdf41d64e54823bd3664ed225d7097"
     },
     {
       "path": "docs/help/fighter.huge.txt",
-      "size": 1721,
-      "sha256": "3b7a5988c9d973f99e9288246e7056ea2ae9a6fb56fb4644ccc96e64dbe4663e"
+      "size": 3466,
+      "sha256": "f17a7258dae60c2da7a058916f6a4b9223ef33c0b0bebfcad0fc93114e5152cd"
     },
     {
       "path": "docs/help/fighter.lunmay.txt",
-      "size": 2366,
-      "sha256": "b606f8f3408b8badaa3361aa5d880d35293ad3b4b04aab88d9b7a0685b8edca1"
+      "size": 3366,
+      "sha256": "56bde7d3723377f3521c8c2ca9ad75eb76d5f4de307844cf4c520c3c737226b8"
     },
     {
       "path": "docs/help/fighter.snow.txt",
-      "size": 1733,
-      "sha256": "b7440f873280c008f667d20ea92dd82b1182de1ed4ad6cef08125dc6652f697a"
+      "size": 3021,
+      "sha256": "e2f9225a49d6700a6d6440b7812cd5455d2f8c4b3c484f01dcd4a903dadfb7d6"
     },
     {
       "path": "docs/help/fighter.tiger.txt",
-      "size": 1539,
-      "sha256": "19bc5e35aa35c888f6f2c5a159a348ff97ebc0b0e4cd1c1d7cbb58aabbbaea58"
+      "size": 2266,
+      "sha256": "f26373ee91baf9117712b2e84ecd98c7b304dbaa4b92f1939326243735de5cbe"
     },
     {
       "path": "docs/help/five-steps.txt",
-      "size": 448,
-      "sha256": "da59c7cf987382355f4c1dfb2033f5bd9d177cce210e599ae449b440ce3bbc2b"
+      "size": 795,
+      "sha256": "fb1e1961fc4b097b0f4d9a6f46d0c2a1aa50a5fd1bde898cdc613d23a0a0ea4b"
     },
     {
       "path": "docs/help/flurry_force.txt",
-      "size": 912,
-      "sha256": "c05b69ba64781d2b4c841e0ec83e038594479d6ea417005ea9b1a70a687c0e8b"
+      "size": 1350,
+      "sha256": "533130de99d21104b4532d0501997db410ce5ee5677b42e1fc0599e72092fdf3"
     },
     {
       "path": "docs/help/fonxiaoken.txt",
-      "size": 706,
-      "sha256": "6da7b193e0ef7528328a836444d82e03bdc61b2ddca19aa85d0e1c741512d743"
+      "size": 967,
+      "sha256": "def5ea9d8596762d81fd8864014d6e8e12cac962e45b53db7e664cdab0dbb46f"
+    },
+    {
+      "path": "docs/help/halieutics.txt",
+      "size": 1419,
+      "sha256": "f3c139bb88695094188245bb3da0c20e925ea8d11ae4305675644faf689ef7de"
     },
     {
       "path": "docs/help/headless.txt",
@@ -9555,13 +9635,13 @@
     },
     {
       "path": "docs/help/heavy_parry.txt",
-      "size": 883,
-      "sha256": "58d858644381cd84bae15317fcf27f1f13791646315151b45d0f0133f1b6528a"
+      "size": 1160,
+      "sha256": "3292883cef58d19b4f7e6938ef24df20cc2ff4de1912552ce038ec2a89c79d7e"
     },
     {
       "path": "docs/help/hesanzhang.txt",
-      "size": 412,
-      "sha256": "0dd4a4a755a50da13a8b0d5b781ea243149572c924877edc7d25eba385d4679e"
+      "size": 653,
+      "sha256": "bf67c5e605b52f740f52868896464e09a1833cc2e3c66ea2a81eb1d1d5d66935"
     },
     {
       "path": "docs/help/home_help.txt",
@@ -9570,13 +9650,18 @@
     },
     {
       "path": "docs/help/huge_force.txt",
-      "size": 669,
-      "sha256": "df788bffebc08f3c9a47fb48f752bcbc896264c6d9e058ecf985ab5ef46fbea2"
+      "size": 1039,
+      "sha256": "d1d38470b9018b990e0b0d1cda48df9e0199c78dabaaf2a3b8266d09ccaa0706"
     },
     {
       "path": "docs/help/human.txt",
       "size": 1162,
       "sha256": "91d9b9d37f0dd40f182171d56904c1240e18470cb0add89796f2ff2b8e9e5990"
+    },
+    {
+      "path": "docs/help/ice-fire_axe.txt",
+      "size": 1650,
+      "sha256": "7fe42167f49cb118044a588d2457ff28227f3efeea4763e3924e471eeade5896"
     },
     {
       "path": "docs/help/inn.txt",
@@ -9595,13 +9680,13 @@
     },
     {
       "path": "docs/help/kee_anatomy.txt",
-      "size": 1074,
-      "sha256": "265705371a61af7b43eb84e1c40100c52507890ee01793874b5b74d6374fc0ae"
+      "size": 1235,
+      "sha256": "5760ece98ace9dc2d0a55d2cfa5a0ddf90c9b3ffa37a8ccb1f0a5f89e8e4beff"
     },
     {
       "path": "docs/help/longyeforce.txt",
-      "size": 1271,
-      "sha256": "d0c299bd2f636a9cf621a026d3e028aae3176bccf4b962608e36999f3986fff2"
+      "size": 1685,
+      "sha256": "4807941f3911576b9aba9d2734c5587dc9312ba93a7ef081e39b359a6a933b60"
     },
     {
       "path": "docs/help/malik.txt",
@@ -9610,23 +9695,23 @@
     },
     {
       "path": "docs/help/mao-shan.fog.txt",
-      "size": 2056,
-      "sha256": "f481a13d1f122a1218fde96f81cc4af679b3347bb62de579961b2c1ea5f20a10"
+      "size": 2403,
+      "sha256": "97403b983d9c94c0d124248d0ba35fd09f6ca5e93ece1c554885ea2bc9636ef9"
     },
     {
       "path": "docs/help/mao-shan.wind.txt",
-      "size": 3345,
-      "sha256": "d2648d41a973ada7e550a6076f997f870eeb7c0f3ef2f4458a161d6c6747544d"
+      "size": 3633,
+      "sha256": "d4ee40f3b19e20af4c7d540a9572091b8adf33bede66168012cd144356ca23ac"
     },
     {
       "path": "docs/help/mao-shan_magic.txt",
-      "size": 1229,
-      "sha256": "06611aaa69c7e40361f4cf8341c41913f253b615b5273f3f9fc817b61a0f7c93"
+      "size": 1565,
+      "sha256": "8bce12edc06b06f50ae19e05097b6e3e9952ca81281533351253979e898ccd9e"
     },
     {
       "path": "docs/help/mao-shan_mysticism.txt",
-      "size": 1792,
-      "sha256": "a731b77e770a731b4d0e136f14562040c89ccc0565ce948f63ded01c412bde5d"
+      "size": 2202,
+      "sha256": "371ab14a124ba5f814bab6e5e61b34f9f90189c4721d4e4f924dc732ae10b53b"
     },
     {
       "path": "docs/help/master.txt",
@@ -9640,13 +9725,13 @@
     },
     {
       "path": "docs/help/myst-force.txt",
-      "size": 1012,
-      "sha256": "b9bfb3bc670b4530b0434a00bea5537f00f761006c0d0b9fede29b7cc505c06f"
+      "size": 1431,
+      "sha256": "a0de171be138e877b2b0fa11e275b613a176e4781f6e09555ac8bfdba06d3c84"
     },
     {
       "path": "docs/help/myst-steps.txt",
-      "size": 502,
-      "sha256": "61acd33d02d5cabd590c049e8ea328b0ef35715226551e7c591851380c114c19"
+      "size": 855,
+      "sha256": "672eea353136b423603db67b51aa4158f469063134c6b1247d65768648bf7767"
     },
     {
       "path": "docs/help/newbie.txt",
@@ -9655,28 +9740,28 @@
     },
     {
       "path": "docs/help/nine-dragon_force.txt",
-      "size": 1531,
-      "sha256": "555e2aee953c288ef9adf16219f4a5e47b300f64b14c8dd25c34acd60e92e9a7"
+      "size": 1908,
+      "sha256": "39c0e4579c22484497666d09575a9fae7654d2b2e55df3883085466c312306a3"
     },
     {
       "path": "docs/help/polar-silkworm_force.txt",
-      "size": 1718,
-      "sha256": "b6aa78f9680a88476cc82dd1f8dda68b687f7fe48edebe69ca77d504b74cbf5a"
+      "size": 2189,
+      "sha256": "d259fd828803dfc4215785479819f5b280822ece53a9ec241c14cf86656e7ecc"
     },
     {
       "path": "docs/help/potency-needle.txt",
-      "size": 1042,
-      "sha256": "2d3419f266313741659f35cbc92bba653bf48b33b251fedf69564dd08a76abe7"
+      "size": 1318,
+      "sha256": "eedd01444364577745adba297f48fd1515e0ebd3f4201bb3286c0ca2fe6e35e2"
     },
     {
       "path": "docs/help/powerblow.txt",
-      "size": 594,
-      "sha256": "a9d4f813dfc5aa4f17067ff4f2011ad79063159aa20b5222969c9e5779d6775a"
+      "size": 855,
+      "sha256": "caf4541190b090fccbb0d2d8fe8f595380dfda838b74a508425cbe8f3e28a494"
     },
     {
       "path": "docs/help/race.detail.txt",
-      "size": 12600,
-      "sha256": "481805a2d530d0bee7fea1b2437161316d8f1609512a4fe35d8cea6c97ba7748"
+      "size": 12612,
+      "sha256": "d81ae835ac8a9c990b81182e5b6cc6d769bd734b9088c56ecd8c82c1d0f04b4d"
     },
     {
       "path": "docs/help/rainner.txt",
@@ -9685,8 +9770,8 @@
     },
     {
       "path": "docs/help/recovery-needle.txt",
-      "size": 589,
-      "sha256": "ff2f385de550af0e6e62fbcbb1a8f0814d67b2742ee7923f47ceba330200af49"
+      "size": 891,
+      "sha256": "13411184184baaa09d348abe643c574e3ed27c7a79ddbaf005cf1fa3eb0a768f"
     },
     {
       "path": "docs/help/rules.txt",
@@ -9695,23 +9780,23 @@
     },
     {
       "path": "docs/help/scholar.myst.txt",
-      "size": 1233,
-      "sha256": "27977a096b347e74b585f74043f416b568a0e9582206bae59647326093ccf161"
+      "size": 1835,
+      "sha256": "54fa2267ce5f5b82b5c0bfbfebcfddf5fc42aa596104cacb52ea2005e5bd252b"
     },
     {
       "path": "docs/help/scholar.sky.txt",
-      "size": 1487,
-      "sha256": "70d613a9dfc1f1804892753c18f508074bd8f22316b1b32f56c954cc9ecec33d"
+      "size": 1864,
+      "sha256": "5f74f5d919e55f0213b9a6d661519e50bdb0ec09a0ca03ab2e16b70cf2fc51ad"
     },
     {
       "path": "docs/help/six-chaos-sword.txt",
-      "size": 434,
-      "sha256": "8e8f34064b4cfa5464d995426e6f7b51432a09ad7aa5cd59d91c38972bb3a455"
+      "size": 732,
+      "sha256": "886bc00be94a77c6c324f668e6f0ca9b4d22941042bf967868364a1bcdece1f2"
     },
     {
       "path": "docs/help/six-dao-sword.txt",
-      "size": 619,
-      "sha256": "39ffa2f7d4d6268634e634af88b02962ff8868ade84633539bc7f1700eb7cc28"
+      "size": 718,
+      "sha256": "f5520f048cead26e3f75904d3fc6422fa2e77c4855a2d75b176d58f604c9ce52"
     },
     {
       "path": "docs/help/skill_help.txt",
@@ -9720,8 +9805,13 @@
     },
     {
       "path": "docs/help/sky_force.txt",
-      "size": 1169,
-      "sha256": "9a0b4dd5f277b4d52aba87c2aad07687f5555fed94c9d2a427b28c9d3590c5ae"
+      "size": 1528,
+      "sha256": "6795682bffd8aa1c00ed52027e1b76601ea6a34a3fbdc18a62b6d9cb97d98ca6"
+    },
+    {
+      "path": "docs/help/sky_pike.txt",
+      "size": 1493,
+      "sha256": "b0acd039178d7da47dc5d863bf83427166a6574b162585bf8ee0d4edc30b6ca8"
     },
     {
       "path": "docs/help/snowkeep.txt",
@@ -9730,58 +9820,63 @@
     },
     {
       "path": "docs/help/soldier.ber.txt",
-      "size": 2065,
-      "sha256": "16d02003e4c47c829b245f831de0e96e1e62477ac8a43aecd0ef1ab34a8caaee"
+      "size": 2160,
+      "sha256": "24495973be3495ffdb62801e94d6f1062f3fbb201e4541a403b42e31c048f8cb"
+    },
+    {
+      "path": "docs/help/soonlight_axe.txt",
+      "size": 1174,
+      "sha256": "a7300a5b4fe899595799bc8bb368cffd359e4507aad7e301a2ce0ccbc81f01dd"
     },
     {
       "path": "docs/help/taiyie.txt",
-      "size": 420,
-      "sha256": "120562f3ce76a878fc1b829535f18ba679ffd66855044698d7a8936228b92790"
+      "size": 675,
+      "sha256": "3697a0eb1e4b20eda1988ca09d1992c96b21850f928646f16bc3b05622c6082e"
     },
     {
       "path": "docs/help/taoism_of_darkness.txt",
-      "size": 1059,
-      "sha256": "17b2a082906301df8ee48f0bcf2acfe5f736f0238b1ed26c35e15369d0e380d4"
+      "size": 1418,
+      "sha256": "9b397199756d415fb5dc0c21f27880cdcce03eb8c02e0c23e9f205b2e0d424fe"
     },
     {
       "path": "docs/help/taoism_of_dunja.txt",
-      "size": 1690,
-      "sha256": "20c76b1b608332604dd9dff291e2fb8f98105ce487ed328ad34ab1c04c0a0235"
+      "size": 2090,
+      "sha256": "764f6516a12b04d9bae83dee113fb4f40c4c164367e150c8d7bed3229c2c5850"
     },
     {
       "path": "docs/help/taoism_of_nature.txt",
-      "size": 1626,
-      "sha256": "50dc759710cb4d7229442a4f0f81b1f2212d5f1fe89cacee9ec8e5397f61559c"
+      "size": 1963,
+      "sha256": "de76abfd0ecf71c3b7c1d2688b03545acffeeb618cd3cb4e611d0baaa161f1f2"
     },
     {
       "path": "docs/help/taoist.fire.txt",
-      "size": 1491,
-      "sha256": "969ddc1333c4d0c696d9f43dc3d74c61a142f34470946e81988270602f10ee09"
+      "size": 2217,
+      "sha256": "688af2102624f798fe73f42542fc9451aedf7d7db8e1e90c9ea85d44ab8135a0"
     },
     {
       "path": "docs/help/taoist.freeze.txt",
-      "size": 1957,
-      "sha256": "a7d410164d939f8f742420a96ae82e4d2b9c4ee64b9de55fc64cb85d20d72658"
+      "size": 3080,
+      "sha256": "24785b979264f236cb67a03b651ccbb51a6fd8d7e3482de73617c9ed57cccf75"
     },
     {
       "path": "docs/help/taoist.storm.txt",
-      "size": 1599,
-      "sha256": "2bb139b8da24052efaac44e29fcec4c695f762b84b4ddd5930ad5eb4b16dab3f"
+      "size": 2210,
+      "sha256": "3ec9ee2c5b34b214faf0f77006eceeef7430ad8b0a43f96229f22b1557b5ff68"
     },
     {
       "path": "docs/help/taoist.thunder.txt",
-      "size": 2005,
-      "sha256": "a43f6dab7fc821d7cd38926d9267f067f2639acaa72c3b7c3ce072665d2750f4"
+      "size": 2919,
+      "sha256": "3721cc55f1e73d6739a23b72414fcc5c500cf6f1bad4b095cc8e425defa6c999"
     },
     {
       "path": "docs/help/thief.longye.txt",
-      "size": 775,
-      "sha256": "e4cddbabf2c546c12a0746223c37da56f1373f8160d703d621cd14e08a0ffb32"
+      "size": 1167,
+      "sha256": "a3cd634bdab2b200b14e7125aa30850dc318edccdbdfd327c1fe421546fcaa1b"
     },
     {
       "path": "docs/help/tidy_force.txt",
-      "size": 685,
-      "sha256": "a514b6d537be547f59605edf69cbcc0047f091fd8f9cb7a7e3a6d2123ec32f09"
+      "size": 1021,
+      "sha256": "db723eab4faf1e43aa7bd08d54a7c7cd93807fda8c4e309b5f1d8ce2684095bc"
     },
     {
       "path": "docs/help/tiger.txt",
@@ -9790,13 +9885,13 @@
     },
     {
       "path": "docs/help/topics.txt",
-      "size": 2678,
-      "sha256": "ee56d69b5fd985f200450481842044a28c572673c66614bdc64a1620e537e0da"
+      "size": 2807,
+      "sha256": "bd0d73c7be2c2f679cfe8b8910c1e623afd5e265eaa4af0fa33b09057c4f5945"
     },
     {
       "path": "docs/help/uenfon.txt",
-      "size": 667,
-      "sha256": "1883aa3a8587c7d16c6015113e9a2b43e945794fd09c871f1fd0f802e4894689"
+      "size": 1083,
+      "sha256": "eceac739c7937b7b9fb62da7457d8b2985c8944448259662c00e011b2bb460dc"
     },
     {
       "path": "docs/help/web.txt",
@@ -9820,8 +9915,8 @@
     },
     {
       "path": "docs/help/wuto-needle.txt",
-      "size": 1418,
-      "sha256": "d428a87bc9fd70d2393586109b53e9ae22ef0fa90f37697c473a266f7043e90b"
+      "size": 1703,
+      "sha256": "71b78f21482f95c916947c1bc3306085c686bdfa4793a31a4969953467250261"
     },
     {
       "path": "docs/help/yaksa.txt",
@@ -9836,12 +9931,12 @@
     {
       "path": "docs/help/zmud.txt",
       "size": 701,
-      "sha256": "262c78ba6decdcb12d9d049e7828aca1e28f7cec87b9631c88d13e0cc34584ba"
+      "sha256": "c3c0b249b70c4bccbf8a19bddd798063b75c4ff68eca45e442edb774698978c6"
     },
     {
       "path": "docs/help/zushang.txt",
-      "size": 840,
-      "sha256": "8b6002ff78735646b7f679b86d98d929c996a9b191b248d43c28a3be1d7245e4"
+      "size": 1133,
+      "sha256": "85bfad108b8f815a1f2322ac4a31b4e74f5fd42dc9ce12ae05c381c92881e08f"
     },
     {
       "path": "feature/README.md",
@@ -9905,13 +10000,13 @@
     },
     {
       "path": "feature/char/attack.c",
-      "size": 9545,
-      "sha256": "3aeed7b176c64dd8d2d87c5d4a24bec64172ba720415013b1e7ad2f9e8c10b0b"
+      "size": 10291,
+      "sha256": "bc1ca65a8bf71b61b211b927784669688ba9797d0180ee84b6fe9e7cfe4ad950"
     },
     {
       "path": "feature/char/combat.c",
-      "size": 16296,
-      "sha256": "6e56d4d65155367c55d3d80e4da87bbd9a33816050e5060e8ccca031e4de0e01"
+      "size": 16336,
+      "sha256": "496b42e8c118ebe0b1075466c69883b5f4e05c779fedcb000c8995202df11ea8"
     },
     {
       "path": "feature/char/command.c",
@@ -9940,13 +10035,13 @@
     },
     {
       "path": "feature/char/score.c",
-      "size": 3784,
-      "sha256": "006e4cb941a9be05a18d06b54049c87a916fc0b2bb34b626989f8d7cbfa398b0"
+      "size": 4228,
+      "sha256": "c0d86c9946376158dae898927986817b07b84893d01fcd487b9442fa643caa17"
     },
     {
       "path": "feature/char/skill.c",
-      "size": 20707,
-      "sha256": "371167d2a27a10b029d99eba68bd0ae0523902b07e4387337c448827da450e6c"
+      "size": 21106,
+      "sha256": "2e1ec9e47895613aa1a05dd14d95555afea58ce3d4e083245e0d2135a5722d38"
     },
     {
       "path": "feature/char/team.c",
@@ -10000,8 +10095,8 @@
     },
     {
       "path": "feature/npc/dummy.c",
-      "size": 2232,
-      "sha256": "e3a0797bd45a42135a9fdbf159d6790185c0b16173f267196dd7277de8b4d2b4"
+      "size": 3710,
+      "sha256": "2c7483dcd727370d450b0f180e00718ff45c8d55a07dfb847fdd80a9fe774503"
     },
     {
       "path": "feature/npc/fighter.c",
@@ -10894,6 +10989,11 @@
       "sha256": "8747b577cc7da35eee5fe3701d750ea304bd9301b2aa44c1e6ae5c653cab8c58"
     },
     {
+      "path": "obj/fish_pearl.c",
+      "size": 594,
+      "sha256": "97b89400feb8f13361985417d505687f4c2f06d058db5a136fce73649e7bd95c"
+    },
+    {
       "path": "obj/food/dumpling.c",
       "size": 348,
       "sha256": "17d1830963f357be3b7e5fca818a6227c34c278eb5daf1eec9c8e430322a0406"
@@ -10917,6 +11017,11 @@
       "path": "obj/food/ricedough.c",
       "size": 398,
       "sha256": "758d8016501cad27bddfbc9ca958c39a52a2ab7057b0459f7990f48d585e594a"
+    },
+    {
+      "path": "obj/food/river_fish.c",
+      "size": 1402,
+      "sha256": "92ce339fb7b00bddfdb53ff66caca754a05ca358c0c413b8cbbea6ed0a7b3534"
     },
     {
       "path": "obj/food/snake_powder.c",
@@ -11055,8 +11160,8 @@
     },
     {
       "path": "obj/user.c",
-      "size": 8745,
-      "sha256": "91210822d40bdabe6b8cf5f065f1a4f923a89534489bdf0f308c348599fed76b"
+      "size": 8751,
+      "sha256": "e43cc290a3a8bcba90d2efc9fe8d319a4a38222e0552ff0455e2abb76009d2e2"
     },
     {
       "path": "obj/void.c",
@@ -11125,8 +11230,8 @@
     },
     {
       "path": "std/martial_art.c",
-      "size": 6778,
-      "sha256": "60de00b64823b41be84b6984a0ed7976da49c1cf4af0b726d562d3034b10d21a"
+      "size": 8310,
+      "sha256": "d4f598b5a9ecb129438b33f0d5447692d6db400f0677de45c20b42aa50105da4"
     },
     {
       "path": "std/martial_art.h",
@@ -11190,8 +11295,8 @@
     },
     {
       "path": "std/room.c",
-      "size": 12526,
-      "sha256": "1ae771554a8d6acc25933f088bdcd0b9e833b076188a5477f9f1e80856adbd15"
+      "size": 12812,
+      "sha256": "da808f77cf2762d5fc5fa789a76882414e2085b06f3a6ec6f5cfd0d9c0cee7b0"
     },
     {
       "path": "std/skill.c",

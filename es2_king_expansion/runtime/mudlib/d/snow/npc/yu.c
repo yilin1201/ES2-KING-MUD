@@ -23,6 +23,7 @@ void create()
 		"/obj/armor/fur_hat": 5,
 		"/obj/bottle": 5,
 		"/custom/item/scroll/blank": 1000,	// 空白符紙（2026-10-24）
+		"/d/swaylan/obj/bait" : 500,   // 魚餌（釣魚用）
 	]));
 	set("chat_chance", 5);
 	set("chat_msg", ({
@@ -68,6 +69,7 @@ int accept_object(object me,object ob)
 "魚天說道: 這.. 雖然不是銀兩, 不過也說不定有人想買, 真是謝謝你啦.\n",
 "魚天轉身將"+ob->name()+"收入了櫃台之後.\n",
 		}));
+		call_out("drop_item", 1, ob);
 		return 1;					// lv <=5, 1 coin is enough
 	}								// lv >5, cost silver or gold
 	if( ob->query("money_id")!="coin")
@@ -91,4 +93,10 @@ int accept_object(object me,object ob)
 			return 1;;
 		default:	return 1;
 	}
+}
+
+/* 收下的東西刪掉，不留在身上（give 指令只會銷毀錢；使用者定案，2026-11-22）。 */
+void drop_item(object ob)
+{
+    if( objectp(ob) && environment(ob) == this_object() ) destruct(ob);
 }
