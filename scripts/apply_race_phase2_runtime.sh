@@ -135,11 +135,48 @@ if [[ -d "$ES2M_OLDPINE_DIR" ]]; then
     --source "$REPO_ROOT/es2m_source_mirror/mudlib"
 
   if [[ -e "$ROOT/mudlib/d/oldpine" ]]; then
-    # E2E 再次套用時僅允許逐檔一致的已導入區域，不得覆蓋差異。
-    diff -qr "$ES2M_OLDPINE_DIR" "$ROOT/mudlib/d/oldpine" || {
-      echo "ES2M OLDPINE CONFLICT: existing runtime differs from source" >&2; exit 1;
-    }
-    echo "ES2M OLDPINE IDEMPOTENT PASS"
+    # E2E 重複套用時逐檔驗證 ES2M 來源均存在且 SHA 完全一致；
+    # 允許並明確白名單保留 KING 專屬 goat/squirrel NPC 與歷史區域物件，不以來源清冊縮減刪除。
+    python3 - "$ES2M_OLDPINE_DIR" "$ROOT/mudlib/d/oldpine" <<'PY'
+from pathlib import Path
+import hashlib
+import sys
+
+source = Path(sys.argv[1])
+runtime = Path(sys.argv[2])
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+source_files = {p.relative_to(source).as_posix(): p for p in source.rglob("*.c")}
+runtime_files = {p.relative_to(runtime).as_posix(): p for p in runtime.rglob("*.c")}
+missing = sorted(set(source_files) - set(runtime_files))
+changed = sorted(
+    rel for rel in set(source_files) & set(runtime_files)
+    if digest(source_files[rel]) != digest(runtime_files[rel])
+)
+# KING Expansion 專屬保留項目：不可因 ES2M main 未列入而刪除。
+king_only = {
+    "npc/goat.c",
+    "npc/squirrel.c",
+    "obj/coarse_cloth.c",
+    "obj/dragon_pill.c",
+    "obj/head_cloth.c",
+    "obj/meat.c",
+    "obj/venison.c",
+}
+extra = sorted(set(runtime_files) - set(source_files))
+unclassified = sorted(set(extra) - king_only)
+missing_king = sorted(king_only - set(extra))
+if missing or changed or unclassified or missing_king:
+    print("ES2M OLDPINE IDEMPOTENCY FAIL")
+    print("missing_source_files:", missing)
+    print("changed_source_files:", changed)
+    print("unclassified_runtime_extras:", unclassified)
+    print("missing_KING_preserved_files:", missing_king)
+    raise SystemExit(1)
+print("ES2M OLDPINE IDEMPOTENT PASS／ES2M 來源逐檔一致，7 件 KING 專屬檔案完整保留。")
+PY
   else
     mkdir -p "$ROOT/mudlib/d/oldpine"
     cp -a "$ES2M_OLDPINE_DIR/." "$ROOT/mudlib/d/oldpine/"
