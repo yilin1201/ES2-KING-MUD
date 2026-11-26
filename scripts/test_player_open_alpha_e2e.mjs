@@ -536,9 +536,11 @@ await exerciseSnowTownServices(human);
 await exerciseOriginalLiterateSource(human);
 await joinAlchemist(human);
 await saveQuitRelogin(human, /方士|龍圖丹派弟子/);
-// P0：木劍在存檔、quit、重新登入後必須仍存在；不把指令有回應誤當物品持久化。
-assert.match(await command(human, "i"), /木劍/);
-console.log("PLAYER_WOODSWORD_AUTOLOAD_RELOGIN_PASS");
+// Original ES2 quit contract：沒有 query_autoload() 的有價值物品會在 quit 時落地，不會跟玩家存檔。
+const postQuitInventory = await command(human, "i");
+assert.match(postQuitInventory, /目前你身上沒有任何東西/);
+assert.doesNotMatch(postQuitInventory, /木劍/);
+console.log("PLAYER_WOODSWORD_ORIGINAL_QUIT_DROP_PASS");
 console.log("ORIGINAL_PLAYER_CREATION_HUMAN_E2E_PASS");
 human.socket.close();
 
