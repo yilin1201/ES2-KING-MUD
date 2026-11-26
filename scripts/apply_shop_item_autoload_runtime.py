@@ -12,6 +12,8 @@ ITEMS = (
     "obj/armor/fur_hat.c",
     "d/snow/npc/obj/fur_hat.c",
     "d/lee/obj/waterskin.c",
+    # 最新李忠 merchandise 使用 /d/npc/obj/waterskin；舊 d/lee 路徑不能代替實際販售檔。
+    "d/npc/obj/waterskin.c",
 )
 ADAPTER = r'''
 
