@@ -114,6 +114,18 @@ def main() -> None:
             assert king_extra_npcs == {"goat.c", "squirrel.c"}, (
                 f"ES2M_OLDPINE_UNCLASSIFIED_EXTRA_NPCS: {sorted(king_extra_npcs)}"
             )
+            current_root_objects = {p.name for p in (args.current_source / "d/oldpine/obj").glob("*.c")}
+            current_npc_objects = {p.name for p in (args.current_source / "d/oldpine/npc/obj").glob("*.c")}
+            runtime_root_objects = {p.name for p in (args.runtime / "d/oldpine/obj").glob("*.c")}
+            runtime_npc_objects = {p.name for p in (args.runtime / "d/oldpine/npc/obj").glob("*.c")}
+            assert runtime_root_objects == current_root_objects, (
+                f"ES2M_OLDPINE_RUNTIME_ROOT_OBJECT_MISMATCH: extra={sorted(runtime_root_objects-current_root_objects)} "
+                f"missing={sorted(current_root_objects-runtime_root_objects)}"
+            )
+            assert runtime_npc_objects == current_npc_objects, (
+                f"ES2M_OLDPINE_RUNTIME_NPC_OBJECT_MISMATCH: extra={sorted(runtime_npc_objects-current_npc_objects)} "
+                f"missing={sorted(current_npc_objects-runtime_npc_objects)}"
+            )
         else:
             assert runtime_npc_count == source_npc_count, f"ES2M_OLDPINE_RUNTIME_NPC_COUNT: {runtime_npc_count} expected={source_npc_count}"
         validate_tree(args.runtime, True, runtime_npc_count)
@@ -129,19 +141,6 @@ def main() -> None:
         assert len(extra_npcs) == runtime_npc_count - len(reference_npcs), (
             f"ES2M_OLDPINE_RUNTIME_EXTRA_NPCS: {extra_npcs}"
         )
-            current_root_objects = {p.name for p in (args.current_source / "d/oldpine/obj").glob("*.c")}
-            current_npc_objects = {p.name for p in (args.current_source / "d/oldpine/npc/obj").glob("*.c")}
-            runtime_root_objects = {p.name for p in (args.runtime / "d/oldpine/obj").glob("*.c")}
-            runtime_npc_objects = {p.name for p in (args.runtime / "d/oldpine/npc/obj").glob("*.c")}
-            assert runtime_root_objects == current_root_objects, (
-                f"ES2M_OLDPINE_RUNTIME_ROOT_OBJECT_MISMATCH: extra={sorted(runtime_root_objects-current_root_objects)} "
-                f"missing={sorted(current_root_objects-runtime_root_objects)}"
-            )
-            assert runtime_npc_objects == current_npc_objects, (
-                f"ES2M_OLDPINE_RUNTIME_NPC_OBJECT_MISMATCH: extra={sorted(runtime_npc_objects-current_npc_objects)} "
-                f"missing={sorted(current_npc_objects-runtime_npc_objects)}"
-            )
-        assert len(extra_npcs) == runtime_npc_count - len(source_npcs), f"ES2M_OLDPINE_RUNTIME_EXTRA_NPCS: {extra_npcs}"
         if extra_npcs:
             print("ES2M_OLDPINE_RUNTIME_EXTRA_NPC:", ",".join(extra_npcs))
     source_objects = len(list((args.source / "d/oldpine/obj").glob("*.c"))) + len(list((args.source / "d/oldpine/npc/obj").glob("*.c")))
