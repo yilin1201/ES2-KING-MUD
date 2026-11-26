@@ -191,7 +191,7 @@ PY
 
   python3 "$REPO_ROOT/scripts/test_es2m_oldpine_topology.py" \
     --source "$REPO_ROOT/es2m_source_mirror/mudlib" --runtime "$ROOT/mudlib"
-  echo 'ES2M OLDPINE CONNECTED: 50 rooms, 17 NPCs and 5 local objects; Snow sgate southeast <-> entrance northwest.'
+  echo 'ES2M OLDPINE CONNECTED: 50 rooms, 17 NPCs and 9 NPC equipment objects; Snow sgate southeast <-> entrance northwest.'
 fi
 
 # ES2M 振武軍營正式地圖接線：Owner 已授權開放軍營與原始徵兵規則。
