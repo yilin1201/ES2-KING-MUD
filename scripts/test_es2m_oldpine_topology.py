@@ -60,10 +60,11 @@ def validate_tree(mudlib: Path, require_snow_link: bool, expected_npc_count: int
         for npc in re.findall(r'__DIR__"npc/([a-z_]+)"', code):
             assert (area / "npc" / f"{npc}.c").is_file(), f"ES2M_OLDPINE_MISSING_NPC: {room.name}:{npc}"
 
+    # 最新 ES2M 已將老松林 NPC 裝備改放 d/oldpine/npc/obj；psakaml 則位於共用 d/npc/obj。
     dependencies = {
-        "custom/armor/neck/psakaml.c",
-        "custom/armor/head/violet_hairpin.c",
-        "custom/armor/waist/voliet_jade.c",
+        "d/npc/obj/psakaml.c",
+        "d/oldpine/npc/obj/violet_hairpin.c",
+        "d/oldpine/npc/obj/voliet_jade.c",
     }
     for rel in dependencies:
         assert (mudlib / rel).is_file(), f"ES2M_OLDPINE_MISSING_DEPENDENCY: {rel}"
