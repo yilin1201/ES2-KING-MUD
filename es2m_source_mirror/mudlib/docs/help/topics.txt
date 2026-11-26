@@ -23,25 +23,21 @@
   scholar.myst     步玄派         alchemist.dragon 龍圖丹派
   alchemist.wu     武陀灸堂       scholar.sky      玄天派
   taoist.thunder   紫衣派         taoist.freeze    素衣派
-  fighter.huge     哭笑門
+  fighter.huge     哭笑門         mao-shan.cloud   靈雲觀
 
 【 茅山技能 】
   mao-shan_magic     茅山法術      taoism_of_nature   茅山幻術
   taoism_of_dunja    遁甲書        taoism_of_darkness 茅山奇術
-  mao-shan_mysticism 奇門術
+  mao-shan_mysticism 奇門術        taoism_of_purify   幽冥三箭
+  mao-shan_lightning 五雷術
 
 【 共通技能 】
-  halieutics         捕魚技巧
-  soonlight_axe      迅雷斧法
-  fonxiaoken         風嘯拳法
-  uenfon             雲峰筆招
-  sky_pike           穹槍訣
-  kee_anatomy        經脈穴道之學
-  enchance           強化之術
-  ice-fire_axe       玄冰烈焰斧 (限武者)
-  taiyie             太乙劍法 (限道士)
-  chivi_sutra        天師道法【紫薇心經】 (限道士、方士)
-  butterfly-steps    蝶影幻步 (限盜賊)
+  halieutics         捕魚技巧      soonlight_axe      迅雷斧法
+  fonxiaoken         風嘯拳法      uenfon             雲峰筆招
+  sky_pike           穹槍訣        kee_anatomy        經脈穴道之學
+  enhance            強化之術      ice-fire_axe       玄冰烈焰斧
+  taiyie             太乙劍法      chivi_sutra        天師道法【紫薇心經】
+  butterfly-steps    蝶影幻步
 
 【 種族 】
   human        人類／人類族      blackteeth   黑齒
