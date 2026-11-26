@@ -9,6 +9,16 @@ from apply_combined_item_autoload_runtime import ITEMS, MARKER, apply
 
 
 class CombinedItemAutoloadTests(unittest.TestCase):
+    def test_current_lee_vendor_paths_are_included(self):
+        # 李忠最新 merchandise 指向 d/npc 與 d/lee/npc；舊 d/lee 別名不能代替實際販售檔。
+        for rel in (
+            "d/npc/obj/sugar.c",
+            "d/npc/obj/salt.c",
+            "d/lee/npc/obj/flour.c",
+            "d/npc/obj/bait.c",
+        ):
+            self.assertIn(rel, ITEMS)
+
     def test_adapts_only_known_shop_items(self):
         with tempfile.TemporaryDirectory() as root:
             mudlib = Path(root)
