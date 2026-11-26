@@ -27,10 +27,20 @@ def validate_tree(mudlib: Path, require_snow_link: bool, expected_npc_count: int
     area = mudlib / "d/oldpine"
     rooms = sorted(area.glob("*.c"))
     npcs = sorted((area / "npc").glob("*.c"))
+    # 最新 ES2M 來源已將老松林物件放在 npc/obj；不再使用舊版 d/oldpine/obj 五件清單。
     objects = sorted((area / "obj").glob("*.c"))
+    npc_objects = sorted((area / "npc" / "obj").glob("*.c"))
+    expected_npc_objects = {
+        "animitta_kasaya.c", "head_cloth.c", "leather_vest.c", "venison.c",
+        "violet_cloth.c", "violet_hairpin.c", "violet_shoes.c",
+        "voliet_jade.c", "wither_zenstaff.c",
+    }
     assert len(rooms) == 50, f"ES2M_OLDPINE_ROOM_COUNT: {len(rooms)}"
     assert len(npcs) == expected_npc_count, f"ES2M_OLDPINE_NPC_COUNT: {len(npcs)} expected={expected_npc_count}"
-    assert len(objects) == 5, f"ES2M_OLDPINE_OBJECT_COUNT: {len(objects)}"
+    assert not objects, f"ES2M_OLDPINE_UNEXPECTED_ROOT_OBJECTS: {[p.name for p in objects]}"
+    assert {p.name for p in npc_objects} == expected_npc_objects, (
+        f"ES2M_OLDPINE_NPC_OBJECT_INVENTORY: {sorted(p.name for p in npc_objects)}"
+    )
 
     room_names = {p.stem for p in rooms}
     for room in rooms:
@@ -96,7 +106,7 @@ def main() -> None:
         assert len(extra_npcs) == runtime_npc_count - len(source_npcs), f"ES2M_OLDPINE_RUNTIME_EXTRA_NPCS: {extra_npcs}"
         if extra_npcs:
             print("ES2M_OLDPINE_RUNTIME_EXTRA_NPC:", ",".join(extra_npcs))
-    print(f"ES2M OLDPINE TOPOLOGY PASS／50 房間、最新來源 {source_npc_count} NPC、Runtime {runtime_npc_count} NPC、5 物件、雙向入口及拜師主線引用閉合。")
+    print(f"ES2M OLDPINE TOPOLOGY PASS／50 房間、最新來源 {source_npc_count} NPC、Runtime {runtime_npc_count} NPC、9 件 NPC 裝備物件、雙向入口及拜師主線引用閉合。")
 
 
 if __name__ == "__main__":
