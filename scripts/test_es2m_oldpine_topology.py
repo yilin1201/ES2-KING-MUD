@@ -41,28 +41,31 @@ def validate_tree(mudlib: Path, require_snow_link: bool, expected_npc_count: int
     }
     assert len(rooms) == 50, f"ES2M_OLDPINE_ROOM_COUNT: {len(rooms)}"
     assert len(npcs) == expected_npc_count, f"ES2M_OLDPINE_NPC_COUNT: {len(npcs)} expected={expected_npc_count}"
+    dependencies = set()
     if objects:
         assert {p.name for p in objects} == expected_root_objects, (
             f"ES2M_OLDPINE_ROOT_OBJECT_INVENTORY: {sorted(p.name for p in objects)}"
         )
-        assert not npc_objects, f"ES2M_OLDPINE_UNEXPECTED_NPC_OBJECTS: {[p.name for p in npc_objects]}"
-        dependencies = {
-            "custom/armor/neck/psakaml.c",
-            "custom/armor/head/violet_hairpin.c",
-            "custom/armor/waist/voliet_jade.c",
-        }
-    else:
+        # 僅舊版封存快照使用 custom/armor 依賴；Runtime 若同時含新舊物件，舊物件只作相容保留。
+        if not npc_objects:
+            dependencies.update({
+                "custom/armor/neck/psakaml.c",
+                "custom/armor/head/violet_hairpin.c",
+                "custom/armor/waist/voliet_jade.c",
+            })
+    if npc_objects:
         assert {p.name for p in npc_objects} == expected_npc_objects, (
             f"ES2M_OLDPINE_NPC_OBJECT_INVENTORY: {sorted(p.name for p in npc_objects)}"
         )
-        dependencies = {
+        dependencies.update({
             "d/npc/obj/psakaml.c",
             "d/npc/obj/coarse_cloth.c",
             "d/npc/obj/dragon_pill.c",
             "d/npc/obj/meat.c",
             "d/oldpine/npc/obj/violet_hairpin.c",
             "d/oldpine/npc/obj/voliet_jade.c",
-        }
+        })
+    assert objects or npc_objects, "ES2M_OLDPINE_OBJECT_INVENTORY_EMPTY"
 
     room_names = {p.stem for p in rooms}
     for room in rooms:
@@ -115,12 +118,14 @@ def main() -> None:
                 f"ES2M_OLDPINE_UNCLASSIFIED_EXTRA_NPCS: {sorted(king_extra_npcs)}"
             )
             current_root_objects = {p.name for p in (args.current_source / "d/oldpine/obj").glob("*.c")}
+            legacy_root_objects = {p.name for p in (args.source / "d/oldpine/obj").glob("*.c")}
             current_npc_objects = {p.name for p in (args.current_source / "d/oldpine/npc/obj").glob("*.c")}
             runtime_root_objects = {p.name for p in (args.runtime / "d/oldpine/obj").glob("*.c")}
             runtime_npc_objects = {p.name for p in (args.runtime / "d/oldpine/npc/obj").glob("*.c")}
-            assert runtime_root_objects == current_root_objects, (
-                f"ES2M_OLDPINE_RUNTIME_ROOT_OBJECT_MISMATCH: extra={sorted(runtime_root_objects-current_root_objects)} "
-                f"missing={sorted(current_root_objects-runtime_root_objects)}"
+            expected_runtime_root_objects = current_root_objects | legacy_root_objects
+            assert runtime_root_objects == expected_runtime_root_objects, (
+                f"ES2M_OLDPINE_RUNTIME_ROOT_OBJECT_MISMATCH: extra={sorted(runtime_root_objects-expected_runtime_root_objects)} "
+                f"missing={sorted(expected_runtime_root_objects-runtime_root_objects)}"
             )
             assert runtime_npc_objects == current_npc_objects, (
                 f"ES2M_OLDPINE_RUNTIME_NPC_OBJECT_MISMATCH: extra={sorted(runtime_npc_objects-current_npc_objects)} "
