@@ -453,6 +453,35 @@ python3 "$REPO_ROOT/scripts/apply_es2m_shop_quantity_runtime.py" \
 python3 "$REPO_ROOT/scripts/apply_es2m_container_runtime.py" \
   --runtime "$ROOT/mudlib"
 
+# Latest Lee Vendor Items／最新李家村商店商品：
+# 李忠的 merchandise 已改用 /d/npc/obj 與 /d/lee/npc/obj；由最新 source mirror 補入，
+# 不以舊 d/lee/obj 別名代替，也不覆蓋 Runtime 中內容不同的檔案。
+python3 - "$REPO_ROOT/es2m_source_mirror/mudlib" "$ROOT/mudlib" <<'PY'
+from pathlib import Path
+import filecmp
+import shutil
+import sys
+source_root, runtime_root = map(Path, sys.argv[1:3])
+items = (
+    "d/npc/obj/salt.c",
+    "d/npc/obj/sugar.c",
+    "d/lee/npc/obj/flour.c",
+)
+staged = []
+for rel in items:
+    src, dst = source_root / rel, runtime_root / rel
+    if not src.is_file():
+        raise SystemExit("ES2M_LEE_VENDOR_ITEM_SOURCE_MISSING: " + rel)
+    if dst.is_file():
+        if not filecmp.cmp(src, dst, shallow=False):
+            raise SystemExit("ES2M_LEE_VENDOR_ITEM_CONFLICT: " + rel)
+        continue
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, dst)
+    staged.append(rel)
+print("ES2M_LEE_VENDOR_ITEMS_STAGED_PASS: " + ",".join(items))
+PY
+
 # Combined Item Persistence／組合物品保存：商店購買的包子、饅頭等數量在 save/quit/relogin 後保留。
 # 不修改玩家 save format；沿用既有 user autoload 陣列，只補 COMBINED_ITEM 的既有 autoload 契約。
 python3 "$REPO_ROOT/scripts/apply_combined_item_autoload_runtime.py" \
