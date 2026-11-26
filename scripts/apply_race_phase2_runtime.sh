@@ -266,6 +266,22 @@ if [[ -d "$ES2M_WUTANG_DIR" ]]; then
   fi
   echo 'KING WUTANG FERRY STAGE PASS／羿水渡兩艘船、船夫 NPC 與紫煙渡口已保留於 Runtime。'
 
+  # KING Expansion Wutang NPCs／五堂鎮自訂 NPC：補回冷梅莊弟子、護院武師、小黃與梅影風。
+  # 這四名 NPC 不在最新 ES2M main 的 32 名上游清冊內，必須保留 KING Expansion 版本。
+  KING_WUTANG_NPC_DIR="$REPO_ROOT/es2_king_expansion/runtime/mudlib/d/wutang/npc"
+  for npc in apprentice.c guard.c huang.c may_yin_fong.c; do
+    src="$KING_WUTANG_NPC_DIR/$npc"
+    dst="$ROOT/mudlib/d/wutang/npc/$npc"
+    [[ -f "$src" ]] || { echo "KING WUTANG NPC FAIL: missing Expansion source $src" >&2; exit 1; }
+    if [[ -e "$dst" ]]; then
+      cmp -s "$src" "$dst" || { echo "KING WUTANG NPC CONFLICT: $dst differs from Expansion source" >&2; exit 1; }
+    else
+      mkdir -p "$(dirname "$dst")"
+      cp "$src" "$dst"
+    fi
+  done
+  echo 'KING WUTANG NPC STAGE PASS／四名 KING 專屬 NPC 已保留於 Runtime。'
+
   # KING Expansion Wutang objects／五堂鎮專屬物件：上游只在 npc/obj 保存來源版本，
   # KING Runtime 清冊另外保留已確認的五件區域物件；逐檔比對後才補入，不覆蓋不同版本。
   KING_WUTANG_OBJECT_DIR="$REPO_ROOT/es2_king_expansion/runtime/mudlib/d/wutang/obj"
