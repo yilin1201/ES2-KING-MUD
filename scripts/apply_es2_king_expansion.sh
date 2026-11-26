@@ -23,6 +23,22 @@ fi
 echo "KING HAINMAY BASELINE PASS／KING 凍結武功與執行 overlay 一致。"
 cp -a "$SOURCE/." "$TARGET/mudlib/"
 
+# ES2M Autoload Path Migration／玩家自動載入舊存檔路徑轉換器：
+# MOVED_PATH_D 必須在 globals.h 註冊，daemon 與路徑表也必須同時進入 Runtime。
+python3 - "$TARGET/mudlib" <<'PY'
+from pathlib import Path
+import re
+import sys
+root = Path(sys.argv[1])
+globals_h = (root / "include/globals.h").read_text(encoding="utf-8")
+if not re.search(r'^#define\\s+MOVED_PATH_D\\s+"/adm/daemons/moved_pathd\\.c"', globals_h, re.M):
+    raise SystemExit("ES2M_AUTOLOAD_MOVED_PATH_FAIL: MOVED_PATH_D macro missing from globals.h")
+for rel in ("adm/daemons/moved_pathd.c", "adm/etc/moved_paths"):
+    if not (root / rel).is_file():
+        raise SystemExit("ES2M_AUTOLOAD_MOVED_PATH_FAIL: missing " + rel)
+print("ES2M_AUTOLOAD_MOVED_PATH_RUNTIME_PASS／宏、daemon 與路徑表完整。")
+PY
+
 # ES2M Training Dummy／練武假人：只在生成 Runtime 套用 ES2M 行為，不改寫保存的 Original ES2。
 # 此補丁只調整假人命中、防禦、敘述與教學指令；一般戰鬥公式維持原始來源。
 python3 - "$TARGET/mudlib" <<'PY'
