@@ -104,23 +104,31 @@ def main() -> None:
         runtime_npc_count = len(list((args.runtime / "d/oldpine/npc").glob("*.c")))
         if args.current_source:
             current_npcs = {p.name for p in (args.current_source / "d/oldpine/npc").glob("*.c")}
-            assert runtime_npc_count == len(current_npcs), (
-                f"ES2M_OLDPINE_RUNTIME_NPC_COUNT: {runtime_npc_count} expected_current_source={len(current_npcs)}"
+            runtime_npc_names = {p.name for p in (args.runtime / "d/oldpine/npc").glob("*.c")}
+            missing_current_npcs = sorted(current_npcs - runtime_npc_names)
+            assert not missing_current_npcs, (
+                f"ES2M_OLDPINE_RUNTIME_MISSING_CURRENT_NPCS: {missing_current_npcs}"
+            )
+            # KING Expansion 保留 goat/squirrel 兩名額外 NPC；不得因上游清冊縮減而刪除。
+            king_extra_npcs = runtime_npc_names - current_npcs
+            assert king_extra_npcs == {"goat.c", "squirrel.c"}, (
+                f"ES2M_OLDPINE_UNCLASSIFIED_EXTRA_NPCS: {sorted(king_extra_npcs)}"
             )
         else:
             assert runtime_npc_count == source_npc_count, f"ES2M_OLDPINE_RUNTIME_NPC_COUNT: {runtime_npc_count} expected={source_npc_count}"
         validate_tree(args.runtime, True, runtime_npc_count)
         source_npcs = {p.name for p in (args.source / "d/oldpine/npc").glob("*.c")}
         runtime_npcs = {p.name for p in (args.runtime / "d/oldpine/npc").glob("*.c")}
-        extra_npcs = sorted(runtime_npcs - source_npcs)
-        missing_npcs = sorted(source_npcs - runtime_npcs)
+        reference_npcs = (
+            {p.name for p in (args.current_source / "d/oldpine/npc").glob("*.c")}
+            if args.current_source else source_npcs
+        )
+        extra_npcs = sorted(runtime_npcs - reference_npcs)
+        missing_npcs = sorted(reference_npcs - runtime_npcs)
         assert not missing_npcs, f"ES2M_OLDPINE_RUNTIME_MISSING_NPC: {missing_npcs}"
-        if args.current_source:
-            current_npcs = {p.name for p in (args.current_source / "d/oldpine/npc").glob("*.c")}
-            assert runtime_npcs == current_npcs, (
-                f"ES2M_OLDPINE_RUNTIME_SOURCE_MISMATCH: extra={sorted(runtime_npcs-current_npcs)} "
-                f"missing={sorted(current_npcs-runtime_npcs)}"
-            )
+        assert len(extra_npcs) == runtime_npc_count - len(reference_npcs), (
+            f"ES2M_OLDPINE_RUNTIME_EXTRA_NPCS: {extra_npcs}"
+        )
             current_root_objects = {p.name for p in (args.current_source / "d/oldpine/obj").glob("*.c")}
             current_npc_objects = {p.name for p in (args.current_source / "d/oldpine/npc/obj").glob("*.c")}
             runtime_root_objects = {p.name for p in (args.runtime / "d/oldpine/obj").glob("*.c")}
