@@ -31,7 +31,7 @@ import re
 import sys
 root = Path(sys.argv[1])
 globals_h = (root / "include/globals.h").read_text(encoding="utf-8")
-if not re.search(r'^#define\\s+MOVED_PATH_D\\s+"/adm/daemons/moved_pathd\\.c"', globals_h, re.M):
+if not any(line.strip().startswith('#define MOVED_PATH_D "/adm/daemons/moved_pathd.c"') for line in globals_h.splitlines()):
     raise SystemExit("ES2M_AUTOLOAD_MOVED_PATH_FAIL: MOVED_PATH_D macro missing from globals.h")
 for rel in ("adm/daemons/moved_pathd.c", "adm/etc/moved_paths"):
     if not (root / rel).is_file():
