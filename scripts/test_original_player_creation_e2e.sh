@@ -107,7 +107,7 @@ done
 mkfifo "$TEMP_ROOT/driver.stdin"
 tail -f /dev/null > "$TEMP_ROOT/driver.stdin" &
 stdin_pid=$!
-(cd "$TEMP_ROOT"; exec "$DRIVER_BIN" -f neolith.conf < "$TEMP_ROOT/driver.stdin") >"$TEMP_ROOT/driver.stdout" 2>&1 & driver_pid=$!
+(cd "$TEMP_ROOT"; exec "$DRIVER_BIN" -f neolith.conf -c < "$TEMP_ROOT/driver.stdin") >"$TEMP_ROOT/driver.stdout" 2>&1 & driver_pid=$!
 echo "E2E_STAGE: Neolith started with persistent console stdin"
 # Passive Listen Check／被動監聽檢查：不可主動連線後立即斷線，Neolith 可能因此收到 SIGPIPE。
 command -v ss >/dev/null 2>&1 || { echo 'ORIGINAL PLAYER CREATION E2E BLOCKED：缺少 ss 被動監聽檢查工具。' >&2; exit 1; }
