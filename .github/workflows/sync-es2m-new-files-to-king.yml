@@ -1,5 +1,5 @@
 name: Sync ES2M Files Into KING Overlay
-# 2026-11-22：固定同步使用者指定的 ES2M 最新版 wolfer168/es2-webmud commit d0666da2；KING 僅讀取來源並單向整合。
+# 2026-11-27：同步 ES2M main 最新 HEAD f165fbf259b7ceda1f8e030bd9cf29c8a14b255c；KING 僅讀取來源並單向整合。
 
 on:
   push:
@@ -41,9 +41,9 @@ jobs:
         run: |
           set -euo pipefail
           git clone --no-checkout https://github.com/wolfer168/es2-webmud.git /tmp/es2m-latest
-          git -C /tmp/es2m-latest checkout --detach 62683cd9d72e4000a8a82b44c30ad0def60bd938
+          git -C /tmp/es2m-latest checkout --detach f165fbf259b7ceda1f8e030bd9cf29c8a14b255c
           ES2M_COMMIT=$(git -C /tmp/es2m-latest rev-parse HEAD)
-          test "$ES2M_COMMIT" = "62683cd9d72e4000a8a82b44c30ad0def60bd938"
+          test "$ES2M_COMMIT" = "f165fbf259b7ceda1f8e030bd9cf29c8a14b255c"
           echo "commit=$ES2M_COMMIT" >> "$GITHUB_OUTPUT"
           test -d /tmp/es2m-latest/source/upstream/mudlib
           mkdir -p es2m_source_mirror/mudlib
@@ -71,7 +71,7 @@ jobs:
               "hash_algorithm": "SHA-256",
               "files": files,
               "policy": [
-                  "更新前固定以 wolfer168/es2-webmud commit d0666da2 為來源。",
+                  "更新前固定以 wolfer168/es2-webmud commit f165fbf259b7ceda1f8e030bd9cf29c8a14b255c 為來源。",
                   "鏡像只保留來源 Mudlib 當前存在的檔案。",
                   "KING runtime overlay 依來源同路徑覆蓋；不刪除來源中不存在的 KING 專屬檔案。",
                   "Pinned Original ES2 checkout 僅供比較，絕不修改。",
