@@ -436,8 +436,11 @@ async function exerciseShopQuantityJourney(p) {
   assert.match(await command(p, "south"), /村口大門/);
   assert.match(await command(p, "south"), /村口/);
   assert.match(await command(p, "southwest"), /河邊|李家村/);
-  let snowRoom = "";
-  for (let i = 0; i < 7; i++) snowRoom = await command(p, "west");
+  // Inn Door／客棧大門會依遊戲時間自動關閉；普通玩家從廣場西邊回程時先正常開門。
+  for (let i = 0; i < 6; i++) await command(p, "west");
+  assert.match(await command(p, "look"), /雪亭鎮廣場的西邊/);
+  await command(p, "open west", /打開|已經是開著/);
+  const snowRoom = await command(p, "west");
   assert.match(snowRoom, /客棧大堂/);
 
   // Money Exchange／普通玩家到既有錢莊換零錢，避免以管理指令製造測試貨幣。
@@ -465,6 +468,7 @@ async function exerciseShopQuantityJourney(p) {
   assert.match(await command(p, "north"), /廣場/);
   assert.match(await command(p, "north"), /廣場中央/);
   assert.match(await command(p, "west"), /廣場的西邊/);
+  await command(p, "open west", /打開|已經是開著/);
   assert.match(await command(p, "west"), /客棧大堂/);
 
   const list = await command(p, "list waiter");
@@ -489,6 +493,7 @@ async function exerciseShopQuantityJourney(p) {
   p.socket.send("east\r\n");
   p.lastSentAt = Date.now();
   await waitForAfter(p, leaveOffset, /廣場的西邊/);
+  await command(p, "open west", /打開|已經是開著/);
   await delay(3500);
   const unchanged = await command(p, "inventory");
   assert.match(unchanged, /一兩碎銀/);
