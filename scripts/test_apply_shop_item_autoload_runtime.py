@@ -9,6 +9,9 @@ from apply_shop_item_autoload_runtime import ITEMS, MARKER, apply
 
 
 class ShopItemAutoloadTests(unittest.TestCase):
+    def test_current_lee_vendor_waterskin_path_is_included(self):
+        self.assertIn("d/npc/obj/waterskin.c", ITEMS)
+
     def test_adapts_exact_items_and_is_idempotent(self):
         with tempfile.TemporaryDirectory() as root:
             mudlib = Path(root)
