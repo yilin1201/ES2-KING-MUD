@@ -6,13 +6,15 @@ DRIVER_BIN="$(realpath "${ES2_DRIVER_BIN:-$SOURCE_RUNTIME/neolith/out/build/linu
 TEMP_ROOT="$(mktemp -d)"
 WEB_PORT="$((49000 + $$ % 700))"
 TEST_PASSWORD="$(openssl rand -hex 16)"
-driver_pid=""; bridge_pid=""
+driver_pid=""; bridge_pid=""; stdin_pid=""
 cleanup(){
   status=$?
   [[ -z "$bridge_pid" ]] || kill "$bridge_pid" 2>/dev/null || true
   [[ -z "$driver_pid" ]] || kill "$driver_pid" 2>/dev/null || true
+  [[ -z "$stdin_pid" ]] || kill "$stdin_pid" 2>/dev/null || true
   wait "$bridge_pid" 2>/dev/null || true
   wait "$driver_pid" 2>/dev/null || true
+  wait "$stdin_pid" 2>/dev/null || true
   if ((status)); then
     echo "ORIGINAL PLAYER CREATION E2E FAIL：暫存 Runtime 保留於 $TEMP_ROOT" >&2
     for log in driver.stdout bridge.stdout player-creation.log; do
@@ -100,7 +102,13 @@ for id in humanprobe blackprobe yenprobe wooprobe dingprobe jiaoprobe rainprobe 
   rm -f "$TEMP_ROOT/mudlib/data/login/$initial/$id.o" "$TEMP_ROOT/mudlib/data/user/$initial/$id.o"
 done
 
-(cd "$TEMP_ROOT"; exec "$DRIVER_BIN" -f neolith.conf) >"$TEMP_ROOT/driver.stdout" 2>&1 & driver_pid=$!
+# Neolith console stdin keepalive／Docker build 的 stdin 會立即 EOF；以 FIFO 保持 console reader 存活，
+# 避免 Driver 完成 preload 後因 EOF 自行結束。僅供隔離 E2E Runtime 使用。
+mkfifo "$TEMP_ROOT/driver.stdin"
+tail -f /dev/null > "$TEMP_ROOT/driver.stdin" &
+stdin_pid=$!
+(cd "$TEMP_ROOT"; exec "$DRIVER_BIN" -f neolith.conf < "$TEMP_ROOT/driver.stdin") >"$TEMP_ROOT/driver.stdout" 2>&1 & driver_pid=$!
+echo "E2E_STAGE: Neolith started with persistent console stdin"
 # Passive Listen Check／被動監聽檢查：不可主動連線後立即斷線，Neolith 可能因此收到 SIGPIPE。
 command -v ss >/dev/null 2>&1 || { echo 'ORIGINAL PLAYER CREATION E2E BLOCKED：缺少 ss 被動監聽檢查工具。' >&2; exit 1; }
 driver_ready=0
