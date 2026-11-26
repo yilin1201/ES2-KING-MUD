@@ -7,14 +7,14 @@
  */
 #include <command.h>
 #include <ansi.h>
-#include <attribute.h>  /* Original ES2 屬性範圍：ATTRVAL_MIN=1、ADMIN_ATTR_MAX=50。 */
+#include <attribute.h>  /* Original ES2 屬性範圍：ATTRVAL_MIN=1、ATTRVAL_MAX=50。 */
 
 inherit F_CLEAN_UP;
 
 /* Original ES2 source-verified limits／原版原始碼已確認的數值範圍。 */
 #define ADMIN_SKILL_MAX 200  /* mudlib/feature/char/skill.c 的 set_skill/query_skill 上限。 */
 #define ADMIN_LEVEL_MAX 999 /* mudlib/feature/char/score.c 的 set_level 上限。 */
-#define ADMIN_ATTR_MAX 50 /* 管理員 GM 指令的安全輸入上限；不代表玩家屬性成長上限。 */
+#define ATTRVAL_MAX 50 /* 管理員 GM 指令的安全輸入上限；不代表玩家屬性成長上限。 */
 
 /*
  * Command objects under /cmds/ get UID "Root" but start with EUID 0.
@@ -542,7 +542,7 @@ int main(object me, string arg)
     if (sscanf(arg, "attrs %d %s", value, target_name) == 2) {
         ob = mutable_target(me, target_name);
         if (!ob) return notify_fail("找不到玩家。\n");
-        if (value < ATTRVAL_MIN || value > ADMIN_ATTR_MAX) return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\n");
+        if (value < ATTRVAL_MIN || value > ATTRVAL_MAX) return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\n");
         foreach (cmd in ({ "str", "cor", "int", "spi", "cps", "dex", "con", "wis" }))
             ob->set_attr(cmd, value);
         foreach (cmd in ({ "str", "cor", "int", "spi", "cps", "dex", "con", "wis" }))
@@ -553,7 +553,7 @@ int main(object me, string arg)
     }
 
     if (sscanf(arg, "attrs %d", value) == 1) {
-        if (value < ATTRVAL_MIN || value > ADMIN_ATTR_MAX) return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\n");
+        if (value < ATTRVAL_MIN || value > ATTRVAL_MAX) return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\n");
         foreach (cmd in ({ "str", "cor", "int", "spi", "cps", "dex", "con", "wis" }))
             me->set_attr(cmd, value);
         foreach (cmd in ({ "str", "cor", "int", "spi", "cps", "dex", "con", "wis" }))
@@ -596,7 +596,7 @@ int main(object me, string arg)
             ob = mutable_target(me, target_name);
             if (!ob)
                 return notify_fail("找不到玩家。\n");
-            if (value < ATTRVAL_MIN || value > ADMIN_ATTR_MAX)
+            if (value < ATTRVAL_MIN || value > ATTRVAL_MAX)
                 return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\n");
             ob->set_attr(cmd, value);
             if ((int)ob->query_attr(cmd, 1) != value)
@@ -609,7 +609,7 @@ int main(object me, string arg)
     if (sscanf(arg, "%s %d", cmd, value) == 2) {
         if (member_array(cmd, ({ "str", "cor", "int", "spi", "cps",
                                  "dex", "con", "wis" })) != -1) {
-            if (value < ATTRVAL_MIN || value > ADMIN_ATTR_MAX)
+            if (value < ATTRVAL_MIN || value > ATTRVAL_MAX)
                 return notify_fail("屬性數值須介於 1～50（Original ES2 原版範圍）。\n");
             me->set_attr(cmd, value);
             if ((int)me->query_attr(cmd, 1) != value)
