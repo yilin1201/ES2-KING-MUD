@@ -16,6 +16,11 @@ ITEMS = (
     "d/lee/obj/salt.c",
     "d/lee/obj/sugar.c",
     "d/lee/obj/flour.c",
+    # 最新李家村李忠商店實際販售路徑；不可只補舊路徑別名。
+    "d/npc/obj/salt.c",
+    "d/npc/obj/sugar.c",
+    "d/lee/npc/obj/flour.c",
+    "d/npc/obj/bait.c",
 )
 ADAPTER = r'''
 
