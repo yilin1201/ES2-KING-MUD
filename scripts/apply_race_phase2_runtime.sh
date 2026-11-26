@@ -266,6 +266,22 @@ if [[ -d "$ES2M_WUTANG_DIR" ]]; then
   fi
   echo 'KING WUTANG FERRY STAGE PASS／羿水渡兩艘船、船夫 NPC 與紫煙渡口已保留於 Runtime。'
 
+  # KING Expansion Wutang objects／五堂鎮專屬物件：上游只在 npc/obj 保存來源版本，
+  # KING Runtime 清冊另外保留已確認的五件區域物件；逐檔比對後才補入，不覆蓋不同版本。
+  KING_WUTANG_OBJECT_DIR="$REPO_ROOT/es2_king_expansion/runtime/mudlib/d/wutang/obj"
+  for item in blue_cloth.c drinkblood.c golden_plaque.c pie.c red_scarf.c; do
+    src="$KING_WUTANG_OBJECT_DIR/$item"
+    dst="$ROOT/mudlib/d/wutang/obj/$item"
+    [[ -f "$src" ]] || { echo "KING WUTANG OBJECT FAIL: missing Expansion source $src" >&2; exit 1; }
+    if [[ -e "$dst" ]]; then
+      cmp -s "$src" "$dst" || { echo "KING WUTANG OBJECT CONFLICT: $dst differs from Expansion source" >&2; exit 1; }
+    else
+      mkdir -p "$(dirname "$dst")"
+      cp "$src" "$dst"
+    fi
+  done
+  echo 'KING WUTANG OBJECT STAGE PASS／五堂鎮五件區域物件已保留於 Runtime。'
+
   # 最新五堂鎮地圖的絕對出口依賴可能位於其他區域；補入來源存在而 Runtime 尚缺的檔案。
   python3 - "$REPO_ROOT/es2m_source_mirror/mudlib" "$ROOT/mudlib" <<'PY'
 from pathlib import Path, PurePosixPath
