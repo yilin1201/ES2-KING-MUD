@@ -78,7 +78,7 @@ ES2-KING 新創內容不得寫入本目錄；統一放在 `es2_king_expansion/ra
 - Race Object / Source File
 - 種族背景
 - 出生設定
-- 六大 Attribute
+- 八大 Attribute
 - Attribute Bonus / Penalty
 - Kee / Gin / Sen / Force
 - 特殊能力

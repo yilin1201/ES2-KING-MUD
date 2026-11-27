@@ -1,0 +1,23 @@
+name: ES2-KING M27 Wuji Realm
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths: ['es2_king_expansion/runtime/mudlib/d/king/**', 'es2_king_expansion/runtime/mudlib/cmds/adm/kinghome.c', 'es2_king_expansion/research/m27_*', 'es2_king_expansion/runtime/m27_*', 'scripts/test_m27_*', '.github/workflows/es2-king-m27-wuji-realm.yml']
+  pull_request:
+    paths: ['es2_king_expansion/runtime/mudlib/d/king/**', 'es2_king_expansion/runtime/mudlib/cmds/adm/kinghome.c', 'es2_king_expansion/research/m27_*', 'es2_king_expansion/runtime/m27_*', 'scripts/test_m27_*', '.github/workflows/es2-king-m27-wuji-realm.yml']
+  workflow_dispatch:
+jobs:
+  m27-wuji-realm:
+    name: M27 天神殿・無極之境
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        name: Checkout／取得程式
+      - name: Static regression／驗證 Canon 與邊界
+        run: bash scripts/test_m27_wuji_realm_static.sh
+      - name: Bootstrap／建立獨立 Expansion Runtime
+        run: bash scripts/bootstrap_original_es2.sh .runtime/es2-king
+      - name: Apply Expansion／套用擴充覆蓋層
+        run: bash scripts/apply_es2_king_expansion.sh .runtime/es2-king
+      - name: Runtime Gate／驗證神域與凡間出口
+        run: bash scripts/test_m27_wuji_realm_runtime_gate.sh .runtime/es2-king

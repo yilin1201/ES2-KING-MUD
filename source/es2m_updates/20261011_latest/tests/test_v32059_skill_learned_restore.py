@@ -1,0 +1,41 @@
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
+def text(p): return (ROOT/p).read_text(encoding='utf-8')
+
+def test_exact_gain_bypasses_legacy_level_bonus_and_has_thresholds():
+    s=text('source/upstream/mudlib/feature/char/skill.c')
+    assert 'void improve_skill_exact' in s
+    assert 'level <= 60' in s and 'base = 100' in s
+    assert 'level <= 90' in s and 'base = 125' in s
+    assert 'level <= 120' in s and 'base = 150' in s
+    assert 'level <= 160' in s and 'base = 175' in s
+    assert 'level <= 180' in s and 'base = 200' in s
+    assert 'base = 250' in s
+    exact=s.split('void improve_skill_exact',1)[1].split('// improve_skill()',1)[0]
+    # 2026-10-10 使用者定案：所有技能點數都吃人物等級加成。
+    assert 'amount += amount * random(this_object()->query_level() / 8);' in exact
+
+def test_d_floor_is_two_and_combat_formulas_present():
+    s=text('source/upstream/mudlib/adm/daemons/combatd.c')
+    assert 'if( d < 2 ) d = 2;' in s and 'd > 10' in s
+    # 防禦經驗：(random(敏捷或定力)+1) × (random(d)+1) × (智力/7，最低 1)
+    assert '((a > 0 ? random(a) : 0) + 1) * (random(d) + 1) * restored_int_base(me)' in s
+    assert 'restored_defense_exp(me, opponent, "dex")' in s
+    assert 'restored_defense_exp(me, opponent, "cps")' in s
+    assert 'return ib < 1 ? 1 : ib;' in s
+    assert '(random(str) + 1) * (random(str) + 1) + random(str)' in s
+    assert 'random(me->query_attr("cor"))' in s
+    # 瘋虎功只靠修習取得點數，戰鬥中不給。
+    assert 'improve_skill_exact("tiger-force"' not in s
+    t=text('source/upstream/mudlib/daemon/skill/tiger-force.c')
+    assert 'random(me->query_attr("cps"))' in t
+
+def test_tiger_force_milestones_and_common_thresholds():
+    s=text('source/upstream/mudlib/daemon/skill/tiger-force.c')
+    assert 'tiger_force_threshold' not in s
+    assert 'lv == 91' in s and '"str"' in s and '+ 2' in s
+    assert 'lv == 140' in s and '+ 2' in s
+    assert 'lv >= 141' in s
+
+def test_version_bumped():
+    assert text('VERSION').strip()>='3.20.59'

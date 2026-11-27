@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+MATRIX="original_es2/research/closure/m30_completion_matrix.md"
+ROADMAP="ROADMAP_M0_M30.md"
+test -f "$MATRIX"; test -f "$ROADMAP"
+for m in $(seq 1 30); do grep -Fq "M${m}" "$MATRIX" || { echo "M30 STATIC FAIL：缺少 M$m"; exit 1; }; done
+
+# Completion evidence／完成證據：M1-M29 必須有實際結果、測試或研究檔，不接受空白里程碑。
+for f in original_es2/runtime/m25_release_candidate_result.md original_es2/research/closure/m24_system_data_integrity.md es2_king_expansion/runtime/m26_king_admin_result.md es2_king_expansion/runtime/m27_wuji_realm_result.md es2_king_expansion/runtime/m28_martial_result.md es2_king_expansion/runtime/m29_canon_result.md; do
+  test -f "$f" || { echo "M30 STATIC FAIL：缺少完成證據 $f"; exit 1; }
+done
+
+# Original boundary／原作邊界與 Expansion overlay／擴充覆蓋層。
+test -f original_es2/source_manifest.md
+test -f scripts/bootstrap_original_es2.sh
+test -f scripts/apply_es2_king_expansion.sh
+grep -Fq 'Original ES2' "$MATRIX"
+grep -Fq 'Expansion' "$MATRIX"
+grep -Fq 'UNKNOWN' "$MATRIX"
+grep -Fq 'ACTIONS-INFRA-BLOCKED' "$MATRIX"
+
+# TODO/FIXME/stub scan／待辦、修正標記與佔位實作掃描：不把工具缺失誤判成掃描通過。
+scan_status=0
+if command -v rg >/dev/null 2>&1; then
+  rg -n 'TODO|FIXME|placeholder|STUB' original_es2 es2_king_expansion scripts --glob '!m30_*' --glob '!test_m30_*' --glob '!m30_completion_matrix.md' > .m30_todo_scan || scan_status=$?
+else
+  # GitHub runner 不保證預裝 ripgrep；使用 POSIX/GNU grep 作為等價備援。
+  grep -RInE --exclude='m30_*' --exclude='test_m30_*' --exclude='m30_completion_matrix.md' 'TODO|FIXME|placeholder|STUB' original_es2 es2_king_expansion scripts > .m30_todo_scan || scan_status=$?
+fi
+if [[ $scan_status -eq 0 ]]; then
+  echo 'M30 NOTICE／發現待確認標記（詳見 .m30_todo_scan），不自動改寫 Canon。'
+elif [[ $scan_status -eq 1 ]]; then
+  : > .m30_todo_scan
+  echo 'M30 TODO SCAN PASS／未發現 TODO、FIXME、placeholder、STUB。'
+else
+  echo "M30 STATIC FAIL／待辦掃描工具錯誤，exit=$scan_status" >&2
+  exit "$scan_status"
+fi
+# Latest ES2M Login API／最新來源登入介面：確保 Final Runtime Gate 不再要求舊版固定數字種族選單。
+LOGIN_ASSERT="scripts/assert_m30_final_runtime.sh"
+grep -Fq 'private void get_race (string arg, object ob, string *list)' "$LOGIN_ASSERT"
+grep -Fq 'input_to ("get_race", ob, list);' "$LOGIN_ASSERT"
+
+# Bootstrap must use the same pinned Original ES2 commit as the production Docker build.
+grep -Fq 'ORIGINAL_ES2_COMMIT="${ORIGINAL_ES2_COMMIT:-cc45c06af4852380e5148dad3c9d53ff06854f2c}"' scripts/bootstrap_original_es2.sh
+grep -Fq 'git -C "$WORKDIR" checkout "$ORIGINAL_ES2_COMMIT"' scripts/bootstrap_original_es2.sh
+grep -Fq 'git -C "$WORKDIR" submodule update --init --recursive' scripts/bootstrap_original_es2.sh
+
+# Driver build gate must match Dockerfile; the pinned Neolith submodule has no linux-gcc preset.
+grep -Fq 'cmake -S . -B out/build/linux -G Ninja -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release' .github/workflows/es2-king-m30-alpha.yml
+grep -Fq 'cmake --build out/build/linux --parallel' .github/workflows/es2-king-m30-alpha.yml
+! grep -Fq -- '--preset linux-gcc' .github/workflows/es2-king-m30-alpha.yml
+
+# ADMIN GM LPC Load Gate／只驗證管理員指令可被 Neolith 編譯並 preload；不以繞過 RealIPD 的直連 Telnet 假冒正式 E2E。
+grep -Fq 'for obj in admin khome' scripts/test_admin_gm_lpc_boot.sh
+grep -Fq 'preloaded cmds/adm/$obj' scripts/test_admin_gm_lpc_boot.sh
+! grep -Fq 'telnetlib' scripts/test_admin_gm_lpc_boot.sh
+! grep -Fq 'gmtest' scripts/test_admin_gm_lpc_boot.sh
+
+echo 'M30 ALPHA STATIC PASS／M1-M30 矩陣、完成證據與邊界完整。'

@@ -1,0 +1,79 @@
+// cast.c
+
+#include <skill.h>
+
+inherit F_CLEAN_UP;
+
+int main(object me, string arg)
+{
+    object weapon;
+    string martial_skill, act, trg;
+    object target;
+
+    if( me->is_busy() )
+        return notify_fail("你現在沒有空﹗\n");
+    
+    if( environment(me)->query("no_fight") )
+	return notify_fail("這裡不准戰鬥。\n");
+
+    if( !me->is_fighting())
+	return notify_fail("你必須在戰鬥中才能使用絕招！\n");
+
+    if( !arg ) return notify_fail("指令格式﹕perform <技能:絕招> on <目標>\n");
+    
+    if( sscanf( arg, "%s:%s on %s", martial_skill, act, trg) != 3
+    &&	sscanf( arg, "%s:%s", martial_skill, act) != 2 )
+        return notify_fail("指令格式﹕perform <技能.絕招> [on <目標>]\n");
+    
+    if( trg ) {
+        target = present(trg, environment(me));
+        if( !target ) return notify_fail("你要對誰使用招式？\n");
+        if( !living(target) ) return notify_fail("你可以直接宰了這個昏迷不醒的傢伙，不需要用絕招。\n");
+    }
+
+    // 閃躲步法的絕招（例如 perform butterfly-steps:disappear，使用者同意，2026-11-07）：
+    // 技能名就是目前 enable 在閃躲上的技能，不需要裝備武器，直接交給該技能檔。
+    if( martial_skill != "dodge" && me->skill_mapped("dodge") == martial_skill )
+        return SKILL_D(martial_skill)->perform_action(me, act, target);
+
+    // 武功名稱：perform <武功>:<絕招>（使用者同意，2026-11-19，例如 perform chin_staff:crazy）。
+    // 這套武功要 enable 在目前使用的技能上；單手、雙手兵器都適用，要不要拿武器由武功自己判斷。
+    if( member_array(martial_skill, values(me->query_skill_map())) != -1 ) {
+        object art = SKILL_D(martial_skill);
+
+        if( objectp(art) && function_exists("perform_action", art) )
+            return art->perform_action(me, act, target);
+    }
+
+    if( !me->query_temp("weapon/" + martial_skill ) 
+        && (martial_skill != "unarmed") )
+        return notify_fail("你必須裝備適當的武器來使出絕招。\n");
+
+        notify_fail("你請先用 enable 指令選擇你要使用的技能。\n");
+
+    if( (martial_skill != me->skill_mapped( martial_skill ))
+    &&	(me->skill_mapped(martial_skill) != 0))
+        return SKILL_D(me->skill_mapped(martial_skill))->perform_action(me, act, target);
+
+    return 0;
+
+}
+
+int help (object me)
+{
+    write(@HELP
+指令格式﹕perform <技能:絕招> [on <施招對象>]
+
+在戰鬥中使用所學技能的絕招來和施招對象對戰，絕招可以參考
+個別的技能所提供的HELP。
+
+例如： perform sword:snowblade on guard
+
+就是指定所 enable 的劍法的 snowblade 這招來對 guard 施展。
+
+在你使用某一個技能的絕招之前﹐你必須先用 enable 指令來指定你要使用的技能。
+ 
+HELP
+    );
+    return 1;
+}

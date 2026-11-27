@@ -1,0 +1,29 @@
+name: Original ES2 M14 Apprentice Static
+
+# GitHub Actions／自動測試：鎖定 Original ES2 拜師指令與師徒關係核心，避免後續重建時偏離原始證據。
+on:
+  workflow_dispatch:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths:
+      - '.github/workflows/original-es2-m14-apprentice-static.yml'
+      - 'scripts/test_apprentice_m14_static.sh'
+      - 'original_es2/research/original_apprentice_m14.md'
+      - 'scripts/bootstrap_original_es2.sh'
+  pull_request:
+    paths:
+      - '.github/workflows/original-es2-m14-apprentice-static.yml'
+      - 'scripts/test_apprentice_m14_static.sh'
+      - 'original_es2/research/original_apprentice_m14.md'
+      - 'scripts/bootstrap_original_es2.sh'
+
+jobs:
+  m14-apprentice-static:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v4
+      - name: Bootstrap Original ES2／建立保存版執行樹
+        run: bash scripts/bootstrap_original_es2.sh
+      - name: Apprentice static regression／師徒系統靜態回歸
+        run: bash scripts/test_apprentice_m14_static.sh

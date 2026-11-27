@@ -38,7 +38,7 @@ Original ES2 的考證資料統一保存在：
 - ES2-KING 中文名稱
 - 種族定位
 - 世界觀設定
-- 六大 Attribute 傾向
+- 八大 Attribute 傾向
 - Kee / Gin / Sen / Force
 - 種族優勢
 - 種族弱點
@@ -51,3 +51,22 @@ Original ES2 的考證資料統一保存在：
 - 尚未決定項目
 
 數值尚未完成平衡時，應明確標示為待定，不得假裝為 Original ES2 數值。
+
+
+## Third-party source inventory／第三方來源索引
+
+第三方重建種族、家園與區域資料的來源、可信度、採用狀態及待驗證事項，統一追蹤於：
+
+`docs/research/THIRD_PARTY_CONTENT_INVENTORY_20261011.md`
+
+收錄於來源索引只代表「已登記可追溯」，不代表已採用到 KING Runtime，也不代表 Original ES2 已確認。
+
+
+## ES2M Runtime adopted races／已採用的 ES2M 種族
+
+依專案擁有者 2026-10-11 指示，目前 Runtime 的人類 `human`、化身 `avatar` 與刑天 `headless` 採用 `wolfer168/es2-webmud` 的 ES2M 種族 daemon 快照。具體數值、來源及適用界線見：
+
+- `human`／`avatar`：`es2_king_expansion/races/human.md`
+- `headless`：`es2_king_expansion/races/headless.md`
+
+此決策只表示 KING Runtime 採用第三方重建版本，不會把這些數值改標為 Original ES2 Confirmed。實際套用入口為 `scripts/apply_race_phase2_runtime.sh`，並由來源差異測試鎖定主要數值與複製路徑。

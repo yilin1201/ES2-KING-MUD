@@ -1,0 +1,30 @@
+name: Original ES2 M17 World Runtime Gate
+
+on:
+  push:
+    branches:
+      - build/original-es2-races-phase2
+    paths:
+      - 'original_es2/research/m17_world_runtime_plan.md'
+      - 'original_es2/research/m17_world_evidence_registry.md'
+      - 'scripts/test_m17_world_runtime_gate.sh'
+      - 'scripts/bootstrap_original_es2.sh'
+      - '.github/workflows/original-es2-m17-world-runtime-gate.yml'
+  workflow_dispatch:
+
+jobs:
+  m17-world-runtime-gate:
+    name: M17 世界區域／房間實機證據閘門
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout（取得程式）：將 ES2-KING 分支放進測試主機。
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v5
+
+      # Bootstrap（建立乾淨上游執行樹）：取得 Original ES2 Runtime。
+      - name: Bootstrap Original ES2／建立乾淨上游執行樹
+        run: bash scripts/bootstrap_original_es2.sh
+
+      # Runtime Gate（實機證據閘門）：搜尋世界區域與房間候選證據。
+      - name: Runtime evidence gate／執行世界區域實機證據閘門
+        run: bash scripts/test_m17_world_runtime_gate.sh .runtime/original-es2

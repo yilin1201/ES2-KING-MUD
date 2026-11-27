@@ -1,0 +1,49 @@
+name: Original ES2 M20 Alpha
+
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths: ['original_es2/tests/m20_*', 'scripts/test_m20_*', 'scripts/bootstrap_original_es2.sh', '.github/workflows/original-es2-m20-alpha.yml']
+  pull_request:
+    paths: ['original_es2/tests/m20_*', 'scripts/test_m20_*', 'scripts/bootstrap_original_es2.sh', '.github/workflows/original-es2-m20-alpha.yml']
+  workflow_dispatch:
+
+jobs:
+  m20-original-alpha:
+    name: M20 Original ES2 Alpha 實機驗收
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得 ES2-KING 程式
+        uses: actions/checkout@v5
+      - name: Static gate／驗證 Alpha 驗收範圍
+        run: bash scripts/test_m20_original_alpha_static.sh
+      - name: Install prerequisites／安裝編譯與連線工具
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build bison netcat-openbsd
+          python -m pip install --upgrade cmake
+      - name: Bootstrap／建立乾淨 Original ES2 執行樹
+        run: bash scripts/bootstrap_original_es2.sh
+      - name: Build Driver／編譯 MUD 驅動程式
+        working-directory: .runtime/original-es2/neolith
+        run: cmake --preset linux -DBUILD_TESTING=OFF && cmake --build --preset dev-linux
+      - name: Locate Driver／尋找驅動程式
+        run: |
+          DRIVER="$(find .runtime/original-es2/neolith/out -type f -name neolith -perm -111 | head -n 1)"
+          test -n "$DRIVER"
+          echo "DRIVER=$DRIVER" >> "$GITHUB_ENV"
+      - name: Boot Server／啟動測試伺服器
+        run: |
+          set -euo pipefail
+          cd .runtime/original-es2
+          DRIVER_ABS="$(realpath "$GITHUB_WORKSPACE/$DRIVER")"
+          "$DRIVER_ABS" -f neolith.conf -c > "$RUNNER_TEMP/es2-m20.log" 2>&1 &
+          echo "ES2_PID=$!" >> "$GITHUB_ENV"
+          for i in $(seq 1 30); do nc -z 127.0.0.1 4000 && exit 0; sleep 1; done
+          cat "$RUNNER_TEMP/es2-m20.log"
+          exit 1
+      - name: Alpha journey／執行真實最小可玩旅程
+        run: python scripts/test_m20_original_alpha.py
+      - name: Stop Server／停止測試伺服器
+        if: always()
+        run: if [[ -n "${ES2_PID:-}" ]]; then kill "$ES2_PID" 2>/dev/null || true; fi

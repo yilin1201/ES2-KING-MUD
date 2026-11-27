@@ -1,0 +1,29 @@
+name: ES2-KING M26 Admin Creation
+on:
+  push:
+    branches: [build/original-es2-races-phase2]
+    paths: ['es2_king_expansion/**', 'scripts/apply_es2_king_expansion.sh', 'scripts/test_m26_*', 'scripts/test_admin_gm_*', '.github/workflows/es2-king-m26-admin-creation.yml']
+  pull_request:
+    paths: ['es2_king_expansion/**', 'scripts/apply_es2_king_expansion.sh', 'scripts/test_m26_*', '.github/workflows/es2-king-m26-admin-creation.yml']
+  workflow_dispatch:
+jobs:
+  m26-admin-creation:
+    name: M26 KING 管理員與創世系統
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout／取得程式
+        uses: actions/checkout@v5
+      - name: Static regression／驗證權限與邊界
+        run: bash scripts/test_m26_king_admin_static.sh
+      # ADMIN GM Static Gate／檢查 GM 命令權限、數值保護與載入路徑。
+      - name: ADMIN GM Static Gate／管理員指令靜態檢查
+        run: bash scripts/test_admin_gm_static.sh
+      - name: Bootstrap／建立獨立 Expansion Runtime
+        run: bash scripts/bootstrap_original_es2.sh .runtime/es2-king
+      - name: Apply Expansion／套用擴充覆蓋層
+        run: bash scripts/apply_es2_king_expansion.sh .runtime/es2-king
+      - name: Runtime Gate／驗證受控創造服務
+        run: bash scripts/test_m26_king_admin_runtime_gate.sh .runtime/es2-king
+      # ADMIN GM Runtime Gate／確認 admin.c 已進入生成 Runtime 並可由索引找到。
+      - name: ADMIN GM Runtime Gate／管理員指令 Runtime 檢查
+        run: bash scripts/test_admin_gm_runtime_gate.sh .runtime/es2-king
