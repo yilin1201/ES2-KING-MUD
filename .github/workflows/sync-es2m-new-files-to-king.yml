@@ -1,5 +1,5 @@
 name: Sync ES2M Files Into KING Overlay
-# 2026-11-27：同步 ES2M main 最新 HEAD f165fbf259b7ceda1f8e030bd9cf29c8a14b255c；KING 僅讀取來源並單向整合。
+# 2026-11-27：依使用者授權重新執行 ES2M 全量同步；來源 HEAD f165fbf259b7ceda1f8e030bd9cf29c8a14b255c，KING 單向整合。
 
 on:
   push:
